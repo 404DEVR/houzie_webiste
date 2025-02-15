@@ -1,4 +1,5 @@
 // Review.tsx (Modified)
+import api from 'axios';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +17,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import api from '@/api/axios';
 import { resetAddForm } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
 
@@ -35,7 +35,7 @@ const Review = ({ handleBack, page, setActiveTab }) => {
         throw new Error('No access token available');
       }
 
-      const response = await api.post('/listings', restructuredData, {
+      const response = await api.post('https://api.houzie.in/listings', restructuredData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

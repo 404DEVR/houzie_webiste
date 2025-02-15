@@ -1,6 +1,6 @@
-// MyListings.tsx
 'use client';
 
+import axios from 'axios'; // Assuming you have axios configured
 import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
-import axios from '@/api/axios'; // Assuming you have axios configured
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
 
 interface PropertyFeature {
@@ -83,7 +82,7 @@ const MyListings = () => {
         if (!accessToken) {
           throw new Error('No access token available');
         }
-        const response = await axios.get(`/broker/listings`, {
+        const response = await axios.get(`https://api.houzie.in/broker/listings`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -102,7 +101,7 @@ const MyListings = () => {
   const handleEdit = async (id) => {
     setSelectedListingId(id);
     try {
-      const response = await axios.get(`/listings/${id}`);
+      const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
 
       interface PropertyDetails {
@@ -237,7 +236,7 @@ const MyListings = () => {
         throw new Error('No access token available');
       }
 
-      await axios.delete(`/listings/${id}`, {
+      await axios.delete(`https://api.houzie.in/listings/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
