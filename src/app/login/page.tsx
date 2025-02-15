@@ -26,7 +26,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z
@@ -37,7 +36,6 @@ const formSchema = z.object({
 const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw'; // Updated URL to the API route
 
 const SignUpForm = () => {
-  const searchParams = useSearchParams();
   const { login } = useAuth(); // Ensure login is defined in useAuth
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -74,7 +72,6 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      console.log(response.data.accessToken);
       router.push('/broker');
       toast({
         title: 'Login Succsfull',
@@ -87,7 +84,6 @@ const SignUpForm = () => {
           error.response?.data?.message || 'An unexpected error occurred.',
         variant: 'destructive',
       });
-      console.error('Login error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +101,6 @@ const SignUpForm = () => {
         router.push(redirectUrl);
       }
     } catch (error: any) {
-      console.error('Google sign-up error:', error);
       toast({
         title: 'Google Sign Up Failed',
         description:
@@ -137,7 +132,7 @@ const SignUpForm = () => {
         </CardHeader>
         <CardContent className='grid gap-4 w-[90%] mx-auto'>
           <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-             {/* <div className='grid gap-2'>
+            {/* <div className='grid gap-2'>
               <Label htmlFor='email'>Full Name</Label>
               <div className='relative'>
                 <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />

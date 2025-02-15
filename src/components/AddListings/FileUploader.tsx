@@ -88,7 +88,6 @@ const FileUploader = ({ handleNext, handleBack, page }) => {
           variant: 'default',
         });
       } catch (error) {
-        console.error('Upload error:', error);
         toast({
           title: 'Error uploading image(s)',
           description: 'Please try again later',
@@ -131,7 +130,6 @@ const FileUploader = ({ handleNext, handleBack, page }) => {
         variant: 'default',
       });
     } catch (error) {
-      console.error('Error removing photo from storage:', error);
       toast({
         title: 'Error removing photo',
         description:
@@ -146,7 +144,6 @@ const FileUploader = ({ handleNext, handleBack, page }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Full Form Data:', formData);
     handleNext();
   };
 

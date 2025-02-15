@@ -25,7 +25,7 @@ export async function registerUser(formData: FormData) {
       aadharNumber: formData.get('aadharNumber'),
       role: formData.get('role'),
     });
-    console.log('🚀 ~ registerUser ~ validatedFields:', validatedFields);
+    // console.log('🚀 ~ registerUser ~ validatedFields:', validatedFields);
 
     // if (!validatedFields.success) {
     //   return {
