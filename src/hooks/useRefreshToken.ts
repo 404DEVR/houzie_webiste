@@ -23,7 +23,7 @@ const useRefreshToken = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refreshToken: auth.refreshToken }),
+        body: JSON.stringify({ refreshToken: auth?.refreshToken }),
       });
 
       if (!response.ok) {

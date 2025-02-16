@@ -1,33 +1,38 @@
-import { Middleware } from '@reduxjs/toolkit';
+// import { Middleware } from '@reduxjs/toolkit';
+// import useRefreshToken from '@/hooks/useRefreshToken';
+// import { logout, updateToken } from '../slices/authSlice';
+// import { RootState } from '../store';
 
-import useRefreshToken from '@/hooks/useRefreshToken';
+// const refreshTokenMiddleware: Middleware<{}, RootState> =
+//   (store) => (next) => async (action) => {
+//     const state = store.getState();
+//     const { auth } = state;
+//     const refresh = useRefreshToken();
 
-import { logout,updateToken } from '../slices/authSlice';
-import { RootState } from '../store';
+//     if (auth.token && auth.tokenExpiry && Date.now() >= auth.tokenExpiry) {
+//       const newToken = await refresh();
+//       if (newToken) {
+//         store.dispatch(
+//           updateToken({
+//             token: newToken,
+//             refreshToken: auth.refreshToken ?? '',
+//             tokenExpiry: Date.now() + 3600 * 1000,
+//           })
+//         );
+//       } else {
+//         store.dispatch(logout());
+//       }
+//     }
 
-const refreshTokenMiddleware: Middleware<{}, RootState> = store => next => async action => {
-  const state = store.getState();
-  const { auth } = state;
-  const refresh = useRefreshToken();
+//     return next(action);
+//   };
 
-  if (auth.token && auth.tokenExpiry && Date.now() >= auth.tokenExpiry) {
-    const newToken = await refresh();
-    if (newToken) {
-      // Update the token and token expiry in the state
-      store.dispatch(
-        updateToken({
-          token: newToken,
-          refreshToken: auth.refreshToken, // Include refresh token
-          tokenExpiry: Date.now() + 3600 * 1000
-        })
-      );
-    } else {
-      // Handle token refresh failure (e.g., logout)
-      store.dispatch(logout());
-    }
-  }
+// export default refreshTokenMiddleware;
 
-  return next(action);
+import React from 'react';
+
+const refreshTokenMiddleware = () => {
+  return null;
 };
 
 export default refreshTokenMiddleware;

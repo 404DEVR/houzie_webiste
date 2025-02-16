@@ -17,5 +17,5 @@ function redirectToLogin(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/broker', '/broker/:path*', '/property/:id'],
+  matcher: ['/broker', '/broker/:path*'],
 };

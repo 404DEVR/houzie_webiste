@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
@@ -28,7 +28,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
-  name: z.string(),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z
     .string()
@@ -42,8 +41,6 @@ const SignUpForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const {
     register,
@@ -52,7 +49,6 @@ const SignUpForm = () => {
   } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     },
@@ -64,7 +60,6 @@ const SignUpForm = () => {
       const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({
-          name: data.name,
           email: data.email,
           password: data.password,
         }),
@@ -82,7 +77,7 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push(callbackUrl);
+      router.push('/');
       toast({
         title: 'Login Succsfull',
         description: 'Successfully signed In',
@@ -145,7 +140,7 @@ const SignUpForm = () => {
         </CardHeader>
         <CardContent className='grid gap-4 w-[90%] mx-auto'>
           <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-            <div className='grid gap-2'>
+            {/* <div className='grid gap-2'>
               <Label htmlFor='name'>Full Name</Label>
               <div className='relative'>
                 <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
@@ -160,7 +155,7 @@ const SignUpForm = () => {
               {errors.email && (
                 <p className='text-red-500 text-sm'>{errors.email?.message}</p>
               )}
-            </div>
+            </div> */}
             <div className='grid gap-2'>
               <Label htmlFor='email'>Email Address</Label>
               <div className='relative'>

@@ -14,7 +14,7 @@ const withAuthRedirect = (WrappedComponent: React.ComponentType) => {
     }, [auth]);
 
     // If authenticated, do not render the wrapped component
-    if (auth?.token) {
+    if (auth?.accessToken) {
       return null;
     }
 

@@ -23,37 +23,38 @@ interface DetailsPageClientProps {
 
 export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   const [propertyData, setPropertyData] = useState<Property | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { auth } = useAuth();
 
   useEffect(() => {
     const fetchPropertyData = async () => {
+      setIsLoading(true);
       try {
-        const accessToken = auth?.accessToken;
-        if (!accessToken) {
-          throw new Error('No access token available');
-        }
         const response = await fetch(
-          `https://api.houzie.in/listings/${params.id}`,
-          {
-            headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTMwMmY2NC02MDdmLTQ0NDUtOTJiOC1hY2E1MzVhMmNiNWYiLCJlbWFpbCI6InJvc2hhbjUyQGdtYWlsLmNvbSIsInJvbGUiOiJCUk9LRVIiLCJpc0VtYWlsVmVyaWZpZWQiOmZhbHNlLCJpc1Bob25lVmVyaWZpZWQiOmZhbHNlLCJpYXQiOjE3Mzk3MDQ1NDMsImV4cCI6MTczOTcwNTQ0M30.wgwuWaIIZqdX4Q_BvxD1Mrp5Z5VndfMroqA7KbaoUM0`,
-            },
-          }
+          `https://api.houzie.in/listings/${params.id}`
         );
+        if (!response.ok) {
+          throw new Error('Failed to fetch property data');
+        }
         const data = await response.json();
         setPropertyData(data);
       } catch (error) {
         console.error('Error fetching property data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchPropertyData();
   }, [params.id]);
 
-  if (!propertyData) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  if (!propertyData) {
+    return <div>Failed to load property data.</div>;
+  }
   return (
     <>
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 my-2 sm:my-3 bg-[#F4F4F4]'>
@@ -87,32 +88,37 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           </div>
 
           {/* Right column - Profile Cards */}
-          <div className='w-full ml-0 lg:w-[35%] xl:w-[30%] order-1 lg:order-2'>
-            <div className='space-y-4'>
-              <ProfileCard
-                name='Full Name'
-                rating={4}
-                listingCount={10}
-                totalDeals={6}
-                memberSince='18 Jan, 2024'
-                postedDate='18 Jan, 2025'
-                showContact={false}
-                avatarUrl='/images/Dummy profile.png'
-              />
-              <ProfileCard
-                name='Full Name'
-                rating={4}
-                listingCount={10}
-                totalDeals={6}
-                memberSince='18 Jan, 2024'
-                postedDate='18 Jan, 2025'
-                phoneNumber='+91 7326941125'
-                email='name@gmail.com'
-                showContact={true}
-                avatarUrl='/images/Dummy profile.png'
-              />
+
+          {auth?.accessToken && (
+            <div className='w-full ml-0 lg:w-[35%] xl:w-[30%] order-1 lg:order-2'>
+              <div className='space-y-4'>
+                <ProfileCard
+                  brokerid={propertyData.broker.id}
+                  name='Full Name'
+                  rating={4}
+                  listingCount={10}
+                  totalDeals={6}
+                  memberSince='18 Jan, 2024'
+                  postedDate={propertyData.createdAt}
+                  showContact={false}
+                  avatarUrl='/images/Dummy profile.png'
+                />
+                <ProfileCard
+                  brokerid={propertyData.broker.id}
+                  name='Full Name'
+                  rating={4}
+                  listingCount={10}
+                  totalDeals={6}
+                  memberSince='18 Jan, 2024'
+                  postedDate={propertyData.createdAt}
+                  phoneNumber='+91 7326941125'
+                  email='name@gmail.com'
+                  showContact={true}
+                  avatarUrl='/images/Dummy profile.png'
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className='space-y-4 sm:space-y-6 my-4 sm:my-6'>
           <PropertySuggestions />

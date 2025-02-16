@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import axios from 'axios';
 
 interface PropertyFeature {
   icon: React.ElementType;
@@ -31,9 +32,8 @@ export default function PropertySuggestions() {
   useEffect(() => {
     const fetchPropertyData = async () => {
       try {
-        const response = await fetch('https://api.houzie.in/listings');
-        const data = await response.json();
-        setProperties(data);
+        const response = await axios.get('https://api.houzie.in/listings', {});
+        setProperties(response.data.data);
       } catch (error) {
         console.error('Error fetching property data:', error);
       }
@@ -65,68 +65,72 @@ export default function PropertySuggestions() {
       <h2 className='text-2xl font-semibold mb-4'>Other suggestions</h2>
 
       <div className='flex gap-12 overflow-x-auto scrollbar-hide px-4'>
-        {properties.map((property) => (
-          <Card
-            key={property.id}
-            className='min-w-[300px] max-w-[330px] flex flex-col border-none px-0'
-          >
-            <div className='relative'>
-              <Image
-                width={330}
-                height={220}
-                src={property.mainImage}
-                alt={property.title}
-                className='w-full h-[220px] object-cover rounded-lg'
-              />
-              <button
-                className='absolute top-2 right-2 p-1.5'
-                onClick={() => toggleFavorite(property.id)}
-              >
-                <Heart
-                  className='w-5 h-5 text-[#42A4AE]'
-                  fill={favorites[property.id] ? '#42A4AE' : 'transparent'}
+        {properties && properties.length > 0 ? (
+          properties.map((property) => (
+            <Card
+              key={property.id}
+              className='min-w-[300px] max-w-[330px] flex flex-col border-none px-0'
+            >
+              <div className='relative'>
+                <Image
+                  width={330}
+                  height={220}
+                  src={property.mainImage}
+                  alt={property.title}
+                  className='w-full h-[220px] object-cover rounded-lg'
                 />
-              </button>
-            </div>
-
-            <CardContent className='pt-4 px-0'>
-              <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
-              <p className='text-sm text-gray-600 mb-4'>
-                {property.description.slice(0, 100)}...
-                <button className='underline ml-1 text-black'>Read More</button>
-              </p>
-
-              <div className='flex gap-2 flex-wrap'>
-                {getPropertyFeatures(property).map((feature, index) => (
-                  <Badge
-                    key={index}
-                    variant='outline'
-                    className='bg-[#191919] text-white border-neutral-800 px-[8px] py-[3px] rounded-[20.53px]'
-                  >
-                    <feature.icon className='w-[17.59px] h-[17.59px]' />
-                    <span className='font-medium text-sm ml-[4px]'>
-                      {feature.label}
-                    </span>
-                  </Badge>
-                ))}
+                <button
+                  className='absolute top-2 right-2 p-1.5'
+                  onClick={() => toggleFavorite(property.id)}
+                >
+                  <Heart
+                    className='w-5 h-5 text-[#42A4AE]'
+                    fill={favorites[property.id] ? '#42A4AE' : 'transparent'}
+                  />
+                </button>
               </div>
-            </CardContent>
 
-            <CardFooter className='px-0 flex'>
-              <div className='flex items-center justify-between flex-[1]'>
-                <div>
-                  <p className='text-sm text-gray-500'>Rent</p>
-                  <p className='text-lg font-semibold'>
-                    ₹ {property.price / 100000} lakh
-                  </p>
+              <CardContent className='pt-4 px-0'>
+                <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
+                <p className='text-sm text-gray-600 mb-4'>
+                  {property.description.slice(0, 100)}...
+                  <button className='underline ml-1 text-black'>
+                    Read More
+                  </button>
+                </p>
+
+                <div className='flex gap-2 flex-wrap'>
+                  {getPropertyFeatures(property).map((feature, index) => (
+                    <Badge
+                      key={index}
+                      variant='outline'
+                      className='bg-[#191919] text-white border-neutral-800 px-[8px] py-[3px] rounded-[20.53px]'
+                    >
+                      <feature.icon className='w-[17.59px] h-[17.59px]' />
+                      <span className='font-medium text-sm ml-[4px]'>
+                        {feature.label}
+                      </span>
+                    </Badge>
+                  ))}
                 </div>
-              </div>
-              <Button className='w-full bg-teal-500 hover:bg-teal-600 flex-[1] text-white'>
-                View Details
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+              </CardContent>
+
+              <CardFooter className='px-0 flex'>
+                <div className='flex items-center justify-between flex-[1]'>
+                  <div>
+                    <p className='text-sm text-gray-500'>Rent</p>
+                    <p className='text-lg font-semibold'>₹ {property.price}</p>
+                  </div>
+                </div>
+                <Button className='w-full bg-teal-500 hover:bg-teal-600 flex-[1] text-white'>
+                  View Details
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        ) : (
+          <div>No properties found.</div>
+        )}
       </div>
     </div>
   );

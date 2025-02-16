@@ -17,6 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
+import { useRouter } from 'next/navigation';
 
 interface PropertyFeature {
   icon: React.ElementType;
@@ -67,6 +68,7 @@ interface Listing {
 }
 
 const MyListings = () => {
+  const router = useRouter();
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
@@ -104,10 +106,10 @@ const MyListings = () => {
   }, []);
 
   const handleEdit = async (id) => {
+    console.log(auth?.accessToken);
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
-      console.log(listingData);
 
       interface PropertyDetails {
         title: string;
@@ -309,7 +311,7 @@ const MyListings = () => {
   };
 
   const handleViewDetails = (id) => {
-    alert(`Viewing details for listing with id: ${id}`);
+    router.push(`/property/${id}`);
   };
 
   const handleDelete = async (id: string) => {

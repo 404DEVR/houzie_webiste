@@ -104,7 +104,7 @@ const PropertyDetailsForm = ({
         JSON.stringify(propertyDetails)
       ); // Deep copy
     }
-  }, [page]); // Simplified dependency array
+  }, [page]);
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -216,7 +216,7 @@ const PropertyDetailsForm = ({
   const propertyTypes = [
     { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
     { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/coliving.svg' },
+    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
     { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
     {
       label: 'Preoccupied Property',
@@ -735,6 +735,28 @@ const PropertyDetailsForm = ({
       return '';
     }
   };
+
+  const formatDateForInput = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    if (page === 'edit') {
+      dispatch(updateEditPropertyDetails({ [name]: value }));
+    } else {
+      dispatch(updateAddPropertyDetails({ [name]: value }));
+    }
+  };
+
   return (
     <Card className='w-full max-w-4xl my-6 mx-auto md:p-8'>
       <CardHeader>
@@ -868,14 +890,11 @@ const PropertyDetailsForm = ({
             )}
             {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
               <Select
-              // value={propertyDetails.preoccupiedPropertyType}
-              // onValueChange={(value) =>
-              //   dispatch(
-              //     updateEditPropertyDetails({
-              //       preoccupiedPropertyType: value,
-              //     })
-              //   )
-              // }
+                value={propertyDetails.preoccupiedPropertyType}
+                onValueChange={(value) => {
+                  handleSelectChange('preoccupiedPropertyType', value);
+                }}
+                required
               >
                 <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
                   <SelectValue placeholder='Select a preoccupied property type' />
@@ -1008,7 +1027,7 @@ const PropertyDetailsForm = ({
                     name='availableFrom'
                     label='Available From'
                     id='availableFrom'
-                    value={propertyDetails.availableFrom}
+                    value={formatDateForInput(propertyDetails.availableFrom)} // Format date for display
                     onChange={handleInputChange}
                     min={new Date().toISOString().split('T')[0]}
                     required

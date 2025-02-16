@@ -2,27 +2,75 @@
 
 import { Camera, ListIcon, Settings, UserRoundPen } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import axios from 'axios'; // Import Axios
 
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import useAuth from '@/hooks/useAuth';
 
 interface ProfileFormInterface {
   handleTabChange: (any: any) => void;
 }
 
 const ProfileForm = ({ handleTabChange }: ProfileFormInterface) => {
-  const [fullName, setFullName] = useState('Robert');
-  const [emailAddress, setEmailAddress] = useState('hello@example.com');
+  const { auth } = useAuth();
+  const [fullName, setFullName] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const params = useParams();
+  const userId = params.id;
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `https://api.houzie.in/profile/${auth?.userid}`
+        );
+        setFullName(response.data.name ? response.data.name : '');
+        setEmailAddress(response.data.email ? response.data.email : '');
+        setPhoneNumber(
+          response.data.phoneNumber ? response.data.phoneNumber : ''
+        );
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+        // Handle error appropriately (e.g., display an error message)
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [auth?.userid]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ fullName, emailAddress, phoneNumber });
-    alert('Profile Updated!');
+
+    try {
+      const response = await axios.patch(
+        `https://api.houzie.in/profile/${userId}`,
+        {
+          name: fullName,
+          email: emailAddress,
+          phoneNumber: phoneNumber,
+        }
+      );
+
+      alert('Profile Updated!');
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      // Handle error appropriately (e.g., display an error message)
+    }
   };
+
+  if (isLoading) {
+    return <div>Loading profile...</div>;
+  }
 
   return (
     <div className='container mx-auto pb-8 pt-4 '>

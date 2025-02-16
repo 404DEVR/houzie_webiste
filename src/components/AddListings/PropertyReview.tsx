@@ -197,7 +197,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
         <div>
           <h4 className='font-semibold'>Furnishings</h4>
           <div className='flex flex-wrap gap-2'>
-            <AmenitiesDisplay data={data.furni} type='furnishing' />
+            <AmenitiesDisplay data={data.furnishingExtras} type='furnishing' />
           </div>
         </div>
       </div>
