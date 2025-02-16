@@ -59,7 +59,7 @@ export default function RootLayout({
               <Toaster />
             </ThemeProvider>
           </Providers>
-          </AuthProviders>
+        </AuthProviders>
       </body>
     </html>
   );

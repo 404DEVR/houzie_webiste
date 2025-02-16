@@ -7,7 +7,6 @@ import React from 'react';
 import PropertyComponentSearchbar from '@/components/SearchBar/PropertyComponentSearchbar';
 import RentComponent from '@/components/SearchBar/RentComponent';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 const SearchBar = () => {
   const router = useRouter();
@@ -23,7 +22,7 @@ const SearchBar = () => {
           <label className='text-sm font-semibold block text-gray-800'>
             Office or Nearby
           </label>
-          <Input
+          <input
             type='text'
             placeholder='Enter your office or nearby area'
             className='px-0 py-1 w-full border-none text-sm focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
@@ -77,11 +77,10 @@ const SignUpForm = () => {
         title: 'Login Succsfull',
         description: 'Successfully signed In',
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Login Failed',
-        description:
-          error.response?.data?.message || 'An unexpected error occurred.',
+        description: 'An unexpected error occurred.',
         variant: 'destructive',
       });
     } finally {
@@ -100,11 +99,10 @@ const SignUpForm = () => {
         });
         router.push(redirectUrl);
       }
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Google Sign Up Failed',
         description:
-          error.response?.data?.message ||
           'An error occurred during Google sign up. Please try again.',
         variant: 'destructive',
       });
@@ -113,7 +111,7 @@ const SignUpForm = () => {
 
   return (
     <div className='flex justify-center items-center h-screen bg-gray-100'>
-      <Card className='w-full max-w-md shadow-md'>
+      <Card className='w-full max-w-md shadow-md bg-[#ffffff]'>
         <CardHeader className='space-y-1 flex flex-col items-center'>
           <Image
             src='/svg/logo light.svg'

@@ -28,7 +28,7 @@ const Page = () => {
 
   return (
     <Provider store={store}>
-      <div className='sticky top-0 bg-white z-10 lg:mx-24 mx-4'>
+      <div className='sticky top-0 z-10 lg:mx-24 mx-4'>
         <div className='flex items-center justify-start gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
           <Button
             className={`hover:text-white hover:bg-[#42A4AE]  ${
