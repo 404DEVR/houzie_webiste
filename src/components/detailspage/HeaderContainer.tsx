@@ -1,8 +1,10 @@
 import { Copy, Heart, Share } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
 
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -13,10 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
-import { toast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
 
 export interface Property {
   id: string;
@@ -81,9 +81,13 @@ export default function HeaderContainer({
 }: HeaderContainerprops) {
   const router = useRouter();
 
-  const currentUrl = `${
-    process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000/'
-  }property/${propertyData.id}`;
+  const [currentUrl, setCurrentUrl] = useState('');
+
+  useEffect(() => {
+    if (propertyData?.id) {
+      setCurrentUrl(`${window.location.origin}/property/${propertyData.id}`);
+    }
+  }, [propertyData?.id]);
 
   const copyToClipboard = async () => {
     try {

@@ -34,7 +34,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           style={{ width: `${progressValue}%` }}
         ></div>
       </div>
-
       <div className='flex justify-between items-start w-full absolute top-0 left-0 transform -translate-y-2 md:-translate-y-3'>
         {checkpoints.map((checkpoint, index) => {
           const isCompleted = checkpoint.placement < currentpage;
@@ -71,15 +70,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               className='flex flex-col items-center justify-start w-1/5 text-center'
             >
               <div
+                onClick={() => handlecircel(checkpoint)}
                 className={`w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full ${circleColor} ${circleText} flex items-center justify-center cursor-pointer mb-1 md:mb-2 text-xs md:text-sm`}
               >
                 {checkpoint.placement}
               </div>
-
               <h1 className='font-semibold leading-tight text-[0.6rem] sm:text-xs md:text-sm text-gray-800 h-6 mb-1 md:mb-2'>
                 {checkpoint.label}
               </h1>
-
               <p
                 className={`text-[0.6rem] sm:text-xs ${statusformat} mt-1 rounded-lg px-2 py-1 md:px-4 md:py-2`}
               >
