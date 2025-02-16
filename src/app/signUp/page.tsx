@@ -6,7 +6,7 @@ import { Apple, Eye, Lock, Mail, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
@@ -24,6 +24,13 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -31,7 +38,7 @@ const formSchema = z.object({
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters' }),
-  role: z.string().default('RENTER'),
+  role: z.string().default('BROKER'),
 });
 
 const SignUpForm = () => {
@@ -41,6 +48,7 @@ const SignUpForm = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -48,17 +56,17 @@ const SignUpForm = () => {
       name: '',
       email: '',
       password: '',
-      role: '',
+      role: 'BROKER', // Set default value here
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post('https://api.houzie.in/auth/register', {
+      await axios.post('https://api.houzie.in/auth/register', {
         name: data.name,
         email: data.email,
         password: data.password,
-        role: 'BROKER',
+        role: data.role,
       });
 
       toast({
@@ -66,17 +74,30 @@ const SignUpForm = () => {
         description: 'You have successfully signed up. Redirecting...',
       });
 
-      // Redirect to login or home page
       router.push('/');
-    } catch (error: any) {
-      // Show error toast
-      toast({
-        title: 'Registration Failed',
-        description:
-          error.response?.data?.message ||
-          'An error occurred during registration. Please try again.',
-        variant: 'destructive', 
-      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const responseData = error.response.data;
+        if (responseData.status === 'fail' && responseData.message) {
+          toast({
+            title: 'Registration Failed',
+            description: responseData.message,
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Registration Failed',
+            description: 'An unexpected error occurred. Please try again.',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        toast({
+          title: 'Registration Failed',
+          description: 'An unexpected error occurred. Please try again.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
@@ -160,21 +181,28 @@ const SignUpForm = () => {
                 </p>
               )}
             </div>
-            {/* <div className='grid gap-2'>
-              <Label htmlFor='lookingFor'>I am looking for</Label>
-              <Select {...register('lookingFor')}>
-                <SelectTrigger id='lookingFor'>
-                  <SelectValue placeholder='Property' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='property'>Property</SelectItem>
-                  <SelectItem value='postMyProperty'>
-                    Post my property
-                  </SelectItem>
-                  <SelectItem value='propertyAgent'>Property agent</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
+            <div className='grid gap-2'>
+              <Label htmlFor='role'>I am looking for</Label>
+              <Controller
+                name='role'
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger id='role'>
+                      <SelectValue placeholder='Select Role' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='BROKER'>Broker</SelectItem>
+                      <SelectItem value='ADMIN'>Admin</SelectItem>
+                      <SelectItem value='USER'>User</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
             {/* <div className='flex items-center space-x-2'>
               <Checkbox id='keepSignedIn' {...register('keepSignedIn')} />
               <Label htmlFor='keepSignedIn'>Keep me signed in</Label>

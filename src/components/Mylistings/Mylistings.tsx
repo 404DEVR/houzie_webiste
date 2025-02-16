@@ -107,6 +107,7 @@ const MyListings = () => {
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
+      console.log(listingData);
 
       interface PropertyDetails {
         title: string;

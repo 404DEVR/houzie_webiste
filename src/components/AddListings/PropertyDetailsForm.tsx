@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react'; // Import useEffect
+import { useEffect, useRef, useState } from 'react';
+import { isEqual } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cn } from '@/lib/utils'; // Import cn function
@@ -39,6 +40,8 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
+import axios from 'axios';
+import useAuth from '@/hooks/useAuth';
 
 interface PropertyDetailsForminteface {
   handleNext: () => void;
@@ -51,6 +54,7 @@ const PropertyDetailsForm = ({
   handleBack,
   page,
 }: PropertyDetailsForminteface) => {
+  const { auth } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const addPropertyDetails = useSelector(
     (state: RootState) => state.addForm.propertyDetails
@@ -58,8 +62,6 @@ const PropertyDetailsForm = ({
   const editPropertyDetails = useSelector(
     (state: RootState) => state.editForm.propertyDetails
   );
-
-  const [originalPropertyDetails, setOriginalPropertyDetails] = useState(null);
 
   const propertyDetails =
     page === 'edit' ? editPropertyDetails : addPropertyDetails;
@@ -82,11 +84,10 @@ const PropertyDetailsForm = ({
     (state: RootState) => state.editForm.currentPage
   );
 
+  const initialPropertyDetails = useRef(null);
+
   useEffect(() => {
     if (page === 'edit') {
-      // Deep copy the initial propertyDetails
-      setOriginalPropertyDetails(JSON.parse(JSON.stringify(propertyDetails)));
-
       dispatch(
         populateEditForm({
           currentPage: currentPage,
@@ -99,21 +100,11 @@ const PropertyDetailsForm = ({
           editingListingId: editingListingId,
         })
       );
-    } else {
-      setOriginalPropertyDetails(null); // Clear original data when not in edit mode
+      initialPropertyDetails.current = JSON.parse(
+        JSON.stringify(propertyDetails)
+      ); // Deep copy
     }
-  }, [
-    page,
-    dispatch,
-    propertyDetails,
-    propertyLocation,
-    photos,
-    verification,
-    restructuredData,
-    isEditing,
-    editingListingId,
-    currentPage,
-  ]);
+  }, [page]); // Simplified dependency array
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -533,27 +524,47 @@ const PropertyDetailsForm = ({
 
   const handleEdit = async () => {
     try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
       const changedFields = {};
-      if (originalPropertyDetails) {
-        for (const key in editPropertyDetails) {
-          if (editPropertyDetails[key] !== originalPropertyDetails[key]) {
-            changedFields[key] = editPropertyDetails[key];
+
+      if (initialPropertyDetails.current) {
+        for (const key in propertyDetails) {
+          if (
+            !isEqual(propertyDetails[key], initialPropertyDetails.current[key])
+          ) {
+            changedFields[key] = propertyDetails[key];
           }
         }
+        if (Object.keys(changedFields).length > 0) {
+          const response = await axios.patch(
+            `https://api.houzie.in/listings/${editingListingId}`,
+            changedFields,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            console.log('Listing updated successfully!');
+          } else {
+            console.error('Failed to update listing:', response.status);
+          }
+        } else {
+          toast({
+            title: 'No changes',
+            description: 'No changes were made to the property details.',
+          });
+          handleNext();
+        }
+      } else {
+        console.error('Initial property details are not available');
       }
-
-      // const response = await axios.patch(
-      //   `/listings/${editingListingId}`,
-      //   changedFields
-      // );
-
-      // if (response.status === 200) {
-      //   console.log('Listing updated successfully!');
-      //   handleNext();
-      // } else {
-      //   console.error('Failed to update listing:', response.status);
-      // }
     } catch (error) {
+      console.log(error);
       toast({
         title: 'Edit Failed',
         description: 'Failed To Edit Details',

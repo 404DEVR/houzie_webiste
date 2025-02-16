@@ -54,7 +54,7 @@ export default function RootLayout({
       <body>
         <AuthProviders>
           <Providers>
-            <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+            <ThemeProvider attribute='class' defaultTheme='light' enableSystem>
               {children}
               <Toaster />
             </ThemeProvider>

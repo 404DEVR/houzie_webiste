@@ -1,12 +1,13 @@
 'use client';
 
+import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
 import { User } from 'lucide-react';
-import { Menu, X } from 'lucide-react'; // Import icons for mobile menu
+import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
@@ -14,10 +15,22 @@ import useAuth from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
+interface UserData {
+  id: string;
+  email: string;
+  name: string;
+  phoneNumber: string | null;
+  role: string;
+  aadharNumber: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const NavbarDetailsPage = () => {
   const { auth, setAuth } = useAuth();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const handleLogout = async () => {
     try {
@@ -28,16 +41,42 @@ const NavbarDetailsPage = () => {
         description: 'You have been successfully logged out.',
       });
       router.push('/');
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Log Out Failed',
-        description:
-          error.response?.data?.message ||
-          'An error occurred during Log Out. Please try again.',
+        description: 'An error occurred during Log Out. Please try again.',
         variant: 'destructive',
       });
     }
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (auth?.userid) {
+        try {
+          const response = await axios.get(
+            `https://api.houzie.in/profile/${auth.userid}`,
+            {
+              headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+              },
+            }
+          );
+          setUserData(response.data);
+          console.log(response.data);
+          console.log(auth.userid);
+        } catch (error) {
+          toast({
+            title: 'Failed to fetch user data',
+            description: 'Please try again later.',
+            variant: 'destructive',
+          });
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [auth]);
 
   return (
     <nav className='w-full bg-[#42A4AE] px-4 sm:px-6'>
@@ -77,7 +116,7 @@ const NavbarDetailsPage = () => {
                   </CardContent>
                 </Card>
                 <span className='text-white text-sm sm:text-base'>
-                  {auth?.email}
+                  {userData?.name}
                 </span>
               </div>
               <Button

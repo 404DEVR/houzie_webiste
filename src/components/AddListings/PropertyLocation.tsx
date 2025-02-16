@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { isEqual } from 'lodash';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -20,9 +19,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-
-import { updateAddPropertyLocation } from '@/redux/slices/formslices';
+import {
+  populateEditForm,
+  updateAddPropertyLocation,
+  updateEditPropertyLocation,
+} from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
+import CustomInput from '@/components/inputs/CustomInput';
+import { toast } from '@/hooks/use-toast';
+import axios from 'axios';
+import useAuth from '@/hooks/useAuth';
 
 interface PropertyLocationProps {
   handleNext: () => void;
@@ -33,15 +39,72 @@ interface PropertyLocationProps {
 const PropertyLocation = ({
   handleNext,
   handleBack,
+  page,
 }: PropertyLocationProps) => {
+  const { auth } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
-  const propertyLocation = useSelector(
+
+  const propertyDetails = useSelector(
+    (state: RootState) => state.editForm.propertyDetails
+  );
+  const addPropertyLocation = useSelector(
     (state: RootState) => state.addForm.propertyLocation
   );
+  const editPropertyLocation = useSelector(
+    (state: RootState) => state.editForm.propertyLocation
+  );
+  const propertyLocation =
+    page === 'edit' ? editPropertyLocation : addPropertyLocation;
 
-  const formData = useSelector((state: RootState) => state.addForm);
+  const initialPropertyLocation = useRef(null);
+  const photos = useSelector((state: RootState) => state.editForm.photos);
+  const verification = useSelector(
+    (state: RootState) => state.editForm.verification
+  );
+  const restructuredData = useSelector(
+    (state: RootState) => state.editForm.restructuredData
+  );
+  const isEditing = useSelector((state: RootState) => state.editForm.isEditing);
+  const editingListingId = useSelector(
+    (state: RootState) => state.editForm.editingListingId
+  );
+  const currentPage = useSelector(
+    (state: RootState) => state.editForm.currentPage
+  );
 
-  const [isValidAddress, setIsValidAddress] = useState(false); // state to track if the address is entered
+  useEffect(() => {
+    if (page === 'edit' && propertyLocation) {
+      dispatch(
+        populateEditForm({
+          currentPage: currentPage,
+          propertyDetails: propertyDetails,
+          propertyLocation: propertyLocation,
+          photos: photos,
+          verification: verification,
+          restructuredData: restructuredData,
+          isEditing: isEditing,
+          editingListingId: editingListingId,
+        })
+      );
+      initialPropertyLocation.current = JSON.parse(
+        JSON.stringify(propertyLocation)
+      );
+      setIsValidAddress(true); // Set isValidAddress to true in edit mode
+    }
+  }, [
+    page,
+    dispatch,
+    currentPage,
+    propertyDetails,
+    propertyLocation,
+    photos,
+    verification,
+    restructuredData,
+    isEditing,
+    editingListingId,
+  ]);
+
+  const [isValidAddress, setIsValidAddress] = useState(false);
 
   useEffect(() => {
     // Simulate fetching location data based on full address
@@ -64,10 +127,8 @@ const PropertyLocation = ({
     };
 
     if (propertyLocation.fullAddress) {
-      // if address is non-empty
       fetchLocationData();
     } else {
-      // if address is empty, set to initial state
       dispatch(
         updateAddPropertyLocation({
           city: '',
@@ -79,11 +140,70 @@ const PropertyLocation = ({
       );
       setIsValidAddress(false);
     }
-  }, [propertyLocation.fullAddress, dispatch]);
+  }, [propertyLocation, dispatch]);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(updateAddPropertyLocation({ fullAddress: e.target.value }));
-    setIsValidAddress(false); // Disable submit when the address changes
+    if (page === 'edit') {
+      dispatch(updateEditPropertyLocation({ fullAddress: e.target.value }));
+      setIsValidAddress(false);
+    } else {
+      dispatch(updateAddPropertyLocation({ fullAddress: e.target.value }));
+      setIsValidAddress(false);
+    }
+  };
+
+  const handleEdit = async () => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+      const changedFields = {};
+
+      if (initialPropertyLocation.current) {
+        for (const key in propertyLocation) {
+          if (
+            !isEqual(
+              propertyLocation[key],
+              initialPropertyLocation.current[key]
+            )
+          ) {
+            changedFields[key] = propertyLocation[key];
+          }
+        }
+        if (Object.keys(changedFields).length > 0) {
+          const response = await axios.patch(
+            `https://api.houzie.in/listings/${editingListingId}`,
+            changedFields,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            console.log('Listing updated successfully!');
+            handleNext();
+          } else {
+            console.error('Failed to update listing:', response.status);
+          }
+        } else {
+          toast({
+            title: 'No changes',
+            description: 'No changes were made to the Location details.',
+          });
+          handleNext();
+        }
+      } else {
+        console.error('Initial property details are not available');
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Edit Failed',
+        description: 'Failed To Edit Details',
+      });
+    }
   };
 
   const handleSubmit = () => {
@@ -91,6 +211,13 @@ const PropertyLocation = ({
       handleNext();
     }
   };
+
+  useEffect(() => {
+    if (page === 'edit') {
+      setIsValidAddress(true);
+      return;
+    }
+  }, []);
 
   return (
     <Card className='w-full max-w-4xl my-6 mx-auto md:p-8'>
@@ -103,14 +230,13 @@ const PropertyLocation = ({
           <Label htmlFor='fullAddress' className='text-sm font-bold'>
             Location <span className='text-red-500'>*</span>
           </Label>
-          <Input
+          <CustomInput
             type='text'
             name='fullAddress'
             id='fullAddress'
             value={propertyLocation.fullAddress}
             onChange={handleAddressChange}
             placeholder='Full Address'
-            className='block w-full px-4 sm:text-sm border-t-0 rounded-none border-x-0 border-b-2 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
           />
         </div>
 
@@ -143,8 +269,7 @@ const PropertyLocation = ({
                 : 'Enter Full Address to see the Location'}
             </span>
           </div>
-
-          {/* Placeholder for Map */}
+          ...{/* Placeholder for Map */}
           <div className='h-64 bg-sky-200 relative'>
             {/* Zoom Controls */}
             <div className='absolute top-2 right-2 bg-white border rounded-md shadow-md'>
@@ -262,11 +387,17 @@ const PropertyLocation = ({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+        ) : page === 'edit' ? (
+          <Button
+            onClick={handleEdit}
+            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+          >
+            Edit And Next
+          </Button>
         ) : (
           <Button
             onClick={handleSubmit}
             className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
-            disabled={!isValidAddress}
           >
             Next, Add Address
           </Button>

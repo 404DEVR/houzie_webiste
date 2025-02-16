@@ -1,8 +1,11 @@
+'use client';
+
 import { createClient } from '@supabase/supabase-js';
 import Image from 'next/image';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEqual } from 'lodash';
 
 import { toast } from '@/hooks/use-toast';
 
@@ -16,11 +19,17 @@ import {
 } from '@/components/ui/card';
 
 import {
+  populateEditForm,
   removeAddPhoto,
+  removeEditPhoto,
   setAddPhotos,
+  setEditPhotos,
   updateAddPropertyDetails,
+  updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
+import axios from 'axios';
+import useAuth from '@/hooks/useAuth';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
@@ -33,12 +42,73 @@ interface FileUploaderprops {
   page?: string;
 }
 
-const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
+const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
+  const { auth } = useAuth();
   const dispatch = useDispatch();
-  const photos = useSelector((state: RootState) => state.addForm.photos);
+  const addphotos = useSelector((state: RootState) => state.addForm.photos);
+  const editphotos = useSelector((state: RootState) => state.editForm.photos);
   const mainImage = useSelector(
     (state: RootState) => state.addForm.propertyDetails.mainImage
   );
+
+  const editpropertyDetails = useSelector(
+    (state: RootState) => state.editForm.propertyDetails
+  );
+  const addpropertyDetails = useSelector(
+    (state: RootState) => state.editForm.propertyDetails
+  );
+
+  const propertyDetails =
+    page === 'edit' ? editpropertyDetails : addpropertyDetails;
+  const propertyLocation = useSelector(
+    (state: RootState) => state.editForm.propertyLocation
+  );
+  const photos = page === 'edit' ? editphotos : addphotos;
+
+  const verification = useSelector(
+    (state: RootState) => state.editForm.verification
+  );
+  const restructuredData = useSelector(
+    (state: RootState) => state.editForm.restructuredData
+  );
+  const isEditing = useSelector((state: RootState) => state.editForm.isEditing);
+  const editingListingId = useSelector(
+    (state: RootState) => state.editForm.editingListingId
+  );
+  const currentPage = useSelector(
+    (state: RootState) => state.editForm.currentPage
+  );
+
+  const initialPhotos = useRef<any>(null);
+
+  useEffect(() => {
+    if (page === 'edit' && propertyLocation) {
+      dispatch(
+        populateEditForm({
+          currentPage: currentPage,
+          propertyDetails: propertyDetails,
+          propertyLocation: propertyLocation,
+          photos: photos,
+          verification: verification,
+          restructuredData: restructuredData,
+          isEditing: isEditing,
+          editingListingId: editingListingId,
+        })
+      );
+      initialPhotos.current = JSON.parse(JSON.stringify(photos));
+    }
+  }, [
+    page,
+    dispatch,
+    currentPage,
+    propertyDetails,
+    propertyLocation,
+    photos,
+    verification,
+    restructuredData,
+    isEditing,
+    editingListingId,
+  ]);
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadToSupabase = async (file) => {
@@ -79,12 +149,23 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
             )
         );
         const updatedPhotos = [...photos, ...uniquePhotos];
-        dispatch(setAddPhotos(updatedPhotos));
+
+        if (page === 'edit') {
+          dispatch(setEditPhotos(updatedPhotos));
+        } else {
+          dispatch(setAddPhotos(updatedPhotos));
+        }
 
         if (!mainImage && updatedPhotos.length > 0) {
-          dispatch(
-            updateAddPropertyDetails({ mainImage: updatedPhotos[0].preview })
-          );
+          if (page === 'edit') {
+            dispatch(
+              updateEditPropertyDetails({ mainImage: updatedPhotos[0].preview })
+            );
+          } else {
+            dispatch(
+              updateAddPropertyDetails({ mainImage: updatedPhotos[0].preview })
+            );
+          }
         }
 
         toast({
@@ -102,7 +183,7 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
         setIsUploading(false);
       }
     },
-    [dispatch, photos, mainImage]
+    [dispatch, photos, mainImage, page]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -113,13 +194,21 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
 
   const handleRemovePhoto = async (index: number) => {
     const photoToRemove = photos[index];
-    dispatch(removeAddPhoto(index));
 
-    // If the removed photo was the main image, set a new main image
+    if (page === 'edit') {
+      dispatch(removeEditPhoto(index));
+    } else {
+      dispatch(removeAddPhoto(index));
+    }
+
     if (photoToRemove.preview === mainImage) {
       const newMainImage =
         photos.length > 1 ? photos[index === 0 ? 1 : 0].preview : '';
-      dispatch(updateAddPropertyDetails({ mainImage: newMainImage }));
+      if (page === 'edit') {
+        dispatch(updateEditPropertyDetails({ mainImage: newMainImage }));
+      } else {
+        dispatch(updateAddPropertyDetails({ mainImage: newMainImage }));
+      }
     }
 
     try {
@@ -145,11 +234,78 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
   };
 
   const handleSetMainImage = (preview: string) => {
-    dispatch(updateAddPropertyDetails({ mainImage: preview }));
+    if (page === 'edit') {
+      dispatch(updateEditPropertyDetails({ mainImage: preview }));
+    } else {
+      dispatch(updateAddPropertyDetails({ mainImage: preview }));
+    }
   };
 
   const handleSubmit = () => {
     handleNext();
+  };
+
+  const handleEdit = async () => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+      const changedFields: any = {};
+
+      if (initialPhotos.current) {
+        const initialPhotosValue = JSON.parse(
+          JSON.stringify(initialPhotos.current)
+        );
+        const currentPhotos = JSON.parse(JSON.stringify(photos));
+        if (!isEqual(currentPhotos, initialPhotosValue)) {
+          changedFields.photos = currentPhotos;
+        }
+      }
+      if (initialPhotos.current) {
+        const initial = JSON.parse(
+          JSON.stringify(initialPhotos.current.map((photo) => photo.preview))
+        );
+        const current = JSON.parse(
+          JSON.stringify(photos.map((photo) => photo.preview))
+        );
+        if (!isEqual(current, initial)) {
+          changedFields.photos = photos;
+        }
+      }
+      console.log(changedFields);
+      console.log(initialPhotos.current);
+      // console.log(photos);
+      if (Object.keys(changedFields).length > 0) {
+        // const response = await axios.patch(
+        //   `https://api.houzie.in/listings/${editingListingId}`,
+        //   changedFields,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${accessToken}`,
+        //     },
+        //   }
+        // );
+        // if (response.status === 200) {
+        //   console.log('Listing updated successfully!');
+        //   handleNext();
+        // } else {
+        //   console.error('Failed to update listing:', response.status);
+        // }
+      } else {
+        toast({
+          title: 'No changes',
+          description: 'No changes were made to the Location details.',
+        });
+        // handleNext();
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Edit Failed',
+        description: 'Failed To Edit Details',
+      });
+    }
   };
 
   return (
@@ -188,7 +344,6 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
         </div>
 
         {isUploading && <p className='mt-4 text-center'>Uploading images...</p>}
-
         {photos.length > 0 && (
           <div className='mt-4 grid grid-cols-2 lg:grid-cols-3 gap-4'>
             {photos.map((photo, index) => (
@@ -236,12 +391,21 @@ const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
         >
           Back
         </Button>
-        <Button
-          onClick={handleSubmit}
-          className='bg-[#42A4AE] text-white px-6 py-3 rounded-lg w-full md:w-auto'
-        >
-          Continue
-        </Button>
+        {page === 'edit' ? (
+          <Button
+            onClick={handleEdit}
+            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+          >
+            Edit And Next
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSubmit}
+            className='bg-[#42A4AE] text-white px-6 py-3 rounded-lg w-full md:w-auto'
+          >
+            Continue
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

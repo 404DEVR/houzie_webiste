@@ -4,8 +4,9 @@ import { useCallback, useContext, useDebugValue } from 'react';
 import AuthContext from '@/lib/context/AuthProvider';
 
 export interface User {
+  userid: string;
   email: string;
-  name: string;
+  role: string;
   accessToken: string;
   refreshToken?: string;
 }

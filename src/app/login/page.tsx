@@ -12,7 +12,7 @@ import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
 import { toast } from '@/hooks/use-toast';
-import useAuth from '@/hooks/useAuth'; // Ensure this is correctly imported
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -27,16 +27,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
+  name: z.string(),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters' }),
 });
 
-const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw'; // Updated URL to the API route
+const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw';
 
 const SignUpForm = () => {
-  const { login } = useAuth(); // Ensure login is defined in useAuth
+  const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +49,7 @@ const SignUpForm = () => {
   } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
     },
@@ -58,16 +60,21 @@ const SignUpForm = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ email: data.email, password: data.password }),
+        JSON.stringify({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        }),
         {
           headers: { 'Content-Type': 'application/json' },
         }
       );
 
       const userData = {
+        userid: response.data.user.id,
         email: response.data.user.email,
         accessToken: response.data.accessToken,
-        name: response.data.user.role,
+        role: response.data.user.role,
         refreshToken: response.data.refreshToken,
       };
 
@@ -97,7 +104,12 @@ const SignUpForm = () => {
           title: 'Google Sign Up Successful',
           description: message || 'Successfully signed up with Google.',
         });
-        router.push(redirectUrl);
+        if (redirectUrl && typeof redirectUrl === 'string') {
+          router.push(redirectUrl);
+        } else {
+          console.warn('Invalid redirect URL from Google sign-up');
+          router.push('/broker'); // Or some safe fallback URL
+        }
       }
     } catch (error) {
       toast({
@@ -123,21 +135,21 @@ const SignUpForm = () => {
           <CardTitle className='text-3xl text-center'>Sign In</CardTitle>
           <CardDescription className='text-center'>
             Need to create an account?{' '}
-            <a href='/login' className='text-[#42A4AE]'>
+            <a href='/signUp' className='text-[#42A4AE]'>
               Sign up here
             </a>
           </CardDescription>
         </CardHeader>
         <CardContent className='grid gap-4 w-[90%] mx-auto'>
           <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-            {/* <div className='grid gap-2'>
-              <Label htmlFor='email'>Full Name</Label>
+            <div className='grid gap-2'>
+              <Label htmlFor='name'>Full Name</Label>
               <div className='relative'>
                 <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
                 <Input
-                  id='text'
-                  placeholder='hello@example.com'
-                  type='email'
+                  id='name'
+                  placeholder='hello'
+                  type='text'
                   className='pl-8'
                   {...register('name')}
                 />
@@ -145,7 +157,7 @@ const SignUpForm = () => {
               {errors.email && (
                 <p className='text-red-500 text-sm'>{errors.email?.message}</p>
               )}
-            </div> */}
+            </div>
             <div className='grid gap-2'>
               <Label htmlFor='email'>Email Address</Label>
               <div className='relative'>

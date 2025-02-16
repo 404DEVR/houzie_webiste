@@ -29,7 +29,7 @@ const SearchBar = () => {
           />
         </div>
 
-        <div className='w-full md:w-1/4 border-b md:border-b-0 md:border-r border-gray-300 p-3'>
+        <div className='w-full md:w-1/4 border-b md:border-b-0 md:border-r p-3'>
           <PropertyComponentSearchbar />
         </div>
 
