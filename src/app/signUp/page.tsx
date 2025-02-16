@@ -13,6 +13,7 @@ import * as z from 'zod';
 
 import { toast } from '@/hooks/use-toast';
 
+import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -250,4 +251,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default withAuthRedirect(SignUpForm);
