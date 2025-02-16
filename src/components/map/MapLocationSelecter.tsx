@@ -68,7 +68,7 @@ export default function MapLocationSelector({
     <div className='space-y-4'>
       <div className='h-[400px] w-full'>
         <MapContainer
-          center={delhiCoordinates} // Set initial center to Delhi
+          center={delhiCoordinates}
           zoom={13}
           scrollWheelZoom={false}
           style={{ height: '100%', width: '100%' }}
@@ -80,25 +80,34 @@ export default function MapLocationSelector({
           <LocationMarker location={location} setLocation={setLocation} />
         </MapContainer>
       </div>
-      <div className='grid w-full max-w-sm items-center gap-1.5'>
-        <Label htmlFor='latitude'>Latitude</Label>
-        <Input
-          type='number'
-          id='latitude'
-          value={location?.lat || ''}
-          readOnly
-        />
+      <div className='flex flex-wrap gap-6'>
+        <div className='grid w-full md:w-[44%] items-center gap-1.5'>
+          <Label htmlFor='latitude'>Latitude</Label>
+          <Input
+            type='number'
+            id='latitude'
+            value={location?.lat || ''}
+            readOnly
+          />
+        </div>
+        <div className='grid w-full md:w-[44%] items-center gap-1.5'>
+          <Label htmlFor='longitude'>Longitude</Label>
+          <Input
+            type='number'
+            id='longitude'
+            value={location?.lng || ''}
+            readOnly
+          />
+        </div>
       </div>
-      <div className='grid w-full max-w-sm items-center gap-1.5'>
-        <Label htmlFor='longitude'>Longitude</Label>
-        <Input
-          type='number'
-          id='longitude'
-          value={location?.lng || ''}
-          readOnly
-        />
-      </div>
-      <Button onClick={handleSaveLocation}>Save Location</Button>
+
+      <Button
+        variant='outline'
+        className='hover:bg-[#42A4AE] hover:text-white'
+        onClick={handleSaveLocation}
+      >
+        Save Location
+      </Button>
     </div>
   );
 }

@@ -74,8 +74,14 @@ const PropertyLocation = ({ handleNext, handleBack }) => {
   }, [propertyLocation.fullAddress, dispatch]);
 
   const handleLocationSave = (location) => {
-    // dispatch(updateAddPropertyLocation(location)); // Update Redux store with the location
-    setIsLocationSelected(true); // Set location selected to true
+    dispatch(
+      updateAddPropertyLocation({
+        ...propertyLocation, // Keep existing propertyLocation data
+        latitude: location.lat,
+        longitude: location.lng,
+      })
+    );
+    setIsLocationSelected(true);
     console.log('locationnn', location);
   };
 
