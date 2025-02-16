@@ -20,7 +20,7 @@ interface FinancialDetails {
 
 interface PropertyCardProps {
   property: {
-    id:number;
+    id: number;
     title: string;
     description: string;
     location: {
@@ -38,16 +38,15 @@ interface PropertyCardProps {
     rentDetails: {
       availableFrom: string;
       deposit: number;
-      rentAmount: number;
     };
     amenities: string[];
     security: number;
-    mainImage:string
+    mainImage: string;
   };
-  iscreate?:boolean
+  iscreate?: boolean;
 }
 
-export function PropertyCard({ property,iscreate }: PropertyCardProps) {
+export function PropertyCard({ property, iscreate }: PropertyCardProps) {
   const router = useRouter();
   const [favorites, setFavorites] = useState(false);
 
@@ -62,25 +61,33 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
   ];
 
   const financialDetails: FinancialDetails[] = [
-    property.rentDetails.rentAmount !== null && {
+    property.price !== null && {
       icon: Wallet,
       label: 'Rent',
-      amount: `₹${property.rentDetails.rentAmount}`,
+      amount: `₹${property.price}`,
     },
     property.rentDetails.deposit !== null && {
       icon: Lock,
       label: 'Security Deposit',
       amount: `₹${property.rentDetails.deposit}`,
     },
-  ].filter(Boolean) as FinancialDetails[]; 
-   const [isExpanded, setIsExpanded] = useState(false);
+  ].filter(Boolean) as FinancialDetails[];
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
   return (
-     <Card className={`w-full mx-auto overflow-hidden shadow-2xl ${iscreate?'max-w-full':'max-w-[80%]'} `}>
+    <Card
+      className={`w-full mx-auto overflow-hidden shadow-2xl ${
+        iscreate ? 'max-w-full' : 'max-w-[80%]'
+      } `}
+    >
       <div className='flex flex-col md:flex-row'>
-        <div className={` mx-auto md:mx-0 ${iscreate?'w-[300px] h-[250px]':' w-[400px] h-[300px]'}  flex items-center justify-center p-4`}>
+        <div
+          className={` mx-auto md:mx-0 ${
+            iscreate ? 'w-[300px] h-[250px]' : ' w-[400px] h-[300px]'
+          }  flex items-center justify-center p-4`}
+        >
           <div className='relative w-full h-full'>
             <Image
               src={property.mainImage}
@@ -105,9 +112,9 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
           <div className='space-y-4 h-full flex flex-col'>
             <div>
               <h3 className='text-center md:text-start text-xl font-semibold leading-tight'>
-                  {property.title}
+                {property.title}
               </h3>
-              <div className="relative mt-2">
+              <div className='relative mt-2'>
                 <p
                   className={`text-sm text-gray-700 ${
                     isExpanded ? '' : 'line-clamp-1'
@@ -118,7 +125,7 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
                 {!isExpanded && (
                   <button
                     onClick={toggleExpanded}
-                    className="text-blue-500 text-sm text-nowrap font-medium hover:underline"
+                    className='text-blue-500 text-sm text-nowrap font-medium hover:underline'
                   >
                     Read More
                   </button>
@@ -126,14 +133,14 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
                 {isExpanded && (
                   <button
                     onClick={toggleExpanded}
-                    className="text-blue-500 text-sm font-medium hover:underline mt-1"
+                    className='text-blue-500 text-sm font-medium hover:underline mt-1'
                   >
                     Show Less
                   </button>
                 )}
               </div>
             </div>
-            
+
             <div className='flex flex-wrap items-start justify-center md:justify-start  gap-2'>
               {propertyFeatures.map((feature, index) => (
                 <Badge
@@ -141,7 +148,9 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
                   variant='outline'
                   className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
                 >
-                  {feature.icon && <feature.icon className='w-[17.59px] h-[17.59px]' />}
+                  {feature.icon && (
+                    <feature.icon className='w-[17.59px] h-[17.59px]' />
+                  )}
 
                   <span className='font-medium text-sm ml-[2.93px]'>
                     {feature.label}
@@ -153,7 +162,9 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
               {financialDetails.map((detail, index) => (
                 <Card key={index} className='border-[#eaebef] flex-[1]'>
                   <CardContent className='flex items-center gap-[1.47px] p-1.5'>
-                    {detail.icon && <detail.icon className='w-[17.59px] h-[17.59px]' />}
+                    {detail.icon && (
+                      <detail.icon className='w-[17.59px] h-[17.59px]' />
+                    )}
 
                     <div className='flex flex-col gap-px flex-1'>
                       <div className='text-[#4a4a4a] text-sm text-center font-medium'>
@@ -167,15 +178,20 @@ export function PropertyCard({ property,iscreate }: PropertyCardProps) {
                 </Card>
               ))}
             </div>
-            {!iscreate && <div className='flex justify-end mt-auto pt-4'>
-              <Button
-                onClick={() => router.push('/details')}
-                className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-              >
-                View Details
-              </Button>
-            </div>}
-            
+            {!iscreate && (
+              <div className='flex justify-end mt-auto pt-4'>
+                <Button
+                  onClick={() =>
+                    router.push(
+                      `/property/a0a8e7c7-6d3f-4acf-a8f9-0ca2f1ea75b2`
+                    )
+                  }
+                  className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
+                >
+                  View Details
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

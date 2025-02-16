@@ -1,18 +1,21 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth')?.value;
 
   if (!token) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
+    return redirectToLogin(request);
   }
+}
 
-  return NextResponse.next();
+function redirectToLogin(request: NextRequest) {
+  const loginUrl = new URL('/login', request.url);
+  loginUrl.searchParams.set('callbackUrl', request.url);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
-  matcher: ['/broker'],
+  matcher: ['/broker', '/broker/:path*', '/property/:id'],
 };

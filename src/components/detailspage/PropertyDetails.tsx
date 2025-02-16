@@ -9,51 +9,49 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Property } from '@/components/detailspage/HeaderContainer';
+import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 
-const propertyDetails = [
-  [
-    { label: 'Bedroom', value: '3' },
-    { label: 'Balcony', value: '2' },
-    { label: 'Gated Community', value: 'No' },
-  ],
-  [
-    { label: 'Bathroom', value: '2' },
-    { label: 'Parking', value: 'Yes' },
-    { label: 'Floor Number', value: '12' },
-  ],
-  [
-    { label: 'Furnishing', value: 'Fully Furnished', hasIcon: true },
-    { label: 'Pet Friendly', value: 'Yes' },
-    { label: 'Available for', value: 'Family / Bachelor / Company' },
-  ],
-];
+interface Overviewprops {
+  propertyData: Property;
+}
 
-const furnishings = [
-  {
-    label: 'Water Purifier',
-    value: 'waterPurifier',
-    url: '/svg/water-dispenser.svg',
-  },
-  { label: 'Cupboard', value: 'cupboard', url: '/svg/cupboard.svg' },
-  { label: 'Geyser', value: 'geyser', url: '/svg/geyser.svg' },
-  { label: 'Fan', value: 'fan', url: '/svg/fan.svg' },
-  { label: 'Microwave', value: 'microwave', url: '/svg/microvawe.svg' },
-  { label: 'Bed', value: 'bed', url: '/svg/double bed.svg' },
-  { label: 'Sofa', value: 'sofa', url: '/svg/sofa.svg' },
-  {
-    label: 'Dining table',
-    value: 'diningTable',
-    url: '/svg/dining.svg',
-  },
+const Overview = ({ propertyData }: Overviewprops) => {
+  const propertyDetails = [
+    [
+      { label: 'Bedroom', value: propertyData.bedrooms },
+      { label: 'Balcony', value: propertyData.balconies },
+      {
+        label: 'Gated Community',
+        value: propertyData.features.includes('GATED_COMMUNITY') ? 'Yes' : 'No',
+      },
+    ],
+    [
+      { label: 'Bathroom', value: propertyData.bathrooms },
+      {
+        label: '4 Wheeler Parking',
+        value: propertyData.amenities.includes('FOUR_WHEELER_PARKING')
+          ? 'Yes'
+          : 'No',
+      },
 
-  { label: 'AC', value: 'ac', url: '/svg/air-conditioning.svg' },
-  { label: 'TV', value: 'tv', url: '/svg/tv.svg' },
-  { label: 'Washing Machine', value: 'washing_machine', url: '/svg/washing-machine.svg' },
-  { label: 'Fridge', value: 'fridge', url: '/svg/fridge.svg' },
-  { label: 'Table', value: 'table', url: '/svg/table.svg' },
-];
+      {
+        label: '2 Wheeler Parking',
+        value: propertyData.amenities.includes('TWO_WHEELER_PARKING')
+          ? 'Yes'
+          : 'No',
+      },
+    ],
+    [
+      { label: 'Furnishing', value: propertyData.furnishing, hasIcon: true },
+      {
+        label: 'Pet Friendly',
+        value: propertyData.features.includes('PET_FRIENDLY') ? 'Yes' : 'No',
+      },
+      { label: 'Available for', value: propertyData.preferredTenant },
+    ],
+  ];
 
-const Overview = () => {
   return (
     <Card className='h-[307px] border-zinc-200 mt-7'>
       <CardContent className='flex flex-col gap-5 p-5'>
@@ -79,7 +77,13 @@ const Overview = () => {
                             <InfoIcon className='w-6 h-6 cursor-pointer' />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <ItemGrid items={furnishings} title='Furnishings' />
+                            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                              <ItemGrid
+                                title='Furnishings'
+                                data={propertyData.furnishingExtras}
+                                type='furnishing'
+                              />
+                            </div>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>

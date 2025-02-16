@@ -11,21 +11,27 @@ import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Property } from '@/components/detailspage/HeaderContainer';
 
-const propertyFeatures = [
-  { icon: Bed, label: '4-Bedroom' },
-  { icon: Bath, label: '3-Bathroom' },
-  { icon: Building2, label: 'Balcony' },
-  { icon: Home, label: 'Villa' },
-];
+interface PropertyHighlightsprops {
+  propertyData: Property;
+}
 
-const financialDetails = [
-  { icon: Wallet, label: 'Rent', amount: '₹ 25k' },
-  { icon: Lock, label: 'Security', amount: '₹ 50k' },
-  { icon: Receipt, label: 'Brokerage', amount: '₹ 13.5k' },
-];
+export default function PropertyHighlights({
+  propertyData,
+}: PropertyHighlightsprops) {
+  const propertyFeatures = [
+    { icon: Bed, label: `${propertyData.bedrooms} Bedrooms` },
+    { icon: Bath, label: `${propertyData.bathrooms} Bathrooms` },
+    { icon: Building2, label: `${propertyData.balconies} Balconies` },
+    { icon: Home, label: propertyData.propertyType },
+  ];
 
-export default function PropertyHighlights() {
+  const financialDetails = [
+    { icon: Wallet, label: 'Rent', amount: propertyData.price },
+    { icon: Lock, label: 'Security', amount: propertyData.security },
+    { icon: Receipt, label: 'Brokerage', amount: propertyData.brokerage },
+  ];
   return (
     <Card className='flex flex-col items-start gap-5 p-5'>
       <CardContent className='flex flex-col gap-[22px] w-full p-0'>

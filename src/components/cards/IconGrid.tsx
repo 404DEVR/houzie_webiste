@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
-
 import { cn } from '@/lib/utils';
-
 import { Button } from '@/components/ui/button';
 
 interface Item {
@@ -12,27 +10,106 @@ interface Item {
 }
 
 interface ItemGridProps {
-  items: Item[];
+  data: string[];
   title: string;
+  type: 'amenities' | 'furnishing';
   itemsPerRow?: number;
   maxRows?: number;
 }
 
+const furnishingList: Item[] = [
+  {
+    label: 'Water Purifier',
+    value: 'waterPurifier',
+    url: '/svg/water-dispenser.svg',
+  },
+  { label: 'Cupboard', value: 'cupboard', url: '/svg/cupboard.svg' },
+  { label: 'Geyser', value: 'geyser', url: '/svg/geyser.svg' },
+  { label: 'Fan', value: 'fan', url: '/svg/fan.svg' },
+  { label: 'Microwave', value: 'microwave', url: '/svg/microvawe.svg' },
+  {
+    label: 'Single Bed',
+    value: 'Single_bed',
+    url: '/svg/single-bed.svg',
+  },
+  {
+    label: 'Double Bed',
+    value: 'Double_bed',
+    url: '/svg/double bed.svg',
+  },
+  { label: 'Chair', value: 'Chair', url: '/svg/chair.svg' },
+  { label: 'Bed', value: 'bed', url: '/svg/double bed.svg' },
+  { label: 'Sofa', value: 'sofa', url: '/svg/sofa.svg' },
+  {
+    label: 'Dining table',
+    value: 'diningTable',
+    url: '/svg/dining.svg',
+  },
+
+  { label: 'AC', value: 'ac', url: '/svg/air-conditioning.svg' },
+  { label: 'TV', value: 'tv', url: '/svg/tv.svg' },
+  {
+    label: 'Washing Machine',
+    value: 'washing_machine',
+    url: '/svg/washing-machine.svg',
+  },
+  { label: 'Fridge', value: 'fridge', url: '/svg/fridge.svg' },
+  { label: 'Table', value: 'table', url: '/svg/table.svg' },
+];
+
+const amenitiesList: Item[] = [
+  { label: 'Wifi', value: 'WIFI', url: '/svg/wi-fi-icon.svg' },
+  { label: 'Power Backup', value: 'POWER_BACKUP', url: '/svg/charge.svg' },
+  {
+    label: '4 Wheeler Parking',
+    value: 'FOUR_WHEELER_PARKING',
+    url: '/svg/parking.svg',
+  },
+  {
+    label: '2 Wheeler Parking',
+    value: 'TWO_WHEELER_PARKING',
+    url: '/svg/parking (1).svg',
+  },
+  {
+    label: '24/7 Water Supply',
+    value: 'WATER_SUPPLY_24_7',
+    url: '/svg/water supply.svg',
+  },
+  {
+    label: '24/7 Security',
+    value: 'SECURITY_24_7',
+    url: '/svg/security.svg',
+  },
+  {
+    label: 'Daily House Keeping',
+    value: 'DAILY_HOUSEKEEPING',
+    url: '/svg/house-keeping.svg',
+  },
+  {
+    label: '24/7 CCTV Surveillance',
+    value: 'CCTV',
+    url: '/svg/cctv.svg',
+  },
+  { label: 'Meals', value: 'MEALS', url: '/svg/dinner.svg' },
+];
+
 const ItemGrid: React.FC<ItemGridProps> = ({
-  items,
+  data,
   title,
+  type,
   itemsPerRow = 5,
   maxRows = 2,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
-  // Calculate total slots available in initial view
+  const itemsList = type === 'amenities' ? amenitiesList : furnishingList;
+  const filteredItems = itemsList.filter((item) => data.includes(item.value));
+
   const totalSlots = itemsPerRow * maxRows;
-
-  // Determine which items to show
-  const visibleItems = showAll ? items : items.slice(0, totalSlots - 1);
-
-  const remainingCount = items.length - (totalSlots - 1);
+  const visibleItems = showAll
+    ? filteredItems
+    : filteredItems.slice(0, totalSlots - 1);
+  const remainingCount = filteredItems.length - (totalSlots - 1);
 
   return (
     <div
@@ -49,22 +126,21 @@ const ItemGrid: React.FC<ItemGridProps> = ({
           showAll ? 'overflow-y-auto max-h-[60vh] sm:max-h-[500px]' : ''
         }`}
       >
-        {visibleItems.map((amenity, index) => (
-          <div key={index} className=' mt-2'>
+        {visibleItems.map((item, index) => (
+          <div key={index} className='mt-2'>
             <Button
-              key={index}
               className={cn(
                 'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors'
               )}
             >
               <Image
-                src={amenity.url}
-                alt={amenity.label}
+                src={item.url}
+                alt={item.label}
                 width={55}
                 height={55}
                 className='object-contain'
               />
-              <div className='mt-2 text-center text-wrap'>{amenity.label}</div>
+              <div className='mt-2 text-center text-wrap'>{item.label}</div>
             </Button>
           </div>
         ))}
@@ -72,7 +148,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         {!showAll && remainingCount > 0 && (
           <div
             onClick={() => setShowAll(true)}
-            className='flex items-center justify-start cursor-pointer '
+            className='flex items-center justify-start cursor-pointer'
           >
             <div className='border-2 border-black px-2 py-2 sm:px-4 sm:py-4 rounded-lg text-xs sm:text-sm bg-pink-50'>
               {`+${remainingCount} more`}

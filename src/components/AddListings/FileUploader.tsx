@@ -47,19 +47,18 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
   const dispatch = useDispatch();
   const addphotos = useSelector((state: RootState) => state.addForm.photos);
   const editphotos = useSelector((state: RootState) => state.editForm.photos);
-  const mainImage = useSelector(
-    (state: RootState) => state.addForm.propertyDetails.mainImage
-  );
 
   const editpropertyDetails = useSelector(
     (state: RootState) => state.editForm.propertyDetails
   );
   const addpropertyDetails = useSelector(
-    (state: RootState) => state.editForm.propertyDetails
+    (state: RootState) => state.addForm.propertyDetails
   );
 
   const propertyDetails =
     page === 'edit' ? editpropertyDetails : addpropertyDetails;
+
+  const mainImage = propertyDetails?.mainImage || '';
   const propertyLocation = useSelector(
     (state: RootState) => state.editForm.propertyLocation
   );
@@ -79,10 +78,17 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
     (state: RootState) => state.editForm.currentPage
   );
 
-  const initialPhotos = useRef<any>(null);
+  const [initialPhotos, setInitialPhotos] = useState<any[]>([]);
+  const [initialMainImage, setInitialMainImage] = useState<string>('');
 
   useEffect(() => {
-    if (page === 'edit' && propertyLocation) {
+    if (page === 'edit' && restructuredData) {
+      // Set initial values from restructuredData
+
+      setInitialPhotos(restructuredData.photos || []);
+
+      setInitialMainImage(restructuredData?.mainImage || '');
+
       dispatch(
         populateEditForm({
           currentPage: currentPage,
@@ -95,7 +101,6 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
           editingListingId: editingListingId,
         })
       );
-      initialPhotos.current = JSON.parse(JSON.stringify(photos));
     }
   }, [
     page,
@@ -109,6 +114,7 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
     isEditing,
     editingListingId,
   ]);
+
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadToSupabase = async (file) => {
@@ -149,13 +155,11 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
             )
         );
         const updatedPhotos = [...photos, ...uniquePhotos];
-
         if (page === 'edit') {
           dispatch(setEditPhotos(updatedPhotos));
         } else {
           dispatch(setAddPhotos(updatedPhotos));
         }
-
         if (!mainImage && updatedPhotos.length > 0) {
           if (page === 'edit') {
             dispatch(
@@ -167,7 +171,6 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
             );
           }
         }
-
         toast({
           title: 'Images uploaded successfully',
           description: `${uniquePhotos.length} new image(s) added`,
@@ -253,29 +256,22 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
       }
       const changedFields: any = {};
 
-      if (initialPhotos.current) {
-        const initialPhotosValue = JSON.parse(
-          JSON.stringify(initialPhotos.current)
-        );
-        const currentPhotos = JSON.parse(JSON.stringify(photos));
-        if (!isEqual(currentPhotos, initialPhotosValue)) {
-          changedFields.photos = currentPhotos;
-        }
+      // Compare photos
+      console.log(photos);
+      console.log(initialPhotos);
+      if (!isEqual(photos, initialPhotos)) {
+        changedFields.photos = photos;
       }
-      if (initialPhotos.current) {
-        const initial = JSON.parse(
-          JSON.stringify(initialPhotos.current.map((photo) => photo.preview))
-        );
-        const current = JSON.parse(
-          JSON.stringify(photos.map((photo) => photo.preview))
-        );
-        if (!isEqual(current, initial)) {
-          changedFields.photos = photos;
-        }
+
+      // Compare mainImage
+      console.log(propertyDetails?.mainImage);
+      console.log(initialMainImage);
+      if (propertyDetails?.mainImage !== initialMainImage) {
+        changedFields.mainImage = propertyDetails?.mainImage;
       }
+
       console.log(changedFields);
-      console.log(initialPhotos.current);
-      // console.log(photos);
+
       if (Object.keys(changedFields).length > 0) {
         // const response = await axios.patch(
         //   `https://api.houzie.in/listings/${editingListingId}`,
@@ -295,7 +291,7 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
       } else {
         toast({
           title: 'No changes',
-          description: 'No changes were made to the Location details.',
+          description: 'No changes were made to the  details.',
         });
         // handleNext();
       }

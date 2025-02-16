@@ -4,49 +4,39 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Property } from '@/components/detailspage/HeaderContainer';
 
 const galleryImages = [
   {
-    id: 1,
-    src: '/images/3d-electric-car-building-1.png',
-    alt: 'Modern building with electric car charging station',
     className: 'object-cover rounded-t-xl sm:rounded-t-none sm:rounded-l-xl',
   },
   {
-    id: 2,
-    src: '/images/armchair-green-living-room-with-copy-space-1.png',
-    alt: 'Green armchair in living room',
     className: 'object-cover',
   },
   {
-    id: 3,
-    src: '/images/luxury-classic-modern-bedroom-suite-hotel-1.png',
-    alt: 'Luxury hotel bedroom suite',
     className: 'object-cover sm:rounded-tr-xl',
   },
   {
-    id: 4,
-    src: '/images/3d-rendering-loft-luxury-living-room-with-bookshelf-1.png',
-    alt: 'Modern living room with bookshelf',
     className: 'object-cover',
   },
   {
-    id: 5,
-    src: '/images/empty-modern-room-with-furniture-1.png',
-    alt: 'Modern living room',
     className: 'object-cover rounded-b-xl sm:rounded-b-none sm:rounded-br-xl',
   },
 ];
 
-const ImageGallery = () => {
+interface ImageGalleryprops {
+  propertyData: Property;
+}
+
+const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
   return (
-    <div className='flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-4 sm:mt-7'>\
+    <div className='flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-4 sm:mt-7'>
       <Card className='flex-1 overflow-hidden sm:rounded-l-xl sm:rounded-r-none border-0'>
         <CardContent className='p-0'>
           <div className='relative w-full h-48 sm:h-56 md:h-[34.8rem]'>
             <Image
-              src={galleryImages[0].src}
-              alt={galleryImages[0].alt}
+              src={propertyData.mainImage}
+              alt={propertyData.title}
               layout='fill'
               objectFit='cover'
               quality={100}
@@ -56,28 +46,18 @@ const ImageGallery = () => {
           </div>
         </CardContent>
       </Card>
-
       <div className='grid grid-cols-2 gap-2 md:gap-2.5 flex-1'>
-        {galleryImages.slice(1).map((image, index) => (
-          <Card
-            key={image.id}
-            className={`relative overflow-hidden border-0 ${
-              index === 1
-                ? 'sm:rounded-tr-xl'
-                : index === 3
-                ? 'sm:rounded-br-xl'
-                : ''
-            }`}
-          >
+        {propertyData.photos.slice(0, 4).map((image, index) => (
+          <Card key={index} className={`relative overflow-hidden border-0`}>
             <CardContent className='p-0'>
               <div className='relative w-full h-24 sm:h-[27vh] md:h-[17rem]'>
                 <Image
-                  src={image.src}
-                  alt={image.alt}
+                  src={image}
+                  alt={`${propertyData.title} - Image ${index + 1}`}
                   layout='fill'
                   objectFit='cover'
                   quality={100}
-                  className={image.className}
+                  className={galleryImages[index + 1].className}
                 />
               </div>
               {index === 3 && (

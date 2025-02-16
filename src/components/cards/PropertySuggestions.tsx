@@ -1,71 +1,68 @@
 // components/PropertySuggestions.tsx
-import { Heart } from 'lucide-react';
-import { Bath, Bed, Building2, Home } from 'lucide-react';
+import { Heart, Bath, Bed, Building2, Home } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
-const properties = [
-  {
-    id: 1,
-    title: 'Seaside Serenity Villa',
-    description:
-      'A stunning 4-bedroom, 3-bathroom villa in a peaceful suburban neighborhood...',
-    image: '/images/armchair-green-living-room-with-copy-space-1.png',
-    propertyFeatures: [
-      { icon: Bed, label: '4-Bedroom' },
-      { icon: Bath, label: '3-Bathroom' },
-      { icon: Building2, label: 'Balcony' },
-      { icon: Home, label: 'Villa' },
-    ],
-    price: '65.5',
-  },
-  {
-    id: 2,
-    title: 'Rustic Retreat Commercial',
-    description:
-      'A stunning 4-bedroom, 3-bathroom villa in a peaceful suburban neighborhood...',
-    image: '/images/luxury-classic-modern-bedroom-suite-hotel-1.png',
-    propertyFeatures: [
-      { icon: Bed, label: '4-Bedroom' },
-      { icon: Bath, label: '3-Bathroom' },
-      { icon: Building2, label: 'Balcony' },
-      { icon: Home, label: 'Villa' },
-    ],
-    price: '65.5',
-  },
-  {
-    id: 3,
-    title: 'Metropolitan Haven',
-    description:
-      'A stunning 4-bedroom, 3-bathroom villa in a peaceful suburban neighborhood...',
-    image: '/images/3d-rendering-loft-luxury-living-room-with-bookshelf-1.png',
-    propertyFeatures: [
-      { icon: Bed, label: '4-Bedroom' },
-      { icon: Bath, label: '3-Bathroom' },
-      { icon: Building2, label: 'Balcony' },
-      { icon: Home, label: 'Villa' },
-    ],
-    price: '65.5',
-  },
-];
+interface PropertyFeature {
+  icon: React.ElementType;
+  label: string;
+}
+
+interface Property {
+  id: string;
+  title: string;
+  description: string;
+  mainImage: string;
+  bedrooms: number;
+  bathrooms: number;
+  balconies: number;
+  propertyType: string;
+  price: number;
+}
 
 export default function PropertySuggestions() {
-  const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
 
-  const toggleFavorite = (propertyId: number) => {
+  useEffect(() => {
+    const fetchPropertyData = async () => {
+      try {
+        const response = await fetch('https://api.houzie.in/listings');
+        const data = await response.json();
+        setProperties(data);
+      } catch (error) {
+        console.error('Error fetching property data:', error);
+      }
+    };
+
+    fetchPropertyData();
+  }, []);
+
+  const toggleFavorite = (propertyId: string) => {
     setFavorites((prev) => ({
       ...prev,
       [propertyId]: !prev[propertyId],
     }));
   };
 
+  const getPropertyFeatures = (property: Property): PropertyFeature[] => [
+    { icon: Bed, label: `${property.bedrooms}-Bedroom` },
+    { icon: Bath, label: `${property.bathrooms}-Bathroom` },
+    { icon: Building2, label: `${property.balconies} Balcony` },
+    { icon: Home, label: property.propertyType },
+  ];
+
+  if (properties.length === 0) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto p-4 bg-white rounded-lg shadow-sm'>
-      <h2 className='text-2xl font-semibold mb-4'>Other suggestion</h2>
+      <h2 className='text-2xl font-semibold mb-4'>Other suggestions</h2>
 
       <div className='flex gap-12 overflow-x-auto scrollbar-hide px-4'>
         {properties.map((property) => (
@@ -75,9 +72,9 @@ export default function PropertySuggestions() {
           >
             <div className='relative'>
               <Image
-                width={96}
-                height={96}
-                src={property.image}
+                width={330}
+                height={220}
+                src={property.mainImage}
                 alt={property.title}
                 className='w-full h-[220px] object-cover rounded-lg'
               />
@@ -95,12 +92,12 @@ export default function PropertySuggestions() {
             <CardContent className='pt-4 px-0'>
               <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
               <p className='text-sm text-gray-600 mb-4'>
-                {property.description}
+                {property.description.slice(0, 100)}...
                 <button className='underline ml-1 text-black'>Read More</button>
               </p>
 
-              <div className='flex gap-2 flex-wrap '>
-                {property.propertyFeatures.map((feature, index) => (
+              <div className='flex gap-2 flex-wrap'>
+                {getPropertyFeatures(property).map((feature, index) => (
                   <Badge
                     key={index}
                     variant='outline'
@@ -120,7 +117,7 @@ export default function PropertySuggestions() {
                 <div>
                   <p className='text-sm text-gray-500'>Rent</p>
                   <p className='text-lg font-semibold'>
-                    ₹ {property.price} lakh
+                    ₹ {property.price / 100000} lakh
                   </p>
                 </div>
               </div>

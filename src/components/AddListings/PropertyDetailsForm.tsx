@@ -600,15 +600,11 @@ const PropertyDetailsForm = ({
             'propertyType',
             'roomType',
             'sharingType',
-            'bedroom',
             'furnishingLevel',
-            'preferredTenantType',
-            'availableFrom',
             'monthlyRent',
             'securityDepositamount',
             'lockInPeriodMonths',
             'brokerageAmount',
-            'brokerageNegotiable',
             'preferredTenantType',
           ];
         case 'BUILDER_FLOOR':
@@ -631,6 +627,21 @@ const PropertyDetailsForm = ({
             'lockInPeriodMonths',
             'brokerageAmount',
           ];
+
+        case 'VILLA':
+          return [
+            'title',
+            'description',
+            'propertyType',
+            'preferredTenantType',
+            'furnishingLevel',
+            'totalfloor',
+            'monthlyRent',
+            'securityDepositamount',
+            'lockInPeriodMonths',
+            'brokerageAmount',
+          ];
+
         case 'FLAT_APARTMENT':
           return [
             'title',
@@ -657,17 +668,9 @@ const PropertyDetailsForm = ({
             'title',
             'description',
             'propertyType',
-            'configuration',
-            'bedroom',
-            'bathroom',
-            'balcony',
-            'availableFrom',
             'preferredTenantType',
             'furnishingLevel',
-            'floornumber',
-            'totalfloor',
             'monthlyRent',
-            'maintenanceChargesAmount',
             'securityDepositamount',
             'lockInPeriodMonths',
             'brokerageAmount',
@@ -863,11 +866,19 @@ const PropertyDetailsForm = ({
                 </div>
               </div>
             )}
-
             {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
-              <Select>
-                <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-nones focus:ring-offset-0'>
-                  <SelectValue placeholder='Select a property type' />
+              <Select
+              // value={propertyDetails.preoccupiedPropertyType}
+              // onValueChange={(value) =>
+              //   dispatch(
+              //     updateEditPropertyDetails({
+              //       preoccupiedPropertyType: value,
+              //     })
+              //   )
+              // }
+              >
+                <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
+                  <SelectValue placeholder='Select a preoccupied property type' />
                 </SelectTrigger>
                 <SelectContent>
                   {propertyOptions.map((option) => (

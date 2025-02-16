@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
@@ -41,6 +41,8 @@ const SignUpForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const {
     register,
@@ -79,7 +81,7 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push('/broker');
+      router.push(callbackUrl);
       toast({
         title: 'Login Succsfull',
         description: 'Successfully signed In',

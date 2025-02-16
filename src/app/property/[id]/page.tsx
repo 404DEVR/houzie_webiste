@@ -7,70 +7,82 @@ import ProfileCard from '@/components/cards/profilecard';
 import PropertyHighlight from '@/components/cards/PropertyHighlights';
 import PropertySuggestions from '@/components/cards/PropertySuggestions';
 import AboutProperty from '@/components/detailspage/AboutProperty';
-import HeaderContainer from '@/components/detailspage/HeaderContainer';
+import HeaderContainer, {
+  Property,
+} from '@/components/detailspage/HeaderContainer';
 import PropertyDetails from '@/components/detailspage/PropertyDetails';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
+import useAuth from '@/hooks/useAuth';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const amenitiesList = [
-  { label: 'Wifi', value: 'WIFI', url: '/svg/wi-fi-icon.svg' },
-  { label: 'Power Backup', value: 'POWER_BACKUP', url: '/svg/charge.svg' },
-  { label: 'Gym', value: 'GYM', url: '/svg/gym.svg' },
-  {
-    label: '4 Wheeler Parking',
-    value: '4_WHEELER_PARKING',
-    url: '/svg/parking.svg',
-  },
-  {
-    label: '2 Wheeler Parking',
-    value: '2_WHEELER_PARKING',
-    url: '/svg/parking (1).svg',
-  },
-  {
-    label: '24/7 Water Supply',
-    value: 'WATER_SUPPLY',
-    url: '/svg/water supply.svg',
-  },
-  { label: '24/7 Security', value: 'SECURITY', url: '/svg/security.svg' },
-  {
-    label: 'Daily House Keeping',
-    value: 'HOUSE_KEEPING',
-    url: '/svg/house-keeping.svg',
-  },
-  {
-    label: '24/7 CCTV Surveillance',
-    value: 'CCTV',
-    url: '/svg/cctv.svg',
-  },
-  { label: 'Meals', value: 'MEALS', url: '/svg/dinner.svg' },
-];
+interface DetailsPageClientProps {
+  params: { id: string };
+}
 
-export default function DetailsPage() {
+export default function DetailsPageClient({ params }: DetailsPageClientProps) {
+  const [propertyData, setPropertyData] = useState<Property | null>(null);
+  const { auth } = useAuth();
+
+  useEffect(() => {
+    const fetchPropertyData = async () => {
+      try {
+        const accessToken = auth?.accessToken;
+        if (!accessToken) {
+          throw new Error('No access token available');
+        }
+        const response = await fetch(
+          `https://api.houzie.in/listings/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTMwMmY2NC02MDdmLTQ0NDUtOTJiOC1hY2E1MzVhMmNiNWYiLCJlbWFpbCI6InJvc2hhbjUyQGdtYWlsLmNvbSIsInJvbGUiOiJCUk9LRVIiLCJpc0VtYWlsVmVyaWZpZWQiOmZhbHNlLCJpc1Bob25lVmVyaWZpZWQiOmZhbHNlLCJpYXQiOjE3Mzk3MDQ1NDMsImV4cCI6MTczOTcwNTQ0M30.wgwuWaIIZqdX4Q_BvxD1Mrp5Z5VndfMroqA7KbaoUM0`,
+            },
+          }
+        );
+        const data = await response.json();
+        setPropertyData(data);
+      } catch (error) {
+        console.error('Error fetching property data:', error);
+      }
+    };
+
+    fetchPropertyData();
+  }, [params.id]);
+
+  if (!propertyData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 my-2 sm:my-3 bg-[#F4F4F4]'>
-        <HeaderContainer />
-        <ImageGallery />
+        <HeaderContainer propertyData={propertyData} />
+        <ImageGallery propertyData={propertyData} />
 
         <div className='mt-4 sm:mt-7 flex flex-col lg:flex-row gap-4'>
           {/* Left column */}
           <div className='w-full flex flex-col lg:w-[65%] xl:w-[70%] order-2 lg:order-1'>
-            <PropertyHighlights />
-            <PropertyDetails />
-            <AboutProperty />
+            <PropertyHighlights propertyData={propertyData} />
+            <PropertyDetails propertyData={propertyData} />
+            <AboutProperty propertyData={propertyData} />
 
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
               <MapCard />
             </div>
 
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-              <ItemGrid items={amenitiesList} title='Amenities' />
+              <ItemGrid
+                title='Amenities'
+                data={propertyData.amenities}
+                type='amenities'
+              />
             </div>
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
               <PlacesNearby />
             </div>
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-              <PropertyHighlight />
+              <PropertyHighlight propertyData={propertyData} />
             </div>
           </div>
 

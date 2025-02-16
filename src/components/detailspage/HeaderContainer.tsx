@@ -14,12 +14,72 @@ const actionButtons = [
   },
 ];
 
-export default function HeaderContainer() {
+export interface Property {
+  id: string;
+  title: string;
+  description: string;
+  propertyType: string;
+  mainImage: string;
+  photos: string[];
+  isActive: boolean;
+  views: number;
+  isPreoccupied: boolean;
+  price: number;
+  security: number;
+  brokerage: number;
+  isNegotiable: boolean;
+  lockInPeriod: string;
+  availableFrom: string;
+  configuration: string;
+  bedrooms: number;
+  bathrooms: number;
+  balconies: number;
+  floorNumber: string;
+  totalFloors: number;
+  maintenanceCharges: number;
+  isMaintenanceIncluded: boolean;
+  roomType: string;
+  sharingType: string;
+  unitsAvailable: number;
+  roomSize: number;
+  amenities: string[];
+  features: string[];
+  furnishing: string;
+  furnishingExtras: any[];
+  preferredTenant: string;
+  locationId: string;
+  brokerId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  location: {
+    id: string;
+    city: string;
+    state: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+  };
+  broker: {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber: string | null;
+  };
+}
+
+interface HeaderContainerprops {
+  propertyData: Property;
+}
+
+export default function HeaderContainer({
+  propertyData,
+}: HeaderContainerprops) {
   return (
     <header className='flex flex-col sm:flex-row items-start justify-between w-full gap-4 sm:gap-6 py-4 sm:py-6'>
       <div className='flex-1 w-full sm:w-auto'>
         <h1 className='font-medium text-2xl sm:text-[32px] leading-tight sm:leading-[48px] text-black font-inter'>
-          Seaside Serenity Villa
+          {propertyData ? propertyData.title : ''}
         </h1>
       </div>
 
