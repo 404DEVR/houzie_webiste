@@ -27,18 +27,23 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-const FileUploader = ({ handleNext, handleBack, page }) => {
+interface FileUploaderprops {
+  handleNext: () => void;
+  handleBack: () => void;
+  page?: string;
+}
+
+const FileUploader = ({ handleNext, handleBack }: FileUploaderprops) => {
   const dispatch = useDispatch();
   const photos = useSelector((state: RootState) => state.addForm.photos);
   const mainImage = useSelector(
     (state: RootState) => state.addForm.propertyDetails.mainImage
   );
-  const formData = useSelector((state: RootState) => state.addForm);
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadToSupabase = async (file) => {
     const fileName = `${Date.now()}_${file.name}`;
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('property-images')
       .upload(fileName, file);
 

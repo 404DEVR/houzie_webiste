@@ -1,12 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
+import { cn } from '@/lib/utils';
+
+import { Button } from '@/components/ui/button';
+
 interface Item {
-  label:string
-  value:string
-  url:string
+  label: string;
+  value: string;
+  url: string;
 }
 
 interface ItemGridProps {
@@ -48,11 +50,11 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         }`}
       >
         {visibleItems.map((amenity, index) => (
-         <div className=' mt-2'>
+          <div key={index} className=' mt-2'>
             <Button
               key={index}
               className={cn(
-                'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors'
               )}
             >
               <Image
@@ -60,11 +62,9 @@ const ItemGrid: React.FC<ItemGridProps> = ({
                 alt={amenity.label}
                 width={55}
                 height={55}
-                className={`object-contain`}
+                className='object-contain'
               />
-              <div className='mt-2 text-center text-wrap'>
-                {amenity.label}
-              </div>
+              <div className='mt-2 text-center text-wrap'>{amenity.label}</div>
             </Button>
           </div>
         ))}

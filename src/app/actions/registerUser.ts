@@ -18,25 +18,22 @@ const RegisterSchema = z.object({
 
 export async function registerUser(formData: FormData) {
   try {
-    const validatedFields = RegisterSchema.safeParse({
-      name: formData.get('name'),
-      email: formData.get('email'),
-      phoneNumber: formData.get('phoneNumber'),
-      aadharNumber: formData.get('aadharNumber'),
-      role: formData.get('role'),
-    });
+    // const validatedFields = RegisterSchema.safeParse({
+    //   name: formData.get('name'),
+    //   email: formData.get('email'),
+    //   phoneNumber: formData.get('phoneNumber'),
+    //   aadharNumber: formData.get('aadharNumber'),
+    //   role: formData.get('role'),
+    // });
     // console.log('🚀 ~ registerUser ~ validatedFields:', validatedFields);
-
     // if (!validatedFields.success) {
     //   return {
     //     status: 'error',
     //     errors: validatedFields.error.flatten().fieldErrors,
     //   };
     // }
-
     // Here you would typically make your API call or database operation
     // For demonstration, we'll simulate a delay
-
     // return {
     //   status: 'success',
     //   message: 'Registration successful! You can now login.',

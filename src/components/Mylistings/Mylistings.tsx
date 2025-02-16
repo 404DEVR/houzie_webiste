@@ -69,7 +69,6 @@ interface Listing {
 const MyListings = () => {
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedListingId, setSelectedListingId] = useState(null);
   const dispatch = useDispatch();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,14 +81,20 @@ const MyListings = () => {
         if (!accessToken) {
           throw new Error('No access token available');
         }
-        const response = await axios.get(`https://api.houzie.in/broker/listings`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `https://api.houzie.in/broker/listings`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setListings(response.data.data);
       } catch (error) {
-        console.error('Error fetching listings:', error);
+        toast({
+          title: 'Failed To Fetch Listings',
+          description: 'Please Check YOur Network Connection',
+        });
       } finally {
         setIsLoading(false);
       }
@@ -99,7 +104,6 @@ const MyListings = () => {
   }, []);
 
   const handleEdit = async (id) => {
-    setSelectedListingId(id);
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
@@ -151,6 +155,45 @@ const MyListings = () => {
       interface Verification {
         selectedDate: string | null;
         phoneNumber: string;
+      }
+
+      interface Restructuredinterface {
+        title: string;
+        description: string;
+        propertyType: string;
+        location: {
+          city: string;
+          state: string;
+          country: string;
+          latitude: number | null;
+          longitude: number | null;
+        };
+        price: number | null;
+        security: number | null;
+        brokerage: number | null;
+        isNegotiable: boolean;
+        lockInPeriod: string;
+        availableFrom: string;
+        configuration: string;
+        bedrooms: number | null;
+        bathrooms: number | null;
+        balconies: number | null;
+        floorNumber: string;
+        totalFloors: number | null;
+        maintenanceCharges: number | null;
+        isMaintenanceIncluded: boolean;
+        roomType: string;
+        sharingType: string;
+        unitsAvailable: number | null;
+        roomSize: number | null;
+        furnishing: string;
+        furnishingExtras: string[];
+        amenities: string[];
+        features: string[];
+        preferredTenant: string;
+        mainImage: string;
+        photos: string[];
+        isPreoccupied: boolean;
       }
 
       const editFormData = {
@@ -211,7 +254,44 @@ const MyListings = () => {
           selectedDate: null,
           phoneNumber: '',
         } as Verification,
-        restructuredData: {},
+        restructuredData: {
+          title: '',
+          description: '',
+          propertyType: '',
+          location: {
+            city: '',
+            state: '',
+            country: '',
+            latitude: null,
+            longitude: null,
+          },
+          price: null,
+          security: null,
+          brokerage: null,
+          isNegotiable: false,
+          lockInPeriod: '',
+          availableFrom: '',
+          configuration: '',
+          bedrooms: null,
+          bathrooms: null,
+          balconies: null,
+          floorNumber: '',
+          totalFloors: null,
+          maintenanceCharges: null,
+          isMaintenanceIncluded: false,
+          roomType: '',
+          sharingType: '',
+          unitsAvailable: null,
+          roomSize: null,
+          furnishing: '',
+          furnishingExtras: [],
+          amenities: [],
+          features: [],
+          preferredTenant: '',
+          mainImage: '',
+          photos: [],
+          isPreoccupied: false,
+        } as Restructuredinterface,
         isEditing: true,
         editingListingId: id,
       };
@@ -220,12 +300,14 @@ const MyListings = () => {
       dispatch(populateEditForm(editFormData));
       setIsDialogOpen(true);
     } catch (error) {
-      console.error('Error fetching listing data:', error);
+      toast({
+        title: 'Please Try Again',
+        description: 'Please Check Your Netwrok Connection',
+      });
     }
   };
 
   const handleViewDetails = (id) => {
-    console.log(`Viewing details for listing with id: ${id}`);
     alert(`Viewing details for listing with id: ${id}`);
   };
 
@@ -249,11 +331,10 @@ const MyListings = () => {
       toast({
         title: 'Listing deleted successfully!',
       });
-    } catch (error: any) {
-      console.error('Error deleting listing:', error);
+    } catch (error) {
       toast({
         title: 'Failed to delete listing.',
-        description: error.response?.data?.message || 'Please try again later.',
+        description: 'Please try again later.',
         variant: 'destructive',
       });
     }

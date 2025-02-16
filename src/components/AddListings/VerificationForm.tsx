@@ -23,10 +23,19 @@ import {
 import {
   restructureAddFormData,
   updateAddVerification,
-} from '@/redux/slices/formslices'; // Adjust the import path as needed
-import { RootState } from '@/redux/store'; // Adjust the import path as needed
+} from '@/redux/slices/formslices';
+import { RootState } from '@/redux/store';
 
-const VerificationForm = ({ handleNext, handleBack, page }) => {
+interface VerificationFormprops {
+  handleNext: () => void;
+  handleBack: () => void;
+  page?: string;
+}
+
+const VerificationForm = ({
+  handleNext,
+  handleBack,
+}: VerificationFormprops) => {
   const dispatch = useDispatch();
   const verification = useSelector(
     (state: RootState) => state.addForm.verification
@@ -35,7 +44,6 @@ const VerificationForm = ({ handleNext, handleBack, page }) => {
   const formData = useSelector((state: RootState) => state.addForm);
 
   const handleDateChange = (date: Date | undefined) => {
-    // Store the selected date as an ISO string in Redux
     dispatch(
       updateAddVerification({ selectedDate: date?.toISOString() || null })
     );
@@ -55,11 +63,9 @@ const VerificationForm = ({ handleNext, handleBack, page }) => {
   }, [dispatch, verification.selectedDate]);
 
   const handleSubmit = () => {
-    dispatch(restructureAddFormData()); // Restructure the form data and store it in Redux
+    dispatch(restructureAddFormData());
 
-    console.log('Restructured Data:', formData.restructuredData); // Access it from Redux
-
-    handleNext(); // Proceed to the next step without passing parameters
+    handleNext();
   };
 
   return (

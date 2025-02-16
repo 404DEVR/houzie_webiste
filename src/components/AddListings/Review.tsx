@@ -1,6 +1,5 @@
 // Review.tsx (Modified)
 import api from 'axios';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,9 +19,14 @@ import {
 import { resetAddForm } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
 
-const Review = ({ handleBack, page, setActiveTab }) => {
+interface ReviewProps {
+  handleBack: () => void;
+  page?: string;
+  setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Review = ({ handleBack, page, setActiveTab }: ReviewProps) => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const { auth } = useAuth();
   const restructuredData = useSelector(
     (state: RootState) => state.addForm.restructuredData
@@ -35,7 +39,7 @@ const Review = ({ handleBack, page, setActiveTab }) => {
         throw new Error('No access token available');
       }
 
-      const response = await api.post('https://api.houzie.in/listings', restructuredData, {
+      await api.post('https://api.houzie.in/listings', restructuredData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -46,7 +50,9 @@ const Review = ({ handleBack, page, setActiveTab }) => {
       });
       dispatch(resetAddForm());
 
-      setActiveTab('myListing');
+      if (setActiveTab) {
+        setActiveTab('myListing');
+      }
     } catch (error: any) {
       console.error('Error posting listing:', error);
       if (

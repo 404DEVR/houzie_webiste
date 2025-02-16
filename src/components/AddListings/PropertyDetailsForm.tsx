@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'; // Import useEffect
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cn } from '@/lib/utils'; // Import cn function
+import { toast } from '@/hooks/use-toast';
 
 import CustomInput from '@/components/inputs/CustomInput';
 import { Button } from '@/components/ui/button';
@@ -527,7 +528,6 @@ const PropertyDetailsForm = ({
   };
 
   const handleSubmit = () => {
-    console.log(propertyDetails);
     handleNext();
   };
 
@@ -542,7 +542,6 @@ const PropertyDetailsForm = ({
         }
       }
 
-      console.log(changedFields);
       // const response = await axios.patch(
       //   `/listings/${editingListingId}`,
       //   changedFields
@@ -555,7 +554,10 @@ const PropertyDetailsForm = ({
       //   console.error('Failed to update listing:', response.status);
       // }
     } catch (error) {
-      console.error('Error updating listing:', error);
+      toast({
+        title: 'Edit Failed',
+        description: 'Failed To Edit Details',
+      });
     }
   };
 
@@ -708,7 +710,7 @@ const PropertyDetailsForm = ({
     );
 
     setIsFormValid(isValid);
-  }, [propertyDetails]);
+  }, [propertyDetails, page]);
 
   const formatDateForAPI = (dateString: string) => {
     if (!dateString) return '';
@@ -716,7 +718,6 @@ const PropertyDetailsForm = ({
       const date = new Date(dateString);
       return date.toISOString();
     } catch (error) {
-      console.error('Error formatting date:', error);
       return '';
     }
   };

@@ -57,6 +57,45 @@ interface Verification {
   phoneNumber: string;
 }
 
+interface restructured {
+  title: string;
+  description: string;
+  propertyType: string;
+  location: {
+    city: string;
+    state: string;
+    country: string;
+    latitude: number | null;
+    longitude: number | null;
+  };
+  price: number | null;
+  security: number | null;
+  brokerage: number | null;
+  isNegotiable: boolean;
+  lockInPeriod: string;
+  availableFrom: string;
+  configuration: string;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  balconies: number | null;
+  floorNumber: string;
+  totalFloors: number | null;
+  maintenanceCharges: number | null;
+  isMaintenanceIncluded: boolean;
+  roomType: string;
+  sharingType: string;
+  unitsAvailable: number | null;
+  roomSize: number | null;
+  furnishing: string;
+  furnishingExtras: string[];
+  amenities: string[];
+  features: string[];
+  preferredTenant: string;
+  mainImage: string;
+  photos: string[];
+  isPreoccupied: boolean;
+}
+
 // Define separate state interfaces
 interface AddFormState {
   currentPage: number;
@@ -64,7 +103,7 @@ interface AddFormState {
   propertyLocation: PropertyLocation;
   photos: Photo[];
   verification: Verification;
-  restructuredData: any;
+  restructuredData: restructured;
 }
 
 interface EditFormState {
@@ -73,7 +112,7 @@ interface EditFormState {
   propertyLocation: PropertyLocation;
   photos: Photo[];
   verification: Verification;
-  restructuredData: any;
+  restructuredData: restructured;
   isEditing: boolean;
   editingListingId: string | null;
 }
@@ -127,7 +166,44 @@ const initialAddFormState: AddFormState = {
     selectedDate: null,
     phoneNumber: '',
   },
-  restructuredData: {},
+  restructuredData: {
+    title: '',
+    description: '',
+    propertyType: '',
+    location: {
+      city: '',
+      state: '',
+      country: '',
+      latitude: null,
+      longitude: null,
+    },
+    price: null,
+    security: null,
+    brokerage: null,
+    isNegotiable: false,
+    lockInPeriod: '',
+    availableFrom: '',
+    configuration: '',
+    bedrooms: null,
+    bathrooms: null,
+    balconies: null,
+    floorNumber: '',
+    totalFloors: null,
+    maintenanceCharges: null,
+    isMaintenanceIncluded: false,
+    roomType: '',
+    sharingType: '',
+    unitsAvailable: null,
+    roomSize: null,
+    furnishing: '',
+    furnishingExtras: [],
+    amenities: [],
+    features: [],
+    preferredTenant: '',
+    mainImage: '',
+    photos: [],
+    isPreoccupied: false,
+  },
 };
 
 const initialEditFormState: EditFormState = {
@@ -178,7 +254,44 @@ const initialEditFormState: EditFormState = {
     selectedDate: null,
     phoneNumber: '',
   },
-  restructuredData: {},
+  restructuredData: {
+    title: '',
+    description: '',
+    propertyType: '',
+    location: {
+      city: '',
+      state: '',
+      country: '',
+      latitude: null,
+      longitude: null,
+    },
+    price: null,
+    security: null,
+    brokerage: null,
+    isNegotiable: false,
+    lockInPeriod: '',
+    availableFrom: '',
+    configuration: '',
+    bedrooms: null,
+    bathrooms: null,
+    balconies: null,
+    floorNumber: '',
+    totalFloors: null,
+    maintenanceCharges: null,
+    isMaintenanceIncluded: false,
+    roomType: '',
+    sharingType: '',
+    unitsAvailable: null,
+    roomSize: null,
+    furnishing: '',
+    furnishingExtras: [],
+    amenities: [],
+    features: [],
+    preferredTenant: '',
+    mainImage: '',
+    photos: [],
+    isPreoccupied: false,
+  },
   isEditing: false,
   editingListingId: null,
 };

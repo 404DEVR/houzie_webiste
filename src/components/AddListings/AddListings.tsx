@@ -91,25 +91,13 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
         />
       )}
       {currentPage === 2 && (
-        <PropertyLocation
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-        />
+        <PropertyLocation handleNext={handleNext} handleBack={handleBack} />
       )}
       {currentPage === 3 && (
-        <FileUploader
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-        />
+        <FileUploader handleNext={handleNext} handleBack={handleBack} />
       )}
       {currentPage === 4 && (
-        <VerificationForm
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-        />
+        <VerificationForm handleNext={handleNext} handleBack={handleBack} />
       )}
       {currentPage === 5 && (
         <Review

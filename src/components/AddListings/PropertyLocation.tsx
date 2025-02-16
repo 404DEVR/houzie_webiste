@@ -24,7 +24,16 @@ import {
 import { updateAddPropertyLocation } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
 
-const PropertyLocation = ({ handleNext, handleBack, page }) => {
+interface PropertyLocationProps {
+  handleNext: () => void;
+  handleBack: () => void;
+  page?: string;
+}
+
+const PropertyLocation = ({
+  handleNext,
+  handleBack,
+}: PropertyLocationProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const propertyLocation = useSelector(
     (state: RootState) => state.addForm.propertyLocation
@@ -79,7 +88,6 @@ const PropertyLocation = ({ handleNext, handleBack, page }) => {
 
   const handleSubmit = () => {
     if (isValidAddress) {
-      console.log('Full Form Data:', formData);
       handleNext();
     }
   };

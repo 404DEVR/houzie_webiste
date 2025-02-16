@@ -69,12 +69,10 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
       }
     }
 
-    // Clear existing interval if any
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
-    // Set up periodic token check
     intervalRef.current = setInterval(
       () => checkTokenExpiration(auth, logout),
       60000
