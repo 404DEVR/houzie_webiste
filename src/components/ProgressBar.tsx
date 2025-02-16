@@ -28,7 +28,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div className='relative w-full mx-auto mt-4 mb-8 md:mt-8 md:mb-16'>
-      {/* Progress Bar */}
       <div className='h-1 md:h-2 bg-gray-200 rounded-full overflow-hidden relative'>
         <div
           className='h-full bg-[#00C52E] transition-all duration-300 ease-in-out'
@@ -36,7 +35,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         ></div>
       </div>
 
-      {/* Checkpoints */}
       <div className='flex justify-between items-start w-full absolute top-0 left-0 transform -translate-y-2 md:-translate-y-3'>
         {checkpoints.map((checkpoint, index) => {
           const isCompleted = checkpoint.placement < currentpage;
@@ -72,20 +70,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               key={index}
               className='flex flex-col items-center justify-start w-1/5 text-center'
             >
-              {/* Circle */}
               <div
-                onClick={() => handlecircel(checkpoint)}
                 className={`w-5 h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full ${circleColor} ${circleText} flex items-center justify-center cursor-pointer mb-1 md:mb-2 text-xs md:text-sm`}
               >
                 {checkpoint.placement}
               </div>
 
-              {/* Label */}
               <h1 className='font-semibold leading-tight text-[0.6rem] sm:text-xs md:text-sm text-gray-800 h-6 mb-1 md:mb-2'>
                 {checkpoint.label}
               </h1>
 
-              {/* Status */}
               <p
                 className={`text-[0.6rem] sm:text-xs ${statusformat} mt-1 rounded-lg px-2 py-1 md:px-4 md:py-2`}
               >
