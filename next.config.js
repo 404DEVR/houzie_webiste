@@ -17,11 +17,15 @@ const nextConfig = {
   //   ]
   // },
 
-   images: {
+  images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'snbtpxktxlmmnfxabqre.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'example.com',
       },
     ],
   },

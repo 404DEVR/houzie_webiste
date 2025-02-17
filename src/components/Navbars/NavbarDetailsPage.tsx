@@ -54,17 +54,12 @@ const NavbarDetailsPage = () => {
     const fetchUserData = async () => {
       if (auth?.userid) {
         try {
-          const response = await axios.get(
-            `https://api.houzie.in/profile/${auth.userid}`,
-            {
-              headers: {
-                Authorization: `Bearer ${auth.accessToken}`,
-              },
-            }
-          );
+          const response = await axios.get(`https://api.houzie.in/profile`, {
+            headers: {
+              Authorization: `Bearer ${auth.accessToken}`,
+            },
+          });
           setUserData(response.data);
-          console.log(response.data);
-          console.log(auth.userid);
         } catch (error) {
           toast({
             title: 'Failed to fetch user data',

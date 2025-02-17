@@ -4,6 +4,7 @@ import axios from 'axios'; // Assuming you have axios configured
 import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -17,7 +18,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
-import { useRouter } from 'next/navigation';
 
 interface PropertyFeature {
   icon: React.ElementType;
@@ -91,7 +91,7 @@ const MyListings = () => {
             },
           }
         );
-        setListings(response.data.data);
+        setListings(response.data);
       } catch (error) {
         toast({
           title: 'Failed To Fetch Listings',
@@ -111,6 +111,7 @@ const MyListings = () => {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
 
+      console.log(listingData);
       interface PropertyDetails {
         title: string;
         description: string;

@@ -1,35 +1,47 @@
+// FilterContext.tsx
 'use client';
 
 import { createContext, ReactNode, useContext, useState } from 'react';
 
+// Updated Type Definitions to match your actual data
 type PropertyType =
-  | 'House'
-  | 'Builder floor'
-  | 'Villa'
-  | 'Co living/PG'
-  | 'Preoccupied property'
-  | 'Flat/apartment'
+  | 'BUILDER_FLOOR'
+  | 'VILLA'
+  | 'CO_LIVING'
+  | 'PG'
+  | 'PREOCCUPIED_PROPERTY'
+  | 'FLAT_APARTMENT'
   | string;
-type BHKType = '1 BHK' | '2 BHK' | '3 BHK' | '4 BHK' | '4+ BHK' | string;
-type AvailableFor = 'All' | 'Family' | 'Bachelor' | string;
-type Furnishing = 'Full Furnish' | 'Semi Furnish' | 'No Furnish' | string;
+type BHKType =
+  | 'ONE_RK'
+  | 'ONE_BHK'
+  | 'TWO_BHK'
+  | 'THREE_BHK'
+  | 'FOUR_BHK'
+  | 'FOUR_PLUS_BHK'
+  | string;
+type AvailableFor = 'FAMILY' | 'BACHELOR' | 'COMPANY_LEASE' | 'ANY' | string;
+type Furnishing = 'FULLY_FURNISHED' | 'SEMI_FURNISHED' | 'NONE' | string;
 type Amenity =
-  | 'Owner Free'
-  | 'Pet Friendly'
-  | 'Couple Friendly'
-  | 'Balcony'
-  | 'Wifi'
-  | 'Grocery Shop'
-  | 'Gym'
-  | 'Car Parking'
-  | '24/7 Water Supply'
-  | '24/7 Security'
-  | 'Club House'
-  | 'High Speed Elevators'
+  | 'WIFI'
+  | 'POWER_BACKUP'
+  | 'FOUR_WHEELER_PARKING'
+  | 'TWO_WHEELER_PARKING'
+  | 'WATER_SUPPLY_24_7'
+  | 'SECURITY_24_7'
+  | 'DAILY_HOUSEKEEPING'
+  | 'CCTV'
+  | 'MEALS'
+  | 'COUPLE_FRIENDLY' // Add if you want to filter by these
+  | 'PET_FRIENDLY'
+  | 'OWNER_FREE'
+  | 'BALCONY'
+  | 'ATTACHED_BATHROOM'
+  | 'GATED_COMMUNITY'
   | string;
-type Parking = '2 Wheeler' | '4 Wheeler' | string;
+type Parking = 'TWO_WHEELER_PARKING' | 'FOUR_WHEELER_PARKING' | string;
 
-interface Filters {
+export interface Filters {
   rent: [number, number];
   propertyType: PropertyType[];
   bhkType: BHKType[];

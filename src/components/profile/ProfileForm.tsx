@@ -1,16 +1,18 @@
 'use client';
 
+import axios from 'axios'; // Import Axios
 import { Camera, ListIcon, Settings, UserRoundPen } from 'lucide-react';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import axios from 'axios'; // Import Axios
+import { useEffect, useState } from 'react';
+
+import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import useAuth from '@/hooks/useAuth';
 
 interface ProfileFormInterface {
   handleTabChange: (any: any) => void;
@@ -29,9 +31,11 @@ const ProfileForm = ({ handleTabChange }: ProfileFormInterface) => {
     const fetchProfile = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          `https://api.houzie.in/profile/${auth?.userid}`
-        );
+        const response = await axios.get(`https://api.houzie.in/profile`, {
+          headers: {
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
+        });
         setFullName(response.data.name ? response.data.name : '');
         setEmailAddress(response.data.email ? response.data.email : '');
         setPhoneNumber(
@@ -51,20 +55,37 @@ const ProfileForm = ({ handleTabChange }: ProfileFormInterface) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const data = {
+      name: fullName,
+      email: emailAddress,
+      phoneNumber: phoneNumber,
+    };
+
     try {
       const response = await axios.patch(
-        `https://api.houzie.in/profile/${userId}`,
+        `https://api.houzie.in/profile`,
+        data,
         {
-          name: fullName,
-          email: emailAddress,
-          phoneNumber: phoneNumber,
+          headers: {
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
         }
       );
 
-      alert('Profile Updated!');
+      if (response.data) {
+        const updatedProfile = response.data;
+        setFullName(updatedProfile.name);
+        setEmailAddress(updatedProfile.email);
+        setPhoneNumber(updatedProfile.phoneNumber);
+
+        alert('Profile Updated Successfully!');
+      }
     } catch (error) {
-      console.error('Failed to update profile:', error);
-      // Handle error appropriately (e.g., display an error message)
+      console.log(error);
+      toast({
+        title: 'Failed to Update',
+        description: 'Failed to update profile. Please try again.',
+      });
     }
   };
 

@@ -79,13 +79,21 @@ const SignUpForm = () => {
       login(userData);
       router.push('/');
       toast({
-        title: 'Login Succsfull',
-        description: 'Successfully signed In',
+        title: 'Login Successful',
+        description: 'Successfully signed in',
       });
     } catch (error) {
+      let errorMessage = 'An unexpected error occurred';
+      if (axios.isAxiosError(error)) {
+        // If it's an Axios error, we can access the response data
+        errorMessage = error.response?.data?.message;
+      } else if (error instanceof Error) {
+        // If it's a standard Error object
+        errorMessage = error.message;
+      }
       toast({
         title: 'Login Failed',
-        description: 'An unexpected error occurred.',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {

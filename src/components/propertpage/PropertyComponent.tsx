@@ -14,21 +14,61 @@ import {
 } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 
+function toTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export default function PropertyComponent() {
   const { filters, updateFilters } = useFilters();
 
   const [sliderValue, setSliderValue] = useState(filters.rent);
-  // const resetFilters = () => {
-  //   updateFilters('reset', {
-  //     rent: [0, 50000],
-  //     propertyType: [],
-  //     bhkType: [],
-  //     availableFor: [],
-  //     furnishing: [],
-  //     amenities: [],
-  //     parking: [],
-  //   });
-  // };
+
+  const propertyTypes = [
+    'BUILDER_FLOOR',
+    'VILLA',
+    'CO_LIVING',
+    'PG',
+    'PREOCCUPIED_PROPERTY',
+    'FLAT_APARTMENT',
+  ];
+
+  const bhkTypes = [
+    'ONE_RK',
+    'ONE_BHK',
+    'TWO_BHK',
+    'THREE_BHK',
+    'FOUR_BHK',
+    'FOUR_PLUS_BHK',
+  ];
+
+  const availableForTypes = ['FAMILY', 'BACHELOR', 'COMPANY_LEASE', 'ANY'];
+
+  const furnishingTypes = ['FULLY_FURNISHED', 'SEMI_FURNISHED', 'NONE'];
+
+  const amenities = [
+    'WIFI',
+    'POWER_BACKUP',
+    'FOUR_WHEELER_PARKING',
+    'TWO_WHEELER_PARKING',
+    'WATER_SUPPLY_24_7',
+    'SECURITY_24_7',
+    'DAILY_HOUSEKEEPING',
+    'CCTV',
+    'MEALS',
+    'COUPLE_FRIENDLY',
+    'PET_FRIENDLY',
+    'OWNER_FREE',
+    'BALCONY',
+    'ATTACHED_BATHROOM',
+    'GATED_COMMUNITY',
+  ];
+
+  const parkingTypes = ['TWO_WHEELER_PARKING', 'FOUR_WHEELER_PARKING'];
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -56,17 +96,10 @@ export default function PropertyComponent() {
               <span>₹{sliderValue[1]}</span>
             </div>
           </div>
-          {/* Property Type */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>Property Type</h4>
-            {[
-              'House',
-              'Builder floor',
-              'Villa',
-              'Co living/PG',
-              'Preoccupied property',
-              'Flat/apartment',
-            ].map((type) => (
+            {propertyTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.propertyType.includes(type)}
@@ -84,14 +117,14 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* BHK Type */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>BHK Type</h4>
-            {['1 BHK', '2 BHK', '3 BHK', '4 BHK', '4+ BHK'].map((type) => (
+            {bhkTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.bhkType.includes(type)}
@@ -106,14 +139,14 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* Available For */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>Available For</h4>
-            {['All', 'Family', 'Bachelor'].map((type) => (
+            {availableForTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.availableFor.includes(type)}
@@ -131,14 +164,14 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* Furnishing */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>Furnishing</h4>
-            {['Full Furnish', 'Semi Furnish', 'No Furnish'].map((type) => (
+            {furnishingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.furnishing.includes(type)}
@@ -156,27 +189,14 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* Amenities */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>Amenities</h4>
-            {[
-              'Owner Free',
-              'Pet Friendly',
-              'Couple Friendly',
-              'Balcony',
-              'Wifi',
-              'Grocery Shop',
-              'Gym',
-              'Car Parking',
-              '24/7 Water Supply',
-              '24/7 Security',
-              'Club House',
-              'High Speed Elevators',
-            ].map((type) => (
+            {amenities.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.amenities.includes(type)}
@@ -191,14 +211,14 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* Parking */}
+
           <div className='space-y-2'>
             <h4 className='font-medium'>Parking</h4>
-            {['2 Wheeler', '4 Wheeler'].map((type) => (
+            {parkingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.parking.includes(type)}
@@ -213,15 +233,10 @@ export default function PropertyComponent() {
                     }
                   }}
                 />
-                <label className='text-sm'>{type}</label>
+                <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
-          {/* <div className='pt-4 flex justify-end gap-2'>
-            <Button variant='outline' onClick={() => resetFilters}>
-              Clear All
-            </Button>
-          </div> */}
         </div>
       </PopoverContent>
     </Popover>

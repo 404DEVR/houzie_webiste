@@ -1,17 +1,18 @@
 // components/ProfileCard.tsx
 'use client';
 
+import axios from 'axios'; // Import Axios
 import Image from 'next/image';
+import { useEffect, useState } from 'react'; // Import useState and useEffect
 import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
 import { CiMail } from 'react-icons/ci';
-import { useState, useEffect } from 'react'; // Import useState and useEffect
-import axios from 'axios'; // Import Axios
+
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import useAuth from '@/hooks/useAuth';
 
 interface ProfileCardProps {
   brokerid: string;
@@ -28,20 +29,29 @@ interface ProfileCardProps {
   createdAt?: string;
 }
 
+interface Stats {
+  inActiveListings: number;
+  inActiveLeads: number;
+  activeListings: number;
+  activeLeads: number;
+}
+
 const ProfileCard = ({
   brokerid,
   showContact = false,
   postedDate,
+  avatarUrl,
 }: ProfileCardProps) => {
   const { auth } = useAuth();
   const [brokerData, setBrokerData] = useState<ProfileCardProps>({
     brokerid: brokerid,
   });
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(auth?.accessToken);
       try {
         const response = await axios.get('https://api.houzie.in/broker/stats', {
           headers: {
@@ -49,14 +59,13 @@ const ProfileCard = ({
           },
         });
         const data = response.data;
-        console.log(stats);
         setStats(data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     fetchData();
-  }, [auth?.accessToken]);
+  }, []);
 
   useEffect(() => {
     const fetchBrokerData = async () => {
@@ -98,19 +107,10 @@ const ProfileCard = ({
     return <div>Loading broker profile...</div>; // Or a more sophisticated loader
   }
 
-  const {
-    name,
-    rating,
-    listingCount,
-    totalDeals,
-    memberSince,
-    phoneNumber,
-    email,
-    avatarUrl,
-  } = brokerData; // Destructure from brokerData
+  const { rating, phoneNumber, email } = brokerData; // Destructure from brokerData
 
   return (
-    <Card className='w-full max-w-sm mx-auto md:ml-auto mb-6'>
+    <Card className='w-full md:ml-auto mb-6'>
       <div className='flex flex-col items-center'>
         <div className='w-24 h-24 rounded-full bg-gray-200 mt-6 mb-4'>
           {avatarUrl && (
@@ -129,8 +129,16 @@ const ProfileCard = ({
             <div>
               <p className='text-sm leading-none '>Posted By</p>
               <h3 className='font-semibold'>
-                {brokerData.name || 'Broker Name'}
+                {brokerData.name
+                  ? brokerData.name
+                      .split(' ')
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(' ')
+                  : 'Broker Name'}
               </h3>
+
               {/* Use a default name */}
               <div className='flex gap-1 mt-1'>
                 {[...Array(5)].map((_, i) => (
@@ -155,52 +163,59 @@ const ProfileCard = ({
             <div className='mt-3 space-y-2'>
               <div className='grid grid-cols-2 gap-2'>
                 <div className='flex items-center gap-2'>
-                  <div className='w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center'>
-                    <BsTelephone className=' w-5 h-5' />
+                  <div className='w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center'>
+                    <BsTelephone className='w-5 h-5' />
                   </div>
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col min-w-0'>
                     <span className='text-[#42A4AE] text-sm'>Call us</span>
-                    <p className='text-xs'>{phoneNumber}</p>
+                    <p className='text-xs truncate'>{phoneNumber}</p>
                   </div>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <div className='w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center'>
-                    <CiMail className=' w-5 h-5' />
+                  <div className='w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center'>
+                    <CiMail className='w-5 h-5' />
                   </div>
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col min-w-0 flex-1'>
                     <span className='text-[#42A4AE] text-sm'>Email</span>
-                    <p className='text-xs truncate'>{brokerData.email}</p>
+                    <a
+                      href={`mailto:${brokerData.email}`}
+                      className='text-xs truncate text-gray-800 hover:text-blue-500'
+                    >
+                      {brokerData.email}
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          <div className='mt-3 space-y-2'>
-            <div className='flex justify-between'>
-              <span className='text-sm '>No. of Listing</span>
-              <span className='text-sm text-teal-600'>
-                {listingCount || 0}
-              </span>{' '}
-              {/* Default to 0 */}
+          {auth?.accessToken && (
+            <div className='mt-3 space-y-2'>
+              <div className='flex justify-between'>
+                <span className='text-sm '>No. of Listing</span>
+                <span className='text-sm text-teal-600'>
+                  {stats ? stats.activeListings + stats.inActiveListings : 0}
+                </span>{' '}
+                {/* Default to 0 */}
+              </div>
+              <div className='flex justify-between'>
+                <span className='text-sm '>Total Deals</span>
+                <span className='text-sm text-teal-600'>
+                  {stats ? stats.activeLeads + stats.inActiveLeads : 0}
+                </span>{' '}
+                {/* Default to 0 */}
+              </div>
+              <div className='flex justify-between'>
+                <span className='text-sm '>Member Since</span>
+                <span className='text-sm text-teal-600'>
+                  {brokerData?.createdAt
+                    ? formatDate(brokerData?.createdAt)
+                    : 'N/A'}
+                </span>{' '}
+                {/* Default to 'N/A' */}
+              </div>
             </div>
-            <div className='flex justify-between'>
-              <span className='text-sm '>Total Deals</span>
-              <span className='text-sm text-teal-600'>
-                {totalDeals || 0}
-              </span>{' '}
-              {/* Default to 0 */}
-            </div>
-            <div className='flex justify-between'>
-              <span className='text-sm '>Member Since</span>
-              <span className='text-sm text-teal-600'>
-                {brokerData?.createdAt
-                  ? formatDate(brokerData?.createdAt)
-                  : 'N/A'}
-              </span>{' '}
-              {/* Default to 'N/A' */}
-            </div>
-          </div>
+          )}
 
           {!showContact && (
             <div className='mt-3'>
@@ -213,7 +228,7 @@ const ProfileCard = ({
             </div>
           )}
 
-          {phoneNumber && email ? (
+          {showContact ? (
             <div className='mt-3 space-y-2'>
               <Button className='w-full bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
                 Enquiry

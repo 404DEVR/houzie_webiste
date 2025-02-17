@@ -16,20 +16,51 @@ interface PropertyFiltersProps {
   onViewChange: (view: string) => void;
 }
 
+// Helper function to convert snake_case to Title Case
+function toTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
   const { filters, updateFilters } = useFilters();
 
-  // const handleRadiusChange = (value: string) => {
-  //   updateFilters('radius', value);
-  // };
-
   const handlePropertyTypeChange = (value: string) => {
-    updateFilters('propertyType', [value]);
+    if (value === '') {
+      updateFilters('propertyType', []);
+    } else {
+      updateFilters('propertyType', [value]);
+    }
   };
 
   const handleConfigurationChange = (value: string) => {
-    updateFilters('bhkType', [value]);
+    if (value === '') {
+      updateFilters('bhkType', []);
+    } else {
+      updateFilters('bhkType', [value]);
+    }
   };
+
+  const propertyTypes = [
+    'BUILDER_FLOOR',
+    'VILLA',
+    'CO_LIVING',
+    'PG',
+    'PREOCCUPIED_PROPERTY',
+    'FLAT_APARTMENT',
+  ];
+
+  const bhkTypes = [
+    'ONE_RK',
+    'ONE_BHK',
+    'TWO_BHK',
+    'THREE_BHK',
+    'FOUR_BHK',
+    'FOUR_PLUS_BHK',
+  ];
 
   return (
     <div className='w-full mx-auto px-4 space-y-4'>
@@ -51,9 +82,11 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
             <SelectValue placeholder='Property Type' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='Flat/apartment'>Apartment</SelectItem>
-            <SelectItem value='Villa'>Villa</SelectItem>
-            <SelectItem value='House'>House</SelectItem>
+            {propertyTypes.map((type) => (
+              <SelectItem key={type} value={type}>
+                {toTitleCase(type)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Select onValueChange={handleConfigurationChange}>
@@ -61,9 +94,11 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
             <SelectValue placeholder='Configuration' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='1 BHK'>1 BHK</SelectItem>
-            <SelectItem value='2 BHK'>2 BHK</SelectItem>
-            <SelectItem value='3 BHK'>3 BHK</SelectItem>
+            {bhkTypes.map((type) => (
+              <SelectItem key={type} value={type}>
+                {toTitleCase(type)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <PropertyComponent />

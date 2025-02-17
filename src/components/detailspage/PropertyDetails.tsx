@@ -2,6 +2,7 @@ import { InfoIcon } from 'lucide-react';
 import React from 'react';
 
 import ItemGrid from '@/components/cards/IconGrid';
+import { Property } from '@/components/detailspage/HeaderContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
@@ -9,8 +10,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Property } from '@/components/detailspage/HeaderContainer';
-import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 
 interface Overviewprops {
   propertyData: Property;
@@ -70,6 +69,24 @@ const Overview = ({ propertyData }: Overviewprops) => {
                   </div>
                   <div className='flex items-center gap-1.5 font-medium text-black text-base leading-6'>
                     {detail.value}
+                    {propertyData.furnishingExtras && detail.hasIcon && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <InfoIcon className='w-6 h-6 cursor-pointer' />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                              <ItemGrid
+                                title='Furnishings'
+                                data={propertyData.furnishingExtras}
+                                type='furnishing'
+                              />
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                     {detail.hasIcon && (
                       <TooltipProvider>
                         <Tooltip>

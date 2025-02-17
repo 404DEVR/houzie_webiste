@@ -1,5 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import useAuth from '@/hooks/useAuth';
+
 import ItemGrid from '@/components/cards/IconGrid';
 import MapCard from '@/components/cards/MapCard';
 import PlacesNearby from '@/components/cards/PlacesNearby';
@@ -13,9 +17,6 @@ import HeaderContainer, {
 import PropertyDetails from '@/components/detailspage/PropertyDetails';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
-import useAuth from '@/hooks/useAuth';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -90,11 +91,10 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           {/* Right column - Profile Cards */}
 
           {auth?.accessToken && (
-            <div className='w-full ml-0 lg:w-[35%] xl:w-[30%] order-1 lg:order-2'>
+            <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
               <div className='space-y-4'>
                 <ProfileCard
                   brokerid={propertyData.broker.id}
-                  name='Full Name'
                   rating={4}
                   listingCount={10}
                   totalDeals={6}
@@ -105,14 +105,10 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                 />
                 <ProfileCard
                   brokerid={propertyData.broker.id}
-                  name='Full Name'
                   rating={4}
                   listingCount={10}
                   totalDeals={6}
-                  memberSince='18 Jan, 2024'
                   postedDate={propertyData.createdAt}
-                  phoneNumber='+91 7326941125'
-                  email='name@gmail.com'
                   showContact={true}
                   avatarUrl='/images/Dummy profile.png'
                 />
