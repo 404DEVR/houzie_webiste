@@ -29,7 +29,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const isTokenExpired = (token: string): boolean => {
   try {
     const decodedToken: any = jwtDecode(token);
-    return decodedToken.exp * 1000 < Date.now();
+    console.log(decodedToken);
+    return decodedToken.exp < Math.floor(Date.now() / 1000);
   } catch (error) {
     console.error('Error decoding token:', error);
     return true; // Assume token is expired if it can't be decoded

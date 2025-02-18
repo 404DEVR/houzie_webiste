@@ -21,8 +21,8 @@ const formSchema = z.object({
     .length(10, { message: 'Phone number must be exactly 10 digits' })
     .regex(/^\d+$/, { message: 'Phone number must contain only digits' }),
   email: z.string().email({ message: 'Invalid email address' }),
-  budgetMin: z.string().min(1, { message: 'Minimum budget is required' }),
-  budgetMax: z.string().min(1, { message: 'Maximum budget is required' }),
+  budgetMin: z.number().min(1, { message: 'Minimum budget is required' }),
+  budgetMax: z.number().min(1, { message: 'Maximum budget is required' }),
   preferredLocations: z
     .array(z.string())
     .min(1, { message: 'At least one location is required' }),
@@ -51,8 +51,8 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
       name: '',
       phoneNumber: '',
       email: '',
-      budgetMin: '',
-      budgetMax: '',
+      budgetMin: undefined,
+      budgetMax: undefined,
       preferredLocations: [],
       propertyTypes: propertyData ? [propertyData.propertyType] : [],
       note: '',
@@ -69,6 +69,7 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
 
   const onSubmitForm = (data: FormData) => {
     onSubmit(data);
+    // console.log(data);
   };
 
   return (
@@ -126,6 +127,7 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
             type='number'
             error={errors.budgetMin?.message}
             {...field}
+            onChange={(e) => field.onChange(Number(e.target.value))}
           />
         )}
       />
@@ -141,6 +143,7 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
             type='number'
             error={errors.budgetMax?.message}
             {...field}
+            onChange={(e) => field.onChange(Number(e.target.value))}
           />
         )}
       />

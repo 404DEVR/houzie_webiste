@@ -129,10 +129,7 @@ const Brokerdetail = () => {
                 </div>
 
                 <Button className='text-white bg-[#42A4AE] font-normal w-full sm:w-auto'>
-                  <a
-                    href={`mailto:${lead.email}`}
-                    className='text-xs truncate text-gray-800 hover:text-blue-500'
-                  >
+                  <a href={`mailto:${lead.email}`} className='text-xs truncate'>
                     Follow Up
                   </a>
                 </Button>

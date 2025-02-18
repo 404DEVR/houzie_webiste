@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useFilters } from '@/lib/context/FilterContext';
@@ -42,7 +42,6 @@ export default function DetailsPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
 
   // In-memory cache for images
   const [imageCache, setImageCache] = useState<Record<string, string>>({});
