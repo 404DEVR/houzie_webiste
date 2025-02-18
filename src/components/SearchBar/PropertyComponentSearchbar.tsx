@@ -151,7 +151,7 @@ const PropertyComponentSearchbar = () => {
             <ChevronDown className='h-4 w-4 text-gray-500' />
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-[80vh] max-h-[80vh] overflow-y-auto'>
+        <PopoverContent className='w-[90%] lg:w-[80vh] max-h-[80vh] overflow-y-auto'>
           <div className='space-y-6'>
             <h3 className='text-lg font-semibold text-gray-800'>
               Property Details

@@ -17,7 +17,7 @@ const SearchBar = () => {
 
   return (
     <div className='relative backdrop-blur-md bg-white/10 rounded-2xl max-w-6xl mx-auto p-4 md:p-10'>
-      <div className='flex flex-col flex-grow md:flex-row gap-4 items-stretch p-2 bg-white shadow-lg rounded-2xl border border-gray-200'>
+      <div className='flex flex-col flex-grow lg:flex-row gap-4 items-stretch p-2 bg-white shadow-lg rounded-2xl border border-gray-200'>
         <div className='w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-300 p-3 md:pr-4'>
           <label className='text-sm font-semibold block text-gray-800'>
             Office or Nearby
@@ -29,15 +29,15 @@ const SearchBar = () => {
           />
         </div>
 
-        <div className='w-full md:w-1/4 border-b md:border-b-0 md:border-r p-3'>
+        <div className='w-full lg:w-1/4 border-b md:border-b-0 md:border-r p-3'>
           <PropertyComponentSearchbar />
         </div>
 
-        <div className='w-full md:w-1/4 border-b md:border-b-0 p-3'>
+        <div className='w-full lg:w-1/4 border-b md:border-b-0 p-3'>
           <RentComponent />
         </div>
 
-        <div className='w-full md:w-auto p-3 my-auto'>
+        <div className='w-full lg:w-auto p-3 my-auto'>
           <Button
             onClick={handleSearchClick}
             size='lg'

@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import useAuth from '@/hooks/useAuth';
@@ -17,14 +19,49 @@ import HeaderContainer, {
 import PropertyDetails from '@/components/detailspage/PropertyDetails';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
+import { Button } from '@/components/ui/button';
 
 interface DetailsPageClientProps {
   params: { id: string };
 }
 
+const ProfileCardWithOverlay = ({ children, showOverlay, buttonClick }) => (
+  <div className='relative'>
+    {/* Render the card */}
+    <div
+      className={`${
+        showOverlay ? 'opacity-30' : 'opacity-100'
+      } transition-opacity`}
+    >
+      {children}
+    </div>
+
+    {/* Render the overlay if required */}
+    {showOverlay && (
+      <div className='absolute inset-0 bg-black  bg-opacity-80 flex items-center justify-center rounded-lg z-10'>
+        <div className='text-center space-y-4 p-4'>
+          <h3 className='text-white text-3xl font-semibold'>
+            Sign In to View Details
+          </h3>
+          <p className='text-gray-200 text-md'>
+            Sign in to access broker details, contact information, and more.
+          </p>
+          <Button
+            onClick={buttonClick}
+            className='bg-[#42A4AE] text-white px-4 py-2 rounded-lg font-medium  transition duration-300'
+          >
+            Sign In
+          </Button>
+        </div>
+      </div>
+    )}
+  </div>
+);
+
 export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   const [propertyData, setPropertyData] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
   const { auth } = useAuth();
 
   useEffect(() => {
@@ -50,7 +87,23 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   }, [params.id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
+        <Image
+          src='/svg/loading.gif'
+          alt='Loading'
+          width={200}
+          height={200}
+          className='mb-8'
+        />
+        <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
+          Loading Properties
+        </h2>
+        <p className='text-gray-600'>
+          Please wait while we fetch the latest listings for you.
+        </p>
+      </div>
+    );
   }
 
   if (!propertyData) {
@@ -88,23 +141,28 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
             </div>
           </div>
 
-          {/* Right column - Profile Cards */}
-
-          {auth?.accessToken && (
-            <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
-              <div className='space-y-4'>
+          <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
+            <div className='space-y-4'>
+              <ProfileCardWithOverlay
+                showOverlay={!auth?.accessToken}
+                buttonClick={() => router.push('/login')}
+              >
                 <ProfileCard
-                  brokerid={propertyData.broker.id}
+                  propertyData={propertyData}
                   rating={4}
                   listingCount={10}
                   totalDeals={6}
-                  memberSince='18 Jan, 2024'
                   postedDate={propertyData.createdAt}
                   showContact={false}
                   avatarUrl='/images/Dummy profile.png'
                 />
+              </ProfileCardWithOverlay>
+              <ProfileCardWithOverlay
+                showOverlay={!auth?.accessToken}
+                buttonClick={() => router.push('/login')}
+              >
                 <ProfileCard
-                  brokerid={propertyData.broker.id}
+                  propertyData={propertyData}
                   rating={4}
                   listingCount={10}
                   totalDeals={6}
@@ -112,9 +170,9 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                   showContact={true}
                   avatarUrl='/images/Dummy profile.png'
                 />
-              </div>
+              </ProfileCardWithOverlay>
             </div>
-          )}
+          </div>
         </div>
         <div className='space-y-4 sm:space-y-6 my-4 sm:my-6'>
           <PropertySuggestions />

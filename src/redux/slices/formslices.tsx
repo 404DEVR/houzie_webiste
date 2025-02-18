@@ -44,7 +44,6 @@ interface PropertyDetails {
 }
 
 interface PropertyLocation {
-  fullAddress: string;
   city: string;
   state: string;
   country: string;
@@ -154,7 +153,6 @@ const initialAddFormState: AddFormState = {
     brokerageNegotiable: false,
   },
   propertyLocation: {
-    fullAddress: '',
     city: '',
     state: '',
     country: '',
@@ -242,7 +240,6 @@ const initialEditFormState: EditFormState = {
     brokerageNegotiable: false,
   },
   propertyLocation: {
-    fullAddress: '',
     city: '',
     state: '',
     country: '',

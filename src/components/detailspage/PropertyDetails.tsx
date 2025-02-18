@@ -87,24 +87,6 @@ const Overview = ({ propertyData }: Overviewprops) => {
                         </Tooltip>
                       </TooltipProvider>
                     )}
-                    {detail.hasIcon && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <InfoIcon className='w-6 h-6 cursor-pointer' />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-                              <ItemGrid
-                                title='Furnishings'
-                                data={propertyData.furnishingExtras}
-                                type='furnishing'
-                              />
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
                   </div>
                 </div>
               ))}

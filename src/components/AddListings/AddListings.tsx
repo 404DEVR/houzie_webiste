@@ -14,29 +14,45 @@ interface AddListingsProps {
   setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const ProgressBarCheckpoints = [
-  {
-    label: 'Property Details',
-    placement: 1,
-  },
-  {
-    label: 'Address',
-    placement: 2,
-  },
-  {
-    label: 'Photos',
-    placement: 3,
-  },
-  {
-    label: 'Verify',
-    placement: 4,
-  },
-  {
-    label: 'Review',
-    placement: 5,
-  },
-];
 const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
+  const ProgressBarCheckpoints =
+    page === 'edit'
+      ? [
+          {
+            label: 'Property Details',
+            placement: 1,
+          },
+          {
+            label: 'Address',
+            placement: 2,
+          },
+          {
+            label: 'Photos',
+            placement: 3,
+          },
+        ]
+      : [
+          {
+            label: 'Property Details',
+            placement: 1,
+          },
+          {
+            label: 'Address',
+            placement: 2,
+          },
+          {
+            label: 'Photos',
+            placement: 3,
+          },
+          {
+            label: 'Verify',
+            placement: 4,
+          },
+          {
+            label: 'Review',
+            placement: 5,
+          },
+        ];
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 6;
 
@@ -77,6 +93,7 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
 
       <div className='md:max-w-4xl h-auto w-full px-1 md:mb-0 mb-16 py-1 md:py-8 md:px-8 mx-auto md:border border-gray-200 rounded-lg'>
         <ProgressBar
+          page={page || ''}
           currentpage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPages}
@@ -91,7 +108,11 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
         />
       )}
       {currentPage === 2 && (
-        <PropertyLocation handleNext={handleNext} handleBack={handleBack} />
+        <PropertyLocation
+          handleNext={handleNext}
+          handleBack={handleBack}
+          page={page}
+        />
       )}
       {currentPage === 3 && (
         <FileUploader
@@ -100,10 +121,10 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
           page={page}
         />
       )}
-      {currentPage === 4 && (
+      {page !== 'edit' && currentPage === 4 && (
         <VerificationForm handleNext={handleNext} handleBack={handleBack} />
       )}
-      {currentPage === 5 && (
+      {page !== 'edit' && currentPage === 5 && (
         <Review
           handleBack={handleBack}
           page={page}

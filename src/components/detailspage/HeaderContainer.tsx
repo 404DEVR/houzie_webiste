@@ -114,7 +114,7 @@ export default function HeaderContainer({
         </h1>
       </div>
 
-      <div className='flex items-center gap-3 w-full sm:w-auto'>
+      <div className='flex items-center gap-3 w-auto'>
         <Dialog>
           <DialogTrigger asChild>
             <Button

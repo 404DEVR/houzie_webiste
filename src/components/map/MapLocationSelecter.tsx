@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from 'leaflet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -29,6 +29,12 @@ function LocationMarker({
     },
   });
 
+  useEffect(() => {
+    if (location) {
+      map.flyTo(location, map.getZoom());
+    }
+  }, [location, map]);
+
   return location === null ? null : (
     <Marker
       position={location}
@@ -46,17 +52,14 @@ function LocationMarker({
 
 interface MapLocationSelectorProps {
   onLocationSave: (location: Location) => void;
+  initialLocation?: Location | null;
 }
 
 export default function MapLocationSelector({
   onLocationSave,
+  initialLocation = null,
 }: MapLocationSelectorProps) {
-  const delhiCoordinates: Location = {
-    lat: 28.6139, // Latitude of Delhi
-    lng: 77.209, // Longitude of Delhi
-  };
-
-  const [location, setLocation] = useState<Location | null>(delhiCoordinates); // Initialize with Delhi coordinates
+  const [location, setLocation] = useState<Location | null>(initialLocation);
 
   const handleSaveLocation = () => {
     if (location) {
@@ -68,7 +71,7 @@ export default function MapLocationSelector({
     <div className='space-y-4'>
       <div className='h-[400px] w-full'>
         <MapContainer
-          center={delhiCoordinates}
+          center={location || [0, 0]}
           zoom={13}
           scrollWheelZoom={false}
           style={{ height: '100%', width: '100%' }}
@@ -106,7 +109,7 @@ export default function MapLocationSelector({
         className='hover:bg-[#42A4AE] hover:text-white'
         onClick={handleSaveLocation}
       >
-        Save Location
+        {initialLocation ? 'Update Location' : 'Save Location'}
       </Button>
     </div>
   );

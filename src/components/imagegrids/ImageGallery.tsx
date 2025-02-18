@@ -68,7 +68,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
       <div className='flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-4 sm:mt-7'>
         <Card className='flex-1 overflow-hidden sm:rounded-xl border-0'>
           <CardContent className='p-0'>
-            <div className='relative w-full h-48 sm:h-56 md:h-[34.8rem]'>
+            <div className='relative w-full h-48 sm:h-[34.8rem]'>
               <Image
                 src={propertyData.mainImage}
                 alt={propertyData.title}

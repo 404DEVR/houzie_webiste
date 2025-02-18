@@ -12,6 +12,7 @@ interface ProgressBarProps {
   currentpage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
+  page: string;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -19,12 +20,32 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   currentpage,
   setCurrentPage,
   totalPages,
+  page,
 }) => {
   const handlecircel = (checkpoint: Checkpoint) => {
     setCurrentPage(checkpoint.placement);
   };
 
-  const progressValue = (currentpage / (totalPages - 1)) * 100;
+  const calculateProgressValue = () => {
+    if (page === 'edit') {
+      // Optimize for three points in edit mode
+      switch (currentpage) {
+        case 1:
+          return 30;
+        case 2:
+          return 70;
+        case 3:
+          return 100;
+        default:
+          return 0;
+      }
+    } else {
+      // Original calculation for other pages
+      return (currentpage / (totalPages - 1)) * 100;
+    }
+  };
+
+  const progressValue = calculateProgressValue();
 
   return (
     <div className='relative w-full mx-auto mt-4 mb-8 md:mt-8 md:mb-16'>

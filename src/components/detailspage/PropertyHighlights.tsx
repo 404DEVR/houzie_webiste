@@ -35,6 +35,7 @@ export default function PropertyHighlights({
   return (
     <Card className='flex flex-col items-start gap-5 p-5'>
       <CardContent className='flex flex-col gap-[22px] w-full p-0'>
+        <h2 className='font-semibold text-2xl leading-9'>Property Highlight</h2>
         <div className='flex flex-wrap items-start gap-2'>
           {propertyFeatures.map((feature, index) => (
             <Badge
@@ -50,7 +51,7 @@ export default function PropertyHighlights({
           ))}
         </div>
 
-        <div className='flex flex-wrap items-start mx-auto md:mx-0 gap-2 max-w-[70%] sm:max-w-[80%]'>
+        <div className='flex flex-wrap items-start mx-0 gap-2 max-w-[70%] sm:max-w-[80%]'>
           {financialDetails.map((detail, index) => (
             <Card key={index} className='border-[#eaebef] flex-[1]'>
               <CardContent className='flex items-center gap-[1.47px] p-1.5'>

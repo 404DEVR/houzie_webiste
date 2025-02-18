@@ -1,9 +1,7 @@
 'use client';
 
 import { SlidersHorizontal } from 'lucide-react';
-import { useState } from 'react';
-
-import { useFilters } from '@/lib/context/FilterContext';
+import { useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,6 +11,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
+import { useFilters } from '@/lib/context/FilterContext';
 
 function toTitleCase(str: string) {
   return str
@@ -24,8 +23,6 @@ function toTitleCase(str: string) {
 
 export default function PropertyComponent() {
   const { filters, updateFilters } = useFilters();
-
-  const [sliderValue, setSliderValue] = useState(filters.rent);
 
   const propertyTypes = [
     'BUILDER_FLOOR',
@@ -49,7 +46,7 @@ export default function PropertyComponent() {
 
   const furnishingTypes = ['FULLY_FURNISHED', 'SEMI_FURNISHED', 'NONE'];
 
-  const amenities = [
+  const allAmenities = [
     'WIFI',
     'POWER_BACKUP',
     'FOUR_WHEELER_PARKING',
@@ -69,6 +66,40 @@ export default function PropertyComponent() {
 
   const parkingTypes = ['TWO_WHEELER_PARKING', 'FOUR_WHEELER_PARKING'];
 
+  const handleRentChange = useCallback(
+    (value: number[]) => {
+      if (value.length === 2) {
+        updateFilters('rent', [value[0], value[1]]);
+      }
+    },
+    [updateFilters]
+  );
+
+  const handleCheckboxChange = useCallback(
+    (
+      key:
+        | 'propertyType'
+        | 'bhkType'
+        | 'availableFor'
+        | 'furnishing'
+        | 'amenities'
+        | 'parking',
+      value: string,
+      checked: boolean | string
+    ) => {
+      const currentValue = filters[key] || [];
+      let newValue: string[];
+
+      if (checked) {
+        newValue = [...currentValue, value];
+      } else {
+        newValue = currentValue.filter((item) => item !== value);
+      }
+      updateFilters(key, newValue);
+    },
+    [filters, updateFilters]
+  );
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -86,157 +117,109 @@ export default function PropertyComponent() {
               defaultValue={filters.rent}
               max={50000}
               step={1000}
-              onValueChange={(value: any) => {
-                setSliderValue(value);
-                updateFilters('rent', value);
-              }}
+              onValueChange={handleRentChange}
             />
             <div className='flex justify-between text-sm'>
-              <span>₹{sliderValue[0]}</span>
-              <span>₹{sliderValue[1]}</span>
+              <span>₹{filters.rent[0]}</span>
+              <span>₹{filters.rent[1]}</span>
             </div>
           </div>
 
+          {/* Property Type */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Property Type</h4>
             {propertyTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.propertyType.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('propertyType', [
-                        ...filters.propertyType,
-                        type,
-                      ]);
-                    } else {
-                      updateFilters(
-                        'propertyType',
-                        filters.propertyType.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('propertyType', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
           </div>
 
-          <div className='space-y-2'>
+          {/* BHK Type */}
+          {/* <div className='space-y-2'>
             <h4 className='font-medium'>BHK Type</h4>
             {bhkTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.bhkType.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('bhkType', [...filters.bhkType, type]);
-                    } else {
-                      updateFilters(
-                        'bhkType',
-                        filters.bhkType.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('bhkType', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className='space-y-2'>
+          {/* Available For */}
+          {/* <div className='space-y-2'>
             <h4 className='font-medium'>Available For</h4>
             {availableForTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.availableFor.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('availableFor', [
-                        ...filters.availableFor,
-                        type,
-                      ]);
-                    } else {
-                      updateFilters(
-                        'availableFor',
-                        filters.availableFor.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('availableFor', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className='space-y-2'>
+          {/* Furnishing */}
+          {/* <div className='space-y-2'>
             <h4 className='font-medium'>Furnishing</h4>
             {furnishingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.furnishing.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('furnishing', [
-                        ...filters.furnishing,
-                        type,
-                      ]);
-                    } else {
-                      updateFilters(
-                        'furnishing',
-                        filters.furnishing.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('furnishing', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className='space-y-2'>
+          {/* Amenities */}
+          {/* <div className='space-y-2'>
             <h4 className='font-medium'>Amenities</h4>
-            {amenities.map((type) => (
+            {allAmenities.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.amenities.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('amenities', [...filters.amenities, type]);
-                    } else {
-                      updateFilters(
-                        'amenities',
-                        filters.amenities.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('amenities', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className='space-y-2'>
+          {/* Parking */}
+          {/* <div className='space-y-2'>
             <h4 className='font-medium'>Parking</h4>
             {parkingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
                 <Checkbox
                   checked={filters.parking.includes(type)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      updateFilters('parking', [...filters.parking, type]);
-                    } else {
-                      updateFilters(
-                        'parking',
-                        filters.parking.filter((t) => t !== type)
-                      );
-                    }
-                  }}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('parking', type, checked)
+                  }
                 />
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </PopoverContent>
     </Popover>

@@ -1,7 +1,5 @@
 'use client';
 
-import { useFilters } from '@/lib/context/FilterContext';
-
 import PropertyComponent from '@/components/propertpage/PropertyComponent';
 import {
   Select,
@@ -11,12 +9,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useFilters } from '@/lib/context/FilterContext';
 
 interface PropertyFiltersProps {
   onViewChange: (view: string) => void;
 }
 
-// Helper function to convert snake_case to Title Case
 function toTitleCase(str: string) {
   return str
     .toLowerCase()
@@ -29,20 +27,16 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
   const { filters, updateFilters } = useFilters();
 
   const handlePropertyTypeChange = (value: string) => {
-    if (value === '') {
-      updateFilters('propertyType', []);
-    } else {
-      updateFilters('propertyType', [value]);
-    }
+    updateFilters('propertyType', value ? [value] : []);
   };
 
   const handleConfigurationChange = (value: string) => {
-    if (value === '') {
-      updateFilters('bhkType', []);
-    } else {
-      updateFilters('bhkType', [value]);
-    }
+    updateFilters('bhkType', value ? [value] : []);
   };
+
+  // const handleRadiusChange = (value: string) => {
+  //   updateFilters('radius', value);
+  // };
 
   const propertyTypes = [
     'BUILDER_FLOOR',
@@ -65,19 +59,23 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
   return (
     <div className='w-full mx-auto px-4 space-y-4'>
       <div className='flex flex-wrap items-center gap-3'>
-        <Select>
+        {/* <Select onValueChange={handleRadiusChange} value={filters.radius || ''}>
           <SelectTrigger className='w-[120px] bg-white rounded-xl border-gray-200'>
             <SelectValue placeholder='Radius' />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value=''>Any</SelectItem>
             <SelectItem value='5'>5 km</SelectItem>
             <SelectItem value='10'>10 km</SelectItem>
             <SelectItem value='15'>15 km</SelectItem>
             <SelectItem value='20'>20 km</SelectItem>
             <SelectItem value='25'>20+ km</SelectItem>
           </SelectContent>
-        </Select>
-        <Select onValueChange={handlePropertyTypeChange}>
+        </Select> */}
+        <Select
+          onValueChange={handlePropertyTypeChange}
+          value={filters.propertyType[0] || ''}
+        >
           <SelectTrigger className='w-[140px] bg-white rounded-xl border-gray-200'>
             <SelectValue placeholder='Property Type' />
           </SelectTrigger>
@@ -89,7 +87,10 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
             ))}
           </SelectContent>
         </Select>
-        <Select onValueChange={handleConfigurationChange}>
+        <Select
+          onValueChange={handleConfigurationChange}
+          value={filters.bhkType[0] || ''}
+        >
           <SelectTrigger className='w-[140px] bg-white rounded-xl border-gray-200'>
             <SelectValue placeholder='Configuration' />
           </SelectTrigger>

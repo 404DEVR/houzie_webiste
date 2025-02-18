@@ -10,12 +10,21 @@ import { CiMail } from 'react-icons/ci';
 
 import useAuth from '@/hooks/useAuth';
 
+import { Property } from '@/components/detailspage/HeaderContainer';
+import LeadForm from '@/components/detailspage/LeadFrom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface ProfileCardProps {
-  brokerid: string;
+  propertyData?: Property;
   name?: string; // Make these optional since we're fetching them
   rating?: number;
   listingCount?: number;
@@ -37,17 +46,16 @@ interface Stats {
 }
 
 const ProfileCard = ({
-  brokerid,
+  propertyData,
   showContact = false,
   postedDate,
   avatarUrl,
 }: ProfileCardProps) => {
   const { auth } = useAuth();
-  const [brokerData, setBrokerData] = useState<ProfileCardProps>({
-    brokerid: brokerid,
-  });
+  const [brokerData, setBrokerData] = useState<ProfileCardProps>();
   const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const brokerid = propertyData ? propertyData.broker.id : '';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +88,6 @@ const ProfileCard = ({
           }
         ); // Fetch data from API
         setBrokerData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Failed to fetch broker data:', error);
         // Handle error appropriately (e.g., display an error message)
@@ -100,15 +107,31 @@ const ProfileCard = ({
       day: 'numeric',
     };
     const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, options); // Format the date
+    return date.toLocaleDateString(undefined, options);
+  };
+
+  const handleLeadSubmit = async (formData) => {
+    try {
+      const response = await axios.post(
+        'https://api.houzie.in/leads',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
+        }
+      );
+      console.log('Lead submitted successfully:', response.data);
+    } catch (error) {
+      console.error('Error submitting lead:', error);
+    }
   };
 
   if (isLoading) {
-    return <div>Loading broker profile...</div>; // Or a more sophisticated loader
+    return <div>Loading broker profile...</div>;
   }
 
-  const { rating, phoneNumber, email } = brokerData; // Destructure from brokerData
-
+  const rating = 3;
   return (
     <Card className='w-full md:ml-auto mb-6'>
       <div className='flex flex-col items-center'>
@@ -116,7 +139,7 @@ const ProfileCard = ({
           {avatarUrl && (
             <Image
               src={avatarUrl}
-              alt={name || 'Broker Avatar'} // Use a default alt
+              alt='Broker Avatar'
               width={96}
               height={96}
               className='rounded-full object-cover'
@@ -129,7 +152,7 @@ const ProfileCard = ({
             <div>
               <p className='text-sm leading-none '>Posted By</p>
               <h3 className='font-semibold'>
-                {brokerData.name
+                {brokerData && brokerData.name
                   ? brokerData.name
                       .split(' ')
                       .map(
@@ -159,18 +182,22 @@ const ProfileCard = ({
             </div>
           </div>
 
-          {phoneNumber && email && (
-            <div className='mt-3 space-y-2'>
-              <div className='grid grid-cols-2 gap-2'>
+          <div className='mt-3 space-y-2'>
+            <div className='grid grid-cols-2 gap-2'>
+              {brokerData?.phoneNumber && (
                 <div className='flex items-center gap-2'>
                   <div className='w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center'>
                     <BsTelephone className='w-5 h-5' />
                   </div>
                   <div className='flex flex-col min-w-0'>
                     <span className='text-[#42A4AE] text-sm'>Call us</span>
-                    <p className='text-xs truncate'>{phoneNumber}</p>
+                    <p className='text-xs truncate'>
+                      {brokerData?.phoneNumber}
+                    </p>
                   </div>
                 </div>
+              )}
+              {brokerData?.email && (
                 <div className='flex items-center gap-2'>
                   <div className='w-10 h-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center'>
                     <CiMail className='w-5 h-5' />
@@ -178,44 +205,42 @@ const ProfileCard = ({
                   <div className='flex flex-col min-w-0 flex-1'>
                     <span className='text-[#42A4AE] text-sm'>Email</span>
                     <a
-                      href={`mailto:${brokerData.email}`}
+                      href={`mailto:${brokerData ? brokerData.email : ''}`}
                       className='text-xs truncate text-gray-800 hover:text-blue-500'
                     >
-                      {brokerData.email}
+                      {brokerData ? brokerData.email : ''}
                     </a>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
 
-          {auth?.accessToken && (
-            <div className='mt-3 space-y-2'>
-              <div className='flex justify-between'>
-                <span className='text-sm '>No. of Listing</span>
-                <span className='text-sm text-teal-600'>
-                  {stats ? stats.activeListings + stats.inActiveListings : 0}
-                </span>{' '}
-                {/* Default to 0 */}
-              </div>
-              <div className='flex justify-between'>
-                <span className='text-sm '>Total Deals</span>
-                <span className='text-sm text-teal-600'>
-                  {stats ? stats.activeLeads + stats.inActiveLeads : 0}
-                </span>{' '}
-                {/* Default to 0 */}
-              </div>
-              <div className='flex justify-between'>
-                <span className='text-sm '>Member Since</span>
-                <span className='text-sm text-teal-600'>
-                  {brokerData?.createdAt
-                    ? formatDate(brokerData?.createdAt)
-                    : 'N/A'}
-                </span>{' '}
-                {/* Default to 'N/A' */}
-              </div>
+          <div className='mt-3 space-y-2'>
+            <div className='flex justify-between'>
+              <span className='text-sm '>No. of Listing</span>
+              <span className='text-sm text-teal-600'>
+                {stats ? stats.activeListings + stats.inActiveListings : 0}
+              </span>{' '}
+              {/* Default to 0 */}
             </div>
-          )}
+            <div className='flex justify-between'>
+              <span className='text-sm '>Total Deals</span>
+              <span className='text-sm text-teal-600'>
+                {stats ? stats.activeLeads + stats.inActiveLeads : 0}
+              </span>{' '}
+              {/* Default to 0 */}
+            </div>
+            <div className='flex justify-between'>
+              <span className='text-sm '>Member Since</span>
+              <span className='text-sm text-teal-600'>
+                {brokerData?.createdAt
+                  ? formatDate(brokerData?.createdAt)
+                  : 'N/A'}
+              </span>{' '}
+              {/* Default to 'N/A' */}
+            </div>
+          </div>
 
           {!showContact && (
             <div className='mt-3'>
@@ -235,9 +260,22 @@ const ProfileCard = ({
               </Button>
             </div>
           ) : (
-            <Button className='w-full mt-3 bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
-              Connect
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className='w-full mt-3 bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
+                  Connect
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Submit Lead</DialogTitle>
+                </DialogHeader>
+                <LeadForm
+                  onSubmit={handleLeadSubmit}
+                  propertyData={propertyData}
+                />
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       </div>

@@ -1,13 +1,13 @@
-
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface CustomInputInterface
   extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?:string
+  label?: string;
   required?: boolean;
   unit?: string;
   customunit?: boolean;
+  error?: string;
 }
 
 const CustomInput = ({
@@ -15,17 +15,17 @@ const CustomInput = ({
   required = false,
   unit,
   customunit,
+  error,
   ...props
 }: CustomInputInterface) => {
-
   return (
     <div className='relative'>
-      {label && 
+      {label && (
         <Label className='text-lg font-bold'>
-              {label} {required && <span className='text-red-500'>*</span>}
+          {label} {required && <span className='text-red-500'>*</span>}
         </Label>
-      }
-      
+      )}
+
       <Input
         {...props}
         className='placeholder:text-slate-700  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
@@ -43,6 +43,7 @@ const CustomInput = ({
           <span>{unit}</span>
         </div>
       )}
+      {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}
     </div>
   );
 };

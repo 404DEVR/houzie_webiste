@@ -1,9 +1,7 @@
-// FilterContext.tsx
 'use client';
 
 import { createContext, ReactNode, useContext, useState } from 'react';
 
-// Updated Type Definitions to match your actual data
 type PropertyType =
   | 'BUILDER_FLOOR'
   | 'VILLA'

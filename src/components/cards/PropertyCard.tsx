@@ -1,7 +1,7 @@
 import { Bath, Bed, Heart, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ interface FinancialDetails {
   amount: string;
 }
 
-interface PropertyCardProps {
+export interface PropertyCardProps {
   property: {
     id: string;
     title: string;
@@ -40,15 +40,36 @@ interface PropertyCardProps {
     availableFrom: string;
   };
   iscreate?: boolean;
+  loadImage: (url: string) => Promise<string>;
 }
 
-export function PropertyCard({ property, iscreate }: PropertyCardProps) {
+export function PropertyCard({
+  property,
+  iscreate,
+  loadImage,
+}: PropertyCardProps) {
   const router = useRouter();
   const [favorites, setFavorites] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [mainImageSrc, setMainImageSrc] = useState<string | null>(null);
 
   const toggleFavorite = () => setFavorites((prev) => !prev);
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
+
+  useEffect(() => {
+    async function loadMainImage() {
+      if (property.mainImage) {
+        try {
+          const cachedUrl = await loadImage(property.mainImage);
+          setMainImageSrc(cachedUrl);
+        } catch (error) {
+          console.error('Error loading image:', error);
+          setMainImageSrc('/svg/no-results.svg');
+        }
+      }
+    }
+    loadMainImage();
+  }, [property.mainImage, loadImage]);
 
   const propertyFeatures: PropertyFeature[] = [
     { icon: Bed, label: `${property.bedrooms} Beds` },
@@ -84,13 +105,19 @@ export function PropertyCard({ property, iscreate }: PropertyCardProps) {
           } flex items-center justify-center p-4`}
         >
           <div className='relative w-full h-full'>
-            <Image
-              src={property.mainImage}
-              alt={property.title}
-              fill
-              className='object-cover rounded-md'
-              sizes='(max-width: 640px) 100vw, 300px'
-            />
+            {mainImageSrc ? (
+              <Image
+                src={mainImageSrc}
+                alt={property.title}
+                fill
+                className='object-cover rounded-md'
+                sizes='(max-width: 640px) 100vw, 300px'
+              />
+            ) : (
+              <div className='flex items-center justify-center w-full h-full bg-gray-200 rounded-md'>
+                <p>Loading...</p>
+              </div>
+            )}
             <button
               className='absolute top-3 right-3 p-2'
               onClick={toggleFavorite}
