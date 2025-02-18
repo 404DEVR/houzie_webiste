@@ -43,14 +43,12 @@ export default function DetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // In-memory cache for images
   const [imageCache, setImageCache] = useState<Record<string, string>>({});
 
-  // Function to load and cache an image
   const loadImage = useCallback(
     async (url: string) => {
       if (imageCache[url]) {
-        return imageCache[url]; // Return cached URL
+        return imageCache[url];
       }
 
       try {
@@ -58,7 +56,6 @@ export default function DetailsPage() {
         const blob = response.data;
         const imageUrl = URL.createObjectURL(blob);
 
-        // Update the cache
         setImageCache((prevCache) => ({ ...prevCache, [url]: imageUrl }));
         return imageUrl;
       } catch (error) {
@@ -69,66 +66,43 @@ export default function DetailsPage() {
     [imageCache]
   );
 
+  const fetchProperties = async () => {
+    try {
+      setLoading(true);
+
+      const requestBody = {
+        propertyType:
+          filters.propertyType.length > 0
+            ? filters.propertyType
+            : ['FLAT_APARTMENT'],
+      };
+
+      const url = `https://api.houzie.in/listings`;
+
+      const response = await axios.request({
+        method: 'GET',
+        url,
+        data: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setProperties(response.data.data);
+      console.log('Fetched Properties:', response.data.data);
+      console.log('Request Body:', JSON.stringify(requestBody));
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching properties:', err);
+      setError('Failed to fetch properties. Please try again.');
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        setLoading(true);
-
-        // Construct query params based on filters
-        const params = new URLSearchParams();
-
-        // Rent range
-        if (filters.rent[0] > 0)
-          params.append('minPrice', filters.rent[0].toString());
-        if (filters.rent[1] < 50000)
-          params.append('maxPrice', filters.rent[1].toString());
-
-        // Property type
-        if (filters.propertyType.length > 0) {
-          params.append('propertyType', filters.propertyType.join(','));
-        }
-
-        // BHK type
-        if (filters.bhkType.length > 0) {
-          params.append('bhkType', filters.bhkType.join(','));
-        }
-
-        // Available For
-        if (filters.availableFor.length > 0) {
-          params.append('availableFor', filters.availableFor.join(','));
-        }
-
-        // Furnishing
-        if (filters.furnishing.length > 0) {
-          params.append('furnishing', filters.furnishing.join(','));
-        }
-
-        // Amenities
-        if (filters.amenities.length > 0) {
-          params.append('amenities', filters.amenities.join(','));
-        }
-
-        // Parking
-        if (filters.parking.length > 0) {
-          params.append('parking', filters.parking.join(','));
-        }
-
-        const url = `https://api.houzie.in/listings?${params.toString()}`;
-
-        const response = await axios.get(url);
-        setProperties(response.data.data);
-        console.log(response.data.data);
-        console.log(url);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchProperties();
-  }, [filters]);
+  }, [filters.propertyType]);
 
-  //Pre-load images into cache
   useEffect(() => {
     async function preloadImages() {
       if (properties && properties.length > 0) {

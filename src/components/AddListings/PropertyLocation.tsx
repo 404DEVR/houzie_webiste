@@ -292,6 +292,7 @@ const PropertyLocation = ({
             Location
           </Label>
           <MapLocationSelecter
+            page={page || ''}
             onLocationSave={handleLocationSave}
             initialLocation={getInitialLocation()}
           />

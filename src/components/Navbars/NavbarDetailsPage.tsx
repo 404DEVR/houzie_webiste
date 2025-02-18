@@ -85,6 +85,7 @@ const NavbarDetailsPage = () => {
             alt='Houzie Logo'
             width={24}
             height={24}
+            priority
             className='w-6 h-6 sm:w-7 sm:h-7'
           />
           <span className='font-medium text-white text-xl sm:text-2xl md:text-[32px] leading-tight sm:leading-[48px] font-sans'>
@@ -143,7 +144,7 @@ const NavbarDetailsPage = () => {
                 asChild
                 className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
               >
-                <Link href='/login'>Add Listing</Link>
+                <Link href='/broker'>Add Listing</Link>
               </Button>
               <Button
                 asChild

@@ -1,19 +1,21 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import type { NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('auth')?.value;
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get('authToken')?.value;
 
-  if (!token) {
-    return redirectToLogin(request);
+  const protectedRoutes = ['/broker', '/broker/:path*'];
+  const loginPath = '/login';
+
+  if (protectedRoutes.includes(req.nextUrl.pathname)) {
+    if (!token) {
+      const url = new URL(loginPath, req.url);
+      url.searchParams.set('redirect', req.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
   }
-}
 
-function redirectToLogin(request: NextRequest) {
-  const loginUrl = new URL('/login', request.url);
-  loginUrl.searchParams.set('callbackUrl', request.url);
-  return NextResponse.redirect(loginUrl);
+  return NextResponse.next();
 }
 
 export const config = {

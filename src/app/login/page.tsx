@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
@@ -37,6 +37,9 @@ const formSchema = z.object({
 const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw';
 
 const SignUpForm = () => {
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/dashboard';
+
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -77,7 +80,10 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push('/');
+      // router.push(`${callbackUrl}`);
+      router.replace(redirectPath);
+
+      console.log(redirectPath);
       toast({
         title: 'Login Successful',
         description: 'Successfully signed in',
@@ -85,10 +91,8 @@ const SignUpForm = () => {
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
       if (axios.isAxiosError(error)) {
-        // If it's an Axios error, we can access the response data
         errorMessage = error.response?.data?.message;
       } else if (error instanceof Error) {
-        // If it's a standard Error object
         errorMessage = error.message;
       }
       toast({

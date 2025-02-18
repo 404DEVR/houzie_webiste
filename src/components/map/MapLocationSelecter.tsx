@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from 'leaflet';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
@@ -53,13 +53,18 @@ function LocationMarker({
 interface MapLocationSelectorProps {
   onLocationSave: (location: Location) => void;
   initialLocation?: Location | null;
+  page: string; // 'edit' or other
 }
 
 export default function MapLocationSelector({
   onLocationSave,
   initialLocation = null,
+  page,
 }: MapLocationSelectorProps) {
-  const [location, setLocation] = useState<Location | null>(initialLocation);
+  const defaultLocation: Location = { lat: 28.6139, lng: 77.209 }; // Delhi
+  const [location, setLocation] = useState<Location | null>(
+    page === 'edit' ? initialLocation : defaultLocation
+  );
 
   const handleSaveLocation = () => {
     if (location) {
@@ -71,7 +76,7 @@ export default function MapLocationSelector({
     <div className='space-y-4'>
       <div className='h-[400px] w-full'>
         <MapContainer
-          center={location || [0, 0]}
+          center={location || defaultLocation}
           zoom={13}
           scrollWheelZoom={false}
           style={{ height: '100%', width: '100%' }}

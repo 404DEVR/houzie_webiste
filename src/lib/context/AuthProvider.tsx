@@ -2,13 +2,7 @@
 
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 interface User {
   email: string;
@@ -29,11 +23,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const isTokenExpired = (token: string): boolean => {
   try {
     const decodedToken: any = jwtDecode(token);
-    console.log(decodedToken);
     return decodedToken.exp < Math.floor(Date.now() / 1000);
   } catch (error) {
     console.error('Error decoding token:', error);
-    return true; // Assume token is expired if it can't be decoded
+    return true;
   }
 };
 
@@ -47,7 +40,7 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [auth, setAuth] = useState<User | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const logout = useCallback(() => {
     setAuth(null);
@@ -56,40 +49,26 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const authCookie = getCookie('auth');
+
     if (authCookie) {
       try {
-        const userData = JSON.parse(authCookie as string);
-        if (isTokenExpired(userData.accessToken)) {
-          logout();
-        } else {
-          setAuth(userData);
-        }
+        const userData = JSON.parse(authCookie as string) as User;
+        setAuth(userData);
       } catch (error) {
         console.error('Error parsing auth cookie:', error);
-        logout();
+        setAuth(null);
       }
+    } else {
+      setAuth(null);
     }
 
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    intervalRef.current = setInterval(
-      () => checkTokenExpiration(auth, logout),
-      60000
-    );
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [logout]);
+    setLoading(false);
+  }, [setAuth]);
 
   const login = useCallback((userData: User) => {
     setAuth(userData);
     setCookie('auth', JSON.stringify(userData), {
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60,
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -102,6 +81,10 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
     login,
     logout,
   };
+
+  if (loading) {
+    return <></>;
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

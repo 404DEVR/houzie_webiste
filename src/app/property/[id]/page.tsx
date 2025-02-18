@@ -64,6 +64,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   const router = useRouter();
   const { auth } = useAuth();
 
+  console.log(auth?.accessToken);
   useEffect(() => {
     const fetchPropertyData = async () => {
       setIsLoading(true);
