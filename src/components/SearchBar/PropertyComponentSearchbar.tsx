@@ -23,10 +23,41 @@ const PropertyComponentSearchbar = () => {
   });
 
   const propertyTypes = [
-    { id: 'builderFloar', label: 'Builder Floar' },
-    { id: 'villa', label: 'Villa' },
-    { id: 'CoLiving/PG', label: 'Co Living/PG' },
-    { id: 'flatAppartment', label: 'Flat Appartment' },
+    {
+      id: 'builderFloor',
+      label: 'Builder Floor',
+      description:
+        'Independent floors in a low-rise building, offering privacy and exclusivity.',
+    },
+    {
+      id: 'villa',
+      label: 'Villa',
+      description:
+        'Luxurious, detached homes with private gardens and premium amenities.',
+    },
+    {
+      id: 'coliving',
+      label: 'Coliving',
+      description:
+        'Shared living spaces designed for community and convenience, ideal for students and young professionals.',
+    },
+    {
+      id: 'pg',
+      label: 'PG',
+      description:
+        'Affordable shared accommodation, typically including meals and basic amenities.',
+    },
+    {
+      id: 'flatApartment',
+      label: 'Flat Apartment',
+      description: 'Standard residential units within a multi-story building.',
+    },
+    {
+      id: 'preoccupiedApartment',
+      label: 'Preoccupied Apartment',
+      description:
+        'Apartments currently occupied by tenants, often available for investment.',
+    },
   ];
 
   const configurations = [
@@ -34,7 +65,8 @@ const PropertyComponentSearchbar = () => {
     { id: '2bhk', label: '2 BHK' },
     { id: '3bhk', label: '3 BHK' },
     { id: '4bhk', label: '4 BHK' },
-    { id: 'studio', label: 'Studio' },
+    { id: '4+bhk', label: '4+ BHK' },
+    { id: 'studio', label: 'Studio/1 RK' },
   ];
 
   const livingTypes = [
@@ -106,8 +138,7 @@ const PropertyComponentSearchbar = () => {
               </span>
               <div className='flex flex-col justify-around py-2 px-4 space-y-2 rounded-md w-full'>
                 <p className='text-gray-500 font-poppins text-xs font-normal leading-4 tracking-tighter'>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  {option.description}
                 </p>
               </div>
             </label>
@@ -118,10 +149,12 @@ const PropertyComponentSearchbar = () => {
   );
 
   const showConfigurations = selectedValues.propertyType.some(
-    (type) => type === 'builderFloar' || type === 'flatAppartment'
+    (type) => type === 'builderFloor' || type === 'flatApartment'
   );
 
-  const showLivingTypes = selectedValues.propertyType.includes('CoLiving/PG');
+  const showLivingTypes = selectedValues.propertyType.some(
+    (type) => type === 'coliving' || type === 'pg'
+  );
 
   const [isOpen, setIsOpen] = useState(false);
 

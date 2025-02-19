@@ -1,7 +1,7 @@
 import { Bath, Bed, Heart, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -80,17 +80,18 @@ export function PropertyCard({
   const financialDetails: FinancialDetails[] = [
     { icon: Wallet, label: 'Rent', amount: `₹${property.price}` },
     { icon: Lock, label: 'Security Deposit', amount: `₹${property.security}` },
+    { icon: Wallet, label: 'Brokerage', amount: `₹${property.brokerage}` },
   ];
 
-  if (property.maintenanceCharges > 0) {
-    financialDetails.push({
-      icon: Wallet,
-      label: 'Maintenance',
-      amount: `₹${property.maintenanceCharges} ${
-        property.isMaintenanceIncluded ? '(Included)' : '(Extra)'
-      }`,
-    });
-  }
+  // if (property.maintenanceCharges > 0) {
+  //   financialDetails.push({
+  //     icon: Wallet,
+  //     label: 'Maintenance',
+  //     amount: `₹${property.maintenanceCharges} ${
+  //       property.isMaintenanceIncluded ? '(Included)' : '(Extra)'
+  //     }`,
+  //   });
+  // }
 
   return (
     <Card

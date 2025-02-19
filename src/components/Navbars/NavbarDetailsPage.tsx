@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { User } from 'lucide-react';
+import { Bell, LogOut, User } from 'lucide-react';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,6 +14,11 @@ import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface UserData {
   id: string;
@@ -105,29 +110,53 @@ const NavbarDetailsPage = () => {
         <div className='hidden md:flex items-center space-x-4'>
           {auth ? (
             <>
-              <div className='flex items-center gap-2 px-3 py-1 sm:px-5 sm:py-2 rounded-xl'>
-                <Card className='w-8 h-8 sm:w-[42px] sm:h-10 bg-white rounded-[9px] overflow-hidden'>
-                  <CardContent className='p-1 sm:p-2 flex items-center justify-center'>
-                    <User className='w-5 h-5 sm:w-6 sm:h-6 text-[#42A4AE]' />
-                  </CardContent>
-                </Card>
-                <span className='text-white text-sm sm:text-base'>
-                  {userData?.name}
-                </span>
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className='flex items-center gap-2 px-3 py-1 sm:px-5 sm:py-2 rounded-xl cursor-pointer'>
+                    <Card className='w-8 h-8 sm:w-[42px] sm:h-10 bg-white rounded-[9px] overflow-hidden'>
+                      <CardContent className='p-1 sm:p-2 flex items-center justify-center'>
+                        <User className='w-5 h-5 sm:w-6 sm:h-6 text-[#42A4AE]' />
+                      </CardContent>
+                    </Card>
+                    <span className='text-white text-sm sm:text-base'>
+                      {userData?.name}
+                    </span>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className='w-56'>
+                  <div className='flex flex-col space-y-2'>
+                    <Button
+                      onClick={() => router.push('/profile')}
+                      variant='outline'
+                      className='flex border-none justify-start items-center text-start space-x-2 hover:bg-gray-100 p-2 rounded'
+                    >
+                      <User size={18} />
+                      <span>Profile</span>
+                    </Button>
+                    <Button
+                      variant='outline'
+                      className='flex border-none justify-start items-center  space-x-2 hover:bg-gray-100 p-2 rounded'
+                    >
+                      <Bell size={18} />
+                      <span>Notifications</span>
+                    </Button>
+                    <Button
+                      variant='outline'
+                      onClick={handleLogout}
+                      className='flex border-none justify-start items-center  space-x-2 hover:bg-gray-100 p-2 rounded text-red-500 hover:text-red-500'
+                    >
+                      <LogOut size={18} />
+                      <span>Logout</span>
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
               <Button
                 variant='outline'
                 asChild
                 className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
               >
                 <Link href='/broker'>Add Listing</Link>
-              </Button>
-              <Button
-                onClick={handleLogout}
-                variant='outline'
-                className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-              >
-                Logout
               </Button>
             </>
           ) : (

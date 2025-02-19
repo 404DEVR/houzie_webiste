@@ -1,5 +1,7 @@
 'use client';
 
+import { useFilters } from '@/lib/context/FilterContext';
+
 import PropertyComponent from '@/components/propertpage/PropertyComponent';
 import {
   Select,
@@ -9,7 +11,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useFilters } from '@/lib/context/FilterContext';
 
 interface PropertyFiltersProps {
   onViewChange: (view: string) => void;
@@ -47,14 +48,7 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
     'FLAT_APARTMENT',
   ];
 
-  const bhkTypes = [
-    'ONE_RK',
-    'ONE_BHK',
-    'TWO_BHK',
-    'THREE_BHK',
-    'FOUR_BHK',
-    'FOUR_PLUS_BHK',
-  ];
+  const bhkTypes = ['1', '2', '3', '4', '4+'];
 
   return (
     <div className='w-full mx-auto px-4 space-y-4'>
@@ -97,7 +91,7 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
           <SelectContent>
             {bhkTypes.map((type) => (
               <SelectItem key={type} value={type}>
-                {toTitleCase(type)}
+                {type === '5+' ? `${type} BHK` : `${type} BHK`}
               </SelectItem>
             ))}
           </SelectContent>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useFilters } from '@/lib/context/FilterContext';
+import useAuth from '@/hooks/useAuth';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
@@ -36,6 +37,7 @@ interface Property {
 }
 
 export default function DetailsPage() {
+  const { auth } = useAuth();
   const router = useRouter();
   const { filters } = useFilters();
   const [activeView, setActiveView] = useState('list');
@@ -79,18 +81,11 @@ export default function DetailsPage() {
 
       const url = `https://api.houzie.in/listings`;
 
-      const response = await axios.request({
-        method: 'GET',
-        url,
-        data: JSON.stringify(requestBody),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.get(url);
 
       setProperties(response.data.data);
-      console.log('Fetched Properties:', response.data.data);
-      console.log('Request Body:', JSON.stringify(requestBody));
+      // console.log('Fetched Properties:', response.data.data);
+      // console.log('Request Body:', JSON.stringify(requestBody));
       setLoading(false);
     } catch (err) {
       console.error('Error fetching properties:', err);
@@ -244,11 +239,11 @@ export default function DetailsPage() {
                         ? imageCache[properties[0].mainImage] ||
                           '/images/Map.png'
                         : '/images/Map.png'
-                    } // Fallback to local image if mainImage is missing
+                    }
                     alt='Map View'
                     layout='fill'
                     objectFit='cover'
-                    fill // Use fill instead of width and height for layout="fill"
+                    fill
                     style={{ objectFit: 'cover' }}
                   />
                 </div>

@@ -1,17 +1,18 @@
 'use client';
 
 import { SlidersHorizontal } from 'lucide-react';
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+
+import { useFilters } from '@/lib/context/FilterContext';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Slider } from '@/components/ui/slider';
-import { useFilters } from '@/lib/context/FilterContext';
 
 function toTitleCase(str: string) {
   return str
@@ -23,6 +24,7 @@ function toTitleCase(str: string) {
 
 export default function PropertyComponent() {
   const { filters, updateFilters } = useFilters();
+  const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
 
   const propertyTypes = [
     'BUILDER_FLOOR',
@@ -66,14 +68,23 @@ export default function PropertyComponent() {
 
   const parkingTypes = ['TWO_WHEELER_PARKING', 'FOUR_WHEELER_PARKING'];
 
-  const handleRentChange = useCallback(
-    (value: number[]) => {
-      if (value.length === 2) {
-        updateFilters('rent', [value[0], value[1]]);
-      }
-    },
-    [updateFilters]
-  );
+  const handleSliderChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    const sliderRect = e.currentTarget.getBoundingClientRect();
+    const position = ((e.clientX - sliderRect.left) / sliderRect.width) * 50000;
+    const value = Math.min(Math.max(0, Math.round(position)), 50000);
+
+    if (isDragging === 'min') {
+      if (value <= filters.rent[1])
+        updateFilters('rent', [value, filters.rent[1]]);
+    } else if (isDragging === 'max') {
+      if (value >= filters.rent[0])
+        updateFilters('rent', [filters.rent[0], value]);
+    }
+  };
+
+  const getLeftPosition = (value: number) => {
+    return `${(value / 50000) * 100}%`;
+  };
 
   const handleCheckboxChange = useCallback(
     (
@@ -113,15 +124,55 @@ export default function PropertyComponent() {
           {/* Rent Range */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Rent</h4>
-            <Slider
-              defaultValue={filters.rent}
-              max={50000}
-              step={1000}
-              onValueChange={handleRentChange}
-            />
-            <div className='flex justify-between text-sm'>
-              <span>₹{filters.rent[0]}</span>
-              <span>₹{filters.rent[1]}</span>
+            <div className='relative w-[90%] mx-auto h-12'>
+              <div
+                className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                onMouseUp={() => setIsDragging(null)}
+                onMouseLeave={() => setIsDragging(null)}
+              >
+                <div
+                  className='absolute h-2 bg-teal-500 rounded-full'
+                  style={{
+                    left: getLeftPosition(filters.rent[0]),
+                    right: `${100 - (filters.rent[1] / 50000) * 100}%`,
+                  }}
+                />
+                <button
+                  className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                  style={{ left: getLeftPosition(filters.rent[0]) }}
+                  onMouseDown={() => setIsDragging('min')}
+                />
+                <button
+                  className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                  style={{ left: getLeftPosition(filters.rent[1]) }}
+                  onMouseDown={() => setIsDragging('max')}
+                />
+              </div>
+            </div>
+            <div className='flex justify-between gap-4'>
+              <Input
+                type='number'
+                value={filters.rent[0]}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value <= filters.rent[1])
+                    updateFilters('rent', [value, filters.rent[1]]);
+                }}
+                className='w-1/2'
+                placeholder='Min Rent'
+              />
+              <Input
+                type='number'
+                value={filters.rent[1]}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value >= filters.rent[0])
+                    updateFilters('rent', [filters.rent[0], value]);
+                }}
+                className='w-1/2'
+                placeholder='Max Rent'
+              />
             </div>
           </div>
 
