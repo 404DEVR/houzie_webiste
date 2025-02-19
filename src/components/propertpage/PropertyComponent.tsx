@@ -25,6 +25,7 @@ function toTitleCase(str: string) {
 export default function PropertyComponent() {
   const { filters, updateFilters } = useFilters();
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+  const [tempRent, setTempRent] = useState<[number, number]>([...filters.rent]);
 
   const propertyTypes = [
     'BUILDER_FLOOR',
@@ -74,11 +75,9 @@ export default function PropertyComponent() {
     const value = Math.min(Math.max(0, Math.round(position)), 50000);
 
     if (isDragging === 'min') {
-      if (value <= filters.rent[1])
-        updateFilters('rent', [value, filters.rent[1]]);
+      setTempRent([value, tempRent[1]]);
     } else if (isDragging === 'max') {
-      if (value >= filters.rent[0])
-        updateFilters('rent', [filters.rent[0], value]);
+      setTempRent([tempRent[0], value]);
     }
   };
 
@@ -111,6 +110,10 @@ export default function PropertyComponent() {
     [filters, updateFilters]
   );
 
+  const handleApplyRent = () => {
+    updateFilters('rent', [tempRent[0], tempRent[1]]);
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -134,18 +137,18 @@ export default function PropertyComponent() {
                 <div
                   className='absolute h-2 bg-teal-500 rounded-full'
                   style={{
-                    left: getLeftPosition(filters.rent[0]),
-                    right: `${100 - (filters.rent[1] / 50000) * 100}%`,
+                    left: getLeftPosition(tempRent[0]),
+                    right: `${100 - (tempRent[1] / 50000) * 100}%`,
                   }}
                 />
                 <button
                   className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                  style={{ left: getLeftPosition(filters.rent[0]) }}
+                  style={{ left: getLeftPosition(tempRent[0]) }}
                   onMouseDown={() => setIsDragging('min')}
                 />
                 <button
                   className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                  style={{ left: getLeftPosition(filters.rent[1]) }}
+                  style={{ left: getLeftPosition(tempRent[1]) }}
                   onMouseDown={() => setIsDragging('max')}
                 />
               </div>
@@ -153,29 +156,34 @@ export default function PropertyComponent() {
             <div className='flex justify-between gap-4'>
               <Input
                 type='number'
-                value={filters.rent[0]}
+                value={tempRent[0]}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value <= filters.rent[1])
-                    updateFilters('rent', [value, filters.rent[1]]);
+                  setTempRent([value, tempRent[1]]);
                 }}
                 className='w-1/2'
                 placeholder='Min Rent'
               />
               <Input
                 type='number'
-                value={filters.rent[1]}
+                value={tempRent[1]}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value >= filters.rent[0])
-                    updateFilters('rent', [filters.rent[0], value]);
+                  setTempRent([tempRent[0], value]);
                 }}
                 className='w-1/2'
                 placeholder='Max Rent'
               />
+              <Button
+                type='button'
+                variant='outline'
+                className='flex justify-center items-center text-white bg-[#42A4AE]'
+                onClick={handleApplyRent}
+              >
+                Apply
+              </Button>
             </div>
           </div>
-
           {/* Property Type */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Property Type</h4>
@@ -193,7 +201,7 @@ export default function PropertyComponent() {
           </div>
 
           {/* BHK Type */}
-          {/* <div className='space-y-2'>
+          <div className='space-y-2'>
             <h4 className='font-medium'>BHK Type</h4>
             {bhkTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
@@ -206,10 +214,10 @@ export default function PropertyComponent() {
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div> */}
+          </div>
 
           {/* Available For */}
-          {/* <div className='space-y-2'>
+          <div className='space-y-2'>
             <h4 className='font-medium'>Available For</h4>
             {availableForTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
@@ -222,10 +230,10 @@ export default function PropertyComponent() {
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div> */}
+          </div>
 
           {/* Furnishing */}
-          {/* <div className='space-y-2'>
+          <div className='space-y-2'>
             <h4 className='font-medium'>Furnishing</h4>
             {furnishingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
@@ -238,10 +246,10 @@ export default function PropertyComponent() {
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div> */}
+          </div>
 
           {/* Amenities */}
-          {/* <div className='space-y-2'>
+          <div className='space-y-2'>
             <h4 className='font-medium'>Amenities</h4>
             {allAmenities.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
@@ -254,10 +262,10 @@ export default function PropertyComponent() {
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div> */}
+          </div>
 
           {/* Parking */}
-          {/* <div className='space-y-2'>
+          <div className='space-y-2'>
             <h4 className='font-medium'>Parking</h4>
             {parkingTypes.map((type) => (
               <div key={type} className='flex items-center space-x-2'>
@@ -270,7 +278,7 @@ export default function PropertyComponent() {
                 <label className='text-sm'>{toTitleCase(type)}</label>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
       </PopoverContent>
     </Popover>

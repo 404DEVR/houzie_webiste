@@ -30,7 +30,7 @@ type Amenity =
   | 'DAILY_HOUSEKEEPING'
   | 'CCTV'
   | 'MEALS'
-  | 'COUPLE_FRIENDLY' // Add if you want to filter by these
+  | 'COUPLE_FRIENDLY'
   | 'PET_FRIENDLY'
   | 'OWNER_FREE'
   | 'BALCONY'
@@ -47,6 +47,7 @@ export interface Filters {
   furnishing: Furnishing[];
   amenities: Amenity[];
   parking: Parking[];
+  radius: string;
 }
 
 interface FilterContextType {
@@ -55,20 +56,24 @@ interface FilterContextType {
     filterType: K,
     value: Filters[K]
   ) => void;
+  resetFilters: () => void;
 }
+
+const initialFilters: Filters = {
+  rent: [0, 50000],
+  propertyType: [],
+  bhkType: [],
+  availableFor: [],
+  furnishing: [],
+  amenities: [],
+  parking: [],
+  radius: '',
+};
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export function FilterProvider({ children }: { children: ReactNode }) {
-  const [filters, setFilters] = useState<Filters>({
-    rent: [0, 50000],
-    propertyType: [],
-    bhkType: [],
-    availableFor: [],
-    furnishing: [],
-    amenities: [],
-    parking: [],
-  });
+  const [filters, setFilters] = useState<Filters>(initialFilters);
 
   const updateFilters = <K extends keyof Filters>(
     filterType: K,
@@ -80,8 +85,12 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const resetFilters = () => {
+    setFilters(initialFilters);
+  };
+
   return (
-    <FilterContext.Provider value={{ filters, updateFilters }}>
+    <FilterContext.Provider value={{ filters, updateFilters, resetFilters }}>
       {children}
     </FilterContext.Provider>
   );

@@ -39,7 +39,7 @@ interface Property {
 export default function DetailsPage() {
   const { auth } = useAuth();
   const router = useRouter();
-  const { filters } = useFilters();
+  const { filters, resetFilters } = useFilters(); // Get resetFilters from the hook
   const [activeView, setActiveView] = useState('list');
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,20 +72,38 @@ export default function DetailsPage() {
     try {
       setLoading(true);
 
-      const requestBody = {
-        propertyType:
-          filters.propertyType.length > 0
-            ? filters.propertyType
-            : ['FLAT_APARTMENT'],
-      };
+      // Build the query string from the filters
+      const queryParams = new URLSearchParams();
 
-      const url = `https://api.houzie.in/listings`;
+      //Price Range
+      queryParams.append('minPrice', filters.rent[0].toString());
+      queryParams.append('maxPrice', filters.rent[1].toString());
+
+      if (filters.propertyType && filters.propertyType.length > 0) {
+        queryParams.append('propertyType', filters.propertyType.join(','));
+      }
+      if (filters.bhkType && filters.bhkType.length > 0) {
+        queryParams.append('bhkType', filters.bhkType.join(','));
+      }
+      if (filters.availableFor && filters.availableFor.length > 0) {
+        queryParams.append('availableFor', filters.availableFor.join(','));
+      }
+      if (filters.furnishing && filters.furnishing.length > 0) {
+        queryParams.append('furnishing', filters.furnishing.join(','));
+      }
+      if (filters.amenities && filters.amenities.length > 0) {
+        queryParams.append('amenities', filters.amenities.join(','));
+      }
+      if (filters.parking && filters.parking.length > 0) {
+        queryParams.append('parking', filters.parking.join(','));
+      }
+
+      const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
 
       const response = await axios.get(url);
+      console.log(url);
 
       setProperties(response.data.data);
-      // console.log('Fetched Properties:', response.data.data);
-      // console.log('Request Body:', JSON.stringify(requestBody));
       setLoading(false);
     } catch (err) {
       console.error('Error fetching properties:', err);
@@ -96,7 +114,7 @@ export default function DetailsPage() {
 
   useEffect(() => {
     fetchProperties();
-  }, [filters.propertyType]);
+  }, [filters]); //Now this will trigger when ANY filter changes
 
   useEffect(() => {
     async function preloadImages() {
@@ -135,7 +153,6 @@ export default function DetailsPage() {
       </div>
     );
   }
-
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -158,7 +175,7 @@ export default function DetailsPage() {
       </p>
       <Button
         onClick={() => {
-          router.push('/listings');
+          resetFilters();
         }}
         className='px-4 py-2 bg-[#42A4AE] text-white'
       >
@@ -212,7 +229,6 @@ export default function DetailsPage() {
                 </div>
               </div>
 
-              {/* Left side - Properties and LocalitiesGrid */}
               <div className='w-full xl:w-2/3 pr-4'>
                 <div className='flex flex-col gap-4 mb-4'>
                   {properties && properties.length > 0 ? (
