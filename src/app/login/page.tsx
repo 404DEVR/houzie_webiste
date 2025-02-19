@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
@@ -37,9 +37,6 @@ const formSchema = z.object({
 const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw';
 
 const SignUpForm = () => {
-  const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/dashboard';
-
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -80,10 +77,9 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      // router.push(`${callbackUrl}`);
-      router.replace(redirectPath);
+      router.push('/broker');
 
-      console.log(redirectPath);
+      // console.log(redirectPath);
       toast({
         title: 'Login Successful',
         description: 'Successfully signed in',

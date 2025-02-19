@@ -12,6 +12,7 @@ import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
 import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,7 @@ const formSchema = z.object({
 });
 
 const SignUpForm = () => {
+  const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -57,7 +59,7 @@ const SignUpForm = () => {
       name: '',
       email: '',
       password: '',
-      role: 'BROKER', // Set default value here
+      role: 'BROKER',
     },
   });
 
@@ -77,6 +79,7 @@ const SignUpForm = () => {
 
       router.push('/');
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error) && error.response) {
         const responseData = error.response.data;
         if (responseData.status === 'fail' && responseData.message) {
@@ -93,6 +96,7 @@ const SignUpForm = () => {
           });
         }
       } else {
+        console.log(error);
         toast({
           title: 'Registration Failed',
           description: 'An unexpected error occurred. Please try again.',
@@ -171,6 +175,7 @@ const SignUpForm = () => {
                   size='icon'
                   className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
                   onClick={() => setShowPassword(!showPassword)}
+                  type='button'
                 >
                   <Eye className='h-4 w-4' />
                   <span className='sr-only'>Show password</span>
@@ -197,7 +202,6 @@ const SignUpForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value='BROKER'>Broker</SelectItem>
-                      <SelectItem value='ADMIN'>Admin</SelectItem>
                       <SelectItem value='USER'>User</SelectItem>
                     </SelectContent>
                   </Select>
