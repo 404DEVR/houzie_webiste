@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-interface ProfileCardProps {
+export interface ProfileCardProps {
   propertyData?: Property;
   name?: string; // Make these optional since we're fetching them
   rating?: number;
