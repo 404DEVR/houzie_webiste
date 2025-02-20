@@ -358,7 +358,10 @@ const MyListings = ({ page }: MyListingsProps) => {
     if (listing.balconies) {
       features.push({ icon: Building2, label: `${listing.balconies}-Balcony` });
     }
-    features.push({ icon: Home, label: listing.propertyType });
+    features.push({
+      icon: Home,
+      label: listing.propertyType.replace(/_/g, ' '),
+    });
 
     return features;
   };

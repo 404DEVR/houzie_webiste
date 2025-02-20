@@ -69,7 +69,7 @@ const Brokerdetail = () => {
   return (
     <Card className='w-full rounded-lg shadow-2xl my-6'>
       <CardHeader>
-        <CardTitle className='text-xl sm:text-2xl'>Deals Details</CardTitle>
+        <CardTitle className='text-xl sm:text-2xl'>Leads Details</CardTitle>
       </CardHeader>
       <CardContent>
         {leadsData?.length === 0 ? (
