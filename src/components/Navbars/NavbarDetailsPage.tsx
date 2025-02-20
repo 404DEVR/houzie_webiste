@@ -46,6 +46,7 @@ const NavbarDetailsPage = () => {
         description: 'You have been successfully logged out.',
       });
       router.push('/');
+      window.location.reload();
     } catch (error) {
       toast({
         title: 'Log Out Failed',
@@ -66,7 +67,6 @@ const NavbarDetailsPage = () => {
         setUserData(response.data);
       }
     };
-
     fetchUserData();
   }, [auth]);
 
