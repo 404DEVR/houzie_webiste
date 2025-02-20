@@ -113,9 +113,8 @@ const PropertyDetailsForm = ({
     let formattedValue = value;
 
     if (type === 'number') {
-      // Prevent negative values
       if (Number(value) < 0) {
-        formattedValue = '0'; // Or any other default value you prefer
+        formattedValue = '0';
       }
     }
 
@@ -874,7 +873,8 @@ const PropertyDetailsForm = ({
 
             {/* Sharing Type */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Sharing Type<span className='text-red-500'>*</span>
@@ -931,7 +931,8 @@ const PropertyDetailsForm = ({
 
             {/* Configuration */}
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT') && (
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Configuration<span className='text-red-500'>*</span>
@@ -959,7 +960,8 @@ const PropertyDetailsForm = ({
 
             {/* Number of Units Available */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div className=''>
                 <div className=''>
                   <CustomInput
@@ -977,7 +979,8 @@ const PropertyDetailsForm = ({
 
             {/* Rooms Size */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div className=''>
                 <div className=''>
                   <CustomInput
@@ -994,7 +997,8 @@ const PropertyDetailsForm = ({
             )}
 
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT') && (
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div className='flex flex-wrap gap-6'>
                 <div className='w-full lg:w-[48%]'>
                   <CustomInput
@@ -1029,18 +1033,6 @@ const PropertyDetailsForm = ({
                     value={propertyDetails.bathroom}
                     onChange={handleInputChange}
                     placeholder='Enter Number Of Bathroom'
-                    required
-                  />
-                </div>
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    type='date'
-                    name='availableFrom'
-                    label='Available From'
-                    id='availableFrom'
-                    value={formatDateForInput(propertyDetails.availableFrom)} // Format date for display
-                    onChange={handleInputChange}
-                    min={new Date().toISOString().split('T')[0]}
                     required
                   />
                 </div>
@@ -1234,7 +1226,8 @@ const PropertyDetailsForm = ({
                 </div>
               </div>
 
-              {propertyDetails.propertyType === 'VILLA' && (
+              {(propertyDetails.propertyType === 'VILLA' ||
+                propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
                 <div className='w-full lg:w-[48%]'>
                   <CustomInput
                     label='Total Number Of Floors'
@@ -1278,7 +1271,8 @@ const PropertyDetailsForm = ({
             </div>
 
             {/* Preferred Tenant Type */}
-            {propertyDetails.propertyType !== 'CO_LIVING' && (
+            {(propertyDetails.propertyType === 'VILLA' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Preferred Tenant Type
@@ -1307,7 +1301,8 @@ const PropertyDetailsForm = ({
 
             {/* Floor Number */}
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT') && (
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div className=' flex justify-start items-center gap-6 w-full lg:w-[60%]'>
                 <Label className='font-bold text-lg text-nowrap'>
                   Floor Number

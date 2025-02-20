@@ -68,6 +68,8 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
     ],
   ];
 
+  console.log(propertyData.furnishingExtras);
+
   return (
     <Card className='h-[307px] border-zinc-200 mt-7'>
       <CardContent className='flex flex-col gap-5 p-5'>
@@ -86,26 +88,28 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
                   </div>
                   <div className='flex items-center gap-1.5 font-medium text-black text-base leading-6'>
                     {detail.value}
-                    {propertyData.furnishingExtras && detail.hasIcon && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <InfoIcon className='w-6 h-6 cursor-pointer' />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-                              <ItemGrid
-                                title='Furnishings'
-                                data={propertyData.furnishingExtras.map(
-                                  transformString
-                                )}
-                                type='furnishing'
-                              />
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
+                    {propertyData.furnishingExtras &&
+                      propertyData.furnishingExtras.length > 0 &&
+                      detail.hasIcon && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InfoIcon className='w-6 h-6 cursor-pointer' />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                                <ItemGrid
+                                  title='Furnishings'
+                                  data={propertyData.furnishingExtras.map(
+                                    transformString
+                                  )}
+                                  type='furnishing'
+                                />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
                   </div>
                 </div>
               ))}
