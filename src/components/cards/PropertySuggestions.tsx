@@ -18,12 +18,22 @@ interface Property {
   title: string;
   description: string;
   mainImage: string;
-  bedrooms: number;
-  bathrooms: number;
-  balconies: number;
-  propertyType: string;
-  price: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  balconies?: number;
+  propertyType?: string;
+  price?: number;
 }
+
+const transformString = (str: string | null | undefined) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 export default function PropertySuggestions() {
   const [properties, setProperties] = useState<Property[] | null>(null);
@@ -60,12 +70,30 @@ export default function PropertySuggestions() {
     }));
   };
 
-  const getPropertyFeatures = (property: Property): PropertyFeature[] => [
-    { icon: Bed, label: `${property.bedrooms}-Bedroom` },
-    { icon: Bath, label: `${property.bathrooms}-Bathroom` },
-    { icon: Building2, label: `${property.balconies} Balcony` },
-    { icon: Home, label: property.propertyType },
-  ];
+  const getPropertyFeatures = (property: Property): PropertyFeature[] => {
+    const features: PropertyFeature[] = [];
+
+    if (property.bedrooms !== 0) {
+      features.push({ icon: Bed, label: `${property.bedrooms}-Bedroom` });
+    }
+    if (property.bathrooms !== 0) {
+      features.push({ icon: Bath, label: `${property.bathrooms}-Bathroom` });
+    }
+    if (property.balconies !== 0) {
+      features.push({
+        icon: Building2,
+        label: `${property.balconies} Balcony`,
+      });
+    }
+    if (property.propertyType) {
+      features.push({
+        icon: Home,
+        label: transformString(property.propertyType),
+      });
+    }
+
+    return features;
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -108,10 +136,14 @@ export default function PropertySuggestions() {
             </div>
             <CardContent className='pt-4 px-0'>
               <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
-              <p className='text-sm text-gray-600 mb-4'>
-                {property.description.slice(0, 100)}...
-                <button className='underline ml-1 text-black'>Read More</button>
-              </p>
+              {property.description && (
+                <p className='text-sm text-gray-600 mb-4'>
+                  {property.description.slice(0, 100)}...
+                  <button className='underline ml-1 text-black'>
+                    Read More
+                  </button>
+                </p>
+              )}
               <div className='flex gap-2 flex-wrap'>
                 {getPropertyFeatures(property).map((feature, index) => (
                   <Badge
@@ -128,12 +160,14 @@ export default function PropertySuggestions() {
               </div>
             </CardContent>
             <CardFooter className='px-0 flex'>
-              <div className='flex items-center justify-between flex-[1]'>
-                <div>
-                  <p className='text-sm text-gray-500'>Rent</p>
-                  <p className='text-lg font-semibold'>₹ {property.price}</p>
+              {property.price !== undefined && (
+                <div className='flex items-center justify-between flex-[1]'>
+                  <div>
+                    <p className='text-sm text-gray-500'>Rent</p>
+                    <p className='text-lg font-semibold'>₹ {property.price}</p>
+                  </div>
                 </div>
-              </div>
+              )}
               <Button className='w-full bg-teal-500 hover:bg-teal-600 flex-[1] text-white'>
                 View Details
               </Button>

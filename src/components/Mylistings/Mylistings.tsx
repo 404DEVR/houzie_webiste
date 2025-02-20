@@ -71,6 +71,17 @@ interface MyListingsProps {
   page?: string;
 }
 
+const transformString = (str: string | null | undefined) => {
+  if (!str) return '';
+  // Replace underscores with spaces and convert to title case
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 const MyListings = ({ page }: MyListingsProps) => {
   const router = useRouter();
   const { auth } = useAuth();
@@ -162,7 +173,6 @@ const MyListings = ({ page }: MyListingsProps) => {
         selectedDate: string | null;
         phoneNumber: string;
       }
-
       interface Restructuredinterface {
         title: string;
         description: string;
@@ -360,7 +370,7 @@ const MyListings = ({ page }: MyListingsProps) => {
     }
     features.push({
       icon: Home,
-      label: listing.propertyType.replace(/_/g, ' '),
+      label: transformString(listing.propertyType),
     });
 
     return features;

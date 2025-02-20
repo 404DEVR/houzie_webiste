@@ -2,24 +2,16 @@ import { Check } from 'lucide-react';
 
 import { Property } from '@/components/detailspage/HeaderContainer';
 
-const highlights = [
-  {
-    id: 1,
-    title: '24×7 Security',
-  },
-  {
-    id: 2,
-    title: 'Security Guards',
-  },
-  {
-    id: 3,
-    title: 'Service Lift',
-  },
-  {
-    id: 4,
-    title: 'Power Backup',
-  },
-];
+const transformString = (str: string) => {
+  if (!str) return '';
+  // Replace underscores with spaces and convert to title case
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 interface PropertyHighlightprops {
   propertyData: Property;
@@ -38,9 +30,7 @@ export default function PropertyHighlight({
             <div className='w-5 h-5 rounded-full bg-[#42A4AE] flex items-center justify-center'>
               <Check className='w-3 h-3 text-white' />
             </div>
-            <span className='text-gray-600'>
-              {highlight.replace(/_/g, ' ')}
-            </span>
+            <span className='text-gray-600'>{transformString(highlight)}</span>
           </div>
         ))}
       </div>

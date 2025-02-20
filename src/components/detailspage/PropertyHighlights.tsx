@@ -17,6 +17,17 @@ interface PropertyHighlightsprops {
   propertyData: Property;
 }
 
+const transformString = (str: string | null | undefined) => {
+  if (!str) return '';
+  // Replace underscores with spaces and convert to title case
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 export default function PropertyHighlights({
   propertyData,
 }: PropertyHighlightsprops) {
@@ -24,14 +35,15 @@ export default function PropertyHighlights({
     { icon: Bed, label: `${propertyData.bedrooms} Bedrooms` },
     { icon: Bath, label: `${propertyData.bathrooms} Bathrooms` },
     { icon: Building2, label: `${propertyData.balconies} Balconies` },
-    { icon: Home, label: propertyData.propertyType.replace(/_/g, ' ') },
+    { icon: Home, label: transformString(propertyData.propertyType) },
   ];
 
   const financialDetails = [
-    { icon: Wallet, label: 'Rent', amount: propertyData.price },
-    { icon: Lock, label: 'Security', amount: propertyData.security },
-    { icon: Receipt, label: 'Brokerage', amount: propertyData.brokerage },
+    { icon: Wallet, label: 'Rent', amount: `₹${propertyData.price}` },
+    { icon: Lock, label: 'Security', amount: `₹${propertyData.security}` },
+    { icon: Receipt, label: 'Brokerage', amount: `₹${propertyData.brokerage}` },
   ];
+
   return (
     <Card className='flex flex-col items-start gap-5 p-5'>
       <CardContent className='flex flex-col gap-[22px] w-full p-0'>

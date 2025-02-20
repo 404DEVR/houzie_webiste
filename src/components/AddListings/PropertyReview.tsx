@@ -19,35 +19,51 @@ interface PropertyReviewProps {
   data: any;
 }
 
+const transformString = (str: string | null | undefined) => {
+  if (!str) return '';
+  // Replace underscores with spaces and convert to title case
+  return toTitleCase(str.replace(/_/g, ' '));
+};
+
+const toTitleCase = (str: string | null | undefined) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [favorites, setFavorites] = useState(false);
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
-  const toggleFavorite = () => setFavorites((prev) => !prev);
 
   if (!data || Object.keys(data).length === 0) {
     return <p>No property data available for review.</p>;
   }
 
   const propertyFeatures = [
-    { icon: Bed, label: `${data.bedrooms} Beds` },
-    { icon: Bath, label: `${data.bathrooms} Baths` },
-    { icon: Home, label: data.propertyType },
-  ];
+    data.bedrooms !== 0 && { icon: Bed, label: `${data.bedrooms} Beds` },
+    data.bathrooms !== 0 && { icon: Bath, label: `${data.bathrooms} Baths` },
+    data.propertyType && {
+      icon: Home,
+      label: transformString(data.propertyType),
+    },
+  ].filter(Boolean);
 
   const financialDetails = [
-    {
+    data.price && {
       icon: Wallet,
       label: 'Rent',
       amount: `₹${data.price}`,
     },
-    {
+    data.security && {
       icon: Lock,
       label: 'Security Deposit',
       amount: `₹${data.security}`,
     },
-  ];
+  ].filter(Boolean);
 
   const imageSRC =
     data.mainImage ||
@@ -61,7 +77,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
           <div className='relative w-full h-full'>
             <Image
               src={imageSRC}
-              alt={data.title}
+              alt={data.title || 'Property Image'}
               fill
               className='object-cover rounded-md'
               sizes='(max-width: 640px) 100vw, 300px'
@@ -72,24 +88,28 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
         <div className='flex-1 p-4'>
           <div className='space-y-4 h-full flex flex-col'>
             <div>
-              <h3 className='text-center md:text-start text-xl font-semibold leading-tight'>
-                {data.title}
-              </h3>
-              <div className='relative mt-2'>
-                <p
-                  className={`text-sm text-gray-700 ${
-                    isExpanded ? '' : 'line-clamp-2'
-                  }`}
-                >
-                  {data.description || 'No description available.'}
-                </p>
-                <button
-                  onClick={toggleExpanded}
-                  className='text-blue-500 text-sm text-nowrap font-medium hover:underline'
-                >
-                  {isExpanded ? 'Show Less' : 'Read More'}
-                </button>
-              </div>
+              {data.title && (
+                <h3 className='text-center md:text-start text-xl font-semibold leading-tight'>
+                  {data.title}
+                </h3>
+              )}
+              {data.description && (
+                <div className='relative mt-2'>
+                  <p
+                    className={`text-sm text-gray-700 ${
+                      isExpanded ? '' : 'line-clamp-2'
+                    }`}
+                  >
+                    {data.description}
+                  </p>
+                  <button
+                    onClick={toggleExpanded}
+                    className='text-blue-500 text-sm text-nowrap font-medium hover:underline'
+                  >
+                    {isExpanded ? 'Show Less' : 'Read More'}
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className='flex flex-wrap items-start justify-center md:justify-start gap-2'>
@@ -108,6 +128,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 </Badge>
               ))}
             </div>
+
             <div className='flex flex-wrap items-start mx-auto md:mx-0 gap-2 max-w-2xl'>
               {financialDetails.map((detail, index) => (
                 <Card key={index} className='border-[#eaebef] flex-[1]'>
@@ -131,66 +152,173 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
         </div>
       </div>
 
-      <div className='p-4 space-y-4'>
-        <div>
-          <h4 className='font-semibold'>Location</h4>
-          <p className='flex items-center'>
-            <MapPin className='w-4 h-4 mr-2' />
-            {data.location.city}, {data.location.state}, {data.location.country}
-          </p>
-        </div>
+      <div className='p-4 space-y-6'>
+        {data.location &&
+          (data.location.city ||
+            data.location.state ||
+            data.location.country) && (
+            <div>
+              <h4 className='font-bold text-xl'>Location</h4>
+              <p className='text-gray-700'>
+                {[
+                  data.location.city,
+                  data.location.state,
+                  data.location.country,
+                ]
+                  .filter(Boolean)
+                  .join(', ') || 'No location specified'}
+              </p>
+            </div>
+          )}
 
         <div>
-          <h4 className='font-semibold'>Property Details</h4>
-          <p>Configuration: {data.configuration}</p>
-          <p>
-            Floor: {data.floorNumber} of {data.totalFloors}
-          </p>
-          <p>Balconies: {data.balconies}</p>
-          <p>Room Size: {data.roomSize} sq ft</p>
-          <p>Furnishing: {data.furnishing}</p>
-          <p>Sharing Type: {data.sharingType}</p>
-          <p>Units Available: {data.unitsAvailable}</p>
-        </div>
-
-        <div>
-          <h4 className='font-semibold'>Financial Details</h4>
-          <p>
-            Brokerage: ₹{data.brokerage}{' '}
-            {data.isNegotiable ? '(Negotiable)' : ''}
-          </p>
-          <p>Lock-in Period: {data.lockInPeriod}</p>
-          <p>
-            Maintenance: ₹{data.maintenanceCharges}{' '}
-            {data.isMaintenanceIncluded ? '(Included)' : '(Not Included)'}
-          </p>
-        </div>
-
-        <div>
-          <h4 className='font-semibold'>Additional Information</h4>
-          <p className='flex items-center'>
-            <Calendar className='w-4 h-4 mr-2' />
-            Available From: {data.availableFrom}
-          </p>
-          <p className='flex items-center'>
-            <User className='w-4 h-4 mr-2' />
-            Preferred Tenant: {data.preferredTenant}
-          </p>
-        </div>
-
-        <div>
-          <h4 className='font-semibold'>Amenities</h4>
-          <div className='flex flex-wrap gap-2'>
-            <AmenitiesDisplay data={data.amenities} type='amenities' />
+          <h4 className='font-bold text-xl'>Property Details</h4>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+            {data.configuration && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Configuration
+                </h6>
+                <div>{transformString(data.configuration)}</div>
+              </div>
+            )}
+            {data.floorNumber && data.totalFloors && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>Floor</h6>
+                <div>
+                  {data.floorNumber} of {data.totalFloors}
+                </div>
+              </div>
+            )}
+            {data.balconies !== 0 && data.balconies !== null && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Balconies
+                </h6>
+                <div>{data.balconies}</div>
+              </div>
+            )}
+            {data.roomSize && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Room Size
+                </h6>
+                <div>{data.roomSize} sq ft</div>
+              </div>
+            )}
+            {data.furnishing && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Furnishing
+                </h6>
+                <div>{transformString(data.furnishing)}</div>
+              </div>
+            )}
+            {data.sharingType && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Sharing Type
+                </h6>
+                <div>{transformString(data.sharingType)}</div>
+              </div>
+            )}
+            {data.unitsAvailable !== null &&
+              data.unitsAvailable !== undefined && (
+                <div>
+                  <h6 className='font-semibold text-md text-gray-800'>
+                    Units Available
+                  </h6>
+                  <div>{data.unitsAvailable}</div>
+                </div>
+              )}
           </div>
         </div>
 
         <div>
-          <h4 className='font-semibold'>Furnishings</h4>
-          <div className='flex flex-wrap gap-2'>
-            <AmenitiesDisplay data={data.furnishingExtras} type='furnishing' />
+          <h4 className='font-bold text-xl'>Financial Details</h4>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+            {data.brokerage !== null && data.brokerage !== undefined && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Brokerage
+                </h6>
+                <div>
+                  ₹{data.brokerage} {data.isNegotiable ? '(Negotiable)' : ''}
+                </div>
+              </div>
+            )}
+            {data.lockInPeriod && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Lock-in Period
+                </h6>
+                <div>{transformString(data.lockInPeriod)}</div>
+              </div>
+            )}
+            {data.maintenanceCharges !== null &&
+              data.maintenanceCharges !== undefined && (
+                <div>
+                  <h6 className='font-semibold text-md text-gray-800'>
+                    Maintenance
+                  </h6>
+                  <div>
+                    ₹{data.maintenanceCharges}{' '}
+                    {data.isMaintenanceIncluded
+                      ? '(Included)'
+                      : '(Not Included)'}
+                  </div>
+                </div>
+              )}
           </div>
         </div>
+
+        <div>
+          {data.availableFrom || data.preferredTenant ? (
+            <>
+              {' '}
+              <h4 className='font-bold text-xl'>Additional Information</h4>
+              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+                {data.availableFrom && (
+                  <div>
+                    <h6 className='font-semibold text-md text-gray-800'>
+                      Available From
+                    </h6>
+                    <div>{transformString(data.availableFrom)}</div>
+                  </div>
+                )}
+                {data.preferredTenant && (
+                  <div>
+                    <h6 className='font-semibold text-md text-gray-800'>
+                      Preferred Tenant
+                    </h6>
+                    <div>{transformString(data.preferredTenant)}</div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        {data.amenities && data.amenities.length > 0 && (
+          <div>
+            <h4 className='font-bold text-xl'>Amenities</h4>
+            <div className='flex flex-wrap gap-2'>
+              <AmenitiesDisplay data={data.amenities} type='amenities' />
+            </div>
+          </div>
+        )}
+
+        {data.furnishingExtras && data.furnishingExtras.length > 0 && (
+          <div>
+            <h4 className='font-semibold text-xl'>Furnishings</h4>
+            <div className='flex flex-wrap gap-2'>
+              <AmenitiesDisplay
+                data={data.furnishingExtras}
+                type='furnishing'
+              />
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   );

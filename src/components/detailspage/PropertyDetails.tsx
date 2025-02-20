@@ -15,6 +15,17 @@ interface Overviewprops {
   propertyData: Property;
 }
 
+const transformString = (str: string | null | undefined) => {
+  if (!str) return '';
+  // Replace underscores with spaces and convert to title case
+  return str
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 const PropertyDetails = ({ propertyData }: Overviewprops) => {
   const propertyDetails = [
     [
@@ -33,7 +44,6 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
           ? 'Yes'
           : 'No',
       },
-
       {
         label: '2 Wheeler Parking',
         value: propertyData.amenities.includes('TWO_WHEELER_PARKING')
@@ -44,14 +54,17 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
     [
       {
         label: 'Furnishing',
-        value: propertyData.furnishing.replace(/_/g, ' '),
+        value: transformString(propertyData.furnishing),
         hasIcon: true,
       },
       {
         label: 'Pet Friendly',
         value: propertyData.features.includes('PET_FRIENDLY') ? 'Yes' : 'No',
       },
-      { label: 'Available for', value: propertyData.preferredTenant },
+      {
+        label: 'Available for',
+        value: transformString(propertyData.preferredTenant),
+      },
     ],
   ];
 
@@ -83,7 +96,9 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
                             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
                               <ItemGrid
                                 title='Furnishings'
-                                data={propertyData.furnishingExtras}
+                                data={propertyData.furnishingExtras.map(
+                                  transformString
+                                )}
                                 type='furnishing'
                               />
                             </div>
