@@ -58,20 +58,12 @@ const NavbarDetailsPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (auth?.userid) {
-        try {
-          const response = await axios.get(`https://api.houzie.in/profile`, {
-            headers: {
-              Authorization: `Bearer ${auth.accessToken}`,
-            },
-          });
-          setUserData(response.data);
-        } catch (error) {
-          toast({
-            title: 'Failed to fetch user data',
-            description: 'Please try again later.',
-            variant: 'destructive',
-          });
-        }
+        const response = await axios.get(`https://api.houzie.in/profile`, {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        });
+        setUserData(response.data);
       }
     };
 

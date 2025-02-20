@@ -304,6 +304,8 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
     }
   };
 
+  const isContinueEnabled = photos.length > 0;
+
   return (
     <Card className='rounded-xl bg-white md:p-8 shadow-sm max-w-4xl my-6 mx-auto border'>
       <CardHeader>
@@ -398,6 +400,7 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
           <Button
             onClick={handleSubmit}
             className='bg-[#42A4AE] text-white px-6 py-3 rounded-lg w-full md:w-auto'
+            disabled={!isContinueEnabled}
           >
             Continue
           </Button>

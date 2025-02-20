@@ -53,7 +53,7 @@ function LocationMarker({
 interface MapLocationSelectorProps {
   onLocationSave: (location: Location) => void;
   initialLocation?: Location | null;
-  page: string; // 'edit' or other
+  page: string;
 }
 
 export default function MapLocationSelector({
@@ -61,9 +61,9 @@ export default function MapLocationSelector({
   initialLocation = null,
   page,
 }: MapLocationSelectorProps) {
-  const defaultLocation: Location = { lat: 28.6139, lng: 77.209 }; // Delhi
+  const defaultLocation: Location = { lat: 28.4595, lng: 77.0266 };
   const [location, setLocation] = useState<Location | null>(
-    page === 'edit' ? initialLocation : defaultLocation
+    initialLocation !== null ? initialLocation : defaultLocation
   );
 
   const handleSaveLocation = () => {

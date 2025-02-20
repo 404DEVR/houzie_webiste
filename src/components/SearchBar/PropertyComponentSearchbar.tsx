@@ -69,10 +69,9 @@ const PropertyComponentSearchbar = () => {
     { id: 'studio', label: 'Studio/1 RK' },
   ];
 
-  const livingTypes = [
-    { id: 'regular', label: 'Regular' },
-    { id: 'coliving', label: 'Coliving' },
-    { id: 'pg', label: 'PG' },
+  const SharingTypes = [
+    { id: 'SINGLE', label: 'Single' },
+    { id: 'SHARING', label: 'Sharing' },
   ];
 
   const handleCheckboxChange = (category, id) => {
@@ -206,8 +205,8 @@ const PropertyComponentSearchbar = () => {
 
             {showLivingTypes && (
               <CheckboxGroup
-                title='Living Type'
-                options={livingTypes}
+                title='Sharing Type'
+                options={SharingTypes}
                 category='livingType'
               />
             )}

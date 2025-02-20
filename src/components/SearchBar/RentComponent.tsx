@@ -52,7 +52,7 @@ const RentComponent = () => {
         <PopoverContent className='w-80'>
           <div className='flex flex-col gap-4'>
             <h3 className='text-lg font-semibold mb-2'>Rent Range</h3>
-            <div className='relative w-full h-12'>
+            <div className='relative w-[90%] mx-auto h-12'>
               <div
                 className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
                 onMouseMove={(e) => isDragging && handleSliderChange(e)}

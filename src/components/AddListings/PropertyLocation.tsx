@@ -271,7 +271,7 @@ const PropertyLocation = ({
   };
 
   const getInitialLocation = () => {
-    if (page === 'edit' && propertyLocation) {
+    if (propertyLocation) {
       const { latitude, longitude } = propertyLocation;
 
       if (typeof latitude === 'number' && typeof longitude === 'number') {
