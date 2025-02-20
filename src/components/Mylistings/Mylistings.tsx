@@ -105,7 +105,7 @@ const MyListings = ({ page }: MyListingsProps) => {
     };
 
     fetchListings();
-  }, []);
+  }, [auth?.accessToken, url]);
 
   const handleEdit = async (id) => {
     console.log(auth?.accessToken);
@@ -369,108 +369,109 @@ const MyListings = ({ page }: MyListingsProps) => {
 
       {isLoading ? (
         <p>Loading listings...</p>
-      ) : listings.length === 0 ? (
+      ) : Array.isArray(listings) && listings.length === 0 ? (
         <p>No listings found.</p>
       ) : (
         <div className='space-y-4'>
-          {listings.map((listing) => {
-            const propertyFeatures = getPropertyFeatures(listing);
-            return (
-              <Card
-                key={listing.id}
-                className='shadow-md rounded-md bg-[#F9FAFB]'
-              >
-                <CardContent className='p-2 sm:p-4 flex flex-col md:flex-row gap-4'>
-                  <div className='w-full md:w-[250px] lg:w-[300px] h-[200px] md:h-[250px] mx-auto md:mx-0 flex items-center justify-center p-1'>
-                    <div className='relative w-full h-full'>
-                      <Image
-                        src={listing.mainImage}
-                        alt={listing.title}
-                        fill
-                        className='object-cover rounded-md'
-                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                      />
+          {Array.isArray(listings) &&
+            listings.map((listing) => {
+              const propertyFeatures = getPropertyFeatures(listing);
+              return (
+                <Card
+                  key={listing.id}
+                  className='shadow-md rounded-md bg-[#F9FAFB]'
+                >
+                  <CardContent className='p-2 sm:p-4 flex flex-col md:flex-row gap-4'>
+                    <div className='w-full md:w-[250px] lg:w-[300px] h-[200px] md:h-[250px] mx-auto md:mx-0 flex items-center justify-center p-1'>
+                      <div className='relative w-full h-full'>
+                        <Image
+                          src={listing.mainImage}
+                          alt={listing.title}
+                          fill
+                          className='object-cover rounded-md'
+                          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className='w-full md:w-3/4 flex flex-col justify-between'>
-                    <div>
-                      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2'>
-                        <h2 className='text-base sm:text-lg font-semibold'>
-                          {listing.title}
-                        </h2>
-                        <div className='py-1 px-3 text-white bg-[#42A4AE] rounded-md text-sm mt-2 sm:mt-0'>
-                          {listing.views} Views
+                    <div className='w-full md:w-3/4 flex flex-col justify-between'>
+                      <div>
+                        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2'>
+                          <h2 className='text-base sm:text-lg font-semibold'>
+                            {listing.title}
+                          </h2>
+                          <div className='py-1 px-3 text-white bg-[#42A4AE] rounded-md text-sm mt-2 sm:mt-0'>
+                            {listing.views} Views
+                          </div>
                         </div>
-                      </div>
-                      <p className='text-xs sm:text-sm text-gray-500 line-clamp-2 mb-2 sm:mb-4'>
-                        {listing.description}
-                        <Link href='#' className='text-blue-500 ml-1'>
-                          Read More
-                        </Link>
-                      </p>
-                      <div className='flex flex-wrap items-start justify-start gap-2 mb-2 sm:mb-0'>
-                        {propertyFeatures &&
-                          propertyFeatures.map((feature, index) => (
-                            <Badge
-                              key={index}
-                              variant='outline'
-                              className='bg-[#191919] text-white border-neutral-800 px-2 py-1 rounded-full text-xs'
-                            >
-                              <feature.icon className='w-3 h-3 inline-block mr-1' />
-                              <span className='font-medium'>
-                                {feature.label}
-                              </span>
-                            </Badge>
-                          ))}
-                      </div>
-                    </div>
-
-                    <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-4'>
-                      <div className='mb-2 sm:mb-0'>
-                        <p className='font-medium flex flex-col text-xs sm:text-sm'>
-                          Rent{' '}
-                          <span className='text-base sm:text-lg'>
-                            ₹ {listing.price}
-                          </span>
+                        <p className='text-xs sm:text-sm text-gray-500 line-clamp-2 mb-2 sm:mb-4'>
+                          {listing.description}
+                          <Link href='#' className='text-blue-500 ml-1'>
+                            Read More
+                          </Link>
                         </p>
-                      </div>
-                      {page !== 'user' && (
-                        <div className='flex flex-wrap gap-2'>
-                          <Button
-                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                            variant='outline'
-                            size='sm'
-                            onClick={() => handleEdit(listing.id)}
-                          >
-                            <Edit className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                            Edit
-                          </Button>
-                          <Button
-                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                            variant='outline'
-                            size='sm'
-                            onClick={() => handleViewDetails(listing.id)}
-                          >
-                            <Eye className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                            View
-                          </Button>
-                          <Button
-                            variant='destructive'
-                            size='sm'
-                            className='text-xs sm:text-sm'
-                            onClick={() => handleDelete(listing.id)}
-                          >
-                            <Trash2 className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                            Delete
-                          </Button>
+                        <div className='flex flex-wrap items-start justify-start gap-2 mb-2 sm:mb-0'>
+                          {propertyFeatures &&
+                            propertyFeatures.map((feature, index) => (
+                              <Badge
+                                key={index}
+                                variant='outline'
+                                className='bg-[#191919] text-white border-neutral-800 px-2 py-1 rounded-full text-xs'
+                              >
+                                <feature.icon className='w-3 h-3 inline-block mr-1' />
+                                <span className='font-medium'>
+                                  {feature.label}
+                                </span>
+                              </Badge>
+                            ))}
                         </div>
-                      )}
+                      </div>
+
+                      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-4'>
+                        <div className='mb-2 sm:mb-0'>
+                          <p className='font-medium flex flex-col text-xs sm:text-sm'>
+                            Rent{' '}
+                            <span className='text-base sm:text-lg'>
+                              ₹ {listing.price}
+                            </span>
+                          </p>
+                        </div>
+                        {page !== 'user' && (
+                          <div className='flex flex-wrap gap-2'>
+                            <Button
+                              className='text-white bg-[#42A4AE] text-xs sm:text-sm'
+                              variant='outline'
+                              size='sm'
+                              onClick={() => handleEdit(listing.id)}
+                            >
+                              <Edit className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                              Edit
+                            </Button>
+                            <Button
+                              className='text-white bg-[#42A4AE] text-xs sm:text-sm'
+                              variant='outline'
+                              size='sm'
+                              onClick={() => handleViewDetails(listing.id)}
+                            >
+                              <Eye className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                              View
+                            </Button>
+                            <Button
+                              variant='destructive'
+                              size='sm'
+                              className='text-xs sm:text-sm'
+                              onClick={() => handleDelete(listing.id)}
+                            >
+                              <Trash2 className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                              Delete
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                  </CardContent>
+                </Card>
+              );
+            })}
         </div>
       )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
