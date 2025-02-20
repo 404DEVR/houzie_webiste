@@ -9,7 +9,6 @@ import {
 import { useState } from 'react';
 import { Provider } from 'react-redux';
 
-import AddListings from '@/components/AddListings/AddListings';
 import Mylistings from '@/components/Mylistings/Mylistings';
 import ProfileForm from '@/components/profile/ProfileForm';
 import SettingsPage from '@/components/settings/SettingsPage';
@@ -77,7 +76,8 @@ const BrokerContent = () => {
           {activeTab === 'profile' && <ProfileForm page='user' />}
           {activeTab === 'favorites' && <Mylistings page='user' />}
           {activeTab === 'savedsearch' && (
-            <AddListings setActiveTab={setActiveTab} />
+            // <AddListings setActiveTab={setActiveTab} />
+            <></>
           )}
           {activeTab === 'settings' && <SettingsPage />}
         </div>
