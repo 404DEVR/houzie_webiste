@@ -388,7 +388,7 @@ const MyListings = ({ page }: MyListingsProps) => {
                     <div className='w-full md:w-[250px] lg:w-[300px] h-[200px] md:h-[250px] mx-auto md:mx-0 flex items-center justify-center p-1'>
                       <div className='relative w-full h-full'>
                         <Image
-                          src={listing.mainImage}
+                          src={listing.mainImage || '/svg/no-results.svg'}
                           alt={listing.title}
                           fill
                           className='object-cover rounded-md'

@@ -41,7 +41,9 @@ const VerificationForm = ({
     (state: RootState) => state.addForm.verification
   );
 
-  const formData = useSelector((state: RootState) => state.addForm);
+  const formData = useSelector(
+    (state: RootState) => state.addForm.restructuredData
+  );
 
   const handleDateChange = (date: Date | undefined) => {
     dispatch(
@@ -64,7 +66,6 @@ const VerificationForm = ({
 
   const handleSubmit = () => {
     dispatch(restructureAddFormData());
-    console.log(formData);
     handleNext();
   };
 

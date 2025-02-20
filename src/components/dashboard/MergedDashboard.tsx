@@ -45,7 +45,6 @@ const MergedDashboard: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>('October');
   const { auth } = useAuth();
 
-  // Fetching data from the API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -138,7 +137,6 @@ const MergedDashboard: React.FC = () => {
   return (
     <div className='container mx-auto px-4 py-6'>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-        {/* First Row: Cards */}
         <div className='md:col-span-2 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6'>
           {cardData.map((card, index) => (
             <Card key={index} className='shadow-2xl'>
@@ -165,7 +163,6 @@ const MergedDashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Second Row: First Graph */}
         <div className='md:col-span-2 lg:col-span-2'>
           <Card className='bg-white shadow-2xl'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -233,12 +230,11 @@ const MergedDashboard: React.FC = () => {
           </Card>
         </div>
 
-        {/* Second Row: Second Graph */}
         <div className='md:col-span-2 lg:col-span-2'>
           <Card className='bg-white shadow-2xl'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-2xl font-semibold'>
-                Performance Trends
+                Listing Views
               </CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>

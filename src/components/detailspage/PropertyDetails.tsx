@@ -15,7 +15,7 @@ interface Overviewprops {
   propertyData: Property;
 }
 
-const Overview = ({ propertyData }: Overviewprops) => {
+const PropertyDetails = ({ propertyData }: Overviewprops) => {
   const propertyDetails = [
     [
       { label: 'Bedroom', value: propertyData.bedrooms },
@@ -102,4 +102,4 @@ const Overview = ({ propertyData }: Overviewprops) => {
   );
 };
 
-export default Overview;
+export default PropertyDetails;

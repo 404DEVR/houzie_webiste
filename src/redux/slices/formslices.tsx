@@ -70,29 +70,29 @@ interface restructured {
   price: number | null;
   security: number | null;
   brokerage: number | null;
-  isNegotiable: boolean;
-  lockInPeriod: string;
-  availableFrom: string;
-  configuration: string;
+  isNegotiable: boolean | null;
+  lockInPeriod: string | null;
+  availableFrom: string | null;
+  configuration: string | null;
   bedrooms: number | null;
   bathrooms: number | null;
   balconies: number | null;
-  floorNumber: string;
+  floorNumber: string | null;
   totalFloors: number | null;
   maintenanceCharges: number | null;
-  isMaintenanceIncluded: boolean;
-  roomType: string;
-  sharingType: string;
+  isMaintenanceIncluded: boolean | null;
+  roomType: string | null;
+  sharingType: string | null;
   unitsAvailable: number | null;
   roomSize: number | null;
-  furnishing: string;
-  furnishingExtras: string[];
-  amenities: string[];
-  features: string[];
-  preferredTenant: string;
-  mainImage: string;
+  furnishing: string | null;
+  furnishingExtras: string[] | null;
+  amenities: string[] | null;
+  features: string[] | null;
+  preferredTenant: string | null;
+  mainImage: string | null;
   photos: string[];
-  isPreoccupied: boolean;
+  isPreoccupied: boolean | null;
 }
 
 // Define separate state interfaces
@@ -179,26 +179,26 @@ const initialAddFormState: AddFormState = {
     security: null,
     brokerage: null,
     isNegotiable: false,
-    lockInPeriod: '',
-    availableFrom: '',
-    configuration: '',
+    lockInPeriod: null,
+    availableFrom: null,
+    configuration: null,
     bedrooms: null,
     bathrooms: null,
     balconies: null,
-    floorNumber: '',
+    floorNumber: null,
     totalFloors: null,
     maintenanceCharges: null,
     isMaintenanceIncluded: false,
-    roomType: '',
-    sharingType: '',
+    roomType: null,
+    sharingType: null,
     unitsAvailable: null,
     roomSize: null,
-    furnishing: '',
+    furnishing: null,
     furnishingExtras: [],
     amenities: [],
     features: [],
-    preferredTenant: '',
-    mainImage: '',
+    preferredTenant: null,
+    mainImage: null,
     photos: [],
     isPreoccupied: false,
   },
@@ -266,26 +266,26 @@ const initialEditFormState: EditFormState = {
     security: null,
     brokerage: null,
     isNegotiable: false,
-    lockInPeriod: '',
-    availableFrom: '',
-    configuration: '',
+    lockInPeriod: null,
+    availableFrom: null,
+    configuration: null,
     bedrooms: null,
     bathrooms: null,
     balconies: null,
-    floorNumber: '',
+    floorNumber: null,
     totalFloors: null,
     maintenanceCharges: null,
     isMaintenanceIncluded: false,
-    roomType: '',
-    sharingType: '',
+    roomType: null,
+    sharingType: null,
     unitsAvailable: null,
     roomSize: null,
-    furnishing: '',
+    furnishing: null,
     furnishingExtras: [],
     amenities: [],
     features: [],
-    preferredTenant: '',
-    mainImage: '',
+    preferredTenant: null,
+    mainImage: null,
     photos: [],
     isPreoccupied: false,
   },
@@ -345,9 +345,9 @@ const addFormSlice = createSlice({
         description: propertyDetails.description,
         propertyType: propertyDetails.propertyType.toUpperCase(),
         location: {
-          city: propertyLocation.city,
-          state: propertyLocation.state,
-          country: propertyLocation.country,
+          city: propertyLocation.city || '',
+          state: propertyLocation.state || '',
+          country: propertyLocation.country || '',
           latitude: propertyLocation.latitude || 0,
           longitude: propertyLocation.longitude || 0,
         },
@@ -356,26 +356,26 @@ const addFormSlice = createSlice({
         brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
         isNegotiable: propertyDetails.brokerageNegotiable,
         lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
-        availableFrom: propertyDetails.availableFrom || '',
-        configuration: propertyDetails.configuration.toUpperCase(),
+        availableFrom: propertyDetails.availableFrom || null,
+        configuration: propertyDetails.configuration.toUpperCase() || null,
         bedrooms: parseInt(propertyDetails.bedroom) || 0,
         bathrooms: parseInt(propertyDetails.bathroom) || 0,
         balconies: parseInt(propertyDetails.balcony) || 0,
-        floorNumber: propertyDetails.floornumber || '',
+        floorNumber: propertyDetails.floornumber || null,
         totalFloors: parseInt(propertyDetails.totalfloor) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
           propertyDetails.maintenanceCharges === 'Included',
-        roomType: propertyDetails.roomType || '',
+        roomType: propertyDetails.roomType || null,
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
-          : 'SINGLE',
+          : null,
         unitsAvailable: parseInt(propertyDetails.units) || 0,
         roomSize: parseInt(propertyDetails.roomSize) || 0,
         furnishing: propertyDetails.furnishingLevel
           ? propertyDetails.furnishingLevel.toUpperCase()
-          : 'NONE',
+          : null,
         furnishingExtras: propertyDetails.furnishings || [],
         amenities: propertyDetails.amenities.map((amenity) =>
           amenity.toUpperCase()
@@ -384,10 +384,12 @@ const addFormSlice = createSlice({
           feature.toUpperCase()
         ),
         preferredTenant:
-          propertyDetails.preferredTenantType[0]?.toUpperCase() || 'FAMILY',
-        mainImage: propertyDetails.mainImage || '',
-        photos: photos.map((photo) => photo.preview || ''),
-        isPreoccupied: propertyDetails.preoccupiedPropertyType !== '',
+          propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+        mainImage: propertyDetails.mainImage || null,
+        photos:
+          photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
+
+        isPreoccupied: propertyDetails.preoccupiedPropertyType !== null,
       };
     },
   },
@@ -448,9 +450,9 @@ const editFormSlice = createSlice({
         description: propertyDetails.description,
         propertyType: propertyDetails.propertyType.toUpperCase(),
         location: {
-          city: propertyLocation.city,
-          state: propertyLocation.state,
-          country: propertyLocation.country,
+          city: propertyLocation.city || '',
+          state: propertyLocation.state || '',
+          country: propertyLocation.country || '',
           latitude: propertyLocation.latitude || 0,
           longitude: propertyLocation.longitude || 0,
         },
@@ -459,26 +461,26 @@ const editFormSlice = createSlice({
         brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
         isNegotiable: propertyDetails.brokerageNegotiable,
         lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
-        availableFrom: propertyDetails.availableFrom || '',
-        configuration: propertyDetails.configuration.toUpperCase(),
+        availableFrom: propertyDetails.availableFrom || null,
+        configuration: propertyDetails.configuration.toUpperCase() || null,
         bedrooms: parseInt(propertyDetails.bedroom) || 0,
         bathrooms: parseInt(propertyDetails.bathroom) || 0,
         balconies: parseInt(propertyDetails.balcony) || 0,
-        floorNumber: propertyDetails.floornumber || '',
+        floorNumber: propertyDetails.floornumber || null,
         totalFloors: parseInt(propertyDetails.totalfloor) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
           propertyDetails.maintenanceCharges === 'Included',
-        roomType: propertyDetails.roomType || '',
+        roomType: propertyDetails.roomType || null,
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
-          : 'SINGLE',
+          : null,
         unitsAvailable: parseInt(propertyDetails.units) || 0,
         roomSize: parseInt(propertyDetails.roomSize) || 0,
         furnishing: propertyDetails.furnishingLevel
           ? propertyDetails.furnishingLevel.toUpperCase()
-          : 'NONE',
+          : null,
         furnishingExtras: propertyDetails.furnishings || [],
         amenities: propertyDetails.amenities.map((amenity) =>
           amenity.toUpperCase()
@@ -487,10 +489,12 @@ const editFormSlice = createSlice({
           feature.toUpperCase()
         ),
         preferredTenant:
-          propertyDetails.preferredTenantType[0]?.toUpperCase() || 'FAMILY',
-        mainImage: propertyDetails.mainImage || '',
-        photos: photos.map((photo) => photo.preview || ''),
-        isPreoccupied: propertyDetails.preoccupiedPropertyType !== '',
+          propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+        mainImage: propertyDetails.mainImage || null,
+        photos:
+          photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
+
+        isPreoccupied: propertyDetails.preoccupiedPropertyType !== null,
       };
     },
 

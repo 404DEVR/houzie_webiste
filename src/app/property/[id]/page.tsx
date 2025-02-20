@@ -9,17 +9,17 @@ import useAuth from '@/hooks/useAuth';
 import ItemGrid from '@/components/cards/IconGrid';
 import MapCard from '@/components/cards/MapCard';
 import PlacesNearby from '@/components/cards/PlacesNearby';
-import ProfileCard from '@/components/cards/profilecard';
-import PropertyHighlight from '@/components/cards/PropertyHighlights';
-import PropertySuggestions from '@/components/cards/PropertySuggestions';
-import AboutProperty from '@/components/detailspage/AboutProperty';
 import HeaderContainer, {
   Property,
 } from '@/components/detailspage/HeaderContainer';
-import PropertyDetails from '@/components/detailspage/PropertyDetails';
+import { Button } from '@/components/ui/button';
+import PropertyHighlight from '@/components/cards/PropertyHighlights';
+import PropertySuggestions from '@/components/cards/PropertySuggestions';
+import ProfileCard from '@/components/cards/profilecard';
+import AboutProperty from '@/components/detailspage/AboutProperty';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
-import { Button } from '@/components/ui/button';
+import PropertyDetails from '@/components/detailspage/PropertyDetails';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -122,11 +122,9 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
             <PropertyHighlights propertyData={propertyData} />
             <PropertyDetails propertyData={propertyData} />
             <AboutProperty propertyData={propertyData} />
-
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
               {propertyData && <MapCard propertyData={propertyData} />}
             </div>
-
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
               <ItemGrid
                 title='Amenities'
@@ -141,7 +139,6 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
               <PropertyHighlight propertyData={propertyData} />
             </div>
           </div>
-
           <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
             <div className='space-y-4'>
               <ProfileCardWithOverlay

@@ -1,12 +1,14 @@
 'use client';
 
+import axios from 'axios';
+import { isEqual } from 'lodash';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { isEqual } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cn } from '@/lib/utils'; // Import cn function
 import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import CustomInput from '@/components/inputs/CustomInput';
 import { Button } from '@/components/ui/button';
@@ -40,8 +42,6 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
-import axios from 'axios';
-import useAuth from '@/hooks/useAuth';
 
 interface PropertyDetailsForminteface {
   handleNext: () => void;
@@ -102,7 +102,7 @@ const PropertyDetailsForm = ({
       );
       initialPropertyDetails.current = JSON.parse(
         JSON.stringify(propertyDetails)
-      ); // Deep copy
+      );
     }
   }, [page]);
 
@@ -110,8 +110,19 @@ const PropertyDetailsForm = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    const formattedValue =
-      name === 'availableFrom' ? formatDateForAPI(value) : value;
+    let formattedValue = value;
+
+    if (type === 'number') {
+      // Prevent negative values
+      if (Number(value) < 0) {
+        formattedValue = '0'; // Or any other default value you prefer
+      }
+    }
+
+    formattedValue =
+      name === 'availableFrom'
+        ? formatDateForAPI(formattedValue)
+        : formattedValue;
 
     if (page === 'edit') {
       dispatch(
@@ -491,28 +502,28 @@ const PropertyDetailsForm = ({
         return [
           { label: 'Family', value: 'FAMILY' },
           { label: 'Bachelors', value: 'BACHELOR' },
-          { label: 'Company Lees', value: 'COMPANY_LEASE' },
+          { label: 'Company Lease', value: 'COMPANY_LEASE' },
           { label: 'Any', value: 'ANY' },
         ];
       case 'BUILDER_FLOOR':
         return [
           { label: 'Family', value: 'FAMILY' },
           { label: 'Bachelors', value: 'BACHELOR' },
-          { label: 'Company Lees', value: 'COMPANY_LEASE' },
+          { label: 'Company Lease', value: 'COMPANY_LEASE' },
           { label: 'Any', value: 'ANY' },
         ];
       case 'FLAT_APARTMENT':
         return [
           { label: 'Family', value: 'FAMILY' },
           { label: 'Bachelors', value: 'BACHELOR' },
-          { label: 'Company Lees', value: 'COMPANY_LEASE' },
+          { label: 'Company Lease', value: 'COMPANY_LEASE' },
           { label: 'Any', value: 'ANY' },
         ];
       default:
         return [
           { label: 'Family', value: 'FAMILY' },
           { label: 'Bachelors', value: 'BACHELOR' },
-          { label: 'Company Lees', value: 'COMPANY_LEASE' },
+          { label: 'Company Lease', value: 'COMPANY_LEASE' },
           { label: 'Any', value: 'ANY' },
         ];
     }

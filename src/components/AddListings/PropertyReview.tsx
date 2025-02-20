@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
 import {
   Bath,
   Bed,
-  Heart,
+  Calendar,
   Home,
   Lock,
-  Wallet,
   MapPin,
-  Calendar,
   User,
+  Wallet,
 } from 'lucide-react';
+import Image from 'next/image';
+import React, { useState } from 'react';
+
+import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 
 interface PropertyReviewProps {
   data: any;
@@ -66,15 +66,6 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
               className='object-cover rounded-md'
               sizes='(max-width: 640px) 100vw, 300px'
             />
-            <button
-              className='absolute top-3 right-3 p-2'
-              onClick={toggleFavorite}
-            >
-              <Heart
-                className='w-5 h-5 text-[#42A4AE]'
-                fill={favorites ? '#42A4AE' : 'transparent'}
-              />
-            </button>
           </div>
         </div>
 

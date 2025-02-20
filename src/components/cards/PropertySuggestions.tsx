@@ -26,16 +26,27 @@ interface Property {
 }
 
 export default function PropertySuggestions() {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<Property[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const fetchPropertyData = async () => {
       try {
-        const response = await axios.get('https://api.houzie.in/listings', {});
-        setProperties(response.data.data);
+        setLoading(true);
+        const response = await axios.get('https://api.houzie.in/listings');
+        console.log('API Response:', response.data);
+        if (response.data && Array.isArray(response.data.data)) {
+          setProperties(response.data.data);
+        } else {
+          setError('Invalid data structure received from API');
+        }
       } catch (error) {
         console.error('Error fetching property data:', error);
+        setError('Failed to fetch property data');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -56,81 +67,79 @@ export default function PropertySuggestions() {
     { icon: Home, label: property.propertyType },
   ];
 
-  if (properties.length === 0) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!properties || properties.length === 0) {
+    return <div>No properties found.</div>;
   }
 
   return (
     <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto p-4 bg-white rounded-lg shadow-sm'>
       <h2 className='text-2xl font-semibold mb-4'>Other suggestions</h2>
-
       <div className='flex gap-12 overflow-x-auto scrollbar-hide px-4'>
-        {properties && properties.length > 0 ? (
-          properties.map((property) => (
-            <Card
-              key={property.id}
-              className='min-w-[300px] max-w-[330px] flex flex-col border-none px-0'
-            >
-              <div className='relative'>
-                <Image
-                  width={330}
-                  height={220}
-                  src={property.mainImage}
-                  alt={property.title}
-                  className='w-full h-[220px] object-cover rounded-lg'
+        {properties.map((property) => (
+          <Card
+            key={property.id}
+            className='min-w-[300px] max-w-[330px] flex flex-col border-none px-0'
+          >
+            <div className='relative'>
+              <Image
+                width={330}
+                height={220}
+                src={property.mainImage || '/svg/no-results.svg'}
+                alt={property.title}
+                className='w-full h-[220px] object-cover rounded-lg'
+              />
+              <button
+                className='absolute top-2 right-2 p-1.5'
+                onClick={() => toggleFavorite(property.id)}
+              >
+                <Heart
+                  className='w-5 h-5 text-[#42A4AE]'
+                  fill={favorites[property.id] ? '#42A4AE' : 'transparent'}
                 />
-                <button
-                  className='absolute top-2 right-2 p-1.5'
-                  onClick={() => toggleFavorite(property.id)}
-                >
-                  <Heart
-                    className='w-5 h-5 text-[#42A4AE]'
-                    fill={favorites[property.id] ? '#42A4AE' : 'transparent'}
-                  />
-                </button>
+              </button>
+            </div>
+            <CardContent className='pt-4 px-0'>
+              <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
+              <p className='text-sm text-gray-600 mb-4'>
+                {property.description.slice(0, 100)}...
+                <button className='underline ml-1 text-black'>Read More</button>
+              </p>
+              <div className='flex gap-2 flex-wrap'>
+                {getPropertyFeatures(property).map((feature, index) => (
+                  <Badge
+                    key={index}
+                    variant='outline'
+                    className='bg-[#191919] text-white border-neutral-800 px-[8px] py-[3px] rounded-[20.53px]'
+                  >
+                    <feature.icon className='w-[17.59px] h-[17.59px]' />
+                    <span className='font-medium text-sm ml-[4px]'>
+                      {feature.label}
+                    </span>
+                  </Badge>
+                ))}
               </div>
-
-              <CardContent className='pt-4 px-0'>
-                <h3 className='text-lg font-semibold mb-4'>{property.title}</h3>
-                <p className='text-sm text-gray-600 mb-4'>
-                  {property.description.slice(0, 100)}...
-                  <button className='underline ml-1 text-black'>
-                    Read More
-                  </button>
-                </p>
-
-                <div className='flex gap-2 flex-wrap'>
-                  {getPropertyFeatures(property).map((feature, index) => (
-                    <Badge
-                      key={index}
-                      variant='outline'
-                      className='bg-[#191919] text-white border-neutral-800 px-[8px] py-[3px] rounded-[20.53px]'
-                    >
-                      <feature.icon className='w-[17.59px] h-[17.59px]' />
-                      <span className='font-medium text-sm ml-[4px]'>
-                        {feature.label}
-                      </span>
-                    </Badge>
-                  ))}
+            </CardContent>
+            <CardFooter className='px-0 flex'>
+              <div className='flex items-center justify-between flex-[1]'>
+                <div>
+                  <p className='text-sm text-gray-500'>Rent</p>
+                  <p className='text-lg font-semibold'>₹ {property.price}</p>
                 </div>
-              </CardContent>
-
-              <CardFooter className='px-0 flex'>
-                <div className='flex items-center justify-between flex-[1]'>
-                  <div>
-                    <p className='text-sm text-gray-500'>Rent</p>
-                    <p className='text-lg font-semibold'>₹ {property.price}</p>
-                  </div>
-                </div>
-                <Button className='w-full bg-teal-500 hover:bg-teal-600 flex-[1] text-white'>
-                  View Details
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        ) : (
-          <div>No properties found.</div>
-        )}
+              </div>
+              <Button className='w-full bg-teal-500 hover:bg-teal-600 flex-[1] text-white'>
+                View Details
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );

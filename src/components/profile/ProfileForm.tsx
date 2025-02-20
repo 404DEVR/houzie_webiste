@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios'; // Import Axios
-import { Camera, ListIcon, Settings, UserRoundPen } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -94,10 +94,6 @@ const ProfileForm = ({ handleTabChange, page }: ProfileFormInterface) => {
         description: 'Failed to update profile. Please try again.',
       });
     }
-  };
-
-  const handlebuttonchange = (value: string) => {
-    if (handleTabChange) handleTabChange(value);
   };
 
   if (isLoading) {
@@ -200,30 +196,6 @@ const ProfileForm = ({ handleTabChange, page }: ProfileFormInterface) => {
             </div>
           </div>
         </div>
-        {page !== 'user' && (
-          <div className='border-b-2 py-1 flex gap-4'>
-            <Button
-              onClick={() => handlebuttonchange('myListing')}
-              variant='ghost'
-              className='w-40 flex justify-center items-center hover:text-white hover:bg-[#42A4AE]'
-            >
-              <ListIcon />
-              My Listings
-            </Button>
-            <Button className='text-white bg-[#42A4AE] w-40 rounded-md flex justify-center items-center'>
-              <UserRoundPen />
-              Profile
-            </Button>
-            <Button
-              onClick={() => handlebuttonchange('settings')}
-              variant='ghost'
-              className='w-40 flex justify-center items-center hover:text-white hover:bg-[#42A4AE]'
-            >
-              <Settings />
-              Settings
-            </Button>
-          </div>
-        )}
       </div>
     </TooltipProvider>
   );
