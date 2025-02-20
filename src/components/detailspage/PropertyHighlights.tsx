@@ -9,9 +9,9 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
+import { Property } from '@/components/detailspage/HeaderContainer';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Property } from '@/components/detailspage/HeaderContainer';
 
 interface PropertyHighlightsprops {
   propertyData: Property;
@@ -24,7 +24,7 @@ export default function PropertyHighlights({
     { icon: Bed, label: `${propertyData.bedrooms} Bedrooms` },
     { icon: Bath, label: `${propertyData.bathrooms} Bathrooms` },
     { icon: Building2, label: `${propertyData.balconies} Balconies` },
-    { icon: Home, label: propertyData.propertyType },
+    { icon: Home, label: propertyData.propertyType.replace(/_/g, ' ') },
   ];
 
   const financialDetails = [

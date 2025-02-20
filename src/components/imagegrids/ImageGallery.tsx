@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Property } from '@/components/detailspage/HeaderContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 const galleryImages = [
   {
@@ -31,8 +31,9 @@ interface ImageGalleryprops {
 }
 
 const FullGallery = ({ images, title, mainImage }) => (
-  <div className='flex flex-col sm:flex-row gap-2 sm:gap-2.5'>
-    <div className='flex-1 relative aspect-[4/3] sm:aspect-auto sm:h-[calc(100vh-10rem)]'>
+  <div className='flex flex-col gap-4'>
+    {/* Main Image */}
+    <div className='relative aspect-[16/9] w-full'>
       <Image
         src={mainImage}
         alt={`${title} - Main Image`}
@@ -41,18 +42,17 @@ const FullGallery = ({ images, title, mainImage }) => (
         className='rounded-lg'
       />
     </div>
-    <div className='flex-1 grid grid-cols-2 gap-2 md:gap-2.5'>
+
+    {/* Grid of Other Images */}
+    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
       {images.map((image, index) => (
-        <div
-          key={index}
-          className='relative aspect-square sm:aspect-auto sm:h-[calc((100vh-10rem)/2)]'
-        >
+        <div key={index} className='relative aspect-square'>
           <Image
             src={image}
             alt={`${title} - Image ${index + 1}`}
             layout='fill'
             objectFit='cover'
-            className='rounded-lg'
+            className='rounded-lg transition-transform hover:scale-105'
           />
         </div>
       ))}
@@ -119,9 +119,6 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
           <DialogTitle className='text-2xl font-bold mb-4'>
             All Photos
           </DialogTitle>
-          <DialogClose className='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground'>
-            <span className='sr-only'>Close</span>
-          </DialogClose>
           <FullGallery
             images={propertyData.photos}
             title={propertyData.title}

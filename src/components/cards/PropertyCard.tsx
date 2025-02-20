@@ -74,7 +74,7 @@ export function PropertyCard({
   const propertyFeatures: PropertyFeature[] = [
     { icon: Bed, label: `${property.bedrooms} Beds` },
     { icon: Bath, label: `${property.bathrooms} Baths` },
-    { icon: Home, label: property.propertyType },
+    { icon: Home, label: property.propertyType.replace(/_/g, ' ') },
   ];
 
   const financialDetails: FinancialDetails[] = [

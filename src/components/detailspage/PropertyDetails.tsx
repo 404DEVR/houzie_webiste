@@ -42,7 +42,11 @@ const Overview = ({ propertyData }: Overviewprops) => {
       },
     ],
     [
-      { label: 'Furnishing', value: propertyData.furnishing, hasIcon: true },
+      {
+        label: 'Furnishing',
+        value: propertyData.furnishing.replace(/_/g, ' '),
+        hasIcon: true,
+      },
       {
         label: 'Pet Friendly',
         value: propertyData.features.includes('PET_FRIENDLY') ? 'Yes' : 'No',

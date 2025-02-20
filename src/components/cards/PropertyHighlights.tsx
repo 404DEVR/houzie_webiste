@@ -1,5 +1,6 @@
-import { Property } from '@/components/detailspage/HeaderContainer';
 import { Check } from 'lucide-react';
+
+import { Property } from '@/components/detailspage/HeaderContainer';
 
 const highlights = [
   {
@@ -37,7 +38,9 @@ export default function PropertyHighlight({
             <div className='w-5 h-5 rounded-full bg-[#42A4AE] flex items-center justify-center'>
               <Check className='w-3 h-3 text-white' />
             </div>
-            <span className='text-gray-600'>{highlight}</span>
+            <span className='text-gray-600'>
+              {highlight.replace(/_/g, ' ')}
+            </span>
           </div>
         ))}
       </div>
