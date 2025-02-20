@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 import useAuth from '@/hooks/useAuth';
@@ -6,12 +6,15 @@ import useAuth from '@/hooks/useAuth';
 const withAuthRedirect = (WrappedComponent: React.ComponentType) => {
   const AuthRedirect = (props: any) => {
     const { auth } = useAuth();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get('redirect') || '/';
 
     useEffect(() => {
       if (auth?.accessToken) {
-        redirect('/'); // Redirect to home or dashboard if authenticated
+        router.push(redirectPath);
       }
-    }, [auth]);
+    }, [auth, router, redirectPath]);
 
     // If authenticated, do not render the wrapped component
     if (auth?.accessToken) {

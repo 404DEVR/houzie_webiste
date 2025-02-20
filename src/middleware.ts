@@ -10,7 +10,10 @@ export function middleware(req: NextRequest) {
   }
 
   if ((path.startsWith('/broker') || path === '/profile') && !token) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    // Add the original URL as a redirect parameter
+    const loginUrl = new URL('/login', req.url);
+    loginUrl.searchParams.set('redirect', path);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

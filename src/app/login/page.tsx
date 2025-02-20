@@ -5,7 +5,9 @@ import axios from 'axios';
 import { Apple, Eye, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
+import { Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
@@ -41,6 +43,8 @@ const SignUpForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/';
 
   const {
     register,
@@ -77,7 +81,7 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push('/broker');
+      router.push(redirectPath);
 
       // console.log(redirectPath);
       toast({
@@ -252,4 +256,15 @@ const SignUpForm = () => {
   );
 };
 
-export default withAuthRedirect(SignUpForm);
+const LoginPage = () => {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SignUpForm />
+      </Suspense>
+    </div>
+  );
+};
+  
+
+export default withAuthRedirect(LoginPage);
