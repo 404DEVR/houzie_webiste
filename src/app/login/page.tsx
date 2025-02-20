@@ -117,7 +117,6 @@ const SignUpForm = () => {
         if (redirectUrl && typeof redirectUrl === 'string') {
           router.push(redirectUrl);
         } else {
-          console.warn('Invalid redirect URL from Google sign-up');
           router.push('/broker'); // Or some safe fallback URL
         }
       }
@@ -198,6 +197,7 @@ const SignUpForm = () => {
                 <Button
                   variant='ghost'
                   size='icon'
+                  type='button'
                   className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -265,6 +265,5 @@ const LoginPage = () => {
     </div>
   );
 };
-  
 
 export default withAuthRedirect(LoginPage);

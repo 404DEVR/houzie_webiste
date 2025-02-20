@@ -1,6 +1,8 @@
 'use client';
+
 import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,20 +11,41 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-interface SelectedValues {
-  propertyType: string[];
-  configuration: string[];
-  livingType: string[];
+import {
+  clearSearch,
+  setConfiguration,
+  setLivingType,
+  setPropertyType,
+} from '@/redux/slices/searchSlice';
+import { RootState } from '@/redux/store';
+
+interface PropertyType {
+  id: string;
+  label: string;
+  description: string;
+}
+
+interface ConfigType {
+  id: string;
+  label: string;
+}
+
+interface SharingType {
+  id: string;
+  label: string;
 }
 
 const PropertyComponentSearchbar = () => {
-  const [selectedValues, setSelectedValues] = useState<SelectedValues>({
-    propertyType: [],
-    configuration: [],
-    livingType: [],
-  });
+  const dispatch = useDispatch();
+  const propertyType = useSelector(
+    (state: RootState) => state.search.propertyType
+  );
+  const configuration = useSelector(
+    (state: RootState) => state.search.configuration
+  );
+  const livingType = useSelector((state: RootState) => state.search.livingType);
 
-  const propertyTypes = [
+  const propertyTypes: PropertyType[] = [
     {
       id: 'builderFloor',
       label: 'Builder Floor',
@@ -60,7 +83,7 @@ const PropertyComponentSearchbar = () => {
     },
   ];
 
-  const configurations = [
+  const configurations: ConfigType[] = [
     { id: '1bhk', label: '1 BHK' },
     { id: '2bhk', label: '2 BHK' },
     { id: '3bhk', label: '3 BHK' },
@@ -69,32 +92,61 @@ const PropertyComponentSearchbar = () => {
     { id: 'studio', label: 'Studio/1 RK' },
   ];
 
-  const SharingTypes = [
+  const SharingTypes: SharingType[] = [
     { id: 'SINGLE', label: 'Single' },
     { id: 'SHARING', label: 'Sharing' },
   ];
 
-  const handleCheckboxChange = (category, id) => {
-    setSelectedValues((prev) => ({
-      ...prev,
-      [category]: prev[category].includes(id)
-        ? prev[category].filter((item) => item !== id)
-        : [...prev[category], id],
-    }));
+  const handleCheckboxChange = (
+    category: 'propertyType' | 'configuration' | 'livingType',
+    id: string
+  ) => {
+    switch (category) {
+      case 'propertyType': {
+        const newPropertyType = propertyType.includes(id)
+          ? propertyType.filter((item) => item !== id)
+          : [...propertyType, id];
+        dispatch(setPropertyType(newPropertyType));
+        break;
+      }
+      case 'configuration': {
+        const newConfiguration = configuration.includes(id)
+          ? configuration.filter((item) => item !== id)
+          : [...configuration, id];
+        dispatch(setConfiguration(newConfiguration));
+        break;
+      }
+      case 'livingType': {
+        const newLivingType = livingType.includes(id)
+          ? livingType.filter((item) => item !== id)
+          : [...livingType, id];
+        dispatch(setLivingType(newLivingType));
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   const getDisplayText = (): string => {
     const selections: string[] = [];
-    if (selectedValues.propertyType.length)
-      selections.push(`${selectedValues.propertyType.length} Properties`);
-    if (selectedValues.configuration.length)
-      selections.push(`${selectedValues.configuration.length} Configs`);
-    if (selectedValues.livingType.length)
-      selections.push(`${selectedValues.livingType.length} Types`);
+    if (propertyType.length)
+      selections.push(`${propertyType.length} Properties`);
+    if (configuration.length)
+      selections.push(`${configuration.length} Configs`);
+    if (livingType.length) selections.push(`${livingType.length} Types`);
     return selections.length ? selections.join(', ') : 'Choose property type';
   };
 
-  const CheckboxGroup = ({ title, options, category }) => (
+  const CheckboxGroup = ({
+    title,
+    options,
+    category,
+  }: {
+    title: string;
+    options: ConfigType[] | SharingType[];
+    category: 'configuration' | 'livingType';
+  }) => (
     <div className='w-full'>
       <label className='text-sm font-semibold mb-3 block text-gray-800'>
         {title}
@@ -107,7 +159,11 @@ const PropertyComponentSearchbar = () => {
           >
             <input
               type='checkbox'
-              checked={selectedValues[category].includes(option.id)}
+              checked={
+                category === 'configuration'
+                  ? configuration.includes(option.id)
+                  : livingType.includes(option.id)
+              }
               onChange={() => handleCheckboxChange(category, option.id)}
               className='w-5 h-5 rounded-md text-teal-500 focus:ring-teal-500 border-gray-300 transition-colors duration-200 ease-in-out'
             />
@@ -120,7 +176,15 @@ const PropertyComponentSearchbar = () => {
     </div>
   );
 
-  const CheckBoxPropertyType = ({ title, options, category }) => (
+  const CheckBoxPropertyType = ({
+    title,
+    options,
+    category,
+  }: {
+    title: string;
+    options: PropertyType[];
+    category: 'propertyType';
+  }) => (
     <div className='w-full'>
       <div className='flex flex-col items-center justify-between w-full'>
         {options.map((option) => (
@@ -129,7 +193,7 @@ const PropertyComponentSearchbar = () => {
               <span className='flex flex-row items-center text-black text-base sm:text-lg font-poppins font-medium leading-5 tracking-tighter w-full'>
                 <input
                   type='checkbox'
-                  checked={selectedValues[category].includes(option.id)}
+                  checked={propertyType.includes(option.id)}
                   onChange={() => handleCheckboxChange(category, option.id)}
                   className='w-5 h-5 sm:w-6 sm:h-6 rounded-full border-gray-300 text-black focus:ring-black'
                 />
@@ -147,27 +211,22 @@ const PropertyComponentSearchbar = () => {
     </div>
   );
 
-  const showConfigurations = selectedValues.propertyType.some(
+  const showConfigurations = propertyType.some(
     (type) => type === 'builderFloor' || type === 'flatApartment'
   );
 
-  const showLivingTypes = selectedValues.propertyType.some(
+  const showLivingTypes = propertyType.some(
     (type) => type === 'coliving' || type === 'pg'
   );
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClearAll = () => {
-    setSelectedValues({
-      propertyType: [],
-      configuration: [],
-      livingType: [],
-    });
+    dispatch(clearSearch());
     setIsOpen(false);
   };
 
   const handleApply = () => {
-    // Add any apply logic here if needed
     setIsOpen(false);
   };
 

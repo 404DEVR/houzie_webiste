@@ -2,6 +2,7 @@
 
 import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,9 +12,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
+import { setRentRange } from '@/redux/slices/searchSlice';
+import { RootState } from '@/redux/store';
+
 const RentComponent = () => {
-  const [minRent, setMinRent] = useState(0);
-  const [maxRent, setMaxRent] = useState(10000);
+  const dispatch = useDispatch();
+  const minRent = useSelector((state: RootState) => state.search.minRent);
+  const maxRent = useSelector((state: RootState) => state.search.maxRent);
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
 
   const handleSliderChange = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -22,9 +27,13 @@ const RentComponent = () => {
     const value = Math.min(Math.max(0, Math.round(position)), 10000);
 
     if (isDragging === 'min') {
-      if (value <= maxRent) setMinRent(value);
+      if (value <= maxRent) {
+        dispatch(setRentRange({ minRent: value, maxRent }));
+      }
     } else if (isDragging === 'max') {
-      if (value >= minRent) setMaxRent(value);
+      if (value >= minRent) {
+        dispatch(setRentRange({ minRent, maxRent: value }));
+      }
     }
   };
 
@@ -35,7 +44,7 @@ const RentComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleApply = () => {
-    // Add any apply logic here if needed
+    dispatch(setRentRange({ minRent, maxRent }));
     setIsOpen(false);
   };
 
@@ -45,7 +54,7 @@ const RentComponent = () => {
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <div className='w-full rounded-md text-gray-700 text-sm bg-white focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between py-2'>
-            ${minRent} - ${maxRent}
+            ₹ {minRent} - ₹ {maxRent}
             <ChevronDown className='h-4 w-4 text-gray-500' />
           </div>
         </PopoverTrigger>
@@ -84,7 +93,9 @@ const RentComponent = () => {
                 value={minRent}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value <= maxRent) setMinRent(value);
+                  if (value <= maxRent) {
+                    dispatch(setRentRange({ minRent: value, maxRent }));
+                  }
                 }}
                 className='w-1/2'
                 placeholder='Min Rent'
@@ -94,7 +105,9 @@ const RentComponent = () => {
                 value={maxRent}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value >= minRent) setMaxRent(value);
+                  if (value >= minRent) {
+                    dispatch(setRentRange({ minRent, maxRent: value }));
+                  }
                 }}
                 className='w-1/2'
                 placeholder='Max Rent'

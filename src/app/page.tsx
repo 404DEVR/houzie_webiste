@@ -1,4 +1,7 @@
+'use client';
+
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import '@/lib/env';
 
 import DiscoverProperties from '@/components/DiscoverProperties';
@@ -8,6 +11,8 @@ import KnowHouzie from '@/components/KnowHouzie';
 import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 import PropertyHero from '@/components/PropertyHero';
 import StartJourney from '@/components/StartJourney';
+
+import store from '@/redux/store';
 
 /**
  * SVGR Support
@@ -19,26 +24,16 @@ import StartJourney from '@/components/StartJourney';
 
 export default function HomePage() {
   return (
-    <main>
-      <NavbarDetailsPage />
-      <PropertyHero />
-      <KnowHouzie />
-      <DiscoverProperties />
-      <StartJourney />
-      <FAQsAndBlogs />
-      <Footer />
-      {/* <div className='flex flex-col items-center h-screen border-2'>
-        <h1 className='text-black text-center font-inter text-6xl font-semibold leading-[90px] tracking-[-1.44px]'>
-          Find your <a className=''>Perfect</a> Property
-        </h1>
-        <p>
-          We can help you find your dream home by guiding you through a few
-          simple steps and matching you with tailor-made property listings.
-        </p>
-        <div className='w-full'>
-          <SearchBar />
-        </div>
-      </div> */}
-    </main>
+    <Provider store={store}>
+      <main>
+        <NavbarDetailsPage />
+        <PropertyHero />
+        <KnowHouzie />
+        <DiscoverProperties />
+        <StartJourney />
+        <FAQsAndBlogs />
+        <Footer />
+      </main>
+    </Provider>
   );
 }

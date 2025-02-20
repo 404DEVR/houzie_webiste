@@ -1,16 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-// import refreshTokenMiddleware from './middleware/refreshTokenMiddleware';
 import authReducer from './slices/authSlice';
 import { addFormReducer, editFormReducer } from './slices/formslices';
+import searchReducer from './slices/searchSlice';
 
 const store = configureStore({
   reducer: {
-    auth: authReducer, // Add the auth reducer here
+    auth: authReducer,
     addForm: addFormReducer,
     editForm: editFormReducer,
+    search: searchReducer,
   },
-  // middleware: getDefaultMiddleware => getDefaultMiddleware().concat(refreshTokenMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -4,17 +4,20 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 
 import { useFilters } from '@/lib/context/FilterContext';
 import useAuth from '@/hooks/useAuth';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
+// Import PropertyComponent
+import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHeader';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
-import PropertyComponent from '@/components/propertpage/PropertyComponent'; // Import PropertyComponent
-import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
+
+import store from '@/redux/store';
 
 interface Property {
   id: string;
@@ -183,7 +186,7 @@ export default function DetailsPage() {
   );
 
   return (
-    <>
+    <Provider store={store}>
       <main className='px-4 my-2 sm:my-3 bg-[#FFFFFF]'>
         <PropertySearchHeader />
 
@@ -222,11 +225,11 @@ export default function DetailsPage() {
                             ? imageCache[properties[0].mainImage] ||
                               '/images/Map.png'
                             : '/images/Map.png'
-                        } // Fallback to local image if mainImage is missing
+                        }
                         alt='Map View'
                         layout='fill'
                         objectFit='cover'
-                        fill // Use fill instead of width and height for layout="fill"
+                        fill
                         style={{ objectFit: 'cover' }}
                       />
                     </div>
@@ -273,6 +276,6 @@ export default function DetailsPage() {
 
         <LocalitiesGrid normal={true} />
       </main>
-    </>
+    </Provider>
   );
 }

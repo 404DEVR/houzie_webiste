@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Apple, Eye, Lock, Mail, User } from 'lucide-react';
+import { Apple, Eye, Lock, Mail, Phone, User } from 'lucide-react'; // Import Phone icon
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -40,6 +40,11 @@ const formSchema = z.object({
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters' }),
+  phoneNumber: z
+    .string()
+    .regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/, {
+      message: 'Please enter a valid phone number',
+    }), // Added phone number validation
   role: z.string().default('BROKER'),
 });
 
@@ -59,6 +64,7 @@ const SignUpForm = () => {
       name: '',
       email: '',
       password: '',
+      phoneNumber: '', // Initialize phone number
       role: 'BROKER',
     },
   });
@@ -69,17 +75,15 @@ const SignUpForm = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        phoneNumber: data.phoneNumber, // Send phone number to the API
         role: data.role,
       });
-
       toast({
         title: 'Registration Successful',
         description: 'You have successfully signed up. Redirecting...',
       });
-
       router.push('/');
     } catch (error) {
-      console.log(error);
       if (axios.isAxiosError(error) && error.response) {
         const responseData = error.response.data;
         if (responseData.status === 'fail' && responseData.message) {
@@ -96,7 +100,6 @@ const SignUpForm = () => {
           });
         }
       } else {
-        console.log(error);
         toast({
           title: 'Registration Failed',
           description: 'An unexpected error occurred. Please try again.',
@@ -187,6 +190,27 @@ const SignUpForm = () => {
                 </p>
               )}
             </div>
+
+            {/* New Phone Number Field */}
+            <div className='grid gap-2'>
+              <Label htmlFor='phoneNumber'>Phone Number</Label>
+              <div className='relative'>
+                <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                <Input
+                  id='phoneNumber'
+                  placeholder='Phone Number'
+                  type='tel'
+                  className='pl-8'
+                  {...register('phoneNumber')}
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className='text-red-500 text-sm'>
+                  {errors.phoneNumber?.message}
+                </p>
+              )}
+            </div>
+
             <div className='grid gap-2'>
               <Label htmlFor='role'>I am looking for</Label>
               <Controller
@@ -222,7 +246,6 @@ const SignUpForm = () => {
           >
             Sign Up
           </Button>
-
           <div className='flex items-center justify-center w-full mt-4'>
             <div className='border-t border-gray-400 flex-grow '></div>
             <span className='mx-4 text-black'>Or</span>

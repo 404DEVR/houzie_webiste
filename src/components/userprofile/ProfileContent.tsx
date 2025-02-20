@@ -9,12 +9,14 @@ import {
 import { useState } from 'react';
 import { Provider } from 'react-redux';
 
-import ProfileFavoriteCards from '../userprofile/ProfileFavoriteCards';
 import ProfileForm from '@/components/profile/ProfileForm';
 import SettingsPage from '@/components/settings/SettingsPage';
 import { Button } from '@/components/ui/button';
+import SaveSearchList from '@/components/userprofile/SaveSearchList';
 
 import store from '@/redux/store';
+
+import ProfileFavoriteCards from '../userprofile/ProfileFavoriteCards';
 
 const BrokerContent = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -75,10 +77,7 @@ const BrokerContent = () => {
         <div className='p-4'>
           {activeTab === 'profile' && <ProfileForm page='user' />}
           {activeTab === 'favorites' && <ProfileFavoriteCards />}
-          {activeTab === 'savedsearch' && (
-            // <AddListings setActiveTab={setActiveTab} />
-            <></>
-          )}
+          {activeTab === 'savedsearch' && <SaveSearchList />}
           {activeTab === 'settings' && <SettingsPage />}
         </div>
       </div>

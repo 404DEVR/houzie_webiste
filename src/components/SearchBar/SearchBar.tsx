@@ -2,17 +2,36 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PropertyComponentSearchbar from '@/components/SearchBar/PropertyComponentSearchbar';
 import RentComponent from '@/components/SearchBar/RentComponent';
 import { Button } from '@/components/ui/button';
 
+import { setLocation } from '@/redux/slices/searchSlice';
+import { RootState } from '@/redux/store';
+
 const SearchBar = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const searchData = useSelector((state: RootState) => state.search);
+  const [savedSearches, setSavedSearches] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Load saved searches from local storage when component mounts
+    const storedSearches = localStorage.getItem('savedSearches');
+    if (storedSearches) {
+      setSavedSearches(JSON.parse(storedSearches));
+    }
+  }, []);
 
   const handleSearchClick = () => {
     router.push('/property');
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setLocation(e.target.value));
   };
 
   return (
@@ -26,6 +45,8 @@ const SearchBar = () => {
             type='text'
             placeholder='Enter your office or nearby area'
             className='px-0 py-1 w-full border-none text-sm focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'
+            value={searchData.location}
+            onChange={handleLocationChange}
           />
         </div>
 
