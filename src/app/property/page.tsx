@@ -2,12 +2,10 @@
 
 import axios from 'axios';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
 import { useFilters } from '@/lib/context/FilterContext';
-import useAuth from '@/hooks/useAuth';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
@@ -41,13 +39,10 @@ interface Property {
 }
 
 export default function DetailsPage() {
-  const { auth } = useAuth();
-  const router = useRouter();
   const { filters, resetFilters } = useFilters(); // Get resetFilters from the hook
   const [activeView, setActiveView] = useState('list');
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [imageCache, setImageCache] = useState<Record<string, string>>({});
 
@@ -65,7 +60,6 @@ export default function DetailsPage() {
         setImageCache((prevCache) => ({ ...prevCache, [url]: imageUrl }));
         return imageUrl;
       } catch (error) {
-        console.error('Error loading image:', error);
         return '/svg/no-results.svg';
       }
     },
@@ -105,13 +99,10 @@ export default function DetailsPage() {
       const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
 
       const response = await axios.get(url);
-      console.log(url);
 
       setProperties(response.data.data);
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching properties:', err);
-      setError('Failed to fetch properties. Please try again.');
       setLoading(false);
     }
   };

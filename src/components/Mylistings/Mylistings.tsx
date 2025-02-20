@@ -67,8 +67,6 @@ interface Listing {
   preferredTenant: string;
 }
 
-interface MyListingsProps {}
-
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
   // Replace underscores with spaces and convert to title case
@@ -80,7 +78,7 @@ const transformString = (str: string | null | undefined) => {
     .join(' ');
 };
 
-const MyListings = ({}: MyListingsProps) => {
+const MyListings = () => {
   const router = useRouter();
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -117,12 +115,10 @@ const MyListings = ({}: MyListingsProps) => {
   }, [auth?.accessToken, url]);
 
   const handleEdit = async (id) => {
-    console.log(auth?.accessToken);
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
 
-      console.log(listingData);
       interface PropertyDetails {
         title: string;
         description: string;

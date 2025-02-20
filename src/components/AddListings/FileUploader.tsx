@@ -256,21 +256,13 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
       }
       const changedFields: any = {};
 
-      // Compare photos
-      console.log(photos);
-      console.log(initialPhotos);
       if (!isEqual(photos, initialPhotos)) {
         changedFields.photos = photos;
       }
 
-      // Compare mainImage
-      console.log(propertyDetails?.mainImage);
-      console.log(initialMainImage);
       if (propertyDetails?.mainImage !== initialMainImage) {
         changedFields.mainImage = propertyDetails?.mainImage;
       }
-
-      console.log(changedFields);
 
       if (Object.keys(changedFields).length > 0) {
         // const response = await axios.patch(
@@ -296,7 +288,6 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
         // handleNext();
       }
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Edit Failed',
         description: 'Failed To Edit Details',

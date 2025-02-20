@@ -85,7 +85,6 @@ export function PropertyCard({
           const cachedUrl = await loadImage(property.mainImage);
           setMainImageSrc(cachedUrl);
         } catch (error) {
-          console.error('Error loading image:', error);
           setMainImageSrc('/svg/no-results.svg');
         }
       }

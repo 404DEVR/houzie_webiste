@@ -9,17 +9,17 @@ import useAuth from '@/hooks/useAuth';
 import ItemGrid from '@/components/cards/IconGrid';
 import MapCard from '@/components/cards/MapCard';
 import PlacesNearby from '@/components/cards/PlacesNearby';
+import ProfileCard from '@/components/cards/profilecard';
+import PropertyHighlight from '@/components/cards/PropertyHighlights';
+import PropertySuggestions from '@/components/cards/PropertySuggestions';
+import AboutProperty from '@/components/detailspage/AboutProperty';
 import HeaderContainer, {
   Property,
 } from '@/components/detailspage/HeaderContainer';
-import { Button } from '@/components/ui/button';
-import PropertyHighlight from '@/components/cards/PropertyHighlights';
-import PropertySuggestions from '@/components/cards/PropertySuggestions';
-import ProfileCard from '@/components/cards/profilecard';
-import AboutProperty from '@/components/detailspage/AboutProperty';
+import PropertyDetails from '@/components/detailspage/PropertyDetails';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
-import PropertyDetails from '@/components/detailspage/PropertyDetails';
+import { Button } from '@/components/ui/button';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -64,7 +64,6 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   const router = useRouter();
   const { auth } = useAuth();
 
-  console.log(auth?.accessToken);
   useEffect(() => {
     const fetchPropertyData = async () => {
       setIsLoading(true);
@@ -78,7 +77,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
         const data = await response.json();
         setPropertyData(data);
       } catch (error) {
-        console.error('Error fetching property data:', error);
+        console.error('Error fetching property data:');
       } finally {
         setIsLoading(false);
       }

@@ -1,7 +1,6 @@
 'use client';
 
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import { jwtDecode } from 'jwt-decode';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 interface User {
@@ -19,22 +18,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const isTokenExpired = (token: string): boolean => {
-  try {
-    const decodedToken: any = jwtDecode(token);
-    return decodedToken.exp < Math.floor(Date.now() / 1000);
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return true;
-  }
-};
-
-const checkTokenExpiration = (auth: User | null, logout: () => void) => {
-  if (auth?.accessToken && isTokenExpired(auth.accessToken)) {
-    logout();
-  }
-};
 
 export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -55,7 +38,6 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
         const userData = JSON.parse(authCookie as string) as User;
         setAuth(userData);
       } catch (error) {
-        console.error('Error parsing auth cookie:', error);
         setAuth(null);
       }
     } else {

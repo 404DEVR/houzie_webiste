@@ -1,6 +1,11 @@
 'use client';
 
+import { useRef, useState } from 'react';
+
 import { useFilters } from '@/lib/context/FilterContext';
+
+import PropertyComponent from '@/components/propertpage/PropertyComponent';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -9,9 +14,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useState, useRef, useEffect } from 'react';
-import PropertyComponent from '@/components/propertpage/PropertyComponent';
 
 interface PropertyFiltersProps {
   onViewChange: (view: string) => void;

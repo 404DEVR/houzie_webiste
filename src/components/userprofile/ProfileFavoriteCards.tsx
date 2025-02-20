@@ -5,31 +5,22 @@ import {
   Bath,
   Bed,
   Building2,
-  Edit,
-  Eye,
   Heart,
   Home,
-  Trash2,
   IndianRupee,
   KeyRound,
   ShieldCheck,
 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
-import AddListings from '@/components/AddListings/AddListings';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-
-import { populateEditForm, startEditing } from '@/redux/slices/formslices';
 
 interface PropertyFeature {
   icon: React.ElementType;
@@ -85,8 +76,6 @@ interface Listing {
   preferredTenant: string;
 }
 
-interface MyListingsProps {}
-
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
   // Replace underscores with spaces and convert to title case
@@ -98,11 +87,9 @@ const transformString = (str: string | null | undefined) => {
     .join(' ');
 };
 
-const MyListings = ({}: MyListingsProps) => {
+const MyListings = () => {
   const router = useRouter();
   const { auth } = useAuth();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const dispatch = useDispatch();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const url = ``;

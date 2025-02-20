@@ -92,9 +92,7 @@ const BrokerContent = () => {
           {activeTab === 'addListing' && (
             <AddListings setActiveTab={setActiveTab} />
           )}
-          {activeTab === 'profile' && (
-            <ProfileForm handleTabChange={handleTabChange} />
-          )}
+          {activeTab === 'profile' && <ProfileForm />}
           {activeTab === 'settings' && <SettingsPage />}
         </div>
       </div>

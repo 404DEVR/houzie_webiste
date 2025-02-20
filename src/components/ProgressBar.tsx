@@ -22,9 +22,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   totalPages,
   page,
 }) => {
-  const handlecircel = (checkpoint: Checkpoint) => {
-    setCurrentPage(checkpoint.placement);
-  };
+  // const handlecircel = (checkpoint: Checkpoint) => {
+  //   setCurrentPage(checkpoint.placement);
+  // };
 
   const calculateProgressValue = () => {
     if (page === 'edit') {

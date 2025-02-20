@@ -25,7 +25,7 @@ import {
 
 export interface ProfileCardProps {
   propertyData?: Property;
-  name?: string; // Make these optional since we're fetching them
+  name?: string;
   rating?: number;
   listingCount?: number;
   totalDeals?: number;
@@ -59,7 +59,6 @@ const ProfileCard = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(auth?.accessToken);
       try {
         const response = await axios.get('https://api.houzie.in/broker/stats', {
           headers: {
@@ -121,7 +120,6 @@ const ProfileCard = ({
           },
         }
       );
-      console.log('Lead submitted successfully:', response.data);
     } catch (error) {
       console.error('Error submitting lead:', error);
     }

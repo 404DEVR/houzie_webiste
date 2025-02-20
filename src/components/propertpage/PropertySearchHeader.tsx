@@ -66,14 +66,14 @@ export function PropertySearchHeader() {
         <Button
           onClick={handleSaveSearch}
           size='custom'
-          disabled={isSearchSaved && auth?.accessToken}
+          disabled={isSearchSaved}
           className={`py-2 px-8 rounded-xl ${
-            isSearchSaved && auth?.accessToken
+            isSearchSaved
               ? 'bg-gray-400 text-white cursor-not-allowed'
               : 'bg-[#42A4AE] text-white hover:bg-[#3a959e]'
           }`}
         >
-          {isSearchSaved && auth?.accessToken ? 'Search Saved' : 'Save Search'}
+          {isSearchSaved ? 'Search Saved' : 'Save Search'}
         </Button>
       </div>
     </div>

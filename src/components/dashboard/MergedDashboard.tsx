@@ -95,7 +95,7 @@ const MergedDashboard: React.FC = () => {
 
         setCardData(newCardData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:');
       }
     };
 

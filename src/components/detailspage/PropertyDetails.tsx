@@ -68,8 +68,6 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
     ],
   ];
 
-  console.log(propertyData.furnishingExtras);
-
   return (
     <Card className='h-[307px] border-zinc-200 mt-7'>
       <CardContent className='flex flex-col gap-5 p-5'>

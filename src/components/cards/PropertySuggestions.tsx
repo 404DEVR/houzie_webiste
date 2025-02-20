@@ -46,14 +46,12 @@ export default function PropertySuggestions() {
       try {
         setLoading(true);
         const response = await axios.get('https://api.houzie.in/listings');
-        console.log('API Response:', response.data);
         if (response.data && Array.isArray(response.data.data)) {
           setProperties(response.data.data);
         } else {
           setError('Invalid data structure received from API');
         }
       } catch (error) {
-        console.error('Error fetching property data:', error);
         setError('Failed to fetch property data');
       } finally {
         setLoading(false);

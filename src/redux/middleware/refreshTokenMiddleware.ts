@@ -29,8 +29,6 @@
 
 // export default refreshTokenMiddleware;
 
-import React from 'react';
-
 const refreshTokenMiddleware = () => {
   return null;
 };

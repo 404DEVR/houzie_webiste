@@ -28,16 +28,16 @@ const LocationSelector = () => {
       : [19.076, 72.8777] // Default to Mumbai
   );
 
-  const LocationMarker = () => {
-    useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        setPosition([lat, lng]);
-        dispatch(updateAddPropertyLocation({ latitude: lat, longitude: lng }));
-      },
-    });
-    return position ? <Marker position={position} icon={customIcon} /> : null;
-  };
+  // const LocationMarker = () => {
+  //   useMapEvents({
+  //     click(e) {
+  //       const { lat, lng } = e.latlng;
+  //       setPosition([lat, lng]);
+  //       dispatch(updateAddPropertyLocation({ latitude: lat, longitude: lng }));
+  //     },
+  //   });
+  //   return position ? <Marker position={position} icon={customIcon} /> : null;
+  // };
 
   return (
     <div className='w-full h-64 rounded-md overflow-hidden'>

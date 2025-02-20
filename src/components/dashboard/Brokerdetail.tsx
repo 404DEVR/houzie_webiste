@@ -36,7 +36,6 @@ const Brokerdetail = () => {
   const [leadsData, setLeadsData] = useState<Lead[] | null>([]);
   const { auth } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -64,7 +63,6 @@ const Brokerdetail = () => {
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <Card className='w-full rounded-lg shadow-2xl my-6'>

@@ -21,18 +21,16 @@ import {
 } from '@/components/ui/tooltip';
 
 interface ProfileFormInterface {
-  handleTabChange?: (any: any) => void;
   page?: string;
 }
 
-const ProfileForm = ({ handleTabChange, page }: ProfileFormInterface) => {
+const ProfileForm = ({ page }: ProfileFormInterface) => {
   const { auth } = useAuth();
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
-  const userId = params.id;
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -49,7 +47,7 @@ const ProfileForm = ({ handleTabChange, page }: ProfileFormInterface) => {
           response.data.phoneNumber ? response.data.phoneNumber : ''
         );
       } catch (error) {
-        console.error('Failed to fetch profile:', error);
+        console.error('Failed to fetch profile:');
         // Handle error appropriately (e.g., display an error message)
       } finally {
         setIsLoading(false);

@@ -79,8 +79,6 @@ interface HeaderContainerprops {
 export default function HeaderContainer({
   propertyData,
 }: HeaderContainerprops) {
-  const router = useRouter();
-
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
@@ -97,7 +95,6 @@ export default function HeaderContainer({
         description: 'Link copied to clipboard.',
       });
     } catch (err) {
-      console.error('Failed to copy: ', err);
       toast({
         title: 'Copy failed',
         description: 'Failed to copy link. Please try again.',

@@ -25,7 +25,7 @@ interface ReviewProps {
   setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Review = ({ handleBack, page, setActiveTab }: ReviewProps) => {
+const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
   const dispatch = useDispatch();
   const { auth } = useAuth();
   const restructuredData = useSelector(
@@ -54,7 +54,6 @@ const Review = ({ handleBack, page, setActiveTab }: ReviewProps) => {
         setActiveTab('myListing');
       }
     } catch (error: any) {
-      console.error('Error posting listing:', error);
       if (
         error.response?.status === 401 ||
         error.message === 'No access token available'

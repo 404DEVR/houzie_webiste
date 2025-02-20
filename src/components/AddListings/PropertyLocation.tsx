@@ -28,7 +28,6 @@ import {
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
 import { toast } from '@/hooks/use-toast';
-import axios from 'axios';
 import useAuth from '@/hooks/useAuth';
 
 interface PropertyLocationProps {
@@ -223,7 +222,6 @@ const PropertyLocation = ({
             longitude: propertyLocation.longitude,
           };
         }
-        console.log(accessToken);
 
         // console.log(changedFields);
 
@@ -262,7 +260,6 @@ const PropertyLocation = ({
         console.error('Initial property location is not available');
       }
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Edit Failed',
         description: 'Failed to edit property location.',
@@ -292,7 +289,6 @@ const PropertyLocation = ({
             Location
           </Label>
           <MapLocationSelecter
-            page={page || ''}
             onLocationSave={handleLocationSave}
             initialLocation={getInitialLocation()}
           />

@@ -2,7 +2,7 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PropertyComponentSearchbar from '@/components/SearchBar/PropertyComponentSearchbar';
@@ -16,15 +16,6 @@ const SearchBar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchData = useSelector((state: RootState) => state.search);
-  const [savedSearches, setSavedSearches] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Load saved searches from local storage when component mounts
-    const storedSearches = localStorage.getItem('savedSearches');
-    if (storedSearches) {
-      setSavedSearches(JSON.parse(storedSearches));
-    }
-  }, []);
 
   const handleSearchClick = () => {
     router.push('/property');
