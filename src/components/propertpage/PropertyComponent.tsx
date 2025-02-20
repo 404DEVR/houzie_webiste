@@ -115,15 +115,9 @@ export default function PropertyComponent() {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant='outline' className='flex gap-2'>
-          <SlidersHorizontal size={16} />
-          Filters
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='w-80 p-4' side='bottom'>
-        <div className='space-y-4 max-h-[80vh] overflow-y-auto'>
+    <>
+      <div className='hidden md:block'>
+        <div className='space-y-4'>
           {/* Rent Range */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Rent</h4>
@@ -199,7 +193,6 @@ export default function PropertyComponent() {
               </div>
             ))}
           </div>
-
           {/* BHK Type */}
           <div className='space-y-2'>
             <h4 className='font-medium'>BHK Type</h4>
@@ -215,7 +208,6 @@ export default function PropertyComponent() {
               </div>
             ))}
           </div>
-
           {/* Available For */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Available For</h4>
@@ -231,7 +223,6 @@ export default function PropertyComponent() {
               </div>
             ))}
           </div>
-
           {/* Furnishing */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Furnishing</h4>
@@ -247,7 +238,6 @@ export default function PropertyComponent() {
               </div>
             ))}
           </div>
-
           {/* Amenities */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Amenities</h4>
@@ -263,7 +253,6 @@ export default function PropertyComponent() {
               </div>
             ))}
           </div>
-
           {/* Parking */}
           <div className='space-y-2'>
             <h4 className='font-medium'>Parking</h4>
@@ -280,7 +269,174 @@ export default function PropertyComponent() {
             ))}
           </div>
         </div>
-      </PopoverContent>
-    </Popover>
+      </div>
+      <div className='block md:hidden'>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant='outline' className='flex gap-2'>
+              <SlidersHorizontal size={16} />
+              Filters
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 p-4' side='bottom'>
+            <div className='space-y-4 max-h-[80vh] overflow-y-auto'>
+              {/* Rent Range */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Rent</h4>
+                <div className='relative w-[90%] mx-auto h-12'>
+                  <div
+                    className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                    onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                    onMouseUp={() => setIsDragging(null)}
+                    onMouseLeave={() => setIsDragging(null)}
+                  >
+                    <div
+                      className='absolute h-2 bg-teal-500 rounded-full'
+                      style={{
+                        left: getLeftPosition(tempRent[0]),
+                        right: `${100 - (tempRent[1] / 50000) * 100}%`,
+                      }}
+                    />
+                    <button
+                      className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                      style={{ left: getLeftPosition(tempRent[0]) }}
+                      onMouseDown={() => setIsDragging('min')}
+                    />
+                    <button
+                      className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                      style={{ left: getLeftPosition(tempRent[1]) }}
+                      onMouseDown={() => setIsDragging('max')}
+                    />
+                  </div>
+                </div>
+                <div className='flex justify-between gap-4'>
+                  <Input
+                    type='number'
+                    value={tempRent[0]}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setTempRent([value, tempRent[1]]);
+                    }}
+                    className='w-1/2'
+                    placeholder='Min Rent'
+                  />
+                  <Input
+                    type='number'
+                    value={tempRent[1]}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setTempRent([tempRent[0], value]);
+                    }}
+                    className='w-1/2'
+                    placeholder='Max Rent'
+                  />
+                  <Button
+                    type='button'
+                    variant='outline'
+                    className='flex justify-center items-center text-white bg-[#42A4AE]'
+                    onClick={handleApplyRent}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
+              {/* Property Type */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Property Type</h4>
+                {propertyTypes.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.propertyType.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('propertyType', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+              {/* BHK Type */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>BHK Type</h4>
+                {bhkTypes.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.bhkType.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('bhkType', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+
+              {/* Available For */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Available For</h4>
+                {availableForTypes.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.availableFor.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('availableFor', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+
+              {/* Furnishing */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Furnishing</h4>
+                {furnishingTypes.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.furnishing.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('furnishing', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+              {/* Amenities */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Amenities</h4>
+                {allAmenities.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.amenities.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('amenities', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+
+              {/* Parking */}
+              <div className='space-y-2'>
+                <h4 className='font-medium'>Parking</h4>
+                {parkingTypes.map((type) => (
+                  <div key={type} className='flex items-center space-x-2'>
+                    <Checkbox
+                      checked={filters.parking.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleCheckboxChange('parking', type, checked)
+                      }
+                    />
+                    <label className='text-sm'>{toTitleCase(type)}</label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+    </>
   );
 }

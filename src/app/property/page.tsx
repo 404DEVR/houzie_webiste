@@ -10,10 +10,11 @@ import useAuth from '@/hooks/useAuth';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
-import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHeader';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
+import PropertyComponent from '@/components/propertpage/PropertyComponent'; // Import PropertyComponent
+import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 
 interface Property {
   id: string;
@@ -153,9 +154,6 @@ export default function DetailsPage() {
       </div>
     );
   }
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   const NoPropertiesFound = () => (
     <div className='flex flex-col items-center justify-center py-20 bg-gray-100'>
@@ -188,49 +186,18 @@ export default function DetailsPage() {
     <>
       <main className='px-4 my-2 sm:my-3 bg-[#FFFFFF]'>
         <PropertySearchHeader />
-        <PropertyFilters onViewChange={(view) => setActiveView(view)} />
 
-        <Tabs value={activeView} className='w-full'>
-          <TabsContent value='list' className='mt-0'>
-            <div className='flex flex-col gap-4 p-4'>
-              {properties && properties.length > 0 ? (
-                properties.map((property, index) => (
-                  <PropertyCard
-                    key={index}
-                    property={property}
-                    loadImage={loadImage}
-                  />
-                ))
-              ) : (
-                <NoPropertiesFound />
-              )}
-            </div>
-          </TabsContent>
+        <div className='flex flex-col md:flex-row gap-4'>
+          {/* Filter Component (visible on larger screens) */}
+          <aside className='w-full md:w-[25%]'>
+            <PropertyFilters onViewChange={(view) => setActiveView(view)} />
+          </aside>
 
-          <TabsContent value='map' className='mt-0'>
-            <div className='flex flex-col xl:flex-row gap-4 p-4 '>
-              {/* Small Window Size Right side - Map */}
-              <div className='xl:hidden w-full xl:w-1/3 rounded-lg '>
-                <div className='h-[400px] w-[60%] mx-auto rounded-lg relative overflow-hidden'>
-                  {/*  USE MAIN IMAGE FROM API */}
-                  <Image
-                    src={
-                      properties[0]?.mainImage
-                        ? imageCache[properties[0].mainImage] ||
-                          '/images/Map.png'
-                        : '/images/Map.png'
-                    } // Fallback to local image if mainImage is missing
-                    alt='Map View'
-                    layout='fill'
-                    objectFit='cover'
-                    fill // Use fill instead of width and height for layout="fill"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-              </div>
-
-              <div className='w-full xl:w-2/3 pr-4'>
-                <div className='flex flex-col gap-4 mb-4'>
+          {/* Property Listings */}
+          <div className='w-full md:w-[75%]'>
+            <Tabs value={activeView} className='w-full'>
+              <TabsContent value='list' className='mt-0'>
+                <div className='flex flex-col gap-4 p-4'>
                   {properties && properties.length > 0 ? (
                     properties.map((property, index) => (
                       <PropertyCard
@@ -243,30 +210,66 @@ export default function DetailsPage() {
                     <NoPropertiesFound />
                   )}
                 </div>
-              </div>
+              </TabsContent>
 
-              {/* Right side - Map */}
-              <div className='hidden xl:block w-full lg:w-1/3 rounded-lg sticky top-0'>
-                <div className='h-[400px] w-full rounded-lg relative overflow-hidden'>
-                  {/* USE MAIN IMAGE FROM API */}
-                  <Image
-                    src={
-                      properties[0]?.mainImage
-                        ? imageCache[properties[0].mainImage] ||
-                          '/images/Map.png'
-                        : '/images/Map.png'
-                    }
-                    alt='Map View'
-                    layout='fill'
-                    objectFit='cover'
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
+              <TabsContent value='map' className='mt-0'>
+                <div className='flex flex-col gap-4 p-4 '>
+                  <div className='w-full  rounded-lg '>
+                    <div className='h-[400px] w-[60%] mx-auto rounded-lg relative overflow-hidden'>
+                      <Image
+                        src={
+                          properties[0]?.mainImage
+                            ? imageCache[properties[0].mainImage] ||
+                              '/images/Map.png'
+                            : '/images/Map.png'
+                        } // Fallback to local image if mainImage is missing
+                        alt='Map View'
+                        layout='fill'
+                        objectFit='cover'
+                        fill // Use fill instead of width and height for layout="fill"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='w-full pr-4'>
+                    <div className='flex flex-col gap-4 mb-4'>
+                      {properties && properties.length > 0 ? (
+                        properties.map((property, index) => (
+                          <PropertyCard
+                            key={index}
+                            property={property}
+                            loadImage={loadImage}
+                          />
+                        ))
+                      ) : (
+                        <NoPropertiesFound />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* <div className='hidden xl:block w-full lg:w-1/3 rounded-lg sticky top-0'>
+                    <div className='h-[400px] w-full rounded-lg relative overflow-hidden'>
+                      <Image
+                        src={
+                          properties[0]?.mainImage
+                            ? imageCache[properties[0].mainImage] ||
+                              '/images/Map.png'
+                            : '/images/Map.png'
+                        }
+                        alt='Map View'
+                        layout='fill'
+                        objectFit='cover'
+                        fill
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </div> */}
                 </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
 
         <LocalitiesGrid normal={true} />
       </main>

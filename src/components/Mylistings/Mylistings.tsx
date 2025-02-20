@@ -67,9 +67,7 @@ interface Listing {
   preferredTenant: string;
 }
 
-interface MyListingsProps {
-  page?: string;
-}
+interface MyListingsProps {}
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -82,14 +80,14 @@ const transformString = (str: string | null | undefined) => {
     .join(' ');
 };
 
-const MyListings = ({ page }: MyListingsProps) => {
+const MyListings = ({}: MyListingsProps) => {
   const router = useRouter();
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const url = page === 'user' ? `` : `https://api.houzie.in/broker/listings`;
+  const url = `https://api.houzie.in/broker/listings`;
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -448,37 +446,35 @@ const MyListings = ({ page }: MyListingsProps) => {
                             </span>
                           </p>
                         </div>
-                        {page !== 'user' && (
-                          <div className='flex flex-wrap gap-2'>
-                            <Button
-                              className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                              variant='outline'
-                              size='sm'
-                              onClick={() => handleEdit(listing.id)}
-                            >
-                              <Edit className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                              Edit
-                            </Button>
-                            <Button
-                              className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                              variant='outline'
-                              size='sm'
-                              onClick={() => handleViewDetails(listing.id)}
-                            >
-                              <Eye className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                              View
-                            </Button>
-                            <Button
-                              variant='destructive'
-                              size='sm'
-                              className='text-xs sm:text-sm'
-                              onClick={() => handleDelete(listing.id)}
-                            >
-                              <Trash2 className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                              Delete
-                            </Button>
-                          </div>
-                        )}
+                        <div className='flex flex-wrap gap-2'>
+                          <Button
+                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
+                            variant='outline'
+                            size='sm'
+                            onClick={() => handleEdit(listing.id)}
+                          >
+                            <Edit className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                            Edit
+                          </Button>
+                          <Button
+                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
+                            variant='outline'
+                            size='sm'
+                            onClick={() => handleViewDetails(listing.id)}
+                          >
+                            <Eye className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                            View
+                          </Button>
+                          <Button
+                            variant='destructive'
+                            size='sm'
+                            className='text-xs sm:text-sm'
+                            onClick={() => handleDelete(listing.id)}
+                          >
+                            <Trash2 className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
+                            Delete
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useFilters } from '@/lib/context/FilterContext';
-import PropertyComponent from '@/components/propertpage/PropertyComponent';
 import {
   Select,
   SelectContent,
@@ -12,6 +11,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useState, useRef, useEffect } from 'react';
+import PropertyComponent from '@/components/propertpage/PropertyComponent';
 
 interface PropertyFiltersProps {
   onViewChange: (view: string) => void;
@@ -62,11 +62,22 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
   const bhkTypes = ['1', '2', '3', '4', '4+'];
 
   return (
-    <div className='w-full mx-auto px-4 space-y-4'>
-      <div className='flex flex-wrap items-center gap-3'>
+    <div className='w-full mx-auto p-4 space-y-4'>
+      <div className='flex md:flex-col flex-wrap items-center gap-3'>
+        {/* View Change Tabs */}
+        <Tabs
+          defaultValue='list'
+          className='w-full ml-auto hidden md:block'
+          onValueChange={onViewChange}
+        >
+          <TabsList className='grid w-full grid-cols-2 bg-[#F4F4F4] p-1 rounded-lg'>
+            <TabsTrigger value='list'>List</TabsTrigger>
+            <TabsTrigger value='map'>Map</TabsTrigger>
+          </TabsList>
+        </Tabs>
         {/* Radius Dropdown */}
         <Select onValueChange={handleRadiusChange} value={filters.radius || ''}>
-          <SelectTrigger className='w-[120px] bg-white rounded-xl border-gray-200'>
+          <SelectTrigger className='w-[120px] md:w-full text-md bg-white rounded-xl border-gray-200 block md:hidden'>
             <SelectValue placeholder='Radius' />
           </SelectTrigger>
           <SelectContent>
@@ -79,9 +90,12 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
         </Select>
 
         {/* Property Type Multi-Select */}
-        <div ref={propertyTypeRef} className='relative'>
+        <div
+          ref={propertyTypeRef}
+          className='relative w-[180px] md:w-full block md:hidden'
+        >
           <div
-            className='w-[180px] bg-white rounded-xl border border-gray-200 px-3 py-2 cursor-pointer truncate'
+            className='w-[180px] sm:w-full bg-white rounded-xl border border-gray-200 px-3 py-2 cursor-pointer truncate'
             onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
           >
             {filters.propertyType.length > 0
@@ -89,7 +103,7 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
               : 'Property Type'}
           </div>
           {isPropertyTypeOpen && (
-            <div className='absolute top-full left-0 w-[180px] bg-white border border-gray-200 rounded-xl mt-1 z-10'>
+            <div className='absolute top-full left-0 w-[180px] sm:w-full bg-white border border-gray-200 rounded-xl mt-1 z-10'>
               {propertyTypes.map((type) => (
                 <div
                   key={type}
@@ -109,9 +123,12 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
         </div>
 
         {/* Configuration Multi-Select */}
-        <div ref={configurationRef} className='relative'>
+        <div
+          ref={configurationRef}
+          className='relative w-[180px] md:w-full block md:hidden'
+        >
           <div
-            className='w-[180px] bg-white rounded-xl border border-gray-200 px-3 py-2 cursor-pointer truncate'
+            className='w-[180px] sm:w-full bg-white rounded-xl border border-gray-200 px-3 py-2 cursor-pointer truncate'
             onClick={() => setIsConfigurationOpen(!isConfigurationOpen)}
           >
             {filters.bhkType.length > 0
@@ -119,7 +136,7 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
               : 'Configuration'}
           </div>
           {isConfigurationOpen && (
-            <div className='absolute top-full left-0 w-[180px] bg-white border border-gray-200 rounded-xl mt-1 z-10'>
+            <div className='absolute top-full left-0 w-[180px] sm:w-full bg-white border border-gray-200 rounded-xl mt-1 z-10'>
               {bhkTypes.map((type) => (
                 <div
                   key={type}
@@ -138,13 +155,12 @@ export function PropertyFilters({ onViewChange }: PropertyFiltersProps) {
           )}
         </div>
 
-        {/* Rent Component */}
         <PropertyComponent />
 
         {/* View Change Tabs */}
         <Tabs
           defaultValue='list'
-          className='w-[200px] ml-auto'
+          className='w-[200px] ml-auto block md:hidden'
           onValueChange={onViewChange}
         >
           <TabsList className='grid w-full grid-cols-2 bg-[#F4F4F4] p-1 rounded-lg'>

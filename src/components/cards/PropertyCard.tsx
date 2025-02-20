@@ -1,7 +1,7 @@
 import { Bath, Bed, Heart, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,29 @@ export function PropertyCard({
   const [mainImageSrc, setMainImageSrc] = useState<string | null>(null);
 
   const toggleFavorite = () => setFavorites((prev) => !prev);
-  const toggleExpanded = () => setIsExpanded((prev) => !prev);
+  const [showReadMore, setShowReadMore] = useState(false); // New state
+  const textRef = useRef<HTMLParagraphElement>(null); // Ref for the text
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textRef.current) {
+        setShowReadMore(
+          textRef.current.scrollHeight > textRef.current.clientHeight
+        ); // Detect overflow
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow); // Check on resize
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow); // Clean up
+    };
+  }, [property.description]);
 
   useEffect(() => {
     async function loadMainImage() {
@@ -96,12 +118,12 @@ export function PropertyCard({
   return (
     <Card
       className={`w-full mx-auto overflow-hidden shadow-2xl ${
-        iscreate ? 'max-w-full' : 'max-w-[80%]'
+        iscreate ? 'max-w-full' : 'max-w-full'
       }`}
     >
-      <div className='flex flex-col md:flex-row'>
+      <div className='flex flex-col lg:flex-row'>
         <div
-          className={`mx-auto md:mx-0 ${
+          className={`mx-auto lg:mx-0 ${
             iscreate ? 'w-[300px] h-[250px]' : 'w-[400px] h-[300px]'
           } flex items-center justify-center p-4`}
         >
@@ -134,27 +156,38 @@ export function PropertyCard({
         <div className='flex-1 p-4'>
           <div className='space-y-4 h-full flex flex-col'>
             <div>
-              <h3 className='text-center md:text-start text-xl font-semibold leading-tight'>
+              <h3 className='text-center lg:text-start text-xl font-semibold leading-tight'>
                 {property.title}
               </h3>
               <div className='relative mt-2'>
                 <p
-                  className={`text-sm text-gray-700 ${
-                    isExpanded ? '' : 'line-clamp-1'
-                  }`}
+                  ref={textRef} // Attach the ref
+                  className={`text-sm text-center lg:text-start text-gray-700 ${
+                    isExpanded ? '' : 'line-clamp-2'
+                  }`} // Changed line-clamp-1 to line-clamp-2
+                  style={{
+                    wordBreak: 'break-word', // Ensure words wrap if needed
+                  }}
                 >
                   {property.description || 'No description available.'}
                 </p>
-                <button
-                  onClick={toggleExpanded}
-                  className='text-blue-500 text-sm font-medium hover:underline mt-1'
-                >
-                  {isExpanded ? 'Show Less' : 'Read More'}
-                </button>
+
+                {/* Conditionally render the button */}
+                {showReadMore && (
+                  <button
+                    onClick={toggleExpanded}
+                    className='text-blue-500 text-sm font-medium hover:underline mt-1 absolute bottom-0 right-0' // Absolute positioning
+                    style={{
+                      whiteSpace: 'nowrap', // Prevent button from wrapping to the next line
+                    }}
+                  >
+                    {isExpanded ? 'Show Less' : 'Read More'}
+                  </button>
+                )}
               </div>
             </div>
 
-            <div className='flex flex-wrap items-start justify-center md:justify-start gap-2'>
+            <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2'>
               {propertyFeatures.map((feature, index) => (
                 <Badge
                   key={index}
@@ -169,7 +202,7 @@ export function PropertyCard({
               ))}
             </div>
 
-            <div className='flex flex-wrap items-start mx-auto md:mx-0 gap-2 max-w-2xl'>
+            <div className='flex flex-wrap items-start mx-auto lg:mx-0 gap-2 max-w-2xl'>
               {financialDetails.map((detail, index) => (
                 <Card key={index} className='border-[#eaebef] flex-1'>
                   <CardContent className='flex items-center gap-[1.47px] p-1.5'>
@@ -191,7 +224,7 @@ export function PropertyCard({
               <div className='flex justify-end mt-auto pt-4'>
                 <Button
                   onClick={() => router.push(`/property/${property.id}`)}
-                  className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
+                  className='w-full lg:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
                 >
                   View Details
                 </Button>
