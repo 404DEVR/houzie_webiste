@@ -9,13 +9,10 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface PropertyHighlightsprops {
-  propertyData: Property;
-}
+import { PropertyHighlightsprops } from '@/interfaces/PropsInterface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';

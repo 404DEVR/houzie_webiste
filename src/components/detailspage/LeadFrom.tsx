@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
 import CustomInput from '@/components/inputs/CustomInput';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -13,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
+import { LeadformProps } from '@/interfaces/PropsInterface';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -33,11 +34,6 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
-
-interface LeadformProps {
-  onSubmit: (formdata: FormData) => void;
-  propertyData: Property | undefined;
-}
 
 const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
   const {
@@ -68,8 +64,15 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
   ];
 
   const onSubmitForm = (data: FormData) => {
-    onSubmit(data);
-    // console.log(data);
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
+      }
+    });
+    onSubmit(formData);
   };
 
   return (

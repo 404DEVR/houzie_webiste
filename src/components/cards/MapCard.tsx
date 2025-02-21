@@ -1,14 +1,12 @@
 import { TiLocation } from 'react-icons/ti';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
 import MapLocationDisplay from '@/components/map/MapLocationDisplay';
 
-interface MapCardProps {
-  propertyData: Property;
-}
+import { PropertyPost } from '@/interfaces/Interface';
+import { MapCardProps } from '@/interfaces/PropsInterface';
 
 export default function MapCard({
-  propertyData = {} as Property,
+  propertyData = {} as PropertyPost,
 }: MapCardProps) {
   const location = propertyData?.location
     ? {

@@ -14,12 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-interface UserMenuProps {
-  user: {
-    email: string;
-    image?: string;
-  };
-}
+import { UserMenuProps } from '@/interfaces/PropsInterface';
 
 export function UserMenu({ user }: UserMenuProps) {
   const initials = user.email

@@ -5,10 +5,7 @@ import { cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 
-interface AmenitiesDisplayinterface {
-  data: string[];
-  type: string;
-}
+import { AmenitiesDisplayinterface } from '@/interfaces/PropsInterface';
 
 const furnishinglist = [
   {

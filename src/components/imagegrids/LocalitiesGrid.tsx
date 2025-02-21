@@ -2,10 +2,7 @@
 
 import { ScalableImageCard } from '@/components/cards/ScalableImageCard';
 
-interface CityCard {
-  name: string;
-  imageUrl: string;
-}
+import { CityCard } from '@/interfaces/Interface';
 
 const cities: CityCard[] = [
   { name: 'Bahía Blanca', imageUrl: '/images/skyscrapers-sunset.png' },

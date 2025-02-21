@@ -1,21 +1,12 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
+
 import { cn } from '@/lib/utils';
+
 import { Button } from '@/components/ui/button';
 
-interface Item {
-  label: string;
-  value: string;
-  url: string;
-}
-
-interface ItemGridProps {
-  data: string[];
-  title: string;
-  type: 'amenities' | 'furnishing';
-  itemsPerRow?: number;
-  maxRows?: number;
-}
+import { Item } from '@/interfaces/Interface';
+import { ItemGridProps } from '@/interfaces/PropsInterface';
 
 const furnishingList: Item[] = [
   {

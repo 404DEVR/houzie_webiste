@@ -13,13 +13,13 @@ import ProfileCard from '@/components/cards/profilecard';
 import PropertyHighlight from '@/components/cards/PropertyHighlights';
 import PropertySuggestions from '@/components/cards/PropertySuggestions';
 import AboutProperty from '@/components/detailspage/AboutProperty';
-import HeaderContainer, {
-  Property,
-} from '@/components/detailspage/HeaderContainer';
+import HeaderContainer from '@/components/detailspage/HeaderContainer';
 import PropertyDetails from '@/components/detailspage/PropertyDetails';
 import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
+
+import { PropertyPost } from '@/interfaces/Interface';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -59,7 +59,7 @@ const ProfileCardWithOverlay = ({ children, showOverlay, buttonClick }) => (
 );
 
 export default function DetailsPageClient({ params }: DetailsPageClientProps) {
-  const [propertyData, setPropertyData] = useState<Property | null>(null);
+  const [propertyData, setPropertyData] = useState<PropertyPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { auth } = useAuth();

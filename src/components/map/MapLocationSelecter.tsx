@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-interface Location {
-  lat: number;
-  lng: number;
-}
+import {
+  Location,
+  MapLocationSelectorProps,
+} from '@/interfaces/PropsInterface';
 
 function LocationMarker({
   location,
@@ -48,11 +48,6 @@ function LocationMarker({
       }
     />
   );
-}
-
-interface MapLocationSelectorProps {
-  onLocationSave: (location: Location) => void;
-  initialLocation?: Location | null;
 }
 
 export default function MapLocationSelector({

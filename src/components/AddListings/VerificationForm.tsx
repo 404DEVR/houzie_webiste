@@ -20,17 +20,12 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
+import { VerificationFormprops } from '@/interfaces/PropsInterface';
 import {
   restructureAddFormData,
   updateAddVerification,
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
-
-interface VerificationFormprops {
-  handleNext: () => void;
-  handleBack: () => void;
-  page?: string;
-}
 
 const VerificationForm = ({
   handleNext,

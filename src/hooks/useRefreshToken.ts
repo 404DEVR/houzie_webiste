@@ -1,15 +1,9 @@
+import { useDispatch } from 'react-redux';
+
 import useAuth from '@/hooks/useAuth';
 
 import { AUTH_API_URL } from '@/constant/authUrl';
-
-interface RefreshResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-}
-
-import { useDispatch } from 'react-redux';
-
+import { RefreshResponse } from '@/interfaces/Interface';
 import { updateToken } from '@/redux/slices/authSlice';
 
 const useRefreshToken = () => {
@@ -41,7 +35,6 @@ const useRefreshToken = () => {
 
       return data.accessToken;
     } catch (error) {
-      console.error('Failed to refresh token:', error);
       return null;
     }
   };

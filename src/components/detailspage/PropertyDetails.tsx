@@ -2,7 +2,6 @@ import { InfoIcon } from 'lucide-react';
 import React from 'react';
 
 import ItemGrid from '@/components/cards/IconGrid';
-import { Property } from '@/components/detailspage/HeaderContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
@@ -11,9 +10,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-interface Overviewprops {
-  propertyData: Property;
-}
+import { Overviewprops } from '@/interfaces/PropsInterface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';

@@ -3,10 +3,11 @@ import { ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+
+import { ImageGalleryprops } from '@/interfaces/PropsInterface';
 
 const galleryImages = [
   {
@@ -25,10 +26,6 @@ const galleryImages = [
     className: 'object-cover rounded-b-xl sm:rounded-b-none sm:rounded-br-xl',
   },
 ];
-
-interface ImageGalleryprops {
-  propertyData: Property;
-}
 
 const FullGallery = ({ images, title, mainImage }) => (
   <div className='flex flex-col gap-4'>

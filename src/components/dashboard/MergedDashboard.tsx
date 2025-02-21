@@ -23,22 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-// Types for the card data and the data fetched from the API
-interface CardData {
-  title: string;
-  value: string;
-  trendStatus: 'up' | 'down';
-  trend: string;
-  icon: React.ReactNode;
-  trendColor: string;
-}
-
-interface ApiData {
-  activeListings: number;
-  inActiveListings: number;
-  activeLeads: number;
-  inActiveLeads: number;
-}
+import { ApiData, CardData } from '@/interfaces/Interface';
 
 const MergedDashboard: React.FC = () => {
   const [cardData, setCardData] = useState<CardData[]>([]);

@@ -1,29 +1,13 @@
-// components/PropertySuggestions.tsx
-import { Heart, Bath, Bed, Building2, Home } from 'lucide-react';
+import axios from 'axios';
+import { Bath, Bed, Building2, Heart, Home } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import axios from 'axios';
 
-interface PropertyFeature {
-  icon: React.ElementType;
-  label: string;
-}
-
-interface Property {
-  id: string;
-  title: string;
-  description: string;
-  mainImage: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  balconies?: number;
-  propertyType?: string;
-  price?: number;
-}
+import { PropertyFeature, PropertyPost } from '@/interfaces/Interface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -36,7 +20,7 @@ const transformString = (str: string | null | undefined) => {
 };
 
 export default function PropertySuggestions() {
-  const [properties, setProperties] = useState<Property[] | null>(null);
+  const [properties, setProperties] = useState<PropertyPost[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
@@ -68,7 +52,7 @@ export default function PropertySuggestions() {
     }));
   };
 
-  const getPropertyFeatures = (property: Property): PropertyFeature[] => {
+  const getPropertyFeatures = (property: PropertyPost): PropertyFeature[] => {
     const features: PropertyFeature[] = [];
 
     if (property.bedrooms !== 0) {

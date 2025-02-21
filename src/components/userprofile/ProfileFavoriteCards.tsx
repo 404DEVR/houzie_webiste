@@ -22,59 +22,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface PropertyFeature {
-  icon: React.ElementType;
-  label: string;
-}
-
-interface FinancialDetail {
-  icon: React.ElementType;
-  label: string;
-  amount: string;
-}
-
-interface Listing {
-  id: string;
-  title: string;
-  description: string;
-  location: {
-    id: string;
-    city: string;
-    state: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-  };
-  brokerId: string;
-  isActive: boolean;
-  photos: string[];
-  mainImage: string;
-  bathrooms: number | null;
-  bedrooms: number | null;
-  balconies: number | null;
-  propertyType: string;
-  views: number;
-  price: number;
-  security: number;
-  brokerage: number;
-  isNegotiable: boolean;
-  lockInPeriod: string;
-  availableFrom: string;
-  configuration: string;
-  floorNumber: string;
-  totalFloors: number | null;
-  maintenanceCharges: number;
-  isMaintenanceIncluded: boolean;
-  roomType: string | null;
-  sharingType: string | null;
-  unitsAvailable: string | null;
-  roomSize: string | null;
-  amenities: string[];
-  features: string[];
-  furnishing: string | null;
-  furnishingExtras: string[];
-  preferredTenant: string;
-}
+import {
+  FinancialDetail,
+  Listing,
+  PropertyFeature,
+} from '@/interfaces/Interface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';

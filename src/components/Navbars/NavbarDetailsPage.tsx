@@ -20,16 +20,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-interface UserData {
-  id: string;
-  email: string;
-  name: string;
-  phoneNumber: string | null;
-  role: string;
-  aadharNumber: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import { UserData } from '@/interfaces/Interface';
 
 const NavbarDetailsPage = () => {
   const { auth, setAuth } = useAuth();

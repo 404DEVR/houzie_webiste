@@ -1,10 +1,8 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Property } from '@/components/detailspage/HeaderContainer';
 
-interface AboutPropertyProps {
-  propertyData: Property;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { AboutPropertyProps } from '@/interfaces/PropsInterface';
 
 const AboutProperty = ({ propertyData }: AboutPropertyProps) => {
   return (

@@ -2,18 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-interface SavedSearch {
-  id: string;
-  searchData: {
-    location: string;
-    propertyType: string[];
-    configuration: string[];
-    livingType: string[];
-    minRent: number;
-    maxRent: number;
-  };
-  createdAt: string;
-}
+import { SavedSearch } from '@/interfaces/Interface';
 
 const SaveSearchList = () => {
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);

@@ -1,13 +1,4 @@
-import {
-  Bath,
-  Bed,
-  Calendar,
-  Home,
-  Lock,
-  MapPin,
-  User,
-  Wallet,
-} from 'lucide-react';
+import { Bath, Bed, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -15,9 +6,7 @@ import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface PropertyReviewProps {
-  data: any;
-}
+import { PropertyReviewProps } from '@/interfaces/PropsInterface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';

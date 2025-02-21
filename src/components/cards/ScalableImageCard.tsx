@@ -2,11 +2,7 @@ import Image from 'next/image';
 
 import { Card } from '@/components/ui/card';
 
-interface ScalableImageCardProps {
-  name: string;
-  imageUrl: string;
-  className?: string;
-}
+import { ScalableImageCardProps } from '@/interfaces/PropsInterface';
 
 export function ScalableImageCard({
   name,

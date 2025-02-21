@@ -1,6 +1,6 @@
 'use client';
 
-import axios from 'axios'; // Assuming you have axios configured
+import axios from 'axios';
 import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,55 +17,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
+import { Listing, PropertyFeature } from '@/interfaces/Interface';
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
-
-interface PropertyFeature {
-  icon: React.ElementType;
-  label: string;
-}
-
-interface Listing {
-  id: string;
-  title: string;
-  description: string;
-  location: {
-    id: string;
-    city: string;
-    state: string;
-    country: string;
-    latitude: number;
-    longitude: number;
-  };
-  brokerId: string;
-  isActive: boolean;
-  photos: string[];
-  mainImage: string;
-  bathrooms: number | null;
-  bedrooms: number | null;
-  balconies: number | null;
-  propertyType: string;
-  views: number;
-  price: number;
-  security: number;
-  brokerage: number;
-  isNegotiable: boolean;
-  lockInPeriod: string;
-  availableFrom: string;
-  configuration: string;
-  floorNumber: string;
-  totalFloors: number | null;
-  maintenanceCharges: number;
-  isMaintenanceIncluded: boolean;
-  roomType: string | null;
-  sharingType: string | null;
-  unitsAvailable: string | null;
-  roomSize: string | null;
-  amenities: string[];
-  features: string[];
-  furnishing: string | null;
-  furnishingExtras: string[];
-  preferredTenant: string;
-}
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';

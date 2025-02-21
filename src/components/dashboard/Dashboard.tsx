@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 
 import useAuth from '@/hooks/useAuth';
 
-import { ProfileCardProps } from '@/components/cards/profilecard';
 import Brokerdetail from '@/components/dashboard/Brokerdetail';
 import MergedDashboard from '@/components/dashboard/MergedDashboard';
+
+import { ProfileCardProps } from '@/interfaces/PropsInterface';
 
 export default function Dashboard() {
   const { auth } = useAuth();

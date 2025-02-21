@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
+import { ConfigType, PropertyType, SharingType } from '@/interfaces/Interface';
 import {
   clearSearch,
   setConfiguration,
@@ -18,22 +19,6 @@ import {
   setPropertyType,
 } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
-
-interface PropertyType {
-  id: string;
-  label: string;
-  description: string;
-}
-
-interface ConfigType {
-  id: string;
-  label: string;
-}
-
-interface SharingType {
-  id: string;
-  label: string;
-}
 
 const PropertyComponentSearchbar = () => {
   const dispatch = useDispatch();

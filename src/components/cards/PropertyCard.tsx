@@ -7,41 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface PropertyFeature {
-  icon: any;
-  label: string;
-}
-
-interface FinancialDetails {
-  icon: any;
-  label: string;
-  amount: string;
-}
-
-export interface PropertyCardProps {
-  property: {
-    id: string;
-    title: string;
-    description: string;
-    location: {
-      city: string;
-      state: string;
-    };
-    price: number;
-    propertyType: string;
-    bedrooms: number;
-    bathrooms: number;
-    photos: string[];
-    mainImage: string;
-    security: number;
-    brokerage: number;
-    maintenanceCharges: number;
-    isMaintenanceIncluded: boolean;
-    availableFrom: string;
-  };
-  iscreate?: boolean;
-  loadImage: (url: string) => Promise<string>;
-}
+import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
+import { PropertyCardProps } from '@/interfaces/PropsInterface';
 
 export function PropertyCard({
   property,

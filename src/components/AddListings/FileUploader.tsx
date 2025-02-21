@@ -1,13 +1,14 @@
 'use client';
 
 import { createClient } from '@supabase/supabase-js';
+import { isEqual } from 'lodash';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEqual } from 'lodash';
 
 import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,6 +19,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { FileUploaderprops } from '@/interfaces/PropsInterface';
 import {
   populateEditForm,
   removeAddPhoto,
@@ -28,19 +30,11 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
-import axios from 'axios';
-import useAuth from '@/hooks/useAuth';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
-
-interface FileUploaderprops {
-  handleNext: () => void;
-  handleBack: () => void;
-  page?: string;
-}
 
 const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
   const { auth } = useAuth();

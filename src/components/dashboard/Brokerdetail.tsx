@@ -12,25 +12,7 @@ import useAuth from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface Lead {
-  id: string;
-  name: string;
-  email: string | null;
-  phoneNumber: string;
-  alternatePhone: string | null;
-  isActive: boolean;
-  budgetMin: number;
-  budgetMax: number;
-  preferredLocations: string[];
-  propertyTypes: string[];
-  requirements: string | null;
-  note: string;
-  listingId: string | null;
-  brokerId: string;
-  source: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Lead } from '@/interfaces/Interface';
 
 const Brokerdetail = () => {
   const [leadsData, setLeadsData] = useState<Lead[] | null>([]);

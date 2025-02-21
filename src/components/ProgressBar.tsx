@@ -2,18 +2,7 @@
 
 import React from 'react';
 
-interface Checkpoint {
-  label: string;
-  placement: number;
-}
-
-interface ProgressBarProps {
-  checkpoints: Checkpoint[];
-  currentpage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  totalPages: number;
-  page: string;
-}
+import { ProgressBarProps } from '@/interfaces/PropsInterface';
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   checkpoints,

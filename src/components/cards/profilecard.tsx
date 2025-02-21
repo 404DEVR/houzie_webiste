@@ -10,7 +10,6 @@ import { CiMail } from 'react-icons/ci';
 
 import useAuth from '@/hooks/useAuth';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
 import LeadForm from '@/components/detailspage/LeadFrom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -23,27 +22,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-export interface ProfileCardProps {
-  propertyData?: Property;
-  name?: string;
-  rating?: number;
-  listingCount?: number;
-  totalDeals?: number;
-  memberSince?: string;
-  postedDate?: string;
-  phoneNumber?: string;
-  email?: string;
-  showContact?: boolean;
-  avatarUrl?: string;
-  createdAt?: string;
-}
-
-interface Stats {
-  inActiveListings: number;
-  inActiveLeads: number;
-  activeListings: number;
-  activeLeads: number;
-}
+import { Stats } from '@/interfaces/Interface';
+import { ProfileCardProps } from '@/interfaces/PropsInterface';
 
 const ProfileCard = ({
   propertyData,
@@ -72,7 +52,7 @@ const ProfileCard = ({
       }
     };
     fetchData();
-  }, []);
+  }, [auth?.accessToken]);
 
   useEffect(() => {
     const fetchBrokerData = async () => {
@@ -96,7 +76,7 @@ const ProfileCard = ({
     };
 
     fetchBrokerData();
-  }, [brokerid]);
+  }, [brokerid, auth?.accessToken]);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return 'N/A'; // Return 'N/A' if no date is provided

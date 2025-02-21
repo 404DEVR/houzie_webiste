@@ -15,9 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface PropertyFiltersProps {
-  onViewChange: (view: string) => void;
-}
+import { PropertyFiltersProps } from '@/interfaces/PropsInterface';
 
 function toTitleCase(str: string) {
   return str

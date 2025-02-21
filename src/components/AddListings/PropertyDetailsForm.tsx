@@ -36,18 +36,13 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+import { PropertyDetailsForminteface } from '@/interfaces/PropsInterface';
 import {
   populateEditForm,
   updateAddPropertyDetails,
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
-
-interface PropertyDetailsForminteface {
-  handleNext: () => void;
-  handleBack: () => void;
-  page?: string;
-}
 
 const PropertyDetailsForm = ({
   handleNext,

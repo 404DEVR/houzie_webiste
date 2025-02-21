@@ -16,14 +16,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { ReviewProps } from '@/interfaces/PropsInterface';
 import { resetAddForm } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
-
-interface ReviewProps {
-  handleBack: () => void;
-  page?: string;
-  setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
-}
 
 const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
   const dispatch = useDispatch();

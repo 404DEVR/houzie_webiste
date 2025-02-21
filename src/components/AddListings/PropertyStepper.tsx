@@ -1,20 +1,10 @@
-// components/Stepper.tsx
 import React from 'react';
 
-import { cn } from '@/lib/utils'; // Assuming you have a utils file for class name merging
+import { cn } from '@/lib/utils';
 
-import { Button } from '@/components/ui/button'; // Importing Button component from Shadcn UI
+import { Button } from '@/components/ui/button';
 
-interface Step {
-  id: number;
-  label: string;
-  status: 'inProgress' | 'pending' | 'complete';
-}
-
-interface StepperProps {
-  steps: Step[];
-  currentStep: number;
-}
+import { StepperProps } from '@/interfaces/PropsInterface';
 
 const Stepper: React.FC<StepperProps> = ({ steps, currentStep }) => {
   return (

@@ -1,18 +1,13 @@
-import { Clock, Package, TrendingDown, TrendingUp, User2 } from 'lucide-react';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import axios from 'axios';
+import { Clock, Package, TrendingDown, TrendingUp, User2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 import useAuth from '@/hooks/useAuth';
 
-interface CardsInterface {
-  title: string;
-  value: string;
-  trendStatus: string;
-  trend: string;
-  icon: ReactNode;
-  trendColor: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { CardsInterface } from '@/interfaces/Interface';
 
 const DashboardCards = () => {
   const [cardData, setCardData] = useState<CardsInterface[]>([]);

@@ -9,18 +9,7 @@ import {
 
 import AuthContext from '@/lib/context/AuthProvider';
 
-export interface User {
-  userid: string;
-  email: string;
-  role: string;
-  accessToken: string;
-  refreshToken?: string;
-}
-
-export interface AuthContextType {
-  auth: User | null;
-  setAuth: React.Dispatch<React.SetStateAction<User | null>>;
-}
+import { AuthContextType, User } from '@/interfaces/PropsInterface';
 
 const useAuth = () => {
   const context = useContext(AuthContext);

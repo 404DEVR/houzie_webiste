@@ -15,28 +15,8 @@ import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHea
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 
+import Property from '@/interfaces/Interface';
 import store from '@/redux/store';
-
-interface Property {
-  id: string;
-  title: string;
-  description: string;
-  location: {
-    city: string;
-    state: string;
-  };
-  price: number;
-  propertyType: string;
-  bedrooms: number;
-  bathrooms: number;
-  photos: string[];
-  mainImage: string;
-  security: number;
-  brokerage: number;
-  maintenanceCharges: number;
-  isMaintenanceIncluded: boolean;
-  availableFrom: string;
-}
 
 export default function DetailsPage() {
   const { filters, resetFilters } = useFilters(); // Get resetFilters from the hook

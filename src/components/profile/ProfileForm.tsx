@@ -20,9 +20,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-interface ProfileFormInterface {
-  page?: string;
-}
+import { ProfileFormInterface } from '@/interfaces/PropsInterface';
 
 const ProfileForm = ({ page }: ProfileFormInterface) => {
   const { auth } = useAuth();

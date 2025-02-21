@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
 
-import { Property } from '@/components/detailspage/HeaderContainer';
+import { PropertyHighlightprops } from '@/interfaces/PropsInterface';
 
 const transformString = (str: string) => {
   if (!str) return '';
@@ -12,10 +12,6 @@ const transformString = (str: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
-
-interface PropertyHighlightprops {
-  propertyData: Property;
-}
 
 export default function PropertyHighlight({
   propertyData,

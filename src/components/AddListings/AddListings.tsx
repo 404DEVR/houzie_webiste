@@ -9,10 +9,7 @@ import Review from '@/components/AddListings/Review';
 import VerificationForm from '@/components/AddListings/VerificationForm';
 import ProgressBar from '@/components/ProgressBar';
 
-interface AddListingsProps {
-  page?: string;
-  setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
-}
+import { AddListingsProps } from '@/interfaces/PropsInterface';
 
 const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
   const ProgressBarCheckpoints =

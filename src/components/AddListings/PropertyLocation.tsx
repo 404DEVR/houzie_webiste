@@ -4,6 +4,9 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
+
 import MapLocationSelecter from '@/components/map/MapLocationSelecter';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,33 +24,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+import { Location, PropertyLocationState } from '@/interfaces/Interface';
+import { PropertyLocationProps } from '@/interfaces/PropsInterface';
 import {
   populateEditForm,
   updateAddPropertyLocation,
   updateEditPropertyLocation,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
-import { toast } from '@/hooks/use-toast';
-import useAuth from '@/hooks/useAuth';
-
-interface PropertyLocationProps {
-  handleNext: () => void;
-  handleBack: () => void;
-  page?: string;
-}
-
-interface Location {
-  lat: number | null;
-  lng: number | null;
-}
-
-interface PropertyLocationState {
-  city: string;
-  state: string;
-  country: string;
-  latitude: number | null;
-  longitude: number | null;
-}
 
 const PropertyLocation = ({
   handleNext,
