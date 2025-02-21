@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { PropertyHighlightsprops } from '@/interfaces/PropsInterface';
+import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -28,17 +29,48 @@ const transformString = (str: string | null | undefined) => {
 export default function PropertyHighlights({
   propertyData,
 }: PropertyHighlightsprops) {
-  const propertyFeatures = [
-    { icon: Bed, label: `${propertyData.bedrooms} Bedrooms` },
-    { icon: Bath, label: `${propertyData.bathrooms} Bathrooms` },
-    { icon: Building2, label: `${propertyData.balconies} Balconies` },
-    { icon: Home, label: transformString(propertyData.propertyType) },
+  const propertyFeatures: PropertyFeature[] = [
+    ...(propertyData.bedrooms !== 0
+      ? [{ icon: Bed, label: `${propertyData.bedrooms} Beds` }]
+      : []),
+    ...(propertyData.bathrooms !== 0
+      ? [{ icon: Bath, label: `${propertyData.bathrooms} Baths` }]
+      : []),
+    ...(propertyData.balconies !== 0
+      ? [{ icon: Bath, label: `${propertyData.balconies} Baths` }]
+      : []),
+    ...(propertyData.propertyType
+      ? [
+          {
+            icon: Home,
+            label: transformString(propertyData.propertyType),
+          },
+        ]
+      : []),
   ];
 
-  const financialDetails = [
-    { icon: Wallet, label: 'Rent', amount: `₹${propertyData.price}` },
-    { icon: Lock, label: 'Security', amount: `₹${propertyData.security}` },
-    { icon: Receipt, label: 'Brokerage', amount: `₹${propertyData.brokerage}` },
+  const financialDetails: FinancialDetails[] = [
+    ...(propertyData.price
+      ? [{ icon: Wallet, label: 'Rent', amount: `₹${propertyData.price}` }]
+      : []),
+    ...(propertyData.security
+      ? [
+          {
+            icon: Lock,
+            label: 'Security Deposit',
+            amount: `₹${propertyData.security}`,
+          },
+        ]
+      : []),
+    ...(propertyData.brokerage
+      ? [
+          {
+            icon: Wallet,
+            label: 'Brokerage',
+            amount: `₹${propertyData.brokerage}`,
+          },
+        ]
+      : []),
   ];
 
   return (

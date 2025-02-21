@@ -19,10 +19,18 @@ export function PropertyCard({
   const [favorites, setFavorites] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [mainImageSrc, setMainImageSrc] = useState<string | null>(null);
-
+  const transformString = (str: string | null | undefined) => {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
   const toggleFavorite = () => setFavorites((prev) => !prev);
-  const [showReadMore, setShowReadMore] = useState(false); // New state
-  const textRef = useRef<HTMLParagraphElement>(null); // Ref for the text
+  const [showReadMore, setShowReadMore] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -33,15 +41,15 @@ export function PropertyCard({
       if (textRef.current) {
         setShowReadMore(
           textRef.current.scrollHeight > textRef.current.clientHeight
-        ); // Detect overflow
+        );
       }
     };
 
     checkOverflow();
-    window.addEventListener('resize', checkOverflow); // Check on resize
+    window.addEventListener('resize', checkOverflow);
 
     return () => {
-      window.removeEventListener('resize', checkOverflow); // Clean up
+      window.removeEventListener('resize', checkOverflow);
     };
   }, [property.description]);
 
@@ -60,26 +68,49 @@ export function PropertyCard({
   }, [property.mainImage, loadImage]);
 
   const propertyFeatures: PropertyFeature[] = [
-    { icon: Bed, label: `${property.bedrooms} Beds` },
-    { icon: Bath, label: `${property.bathrooms} Baths` },
-    { icon: Home, label: property.propertyType.replace(/_/g, ' ') },
+    ...(property.bedrooms !== 0
+      ? [{ icon: Bed, label: `${property.bedrooms} Beds` }]
+      : []),
+    ...(property.bathrooms !== 0
+      ? [{ icon: Bath, label: `${property.bathrooms} Baths` }]
+      : []),
+    ...(property.propertyType
+      ? [
+          {
+            icon: Home,
+            label: transformString(property.propertyType),
+          },
+        ]
+      : []),
   ];
 
   const financialDetails: FinancialDetails[] = [
-    { icon: Wallet, label: 'Rent', amount: `₹${property.price}` },
-    { icon: Lock, label: 'Security Deposit', amount: `₹${property.security}` },
-    { icon: Wallet, label: 'Brokerage', amount: `₹${property.brokerage}` },
+    ...(property.price
+      ? [{ icon: Wallet, label: 'Rent', amount: `₹${property.price}` }]
+      : []),
+    ...(property.security
+      ? [
+          {
+            icon: Lock,
+            label: 'Security Deposit',
+            amount: `₹${property.security}`,
+          },
+        ]
+      : []),
+    ...(property.brokerage
+      ? [{ icon: Wallet, label: 'Brokerage', amount: `₹${property.brokerage}` }]
+      : []),
   ];
 
-  // if (property.maintenanceCharges > 0) {
-  //   financialDetails.push({
-  //     icon: Wallet,
-  //     label: 'Maintenance',
-  //     amount: `₹${property.maintenanceCharges} ${
-  //       property.isMaintenanceIncluded ? '(Included)' : '(Extra)'
-  //     }`,
-  //   });
-  // }
+  if (property.maintenanceCharges > 0) {
+    financialDetails.push({
+      icon: Wallet,
+      label: 'Maintenance',
+      amount: `₹${property.maintenanceCharges} ${
+        property.isMaintenanceIncluded ? '(Included)' : '(Extra)'
+      }`,
+    });
+  }
 
   return (
     <Card
@@ -121,70 +152,74 @@ export function PropertyCard({
 
         <div className='flex-1 p-4'>
           <div className='space-y-4 h-full flex flex-col'>
-            <div>
+            {property.title && (
               <h3 className='text-center lg:text-start text-xl font-semibold leading-tight'>
                 {property.title}
               </h3>
-              <div className='relative mt-2'>
-                <p
-                  ref={textRef} // Attach the ref
-                  className={`text-sm text-center lg:text-start text-gray-700 ${
-                    isExpanded ? '' : 'line-clamp-2'
-                  }`} // Changed line-clamp-1 to line-clamp-2
-                  style={{
-                    wordBreak: 'break-word', // Ensure words wrap if needed
-                  }}
-                >
-                  {property.description || 'No description available.'}
-                </p>
+            )}
 
-                {/* Conditionally render the button */}
-                {showReadMore && (
-                  <button
-                    onClick={toggleExpanded}
-                    className='text-blue-500 text-sm font-medium hover:underline mt-1 absolute bottom-0 right-0' // Absolute positioning
-                    style={{
-                      whiteSpace: 'nowrap', // Prevent button from wrapping to the next line
-                    }}
+            {property.description && (
+              <div className='mt-2'>
+                <div className='relative'>
+                  <p
+                    ref={textRef}
+                    className={`text-sm text-center lg:text-start text-gray-700 ${
+                      isExpanded ? '' : 'line-clamp-2'
+                    }`}
+                    style={{ wordBreak: 'break-word' }}
                   >
-                    {isExpanded ? 'Show Less' : 'Read More'}
-                  </button>
+                    {property.description}
+                  </p>
+                </div>
+                {showReadMore && (
+                  <div className='text-right mt-1'>
+                    <button
+                      onClick={toggleExpanded}
+                      className='text-blue-500 text-sm font-medium hover:underline'
+                    >
+                      {isExpanded ? 'Show Less' : 'Read More'}
+                    </button>
+                  </div>
                 )}
               </div>
-            </div>
+            )}
 
-            <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2'>
-              {propertyFeatures.map((feature, index) => (
-                <Badge
-                  key={index}
-                  variant='outline'
-                  className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
-                >
-                  <feature.icon className='w-[17.59px] h-[17.59px]' />
-                  <span className='font-medium text-sm ml-[2.93px]'>
-                    {feature.label}
-                  </span>
-                </Badge>
-              ))}
-            </div>
+            {propertyFeatures.length > 0 && (
+              <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2'>
+                {propertyFeatures.map((feature, index) => (
+                  <Badge
+                    key={index}
+                    variant='outline'
+                    className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
+                  >
+                    <feature.icon className='w-[17.59px] h-[17.59px]' />
+                    <span className='font-medium text-sm ml-[2.93px]'>
+                      {feature.label}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
+            )}
 
-            <div className='flex flex-wrap items-start mx-auto lg:mx-0 gap-2 max-w-2xl'>
-              {financialDetails.map((detail, index) => (
-                <Card key={index} className='border-[#eaebef] flex-1'>
-                  <CardContent className='flex items-center gap-[1.47px] p-1.5'>
-                    <detail.icon className='w-[17.59px] h-[17.59px]' />
-                    <div className='flex flex-col gap-px flex-1'>
-                      <div className='text-[#4a4a4a] text-sm text-center font-medium'>
-                        {detail.label}
+            {financialDetails.length > 0 && (
+              <div className='flex flex-wrap items-start mx-auto lg:mx-0 gap-2 max-w-2xl'>
+                {financialDetails.map((detail, index) => (
+                  <Card key={index} className='border-[#eaebef] flex-1'>
+                    <CardContent className='flex items-center gap-[1.47px] p-1.5'>
+                      <detail.icon className='w-[17.59px] h-[17.59px]' />
+                      <div className='flex flex-col gap-px flex-1'>
+                        <div className='text-[#4a4a4a] text-sm text-center font-medium'>
+                          {detail.label}
+                        </div>
+                        <div className='text-black text-[15px] text-center font-semibold'>
+                          {detail.amount}
+                        </div>
                       </div>
-                      <div className='text-black text-[15px] text-center font-semibold'>
-                        {detail.amount}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
 
             {!iscreate && (
               <div className='flex justify-end mt-auto pt-4'>

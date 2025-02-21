@@ -5,7 +5,7 @@ import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
@@ -305,15 +305,17 @@ const MyListings = () => {
 
   const getPropertyFeatures = (listing: Listing): PropertyFeature[] => {
     const features: PropertyFeature[] = [];
-
     if (listing.bedrooms) {
-      features.push({ icon: Bed, label: `${listing.bedrooms}-Bedroom` });
+      features.push({ icon: Bed, label: `${listing.bedrooms} Beds` });
     }
     if (listing.bathrooms) {
-      features.push({ icon: Bath, label: `${listing.bathrooms}-Bathroom` });
+      features.push({ icon: Bath, label: `${listing.bathrooms} Baths` });
     }
     if (listing.balconies) {
-      features.push({ icon: Building2, label: `${listing.balconies}-Balcony` });
+      features.push({
+        icon: Building2,
+        label: `${listing.balconies} Balconies`,
+      });
     }
     features.push({
       icon: Home,
@@ -363,27 +365,25 @@ const MyListings = () => {
                             {listing.views} Views
                           </div>
                         </div>
-                        <p className='text-xs sm:text-sm text-gray-500 line-clamp-2 mb-2 sm:mb-4'>
-                          {listing.description}
-                          <Link href='#' className='text-blue-500 ml-1'>
-                            Read More
-                          </Link>
-                        </p>
-                        <div className='flex flex-wrap items-start justify-start gap-2 mb-2 sm:mb-0'>
-                          {propertyFeatures &&
-                            propertyFeatures.map((feature, index) => (
+                        <DescriptionWithReadMore
+                          description={listing.description}
+                        />
+                        {propertyFeatures.length > 0 && (
+                          <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2 mt-2'>
+                            {propertyFeatures.map((feature, index) => (
                               <Badge
                                 key={index}
                                 variant='outline'
-                                className='bg-[#191919] text-white border-neutral-800 px-2 py-1 rounded-full text-xs'
+                                className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
                               >
-                                <feature.icon className='w-3 h-3 inline-block mr-1' />
-                                <span className='font-medium'>
+                                <feature.icon className='w-[17.59px] h-[17.59px]' />
+                                <span className='font-medium text-sm ml-[2.93px]'>
                                   {feature.label}
                                 </span>
                               </Badge>
                             ))}
-                        </div>
+                          </div>
+                        )}
                       </div>
 
                       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-4'>
@@ -438,6 +438,73 @@ const MyListings = () => {
           <AddListings page='edit' />
         </DialogContent>
       </Dialog>
+    </div>
+  );
+};
+
+interface DescriptionWithReadMoreProps {
+  description: string | null | undefined;
+}
+
+const DescriptionWithReadMore: React.FC<DescriptionWithReadMoreProps> = ({
+  description,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showReadMore, setShowReadMore] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textRef.current) {
+        setShowReadMore(
+          textRef.current.scrollHeight > textRef.current.clientHeight
+        );
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, [description]);
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  if (!description) {
+    return (
+      <p className='text-xs sm:text-sm text-gray-500'>
+        No description available.
+      </p>
+    );
+  }
+
+  return (
+    <div className='mt-2'>
+      <div className='relative'>
+        <p
+          ref={textRef}
+          className={`text-xs sm:text-sm text-gray-500  ${
+            isExpanded ? '' : 'line-clamp-2'
+          }`}
+          style={{ wordBreak: 'break-word' }}
+        >
+          {description}
+        </p>
+      </div>
+      {showReadMore && (
+        <div className='text-right mt-1'>
+          <button
+            onClick={toggleExpanded}
+            className='text-blue-500 text-xs sm:text-sm font-medium hover:underline'
+          >
+            {isExpanded ? 'Show Less' : 'Read More'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

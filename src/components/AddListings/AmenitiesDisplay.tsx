@@ -10,41 +10,40 @@ import { AmenitiesDisplayinterface } from '@/interfaces/PropsInterface';
 const furnishinglist = [
   {
     label: 'Water Purifier',
-    value: 'waterPurifier',
+    value: 'WATER_PURIFIER',
     url: '/svg/water-dispenser.svg',
   },
-  { label: 'Cupboard', value: 'cupboard', url: '/svg/cupboard.svg' },
-  { label: 'Geyser', value: 'geyser', url: '/svg/geyser.svg' },
-  { label: 'Fan', value: 'fan', url: '/svg/fan.svg' },
-  { label: 'Microwave', value: 'microwave', url: '/svg/microvawe.svg' },
+  { label: 'Cupboard', value: 'CUPBOARD', url: '/svg/cupboard.svg' },
+  { label: 'Geyser', value: 'GEYSER', url: '/svg/geyser.svg' },
+  { label: 'Fan', value: 'FAN', url: '/svg/fan.svg' },
+  { label: 'Microwave', value: 'MICROWAVE', url: '/svg/microvawe.svg' },
   {
     label: 'Single Bed',
-    value: 'Single_bed',
+    value: 'SINGLE_BED',
     url: '/svg/single-bed.svg',
   },
   {
     label: 'Double Bed',
-    value: 'Double_bed',
+    value: 'DOUBLE_BED',
     url: '/svg/double bed.svg',
   },
-  { label: 'Chair', value: 'Chair', url: '/svg/chair.svg' },
-  { label: 'Bed', value: 'bed', url: '/svg/double bed.svg' },
-  { label: 'Sofa', value: 'sofa', url: '/svg/sofa.svg' },
+  { label: 'Chair', value: 'CHAIR', url: '/svg/chair.svg' },
+  { label: 'Bed', value: 'BED', url: '/svg/double bed.svg' },
+  { label: 'Sofa', value: 'SOFA', url: '/svg/sofa.svg' },
   {
     label: 'Dining table',
-    value: 'diningTable',
+    value: 'DINING_TABLE',
     url: '/svg/dining.svg',
   },
-
-  { label: 'AC', value: 'ac', url: '/svg/air-conditioning.svg' },
-  { label: 'TV', value: 'tv', url: '/svg/tv.svg' },
+  { label: 'AC', value: 'AC', url: '/svg/air-conditioning.svg' },
+  { label: 'TV', value: 'TV', url: '/svg/tv.svg' },
   {
     label: 'Washing Machine',
-    value: 'washing_machine',
+    value: 'WASHING_MACHINE',
     url: '/svg/washing-machine.svg',
   },
-  { label: 'Fridge', value: 'fridge', url: '/svg/fridge.svg' },
-  { label: 'Table', value: 'table', url: '/svg/table.svg' },
+  { label: 'Fridge', value: 'FRIDGE', url: '/svg/fridge.svg' },
+  { label: 'Table', value: 'TABLE', url: '/svg/table.svg' },
 ];
 
 const amenitiesList = [

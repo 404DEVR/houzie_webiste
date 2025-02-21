@@ -22,6 +22,26 @@ function toTitleCase(str: string) {
     .join(' ');
 }
 
+// Function to convert BHK type to numeric value
+function bhkToNumeric(bhkType: string): string {
+  switch (bhkType) {
+    case 'ONE_RK':
+      return '1 RK';
+    case 'ONE_BHK':
+      return '1 BHK';
+    case 'TWO_BHK':
+      return '2 BHK';
+    case 'THREE_BHK':
+      return '3 BHK';
+    case 'FOUR_BHK':
+      return '4 BHK';
+    case 'FOUR_PLUS_BHK':
+      return '4+ BHK';
+    default:
+      return 'Unknown';
+  }
+}
+
 export default function PropertyComponent() {
   const { filters, updateFilters } = useFilters();
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
@@ -204,7 +224,8 @@ export default function PropertyComponent() {
                     handleCheckboxChange('bhkType', type, checked)
                   }
                 />
-                <label className='text-sm'>{toTitleCase(type)}</label>
+                {/* Display numeric value for BHK */}
+                <label className='text-sm'>{bhkToNumeric(type)}</label>
               </div>
             ))}
           </div>
@@ -366,7 +387,8 @@ export default function PropertyComponent() {
                         handleCheckboxChange('bhkType', type, checked)
                       }
                     />
-                    <label className='text-sm'>{toTitleCase(type)}</label>
+                    {/* Display numeric value for BHK */}
+                    <label className='text-sm'>{bhkToNumeric(type)}</label>
                   </div>
                 ))}
               </div>
