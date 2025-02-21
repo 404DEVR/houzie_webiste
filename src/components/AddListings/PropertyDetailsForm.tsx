@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { isEqual } from 'lodash';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import useAuth from '@/hooks/useAuth';
 
 import CustomInput from '@/components/inputs/CustomInput';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -22,6 +24,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -49,6 +56,11 @@ const PropertyDetailsForm = ({
   handleBack,
   page,
 }: PropertyDetailsForminteface) => {
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isNextClicked, setIsNextClicked] = useState(false);
+  const [floorError, setFloorError] = useState('');
+
   const { auth } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const addPropertyDetails = useSelector(
@@ -101,16 +113,12 @@ const PropertyDetailsForm = ({
     }
   }, [page]);
 
-  const [isFormValid, setIsFormValid] = useState(false);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     let formattedValue = value;
 
     if (type === 'number') {
-      if (Number(value) < 0) {
-        formattedValue = '0';
-      }
+      formattedValue = Number(value) < 0 ? '0' : value;
     }
 
     formattedValue =
@@ -131,14 +139,73 @@ const PropertyDetailsForm = ({
         })
       );
     }
+
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
+
+    if (name === 'floornumber' || name === 'totalfloor') {
+      validateForm();
+    }
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      const formattedDate = formatDateForAPI(date.toISOString());
+      if (page === 'edit') {
+        dispatch(updateEditPropertyDetails({ availableFrom: formattedDate }));
+      } else {
+        dispatch(updateAddPropertyDetails({ availableFrom: formattedDate }));
+      }
+    }
+    setFieldErrors((prevErrors) => ({ ...prevErrors, availableFrom: false }));
+  };
+
+  const resetPropertyDetails = () => {
+    const defaultState = {
+      propertyType: propertyDetails.propertyType,
+      roomType: '',
+      sharingType: '',
+      units: '',
+      roomSize: '',
+      preoccupiedPropertyType: '',
+      configuration: '',
+      bedroom: '',
+      bathroom: '',
+      balcony: '',
+      maintenanceChargesAmount: '',
+      furnishingLevel: '',
+      availableFrom: '',
+      monthlyRent: '',
+      securityDepositamount: '',
+      lockInPeriodMonths: '',
+      brokerageAmount: '',
+      preferredTenantType: [],
+      floornumber: '',
+      totalfloor: '',
+      brokerageNegotiable: false,
+      amenities: [],
+      furnishings: [],
+      features: [],
+      title: propertyDetails.title,
+      description: propertyDetails.description,
+    };
+
+    if (page === 'edit') {
+      dispatch(updateEditPropertyDetails(defaultState));
+    } else {
+      dispatch(updateAddPropertyDetails(defaultState));
+    }
   };
 
   const handleButtonClick = (name: string, value: string) => {
+    if (name === 'propertyType' && !isNextClicked) {
+      resetPropertyDetails();
+    }
     if (page === 'edit') {
       dispatch(updateEditPropertyDetails({ [name]: value }));
     } else {
       dispatch(updateAddPropertyDetails({ [name]: value }));
     }
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
   };
 
   const handleAmenityClick = (value: string) => {
@@ -157,6 +224,7 @@ const PropertyDetailsForm = ({
     } else {
       dispatch(updateAddPropertyDetails({ amenities: updatedAmenities }));
     }
+    setFieldErrors((prevErrors) => ({ ...prevErrors, amenities: false }));
   };
 
   const handleFurnishingClick = (value: string) => {
@@ -176,6 +244,7 @@ const PropertyDetailsForm = ({
     } else {
       dispatch(updateAddPropertyDetails({ furnishings: updatedFurnishings }));
     }
+    setFieldErrors((prevErrors) => ({ ...prevErrors, furnishings: false }));
   };
 
   const handleTenantClick = (value: string) => {
@@ -198,6 +267,10 @@ const PropertyDetailsForm = ({
         updateAddPropertyDetails({ preferredTenantType: updatedTenants })
       );
     }
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      preferredTenantType: false,
+    }));
   };
 
   const handleFeatureClick = (value: string) => {
@@ -216,6 +289,7 @@ const PropertyDetailsForm = ({
     } else {
       dispatch(updateAddPropertyDetails({ features: updatedFeatures }));
     }
+    setFieldErrors((prevErrors) => ({ ...prevErrors, features: false }));
   };
 
   const propertyTypes = [
@@ -520,7 +594,113 @@ const PropertyDetailsForm = ({
     }
   };
 
+  const getRequiredFields = (propertyType) => {
+    const commonFields = [
+      'title',
+      'description',
+      'propertyType',
+      'furnishingLevel',
+      'availableFrom',
+      'monthlyRent',
+      'securityDepositamount',
+      'lockInPeriodMonths',
+      'brokerageAmount',
+    ];
+
+    switch (propertyType) {
+      case 'CO_LIVING':
+        return [
+          ...commonFields,
+          'roomType',
+          'sharingType',
+          'units',
+          'roomSize',
+        ];
+      case 'VILLA':
+        return [...commonFields, 'totalfloor', 'preferredTenantType'];
+      case 'PG':
+        return [
+          ...commonFields,
+          'roomType',
+          'sharingType',
+          'units',
+          'roomSize',
+        ];
+      case 'BUILDER_FLOOR':
+      case 'FLAT_APARTMENT':
+        return [
+          ...commonFields,
+          'configuration',
+          'bedroom',
+          'bathroom',
+          'balcony',
+          'maintenanceChargesAmount',
+          'preferredTenantType',
+          'floornumber',
+          'totalfloor',
+        ];
+      case 'PREOCCUPIED_PROPERTY':
+        return [
+          ...commonFields,
+          'roomType',
+          'sharingType',
+          'units',
+          'roomSize',
+          'preoccupiedPropertyType',
+          'configuration',
+          'bedroom',
+          'bathroom',
+          'balcony',
+          'maintenanceChargesAmount',
+          'preferredTenantType',
+          'totalfloor',
+          'floornumber',
+        ];
+      default:
+        return commonFields;
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = getRequiredFields(propertyDetails.propertyType);
+
+    requiredFields.forEach((field) => {
+      const value = propertyDetails[field];
+      if (Array.isArray(value)) {
+        errors[field] = value.length === 0;
+      } else {
+        errors[field] = !value;
+      }
+    });
+    const floorNumber = parseInt(propertyDetails.floornumber);
+    const totalFloors = parseInt(propertyDetails.totalfloor);
+
+    if (
+      !isNaN(floorNumber) &&
+      !isNaN(totalFloors) &&
+      floorNumber >= totalFloors
+    ) {
+      errors['floornumber'] = true;
+      errors['totalfloor'] = true;
+      setFloorError('Floor number must be less than total floors');
+    } else {
+      setFloorError('');
+    }
+    return errors;
+  };
+
   const handleSubmit = () => {
+    const errors = validateForm();
+    setFieldErrors(errors);
+
+    const errorFields = Object.keys(errors).filter((key) => errors[key]);
+
+    if (errorFields.length > 0) {
+      return;
+    }
+
+    setIsNextClicked(true);
     handleNext();
   };
 
@@ -566,7 +746,6 @@ const PropertyDetailsForm = ({
         console.error('Initial property details are not available');
       }
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Edit Failed',
         description: 'Failed To Edit Details',
@@ -579,141 +758,6 @@ const PropertyDetailsForm = ({
       setIsFormValid(true);
       return;
     }
-    const getRequiredFields = (propertyType) => {
-      switch (propertyType) {
-        case 'CO_LIVING':
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'roomType',
-            'units',
-            'sharingType',
-            'furnishingLevel',
-            'monthlyRent',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-          ];
-        case 'PG':
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'roomType',
-            'sharingType',
-            'furnishingLevel',
-            'monthlyRent',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-            'preferredTenantType',
-          ];
-        case 'BUILDER_FLOOR':
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'configuration',
-            'bedroom',
-            'bathroom',
-            'balcony',
-            'availableFrom',
-            'preferredTenantType',
-            'furnishingLevel',
-            'floornumber',
-            'totalfloor',
-            'monthlyRent',
-            'maintenanceChargesAmount',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-          ];
-
-        case 'VILLA':
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'preferredTenantType',
-            'furnishingLevel',
-            'totalfloor',
-            'monthlyRent',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-          ];
-
-        case 'FLAT_APARTMENT':
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'configuration',
-            'bedroom',
-            'bathroom',
-            'balcony',
-            'availableFrom',
-            'preferredTenantType',
-            'furnishingLevel',
-            'floornumber',
-            'totalfloor',
-            'monthlyRent',
-            'maintenanceChargesAmount',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-          ];
-        case 'PREOCCUPIED_PROPERTY':
-          return [
-            'preoccupiedPropertyType',
-            'title',
-            'description',
-            'propertyType',
-            'preferredTenantType',
-            'furnishingLevel',
-            'monthlyRent',
-            'securityDepositamount',
-            'lockInPeriodMonths',
-            'brokerageAmount',
-          ];
-        default:
-          return [
-            'title',
-            'description',
-            'propertyType',
-            'roomType',
-            'sharingType',
-            'configuration',
-            'roomSize',
-            'roomSizeDetails',
-            'bedroom',
-            'furnishingLevel',
-            'floornumber',
-            'totalfloor',
-            'preoccupiedPropertyType',
-            'furnishings',
-            'balcony',
-            'mainImage',
-            'bathroom',
-            'amenities',
-            'units',
-            'preferredTenantType',
-            'features',
-            'availableFrom',
-            'monthlyRent',
-            'maintenanceCharges',
-            'maintenanceChargesAmount',
-            'securityDeposit',
-            'securityDepositamount',
-            'lockInPeriod',
-            'lockInPeriodMonths',
-            'brokerageCharges',
-            'brokerageAmount',
-            'brokerageNegotiable',
-          ];
-      }
-    };
 
     const isValid = getRequiredFields(propertyDetails.propertyType).every(
       (field) => {
@@ -775,6 +819,13 @@ const PropertyDetailsForm = ({
               id='title'
               value={propertyDetails.title}
               onChange={handleInputChange}
+              error={fieldErrors['title'] ? 'This field is required' : ''}
+              className={cn(
+                'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                {
+                  'ring-2 ring-red-500 ring-offset-1': fieldErrors['title'],
+                }
+              )}
               placeholder='Enter Property title'
               required
             />
@@ -789,6 +840,14 @@ const PropertyDetailsForm = ({
               id='description'
               value={propertyDetails.description}
               onChange={handleInputChange}
+              error={fieldErrors['description'] ? 'This field is required' : ''}
+              className={cn(
+                'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                {
+                  'ring-2 ring-red-500 ring-offset-1':
+                    fieldErrors['description'],
+                }
+              )}
               placeholder='Enter Property Description'
               required
             />
@@ -800,7 +859,7 @@ const PropertyDetailsForm = ({
           <Label className='text-lg font-bold'>
             Property Type<span className='text-red-500'>*</span>
           </Label>
-          <div className='flex flex-wrap gap-6 mt-2'>
+          <div className='flex flex-wrap gap-2 mt-2'>
             {propertyTypes.map((type) => (
               <Button
                 key={type.value}
@@ -827,6 +886,11 @@ const PropertyDetailsForm = ({
               </Button>
             ))}
           </div>
+          {fieldErrors['propertyType'] && (
+            <p className='text-red-500 text-sm mt-1'>
+              Please select a Property Type
+            </p>
+          )}
         </div>
 
         {(propertyDetails.propertyType === 'CO_LIVING' ||
@@ -838,7 +902,8 @@ const PropertyDetailsForm = ({
           <div className='transition-opacity duration-500 ease-in-out flex flex-col gap-6'>
             {/* Room Type */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Room Type<span className='text-red-500'>*</span>
@@ -860,6 +925,11 @@ const PropertyDetailsForm = ({
                     </Button>
                   ))}
                 </div>
+                {fieldErrors['roomType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a Room Type
+                  </p>
+                )}
               </div>
             )}
 
@@ -871,7 +941,7 @@ const PropertyDetailsForm = ({
                 <Label className='text-lg font-bold'>
                   Sharing Type<span className='text-red-500'>*</span>
                 </Label>
-                <div className='flex flex-wrap gap-4 mt-2'>
+                <div className='flex flex-wrap gap-2 mt-2'>
                   {getShareTypes(propertyDetails.propertyType).map((type) => (
                     <Button
                       key={type.value}
@@ -888,37 +958,57 @@ const PropertyDetailsForm = ({
                       {type.label}
                     </Button>
                   ))}
-                </div>
+                </div>{' '}
+                {fieldErrors['sharingType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a sharing Type
+                  </p>
+                )}
               </div>
             )}
             {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
-              <Select
-                value={propertyDetails.preoccupiedPropertyType}
-                onValueChange={(value) => {
-                  handleSelectChange('preoccupiedPropertyType', value);
-                }}
-                required
-              >
-                <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
-                  <SelectValue placeholder='Select a preoccupied property type' />
-                </SelectTrigger>
-                <SelectContent>
-                  {propertyOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className='flex items-center'>
-                        <Image
-                          src={option.url}
-                          alt={option.label}
-                          width={20}
-                          height={20}
-                          className='mr-2'
-                        />
-                        {option.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className='flex flex-col'>
+                <Label className='text-lg font-bold mb-2'>
+                  Preoccupied Property Type
+                  <span className='text-red-500'>*</span>
+                </Label>
+                <Select
+                  value={propertyDetails.preoccupiedPropertyType}
+                  onValueChange={(value) => {
+                    handleSelectChange('preoccupiedPropertyType', value);
+                    setFieldErrors((prevErrors) => ({
+                      ...prevErrors,
+                      preoccupiedPropertyType: false,
+                    }));
+                  }}
+                  required
+                >
+                  <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
+                    <SelectValue placeholder='Select a preoccupied property type' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {propertyOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div className='flex items-center'>
+                          <Image
+                            src={option.url}
+                            alt={option.label}
+                            width={20}
+                            height={20}
+                            className='mr-2'
+                          />
+                          {option.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldErrors['preoccupiedPropertyType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a preoccupied property type
+                  </p>
+                )}
+              </div>
             )}
 
             {/* Configuration */}
@@ -929,7 +1019,7 @@ const PropertyDetailsForm = ({
                 <Label className='text-lg font-bold'>
                   Configuration<span className='text-red-500'>*</span>
                 </Label>
-                <div className='flex flex-wrap gap-4 mt-2'>
+                <div className='flex flex-wrap gap-2 mt-2'>
                   {configuration.map((type) => (
                     <Button
                       key={type.value}
@@ -947,6 +1037,11 @@ const PropertyDetailsForm = ({
                     </Button>
                   ))}
                 </div>
+                {fieldErrors['configuration'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select an Configuration
+                  </p>
+                )}
               </div>
             )}
 
@@ -963,6 +1058,14 @@ const PropertyDetailsForm = ({
                     id='units'
                     value={propertyDetails.units}
                     onChange={handleInputChange}
+                    error={fieldErrors['units'] ? 'This field is required' : ''}
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['units'],
+                      }
+                    )}
                     placeholder='Enter Number of Unts Available'
                   />
                 </div>
@@ -982,11 +1085,64 @@ const PropertyDetailsForm = ({
                     id='roomSize'
                     value={propertyDetails.roomSize}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['roomSize'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['roomSize'],
+                      }
+                    )}
                     placeholder='Enter Rooms Size'
                   />
                 </div>
               </div>
             )}
+
+            {/* Available From */}
+            <div className='w-full lg:w-[48%] flex flex-col'>
+              <Label htmlFor='availableFrom' className='text-lg font-bold'>
+                Available From<span className='text-red-500'>*</span>
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant='outline'
+                    className='w-full pl-3 text-left font-normal'
+                  >
+                    {propertyDetails.availableFrom ? (
+                      formatDateForInput(propertyDetails.availableFrom)
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-auto p-0' align='start'>
+                  <Calendar
+                    mode='single'
+                    selected={
+                      propertyDetails.availableFrom
+                        ? new Date(propertyDetails.availableFrom)
+                        : undefined
+                    }
+                    onDayClick={(date) => {
+                      handleDateChange(date);
+                    }}
+                    initialFocus
+                    disabled={(date) => date < new Date()} // Disable dates before today
+                    fromDate={new Date()} // Set minimum selectable date to today
+                  />
+                </PopoverContent>
+              </Popover>
+              {fieldErrors['availableFrom'] && (
+                <p className='text-red-500 text-sm mt-1'>
+                  Please select an available date
+                </p>
+              )}
+            </div>
 
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
               propertyDetails.propertyType === 'FLAT_APARTMENT' ||
@@ -1000,6 +1156,16 @@ const PropertyDetailsForm = ({
                     label='Number Of Bedroom'
                     value={propertyDetails.bedroom}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['bedroom'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['bedroom'],
+                      }
+                    )}
                     placeholder='Number Of Bedroom'
                     required
                   />
@@ -1012,6 +1178,16 @@ const PropertyDetailsForm = ({
                     label='Number Of Balcony'
                     value={propertyDetails.balcony}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['balcony'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['balcony'],
+                      }
+                    )}
                     placeholder='Number Of Balcony'
                     required
                   />
@@ -1024,6 +1200,16 @@ const PropertyDetailsForm = ({
                     label='Number Of Bathroom'
                     value={propertyDetails.bathroom}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['bathroom'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['bathroom'],
+                      }
+                    )}
                     placeholder='Enter Number Of Bathroom'
                     required
                   />
@@ -1036,6 +1222,18 @@ const PropertyDetailsForm = ({
                     label='Maintenance Charge'
                     value={propertyDetails.maintenanceChargesAmount}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['maintenanceChargesAmount']
+                        ? 'This field is required'
+                        : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['maintenanceChargesAmount'],
+                      }
+                    )}
                     placeholder='Maintenance Charges (per month)*'
                     required
                   />
@@ -1066,6 +1264,11 @@ const PropertyDetailsForm = ({
                   </Button>
                 ))}
               </div>
+              {fieldErrors['furnishingLevel'] && (
+                <p className='text-red-500 text-sm mt-1'>
+                  Please select a furnishing level
+                </p>
+              )}
             </div>
 
             {/* Furnishings (as array) */}
@@ -1174,6 +1377,16 @@ const PropertyDetailsForm = ({
                   label='Monthly Rent'
                   value={propertyDetails.monthlyRent}
                   onChange={handleInputChange}
+                  error={
+                    fieldErrors['monthlyRent'] ? 'This field is required' : ''
+                  }
+                  className={cn(
+                    'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['monthlyRent'],
+                    }
+                  )}
                   placeholder='Enter Monthly Rent'
                   required
                 />
@@ -1188,6 +1401,18 @@ const PropertyDetailsForm = ({
                   label='Security Deposit'
                   value={propertyDetails.securityDepositamount}
                   onChange={handleInputChange}
+                  error={
+                    fieldErrors['securityDepositamount']
+                      ? 'This field is required'
+                      : ''
+                  }
+                  className={cn(
+                    'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['securityDepositamount'],
+                    }
+                  )}
                   placeholder='Enter Security Deposit'
                   required
                 />
@@ -1216,6 +1441,11 @@ const PropertyDetailsForm = ({
                     </Button>
                   ))}
                 </div>
+                {fieldErrors['lockInPeriodMonths'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a LockIn Period
+                  </p>
+                )}
               </div>
 
               {(propertyDetails.propertyType === 'VILLA' ||
@@ -1228,7 +1458,16 @@ const PropertyDetailsForm = ({
                     id='totalfloor'
                     placeholder='Enter Number Of Floors'
                     value={propertyDetails.totalfloor}
-                    className='placeholder:text-slate-700  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+                    error={
+                      fieldErrors['totalfloor'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['totalfloor'],
+                      }
+                    )}
                     onChange={handleInputChange}
                     required
                   />
@@ -1247,14 +1486,31 @@ const PropertyDetailsForm = ({
                 onChange={handleInputChange}
                 placeholder='Enter Brokerage (In Rupees)'
                 required
+                error={
+                  fieldErrors['brokerageAmount'] ? 'This field is required' : ''
+                }
+                className={cn(
+                  'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                  {
+                    'ring-2 ring-red-500 ring-offset-1':
+                      fieldErrors['brokerageAmount'],
+                  }
+                )}
               />
+
               <label className='inline-flex items-center mt-3 border px-4 py-2 rounded-md '>
                 <Input
                   type='checkbox'
                   name='brokerageNegotiable'
                   checked={propertyDetails.brokerageNegotiable}
                   onChange={handleInputChange}
-                  className='form-checkbox h-5 w-4 text-[#42A4AE] border-2 focus:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                  className={cn(
+                    'form-checkbox h-5 w-4 text-[#42A4AE] border-2 focus:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['brokerageNegotiable'],
+                    }
+                  )}
                 />
                 <span className='ml-2 text-gray-700 text-sm'>
                   Brokerage Negotiable
@@ -1263,7 +1519,9 @@ const PropertyDetailsForm = ({
             </div>
 
             {/* Preferred Tenant Type */}
-            {(propertyDetails.propertyType === 'VILLA' ||
+            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'VILLA' ||
               propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
                 <Label className='text-lg font-bold'>
@@ -1288,6 +1546,11 @@ const PropertyDetailsForm = ({
                     </Button>
                   ))}
                 </div>
+                {fieldErrors['preferredTenantType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a Tenant Type
+                  </p>
+                )}
               </div>
             )}
 
@@ -1295,45 +1558,54 @@ const PropertyDetailsForm = ({
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
               propertyDetails.propertyType === 'FLAT_APARTMENT' ||
               propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div className=' flex justify-start items-center gap-6 w-full lg:w-[60%]'>
-                <Label className='font-bold text-lg text-nowrap'>
-                  Floor Number
+              <div className='flex flex-col w-full lg:w-[60%]'>
+                <Label className='font-bold text-lg mb-2'>
+                  Floor Number<span className='text-red-500'>*</span>
                 </Label>
-                <Input
-                  type='number'
-                  name='floornumber'
-                  id='floornumber'
-                  value={propertyDetails.floornumber}
-                  onChange={handleInputChange}
-                  className='placeholder:text-slate-700  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
-                  required
-                />
-                <Label className='font-bold text-lg text-nowrap  '>
-                  Out Of
-                </Label>
-                <Input
-                  type='number'
-                  name='totalfloor'
-                  id='totalfloor'
-                  value={propertyDetails.totalfloor}
-                  className='placeholder:text-slate-700  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
-                  onChange={handleInputChange}
-                  required
-                />
+                <div className='flex justify-start items-center gap-6'>
+                  <Input
+                    type='number'
+                    name='floornumber'
+                    id='floornumber'
+                    value={propertyDetails.floornumber}
+                    onChange={handleInputChange}
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['floornumber'],
+                      }
+                    )}
+                    required
+                  />
+                  <Label className='font-bold text-lg text-nowrap'>
+                    Out Of
+                  </Label>
+                  <Input
+                    type='number'
+                    name='totalfloor'
+                    id='totalfloor'
+                    value={propertyDetails.totalfloor}
+                    onChange={handleInputChange}
+                    className={cn(
+                      'placeholder:text-slate-700 block w-full px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['totalfloor'],
+                      }
+                    )}
+                    required
+                  />
+                </div>
+                {floorError && (
+                  <p className='text-red-500 text-sm mt-1'>{floorError}</p>
+                )}
               </div>
             )}
           </div>
         )}
       </CardContent>
       <CardFooter className='flex justify-end items-center gap-4'>
-        <Button
-          onClick={handleBack}
-          variant='outline'
-          className='border-2 border-[#42A4AE] text-[#42A4AE]'
-        >
-          Cancel
-        </Button>
-
         {!isFormValid ? (
           <TooltipProvider>
             <Tooltip>
@@ -1341,7 +1613,7 @@ const PropertyDetailsForm = ({
                 <Button
                   onClick={handleSubmit}
                   className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
-                  disabled={!isFormValid}
+                  // disabled={!isFormValid}
                 >
                   Next, Add Address
                 </Button>
@@ -1355,7 +1627,7 @@ const PropertyDetailsForm = ({
           <Button
             onClick={handleEdit}
             className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
-            disabled={!isFormValid}
+            // disabled={!isFormValid}
           >
             Edit And Next
           </Button>
@@ -1363,7 +1635,7 @@ const PropertyDetailsForm = ({
           <Button
             onClick={handleSubmit}
             className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
-            disabled={!isFormValid}
+            // disabled={!isFormValid}
           >
             Next, Add Address
           </Button>
