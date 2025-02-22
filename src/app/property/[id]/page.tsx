@@ -154,20 +154,6 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                   avatarUrl='/images/Dummy profile.png'
                 />
               </ProfileCardWithOverlay>
-              <ProfileCardWithOverlay
-                showOverlay={!auth?.accessToken}
-                buttonClick={() => router.push('/login')}
-              >
-                <ProfileCard
-                  propertyData={propertyData}
-                  rating={4}
-                  listingCount={10}
-                  totalDeals={6}
-                  postedDate={propertyData.createdAt}
-                  showContact={true}
-                  avatarUrl='/images/Dummy profile.png'
-                />
-              </ProfileCardWithOverlay>
             </div>
           </div>
         </div>

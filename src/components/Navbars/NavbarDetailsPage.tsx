@@ -81,7 +81,6 @@ const NavbarDetailsPage = () => {
           </span>
         </div>
 
-        {/* Mobile menu button */}
         <button
           className='md:hidden text-white'
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -89,7 +88,6 @@ const NavbarDetailsPage = () => {
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* Desktop menu */}
         <div className='hidden md:flex items-center space-x-4'>
           {auth ? (
             <>
@@ -139,7 +137,7 @@ const NavbarDetailsPage = () => {
                 asChild
                 className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
               >
-                <Link href='/broker'>Add Listing</Link>
+                <Link href='/broker'>Post Properties on Houzie</Link>
               </Button>
             </>
           ) : (
@@ -149,27 +147,19 @@ const NavbarDetailsPage = () => {
                 asChild
                 className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
               >
-                <Link href='/login'>Login</Link>
-              </Button>
-              <Button
-                variant='outline'
-                asChild
-                className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-              >
-                <Link href='/broker'>Add Listing</Link>
+                <Link href='/brokerSignUp'>Post Properties on Houzie</Link>
               </Button>
               <Button
                 asChild
                 className='bg-white text-[#42A4AE] hover:bg-opacity-90 transition-colors'
               >
-                <Link href='/signUp'>Sign up</Link>
+                <Link href='/signUp'>Explore Properties on Houzie</Link>
               </Button>
             </>
           )}
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className='md:hidden bg-[#42A4AE] py-4'>
           {auth ? (
@@ -180,13 +170,13 @@ const NavbarDetailsPage = () => {
                     <User className='w-5 h-5 text-[#42A4AE]' />
                   </CardContent>
                 </Card>
-                <span className='text-white text-sm'>{auth?.email}</span>
+                <span className='text-white text-sm'>{userData?.name}</span>
               </div>
               <Link
                 href='/broker'
                 className='block px-4 py-2 text-white hover:bg-[#3a939c]'
               >
-                Add Listing
+                Post Properties on Houzie
               </Link>
               <button
                 onClick={handleLogout}
@@ -198,22 +188,16 @@ const NavbarDetailsPage = () => {
           ) : (
             <>
               <Link
-                href='/login'
+                href='/brokerSignUp'
                 className='block px-4 py-2 text-white hover:bg-[#3a939c]'
               >
-                Login
-              </Link>
-              <Link
-                href='/broker'
-                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Add Listing
+                Post Properties on Houzie
               </Link>
               <Link
                 href='/signUp'
                 className='block px-4 py-2 text-white hover:bg-[#3a939c]'
               >
-                Sign up
+                Explore Properties on Houzie
               </Link>
             </>
           )}

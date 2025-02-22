@@ -1,3 +1,5 @@
+'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -22,15 +24,21 @@ const formSchema = z.object({
     .length(10, { message: 'Phone number must be exactly 10 digits' })
     .regex(/^\d+$/, { message: 'Phone number must contain only digits' }),
   email: z.string().email({ message: 'Invalid email address' }),
-  budgetMin: z.number().min(1, { message: 'Minimum budget is required' }),
-  budgetMax: z.number().min(1, { message: 'Maximum budget is required' }),
+  budgetMin: z
+    .number()
+    .min(1, { message: 'Minimum budget is required' })
+    .optional(),
+  budgetMax: z
+    .number()
+    .min(1, { message: 'Maximum budget is required' })
+    .optional(),
   preferredLocations: z
     .array(z.string())
     .min(1, { message: 'At least one location is required' }),
   propertyTypes: z
     .array(z.string())
     .min(1, { message: 'At least one property type is required' }),
-  note: z.string().optional(),
+  note: z.string(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -64,15 +72,7 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
   ];
 
   const onSubmitForm = (data: FormData) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        formData.append(key, JSON.stringify(value));
-      } else if (value !== undefined && value !== null) {
-        formData.append(key, value.toString());
-      }
-    });
-    onSubmit(formData);
+    onSubmit(data as any);
   };
 
   return (
@@ -99,6 +99,7 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
             id='phoneNumber'
             label='Phone Number'
             placeholder='Enter Phone Number'
+            type='number'
             error={errors.phoneNumber?.message}
             {...field}
           />
@@ -130,7 +131,12 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
             type='number'
             error={errors.budgetMin?.message}
             {...field}
-            onChange={(e) => field.onChange(Number(e.target.value))}
+            value={field.value === undefined ? '' : field.value}
+            onChange={(e) =>
+              field.onChange(
+                e.target.value ? Number(e.target.value) : undefined
+              )
+            }
           />
         )}
       />
@@ -146,7 +152,12 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
             type='number'
             error={errors.budgetMax?.message}
             {...field}
-            onChange={(e) => field.onChange(Number(e.target.value))}
+            value={field.value === undefined ? '' : field.value}
+            onChange={(e) =>
+              field.onChange(
+                e.target.value ? Number(e.target.value) : undefined
+              )
+            }
           />
         )}
       />

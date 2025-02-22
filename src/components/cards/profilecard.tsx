@@ -1,9 +1,8 @@
-// components/ProfileCard.tsx
 'use client';
 
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import Image from 'next/image';
-import { useEffect, useState } from 'react'; // Import useState and useEffect
+import { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
 import { CiMail } from 'react-icons/ci';
@@ -27,7 +26,6 @@ import { ProfileCardProps } from '@/interfaces/PropsInterface';
 
 const ProfileCard = ({
   propertyData,
-  showContact = false,
   postedDate,
   avatarUrl,
 }: ProfileCardProps) => {
@@ -36,6 +34,7 @@ const ProfileCard = ({
   const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const brokerid = propertyData ? propertyData.broker.id : '';
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,11 +64,10 @@ const ProfileCard = ({
               Authorization: `Bearer ${auth?.accessToken}`,
             },
           }
-        ); // Fetch data from API
+        );
         setBrokerData(response.data);
       } catch (error) {
         console.error('Failed to fetch broker data:', error);
-        // Handle error appropriately (e.g., display an error message)
       } finally {
         setIsLoading(false);
       }
@@ -78,8 +76,31 @@ const ProfileCard = ({
     fetchBrokerData();
   }, [brokerid, auth?.accessToken]);
 
+  useEffect(() => {
+    const checkConnectionStatus = async () => {
+      if (!brokerid) return;
+
+      try {
+        const response = await axios.get(
+          `https://api.houzie.in/connection/status/${brokerid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.accessToken}`,
+            },
+          }
+        );
+        setIsConnected(response.data.isConnected);
+      } catch (error) {
+        console.error('Error checking connection status:', error);
+        setIsConnected(false);
+      }
+    };
+
+    checkConnectionStatus();
+  }, [brokerid, auth?.accessToken]);
+
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'N/A'; // Return 'N/A' if no date is provided
+    if (!dateString) return 'N/A';
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
@@ -91,18 +112,38 @@ const ProfileCard = ({
 
   const handleLeadSubmit = async (formData) => {
     try {
-      const response = await axios.post(
-        'https://api.houzie.in/leads',
-        formData,
+      await axios.post('https://api.houzie.in/leads', formData, {
+        headers: {
+          Authorization: `Bearer ${auth?.accessToken}`,
+        },
+      });
+      setIsConnected(true); // Update connection status after lead submission
+    } catch (error) {
+      console.error('Error submitting lead:', error);
+    }
+  };
+
+  const handleConnect = async () => {
+    try {
+      await axios.post(
+        `https://api.houzie.in/connection/connect/${brokerid}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${auth?.accessToken}`,
           },
         }
       );
+      setIsConnected(true);
     } catch (error) {
-      console.error('Error submitting lead:', error);
+      console.error('Error connecting:', error);
     }
+  };
+
+  const handleEnquire = () => {
+    // Implement enquiry logic here (e.g., open a modal, navigate to a page)
+    console.log('Enquire button clicked');
+    // You might want to open a modal or redirect to an enquiry page here.
   };
 
   if (isLoading) {
@@ -140,13 +181,12 @@ const ProfileCard = ({
                   : 'Broker Name'}
               </h3>
 
-              {/* Use a default name */}
               <div className='flex gap-1 mt-1'>
                 {[...Array(5)].map((_, i) => (
                   <AiFillStar
                     key={i}
                     className={`w-5 h-5 ${
-                      i < (rating || 0) ? 'text-[#42A4AE]' : 'text-[#B3F8FF]' // Default rating to 0
+                      i < (rating || 0) ? 'text-[#42A4AE]' : 'text-[#B3F8FF]'
                     }`}
                   />
                 ))}
@@ -199,15 +239,13 @@ const ProfileCard = ({
               <span className='text-sm '>No. of Listing</span>
               <span className='text-sm text-teal-600'>
                 {stats ? stats.activeListings + stats.inActiveListings : 0}
-              </span>{' '}
-              {/* Default to 0 */}
+              </span>
             </div>
             <div className='flex justify-between'>
               <span className='text-sm '>Total Deals</span>
               <span className='text-sm text-teal-600'>
                 {stats ? stats.activeLeads + stats.inActiveLeads : 0}
-              </span>{' '}
-              {/* Default to 0 */}
+              </span>
             </div>
             <div className='flex justify-between'>
               <span className='text-sm '>Member Since</span>
@@ -215,46 +253,46 @@ const ProfileCard = ({
                 {brokerData?.createdAt
                   ? formatDate(brokerData?.createdAt)
                   : 'N/A'}
-              </span>{' '}
-              {/* Default to 'N/A' */}
+              </span>
             </div>
           </div>
 
-          {!showContact && (
-            <div className='mt-3'>
-              <label className='flex items-center space-x-2'>
-                <Checkbox className='h-5 w-5 rounded border-2 border-[#42A4AE] text-[#42A4AE] focus:ring-[#42A4AE] focus:ring-offset-0' />
-                <span className='text-sm text-gray-600'>
-                  Allow broker to contact me
-                </span>
-              </label>
-            </div>
-          )}
+          <div className='mt-3'>
+            <label className='flex items-center space-x-2'>
+              <Checkbox className='h-5 w-5 rounded border-2 border-[#42A4AE] text-[#42A4AE] focus:ring-[#42A4AE] focus:ring-offset-0' />
+              <span className='text-sm text-gray-600'>
+                Allow broker to contact me
+              </span>
+            </label>
+          </div>
 
-          {showContact ? (
-            <div className='mt-3 space-y-2'>
-              <Button className='w-full bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
-                Enquiry
+          <div className='mt-3 space-y-2'>
+            {isConnected ? (
+              <Button
+                className='w-full bg-[#42A4AE] hover:bg-[#3a949d] text-white'
+                onClick={handleEnquire}
+              >
+                Enquire
               </Button>
-            </div>
-          ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className='w-full mt-3 bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
-                  Connect
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Submit Lead</DialogTitle>
-                </DialogHeader>
-                <LeadForm
-                  onSubmit={handleLeadSubmit}
-                  propertyData={propertyData}
-                />
-              </DialogContent>
-            </Dialog>
-          )}
+            ) : (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className='w-full mt-3 bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
+                    Connect
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Submit Lead</DialogTitle>
+                  </DialogHeader>
+                  <LeadForm
+                    onSubmit={handleLeadSubmit}
+                    propertyData={propertyData}
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
         </div>
       </div>
     </Card>

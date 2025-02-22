@@ -30,6 +30,7 @@ const Brokerdetail = () => {
             },
           }
         );
+        console.log(response.data);
         setLeadsData(response.data);
         setIsLoading(false);
       } catch (err) {

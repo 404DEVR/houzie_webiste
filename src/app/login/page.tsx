@@ -175,7 +175,7 @@ const SignUpForm = () => {
                   id='email'
                   placeholder='hello@example.com'
                   type='email'
-                  className='pl-8'
+                  className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                   {...register('email')}
                 />
               </div>
@@ -191,7 +191,7 @@ const SignUpForm = () => {
                   id='password'
                   placeholder='Password'
                   type={showPassword ? 'text' : 'password'}
-                  className='pl-8'
+                  className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                   {...register('password')}
                 />
                 <Button

@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Apple, Eye, Lock, Mail, Phone, User } from 'lucide-react'; // Import Phone icon
+import { Apple, Eye, Lock, Mail, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Import useEffect
 import { Controller, useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
@@ -42,14 +42,18 @@ const formSchema = z.object({
     .min(8, { message: 'Password must be at least 8 characters' }),
   phoneNumber: z
     .string()
-    .regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/, {
-      message: 'Please enter a valid phone number',
-    }), // Added phone number validation
+    .refine(
+      (value) =>
+        /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(value) &&
+        value.startsWith('+91'),
+      {
+        message: 'Please enter a valid phone number starting with +91',
+      }
+    ),
   role: z.string().default('BROKER'),
 });
 
 const SignUpForm = () => {
-  const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -57,6 +61,8 @@ const SignUpForm = () => {
     register,
     handleSubmit,
     control,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -64,10 +70,16 @@ const SignUpForm = () => {
       name: '',
       email: '',
       password: '',
-      phoneNumber: '', // Initialize phone number
-      role: 'BROKER',
+      phoneNumber: '+91',
+      role: 'RENTER',
     },
   });
+
+  useEffect(() => {
+    if (!getValues('phoneNumber')) {
+      setValue('phoneNumber', '+91');
+    }
+  }, [setValue, getValues]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -75,7 +87,7 @@ const SignUpForm = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        phoneNumber: data.phoneNumber, // Send phone number to the API
+        phoneNumber: data.phoneNumber,
         role: data.role,
       });
       toast({
@@ -190,7 +202,6 @@ const SignUpForm = () => {
                 </p>
               )}
             </div>
-
             {/* New Phone Number Field */}
             <div className='grid gap-2'>
               <Label htmlFor='phoneNumber'>Phone Number</Label>
@@ -211,7 +222,7 @@ const SignUpForm = () => {
               )}
             </div>
 
-            <div className='grid gap-2'>
+            {/* <div className='grid gap-2'>
               <Label htmlFor='role'>I am looking for</Label>
               <Controller
                 name='role'
@@ -231,7 +242,7 @@ const SignUpForm = () => {
                   </Select>
                 )}
               />
-            </div>
+            </div> */}
             {/* <div className='flex items-center space-x-2'>
               <Checkbox id='keepSignedIn' {...register('keepSignedIn')} />
               <Label htmlFor='keepSignedIn'>Keep me signed in</Label>
@@ -251,7 +262,6 @@ const SignUpForm = () => {
             <span className='mx-4 text-black'>Or</span>
             <div className='border-t border-gray-400 flex-grow '></div>
           </div>
-
           <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
             <Button
               variant='outline'
@@ -261,13 +271,13 @@ const SignUpForm = () => {
             </Button>
             <Button
               variant='outline'
-              className=' rounded-md p-2 flex items-center'
+              className='rounded-md p-2 flex items-center'
             >
               <Apple className='h-5 w-5 mr-2' /> Apple
             </Button>
             <Button
               variant='outline'
-              className=' rounded-md p-2 flex items-center'
+              className='rounded-md p-2 flex items-center'
             >
               <FaFacebook className='h-5 w-5 mr-2' /> Facebook
             </Button>

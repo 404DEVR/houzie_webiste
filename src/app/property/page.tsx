@@ -17,9 +17,10 @@ import { Tabs, TabsContent } from '@/components/ui/tabs';
 
 import Property from '@/interfaces/Interface';
 import store from '@/redux/store';
+import useAuth from '@/hooks/useAuth';
 
 export default function DetailsPage() {
-  const { filters, resetFilters } = useFilters(); // Get resetFilters from the hook
+  const { filters, resetFilters } = useFilters();
   const [activeView, setActiveView] = useState('list');
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
