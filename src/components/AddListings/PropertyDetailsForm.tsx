@@ -511,7 +511,7 @@ const PropertyDetailsForm = ({
   const propertyOptions = [
     { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
     { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/coliving.svg' },
+    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
     { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
     { label: 'Flat/Apartment', value: 'FLAT_APARTMENT', url: '/svg/flat.svg' },
   ];
@@ -983,7 +983,7 @@ const PropertyDetailsForm = ({
                   }}
                   required
                 >
-                  <SelectTrigger className='w-full focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
+                  <SelectTrigger className='w-full border focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
                     <SelectValue placeholder='Select a preoccupied property type' />
                   </SelectTrigger>
                   <SelectContent>
