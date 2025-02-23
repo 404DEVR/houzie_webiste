@@ -13,7 +13,7 @@ const PaymentStatus = () => {
   useEffect(() => {
     const verifyPaymentStatus = async () => {
       if (!order_id) {
-        setStatus('Order ID not found. Redirecting to failure page...');
+        setStatus('Payment unsuccessful. Redirecting...');
         setTimeout(() => router.push('/payment-failure'), 2000);
         return;
       }
@@ -31,7 +31,7 @@ const PaymentStatus = () => {
             2000
           );
         } else {
-          setStatus('Payment unsuccessful. Redirecting to failure page...');
+          setStatus('Payment unsuccessful. Redirecting...');
           setTimeout(
             () => router.push(`/payment-failure?order_id=${order_id}`),
             2000
@@ -39,7 +39,7 @@ const PaymentStatus = () => {
         }
       } catch (error) {
         console.error('Error verifying payment status:', error);
-        setStatus('Error occurred. Redirecting to failure page...');
+        setStatus('Error occurred.');
         setTimeout(() => router.push('/payment-failure'), 2000);
       }
     };
