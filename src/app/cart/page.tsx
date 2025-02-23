@@ -55,8 +55,8 @@ const CartPage = () => {
       if (selectedGateway === 'cashfree') {
         const response = await axios.post('/api/create-order', {
           amount: selectedSubscription?.price,
-          email: 'customer@example.com',
-          phone: '9999999999',
+          email: auth?.email || 'customer@example.com',
+          phone: auth?.phoneNumber || '9999999999',
         });
         setPaymentSessionId(response.data.paymentSessionId);
         console.log(response.data);
