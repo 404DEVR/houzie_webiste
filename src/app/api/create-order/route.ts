@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         customer_phone: phone,
       },
       order_meta: {
-        return_url: `${window.location.origin}/payment-status?order_id={order_id}`,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-status?order_id={order_id}`,
       },
     };
 
@@ -45,17 +45,6 @@ export async function POST(request: Request) {
       'Error creating order:',
       error.response?.data || error.message
     );
-
-    // Log additional details for debugging
-    if (error.response) {
-      console.error('Response data:', error.response.data);
-      console.error('Response status:', error.response.status);
-      console.error('Response headers:', error.response.headers);
-    } else {
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-    }
-
     return NextResponse.json(
       {
         error: 'Failed to create order',
