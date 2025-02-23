@@ -45,6 +45,17 @@ export async function POST(request: Request) {
       'Error creating order:',
       error.response?.data || error.message
     );
+
+    // Log additional details for debugging
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    } else {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+
     return NextResponse.json(
       {
         error: 'Failed to create order',
