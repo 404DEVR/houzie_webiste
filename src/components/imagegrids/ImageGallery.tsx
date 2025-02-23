@@ -32,7 +32,7 @@ const FullGallery = ({ images, title, mainImage }) => (
     {/* Main Image */}
     <div className='relative aspect-[16/9] w-full'>
       <Image
-        src={mainImage}
+        src={mainImage || '/svg/no-results.svg'}
         alt={`${title} - Main Image`}
         layout='fill'
         objectFit='cover'
@@ -67,7 +67,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
           <CardContent className='p-0'>
             <div className='relative w-full h-48 sm:h-[34.8rem]'>
               <Image
-                src={propertyData.mainImage}
+                src={propertyData.mainImage || '/svg/no-results.svg'}
                 alt={propertyData.title}
                 layout='fill'
                 objectFit='cover'
@@ -84,7 +84,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
               <CardContent className='p-0'>
                 <div className='relative w-full h-24 sm:h-[27vh] md:h-[17rem]'>
                   <Image
-                    src={image}
+                    src={image || '/svg/no-results.svg'}
                     alt={`${propertyData.title} - Image ${index + 1}`}
                     layout='fill'
                     objectFit='cover'
