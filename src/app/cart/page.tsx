@@ -1,3 +1,4 @@
+// app/cart/page.tsx
 'use client';
 import { load } from '@cashfreepayments/cashfree-js';
 import axios from 'axios';
@@ -28,6 +29,7 @@ const CartPage = () => {
   const [paymentSessionId, setPaymentSessionId] = useState(null);
   const [cashfree, setCashfree] = useState<any>(null);
   const [selectedGateway, setSelectedGateway] = useState('cashfree');
+  const [orderId, setOrderId] = useState<string | null>(null); // Add orderId state
 
   useEffect(() => {
     const initializeCashfree = async () => {
@@ -41,10 +43,15 @@ const CartPage = () => {
   }, []);
 
   useEffect(() => {
-    if (paymentSessionId && cashfree && selectedGateway === 'cashfree') {
+    if (
+      paymentSessionId &&
+      cashfree &&
+      selectedGateway === 'cashfree' &&
+      orderId
+    ) {
       handleCashfreePayment();
     }
-  }, [paymentSessionId, cashfree, selectedGateway]);
+  }, [paymentSessionId, cashfree, selectedGateway, orderId]);
 
   const handleRemove = () => {
     dispatch(removeSubscription());
@@ -59,6 +66,7 @@ const CartPage = () => {
           phone: auth?.phoneNumber || '9999999999',
         });
         setPaymentSessionId(response.data.paymentSessionId);
+        setOrderId(response.data.orderId);
         console.log(response.data);
       } else if (selectedGateway === 'payu') {
         handlePayUPayment();
@@ -69,11 +77,11 @@ const CartPage = () => {
   };
 
   const handleCashfreePayment = async () => {
-    if (!cashfree || !paymentSessionId) return;
+    if (!cashfree || !paymentSessionId || !orderId) return;
 
     const checkoutOptions = {
       paymentSessionId: paymentSessionId,
-      returnUrl: `${window.location.origin}/payment-success?order_id={order_id}`,
+      returnUrl: `${window.location.origin}/payment-status?order_id=${orderId}`,
     };
 
     try {
@@ -81,7 +89,7 @@ const CartPage = () => {
 
       if (result.error) {
         console.error('Payment error:', result.error.message);
-        window.location.href = `${window.location.origin}/payment-failure`;
+        window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
         return;
       }
 
@@ -90,7 +98,7 @@ const CartPage = () => {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      window.location.href = `${window.location.origin}/payment-failure`;
+      window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
     }
   };
 
@@ -154,7 +162,7 @@ const CartPage = () => {
             </div>
             <div className='flex mt-10'>
               <h3 className='text-sm underline'>
-                <Link href='/'>Continue Shopping</Link>
+                <Link href='/' />
               </h3>
             </div>
             <h2 className='font-semibold text-2xl mt-10'>
@@ -226,7 +234,7 @@ const CartPage = () => {
             Continue Shopping
           </Link>
         </div>
-
+        ...{' '}
         <div id='summary' className='w-1/4 px-8 py-10'>
           <h1 className='font-semibold text-2xl border-b pb-8'>
             Order Summary

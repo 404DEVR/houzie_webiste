@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   try {
     const { amount, email, phone } = await request.json();
 
+    // Validate required fields
     if (!amount || !email || !phone) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -15,7 +16,6 @@ export async function POST(request: Request) {
     }
 
     const orderData = {
-      order_id: `order_${Date.now()}`,
       order_amount: amount,
       order_currency: 'INR',
       customer_details: {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         customer_phone: phone,
       },
       order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-status?order_id={order_id}`,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-status`,
       },
     };
 
@@ -39,12 +39,14 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       paymentSessionId: response.data.payment_session_id,
+      orderId: response.data.order_id,
     });
   } catch (error: any) {
     console.error(
       'Error creating order:',
       error.response?.data || error.message
     );
+
     return NextResponse.json(
       {
         error: 'Failed to create order',
