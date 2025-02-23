@@ -40,11 +40,11 @@ const CartPage = () => {
     initializeCashfree();
   }, []);
 
-  // useEffect(() => {
-  //   if (paymentSessionId && cashfree && selectedGateway === 'cashfree') {
-  //     handleCashfreePayment();
-  //   }
-  // }, [paymentSessionId, cashfree, selectedGateway]);
+  useEffect(() => {
+    if (paymentSessionId && cashfree && selectedGateway === 'cashfree') {
+      handleCashfreePayment();
+    }
+  }, [paymentSessionId, cashfree, selectedGateway]);
 
   const handleRemove = () => {
     dispatch(removeSubscription());
@@ -280,11 +280,11 @@ const CartPage = () => {
               : 'Pay with PayU'}
           </Button>
         </div>
-        {paymentSessionId && (
+        {/* {paymentSessionId && (
           <p className='mt-4 text-sm text-gray-600'>
             Payment Session ID: {paymentSessionId}
           </p>
-        )}
+        )} */}
       </div>
     </div>
   );
