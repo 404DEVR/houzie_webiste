@@ -171,6 +171,8 @@ export interface User {
   role: string;
   accessToken: string;
   refreshToken?: string;
+  phoneNumber?: string;
+  name?: string;
 }
 
 export interface AuthContextType {

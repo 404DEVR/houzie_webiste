@@ -60,7 +60,6 @@ const VerificationForm = ({
   const handleSubmit = () => {
     dispatch(restructureAddFormData());
     handleNext();
-    console.log(formData);
   };
 
   return (

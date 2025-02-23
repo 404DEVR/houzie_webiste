@@ -9,7 +9,13 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
-  if ((path.startsWith('/broker') || path === '/profile') && !token) {
+  if (
+    (path.startsWith('/broker') ||
+      path === '/profile' ||
+      path.startsWith('/subscriptions') ||
+      path.startsWith('/cart')) &&
+    !token
+  ) {
     // Add the original URL as a redirect parameter
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('redirect', path);
@@ -20,5 +26,12 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/broker/:path*', '/profile', '/login', '/signUp'],
+  matcher: [
+    '/broker/:path*',
+    '/profile',
+    '/login',
+    '/signUp',
+    '/subscriptions',
+    '/cart',
+  ],
 };

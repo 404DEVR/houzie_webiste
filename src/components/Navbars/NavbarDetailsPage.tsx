@@ -139,6 +139,12 @@ const NavbarDetailsPage = () => {
               >
                 <Link href='/broker'>Post Properties on Houzie</Link>
               </Button>
+              <Button
+                asChild
+                className='bg-white text-[#42A4AE] hover:bg-opacity-90 transition-colors'
+              >
+                <Link href='/subscriptions'>Upgrade Plan</Link>
+              </Button>
             </>
           ) : (
             <>
@@ -184,6 +190,12 @@ const NavbarDetailsPage = () => {
               >
                 Logout
               </button>
+              <Link
+                href='/subscriptions'
+                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
+              >
+                Upgrade Plan
+              </Link>
             </>
           ) : (
             <>

@@ -16,7 +16,7 @@ const RegisterSchema = z.object({
   role: z.enum(['ADMIN', 'USER'], { required_error: 'Role is required' }),
 });
 
-export async function registerUser(formData: FormData) {
+export async function registerUser() {
   try {
     // const validatedFields = RegisterSchema.safeParse({
     //   name: formData.get('name'),

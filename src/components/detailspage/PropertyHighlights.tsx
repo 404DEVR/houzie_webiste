@@ -17,7 +17,6 @@ import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
-  // Replace underscores with spaces and convert to title case
   return str
     .toLowerCase()
     .replace(/_/g, ' ')

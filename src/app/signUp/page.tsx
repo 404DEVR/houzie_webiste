@@ -5,14 +5,13 @@ import axios from 'axios';
 import { Apple, Eye, Lock, Mail, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react'; // Import useEffect
-import { Controller, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react'; // Import useEffect
+import { useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
 import { toast } from '@/hooks/use-toast';
-import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
@@ -26,13 +25,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
