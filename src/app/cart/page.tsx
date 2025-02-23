@@ -260,7 +260,7 @@ const CartPage = () => {
                 <SelectItem value='payu'>
                   <div className='flex items-center gap-2'>
                     <Image
-                      src='/svg/cashfree.svg'
+                      src='/svg/payu.svg'
                       width={20}
                       height={20}
                       alt='Description of the image'
