@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 
-const PAYU_KEY = 'gtKFFx';
-const PAYU_SALT = '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW';
+const PAYU_KEY = process.env.NEXT_PUBLIC_PAYU_KEY;
+const PAYU_SALT = process.env.NEXT_PUBLIC_PAYU_SALT;
 
 export async function POST(request: Request) {
   try {

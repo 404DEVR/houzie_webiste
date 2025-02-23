@@ -116,7 +116,7 @@ const CartPage = () => {
       form.action = 'https://test.payu.in/_payment';
 
       const params = {
-        key: 'gtKFFx',
+        key: process.env.NEXT_PUBLIC_PAYU_KEY,
         txnid: txnid,
         amount: selectedSubscription?.price,
         productinfo: selectedSubscription?.name,
