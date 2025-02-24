@@ -731,7 +731,11 @@ const PropertyDetailsForm = ({
             }
           );
           if (response.status === 200) {
-            console.log('Listing updated successfully!');
+            toast({
+              title: 'Success',
+              description: 'Listing Updated Successfully',
+            });
+            handleNext();
           } else {
             console.error('Failed to update listing:', response.status);
           }

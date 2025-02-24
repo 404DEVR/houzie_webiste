@@ -11,7 +11,11 @@ import ProgressBar from '@/components/ProgressBar';
 
 import { AddListingsProps } from '@/interfaces/PropsInterface';
 
-const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
+const AddListings = ({
+  page,
+  setActiveTab,
+  setIsDialogOpen,
+}: AddListingsProps) => {
   const ProgressBarCheckpoints =
     page === 'edit'
       ? [
@@ -20,12 +24,8 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
             placement: 1,
           },
           {
-            label: 'Address',
-            placement: 2,
-          },
-          {
             label: 'Photos',
-            placement: 3,
+            placement: 2,
           },
         ]
       : [
@@ -104,18 +104,19 @@ const AddListings = ({ page, setActiveTab }: AddListingsProps) => {
           page={page}
         />
       )}
-      {currentPage === 2 && (
+      {page !== 'edit' && currentPage === 2 && (
         <PropertyLocation
           handleNext={handleNext}
           handleBack={handleBack}
           page={page}
         />
       )}
-      {currentPage === 3 && (
+      {(page === 'edit' ? currentPage === 2 : currentPage === 3) && (
         <FileUploader
           handleNext={handleNext}
           handleBack={handleBack}
           page={page}
+          setIsDialogOpen={setIsDialogOpen}
         />
       )}
       {page !== 'edit' && currentPage === 4 && (

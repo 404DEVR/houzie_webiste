@@ -3,7 +3,6 @@
 import axios from 'axios';
 import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -435,7 +434,7 @@ const MyListings = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className='w-full sm:max-w-7xl h-[90%] my-auto overflow-y-auto'>
-          <AddListings page='edit' />
+          <AddListings page='edit' setIsDialogOpen={setIsDialogOpen} />
         </DialogContent>
       </Dialog>
     </div>

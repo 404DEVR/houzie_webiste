@@ -3,6 +3,7 @@ import Property, { PropertyPost } from '@/interfaces/Interface';
 export interface AddListingsProps {
   page?: string;
   setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface AmenitiesDisplayinterface {
@@ -14,6 +15,7 @@ export interface FileUploaderprops {
   handleNext: () => void;
   handleBack: () => void;
   page?: string;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface PropertyDetailsForminteface {

@@ -20,10 +20,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       // Optimize for three points in edit mode
       switch (currentpage) {
         case 1:
-          return 30;
+          return 50;
         case 2:
-          return 70;
-        case 3:
           return 100;
         default:
           return 0;

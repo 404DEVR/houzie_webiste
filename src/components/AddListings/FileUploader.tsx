@@ -1,7 +1,6 @@
 'use client';
 
 import { createClient } from '@supabase/supabase-js';
-import { isEqual } from 'lodash';
 import Image from 'next/image';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -36,7 +35,12 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
+const FileUploader = ({
+  handleNext,
+  handleBack,
+  page,
+  setIsDialogOpen,
+}: FileUploaderprops) => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
   const addphotos = useSelector((state: RootState) => state.addForm.photos);
@@ -243,50 +247,49 @@ const FileUploader = ({ handleNext, handleBack, page }: FileUploaderprops) => {
   };
 
   const handleEdit = async () => {
-    try {
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-      const changedFields: any = {};
-
-      if (!isEqual(photos, initialPhotos)) {
-        changedFields.photos = photos;
-      }
-
-      if (propertyDetails?.mainImage !== initialMainImage) {
-        changedFields.mainImage = propertyDetails?.mainImage;
-      }
-
-      if (Object.keys(changedFields).length > 0) {
-        // const response = await axios.patch(
-        //   `https://api.houzie.in/listings/${editingListingId}`,
-        //   changedFields,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // );
-        // if (response.status === 200) {
-        //   console.log('Listing updated successfully!');
-        //   handleNext();
-        // } else {
-        //   console.error('Failed to update listing:', response.status);
-        // }
-      } else {
-        toast({
-          title: 'No changes',
-          description: 'No changes were made to the  details.',
-        });
-        // handleNext();
-      }
-    } catch (error) {
-      toast({
-        title: 'Edit Failed',
-        description: 'Failed To Edit Details',
-      });
-    }
+    setIsDialogOpen(false);
+    window.location.reload();
+    // try {
+    //   const accessToken = auth?.accessToken;
+    //   if (!accessToken) {
+    //     throw new Error('No access token available');
+    //   }
+    //   const changedFields: any = {};
+    //   if (!isEqual(photos, initialPhotos)) {
+    //     changedFields.photos = photos;
+    //   }
+    //   if (propertyDetails?.mainImage !== initialMainImage) {
+    //     changedFields.mainImage = propertyDetails?.mainImage;
+    //   }
+    //   if (Object.keys(changedFields).length > 0) {
+    // const response = await axios.patch(
+    //   `https://api.houzie.in/listings/${editingListingId}`,
+    //   changedFields,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   }
+    // );
+    // if (response.status === 200) {
+    //   console.log('Listing updated successfully!');
+    //   handleNext();
+    // } else {
+    //   console.error('Failed to update listing:', response.status);
+    // }
+    //   } else {
+    //     toast({
+    //       title: 'No changes',
+    //       description: 'No changes were made to the  details.',
+    //     });
+    //     // handleNext();
+    //   }
+    // } catch (error) {
+    //   toast({
+    //     title: 'Edit Failed',
+    //     description: 'Failed To Edit Details',
+    //   });
+    // }
   };
 
   const isContinueEnabled = photos.length > 0;
