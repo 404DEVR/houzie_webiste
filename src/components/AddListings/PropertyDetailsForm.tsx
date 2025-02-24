@@ -874,6 +874,7 @@ const PropertyDetailsForm = ({
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                 )}
                 onClick={() => handleButtonClick('propertyType', type.value)}
+                disabled={page === 'edit'}
               >
                 <Image
                   src={type.url}
