@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import {
   Apple,
   Building2,
@@ -13,16 +14,15 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
-import { signIn } from 'next-auth/react';
-import axios from 'axios';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
+
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
 import {
@@ -239,7 +239,10 @@ const SignUpForm: React.FC = () => {
           {!showOTPForm && (
             <CardDescription className='text-center'>
               Already Have An Account?{' '}
-              <a href='/login' className='text-[#42A4AE]'>
+              <a
+                href='/login?signUpRedirect=brokerSignUp'
+                className='text-[#42A4AE]'
+              >
                 Sign In Here
               </a>
             </CardDescription>

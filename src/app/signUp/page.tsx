@@ -127,7 +127,7 @@ const SignUpForm = () => {
           <CardTitle className='text-3xl text-center'>Sign Up</CardTitle>
           <CardDescription className='text-center'>
             Already Have An Account?{' '}
-            <a href='/login' className='text-[#42A4AE]'>
+            <a href='/login?signUpRedirect=signUp' className='text-[#42A4AE]'>
               Sign In Here
             </a>
           </CardDescription>

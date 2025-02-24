@@ -16,7 +16,6 @@ export function middleware(req: NextRequest) {
       path.startsWith('/cart')) &&
     !token
   ) {
-    // Add the original URL as a redirect parameter
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('redirect', path);
     return NextResponse.redirect(loginUrl);

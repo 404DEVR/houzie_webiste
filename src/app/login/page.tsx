@@ -44,6 +44,7 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
+  const signUpRedirect = searchParams.get('signUpRedirect');
   const redirectPath = searchParams.get('redirect') || '/';
 
   const {
@@ -117,7 +118,7 @@ const SignUpForm = () => {
         if (redirectUrl && typeof redirectUrl === 'string') {
           router.push(redirectUrl);
         } else {
-          router.push('/broker'); // Or some safe fallback URL
+          router.push('/broker');
         }
       }
     } catch (error) {
@@ -144,7 +145,7 @@ const SignUpForm = () => {
           <CardTitle className='text-3xl text-center'>Sign In</CardTitle>
           <CardDescription className='text-center'>
             Need to create an account?{' '}
-            <a href='/signUp' className='text-[#42A4AE]'>
+            <a href={`/${signUpRedirect}`} className='text-[#42A4AE]'>
               Sign up here
             </a>
           </CardDescription>
@@ -218,7 +219,7 @@ const SignUpForm = () => {
             size='custom'
             className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
             onClick={handleSubmit(onSubmit)}
-            disabled={isLoading} // Disable button while loading
+            disabled={isLoading}
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
           </Button>
