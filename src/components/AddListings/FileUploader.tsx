@@ -247,7 +247,7 @@ const FileUploader = ({
   };
 
   const handleEdit = async () => {
-    setIsDialogOpen(false);
+    setIsDialogOpen && setIsDialogOpen(false);
     window.location.reload();
     // try {
     //   const accessToken = auth?.accessToken;
