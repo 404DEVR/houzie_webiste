@@ -81,7 +81,7 @@ const CartPage = () => {
 
     const checkoutOptions = {
       paymentSessionId: paymentSessionId,
-      returnUrl: `${window.location.origin}/payment-status?order_id=${orderId}`,
+      returnUrl: `${window.location.origin}/payment-status?order_id=${orderId}`, 
     };
 
     try {
@@ -89,7 +89,7 @@ const CartPage = () => {
 
       if (result.error) {
         console.error('Payment error:', result.error.message);
-        window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
+        window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`; 
         return;
       }
 
@@ -98,7 +98,7 @@ const CartPage = () => {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
+      window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`; 
     }
   };
 

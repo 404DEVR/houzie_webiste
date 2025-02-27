@@ -52,7 +52,7 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
     setCookie('auth', JSON.stringify(userData), {
       maxAge: 7 * 24 * 60 * 60,
       path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      secure: window.location.protocol === 'https:',
       sameSite: 'strict',
     });
   }, []);
