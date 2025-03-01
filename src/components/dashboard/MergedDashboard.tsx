@@ -1,8 +1,11 @@
 'use client';
 
 import axios from 'axios';
-import { Clock, Package, TrendingDown, TrendingUp, User2 } from 'lucide-react';
+import { TrendingDown, TrendingUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { BsBuildingsFill } from 'react-icons/bs';
+import { FaClockRotateLeft } from 'react-icons/fa6';
+import { MdPeopleAlt } from 'react-icons/md';
 import {
   Area,
   AreaChart,
@@ -45,11 +48,30 @@ const MergedDashboard: React.FC = () => {
 
         const newCardData: CardData[] = [
           {
+            title: 'Active Leads',
+            value: data.activeLeads.toString(),
+            trendStatus: 'up',
+            trend: 'Leads generated recently',
+            bgcolor: 'bg-[#bcd5f4] text-[#2c7bdb]',
+            icon: <FaClockRotateLeft className='w-6 h-6 ' />,
+            trendColor: 'text-green-500',
+          },
+          {
+            title: 'Inactive Leads',
+            value: data.inActiveLeads.toString(),
+            trendStatus: 'down',
+            bgcolor: 'bg-[#ffe7de] text-[#ff9066]',
+            trend: 'Leads not followed up',
+            icon: <MdPeopleAlt className='w-6 h-6 ' />,
+            trendColor: 'text-red-500',
+          },
+          {
             title: 'Active Listings',
             value: data.activeListings.toString(),
             trendStatus: 'up',
             trend: 'New listings added',
-            icon: <User2 className='h-10 w-10 text-blue-500' />,
+            bgcolor: 'bg-[#bcd5f4] text-[#2c7bdb]',
+            icon: <BsBuildingsFill className='w-6 h-6 ' />,
             trendColor: 'text-green-500',
           },
           {
@@ -57,23 +79,8 @@ const MergedDashboard: React.FC = () => {
             value: data.inActiveListings.toString(),
             trendStatus: 'down',
             trend: 'No new listings',
-            icon: <Clock className='h-10 w-10 text-orange-500' />,
-            trendColor: 'text-red-500',
-          },
-          {
-            title: 'Active Leads',
-            value: data.activeLeads.toString(),
-            trendStatus: 'up',
-            trend: 'Leads generated recently',
-            icon: <Package className='h-10 w-10 text-yellow-500' />,
-            trendColor: 'text-green-500',
-          },
-          {
-            title: 'Inactive Leads',
-            value: data.inActiveLeads.toString(),
-            trendStatus: 'down',
-            trend: 'Leads not followed up',
-            icon: <Package className='h-10 w-10 text-yellow-500' />,
+            bgcolor: 'bg-[#ffe7de] text-[#ff9066]',
+            icon: <BsBuildingsFill className='w-6 h-6 ' />,
             trendColor: 'text-red-500',
           },
         ];
@@ -120,42 +127,18 @@ const MergedDashboard: React.FC = () => {
   ];
 
   return (
-    <div className='container mx-auto px-4 py-6'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-        <div className='md:col-span-2 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6'>
-          {cardData.map((card, index) => (
-            <Card key={index} className='shadow-2xl'>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-sm font-medium leading-8'>
-                  {card.title}
-                  <div className='text-2xl font-bold'>{card.value}</div>
-                </CardTitle>
-                {card.icon}
-              </CardHeader>
-              <CardContent>
-                <div
-                  className={`text-xs mt-1 flex justify-start gap-1 items-center ${card.trendColor}`}
-                >
-                  {card.trendStatus === 'up' ? (
-                    <TrendingUp className='text-xs w-4 h-4' />
-                  ) : (
-                    <TrendingDown className='text-xs w-4 h-4' />
-                  )}
-                  {card.trend}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className='md:col-span-2 lg:col-span-2'>
-          <Card className='bg-white shadow-2xl'>
+    <div className='mx-auto pt-6 '>
+      <div className='grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-5 gap-6'>
+        <div className='lg:col-span-4'>
+          <Card className='bg-white shadow-2xl shadow-[#dadbe5] rounded-xl'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-2xl font-semibold'>
-                Deals Overview
+              <CardTitle className='text-lg font-semibold'>
+                Leads Overview
               </CardTitle>
               <Select value={selectedMonth} onValueChange={handleMonthChange}>
-                <SelectTrigger className='w-[180px]'>
+                <SelectTrigger className='w-[120px] md:w-[180px]'>
+                  {' '}
+                  {/* Adjusted width for responsiveness */}
                   <SelectValue placeholder='Select month' />
                 </SelectTrigger>
                 <SelectContent>
@@ -186,7 +169,6 @@ const MergedDashboard: React.FC = () => {
                       <stop offset='100%' stopColor='#4379EE' stopOpacity={0} />
                     </linearGradient>
                   </defs>
-
                   <XAxis
                     dataKey='name'
                     axisLine={false}
@@ -214,13 +196,105 @@ const MergedDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </div>
-
-        <div className='md:col-span-2 lg:col-span-2'>
-          <Card className='bg-white shadow-2xl'>
+        <div className='lg:col-span-2 xl:col-span-1 flex flex-col gap-4 items-center justify-center'>
+          {cardData.slice(0, 2).map((card, index) => (
+            <Card
+              key={index}
+              className='shadow-xl bg-white shadow-[#dadbe5] rounded-xl border w-full'
+            >
+              <CardHeader className='flex flex-col items-start space-y-2 pb-2'>
+                <div className='flex items-center justify-between w-full'>
+                  <div>
+                    <CardTitle className='text-sm font-medium leading-5 mb-4 text-gray-500'>
+                      {card.title}
+                    </CardTitle>
+                    <div className='text-2xl font-bold'>{card.value}</div>
+                  </div>
+                  <div className={`rounded-xl ${card.bgcolor} p-4`}>
+                    {card.icon}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className='pt-6'>
+                <div
+                  className={`text-xs mt-1 flex justify-start gap-1 items-center ${card.trendColor}`}
+                >
+                  {card.trendStatus === 'up' ? (
+                    <TrendingUp className='text-xs w-4 h-4' />
+                  ) : (
+                    <TrendingDown className='text-xs w-4 h-4' />
+                  )}
+                  {card.trend}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+      <div className='grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-5 gap-6 mt-6'>
+        <div className='lg:col-span-2 xl:col-span-1 flex flex-col gap-4 items-center justify-center'>
+          {cardData.slice(2, 4).map((card, index) => (
+            <Card
+              key={index}
+              className='shadow-xl bg-white shadow-[#dadbe5] rounded-xl border w-full'
+            >
+              <CardHeader className='flex flex-col items-start space-y-2 pb-2'>
+                <div className='flex items-center justify-between w-full'>
+                  <div>
+                    <CardTitle className='text-sm font-medium leading-5 mb-4 text-gray-500'>
+                      {card.title}
+                    </CardTitle>
+                    <div className='text-2xl font-bold'>{card.value}</div>
+                  </div>
+                  <div
+                    className={`rounded-xl ${card.bgcolor} text-[#2c7bdb] p-4`}
+                  >
+                    {card.icon}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className='pt-6'>
+                <div
+                  className={`text-xs mt-1 flex justify-start gap-1 items-center ${card.trendColor}`}
+                >
+                  {card.trendStatus === 'up' ? (
+                    <TrendingUp className='text-xs w-4 h-4' />
+                  ) : (
+                    <TrendingDown className='text-xs w-4 h-4' />
+                  )}
+                  {card.trend}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className='lg:col-span-4'>
+          <Card className='shadow-xl bg-white shadow-[#dadbe5]'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-2xl font-semibold'>
+              <CardTitle className='text-lg font-semibold'>
                 Listing Views
               </CardTitle>
+              <Select value={selectedMonth} onValueChange={handleMonthChange}>
+                <SelectTrigger className='w-[120px] md:w-[180px]'>
+                  {' '}
+                  {/* Adjusted width for responsiveness */}
+                  <SelectValue placeholder='Select month' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='January'>January</SelectItem>
+                  <SelectItem value='February'>February</SelectItem>
+                  <SelectItem value='March'>March</SelectItem>
+                  <SelectItem value='April'>April</SelectItem>
+                  <SelectItem value='May'>May</SelectItem>
+                  <SelectItem value='June'>June</SelectItem>
+                  <SelectItem value='July'>July</SelectItem>
+                  <SelectItem value='August'>August</SelectItem>
+                  <SelectItem value='September'>September</SelectItem>
+                  <SelectItem value='October'>October</SelectItem>
+                  <SelectItem value='November'>November</SelectItem>
+                  <SelectItem value='December'>December</SelectItem>
+                </SelectContent>
+              </Select>
             </CardHeader>
             <CardContent className='pl-2'>
               <ResponsiveContainer width='100%' height={300}>

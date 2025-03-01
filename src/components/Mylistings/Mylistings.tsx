@@ -1,7 +1,16 @@
 'use client';
 
 import axios from 'axios';
-import { Bath, Bed, Building2, Edit, Eye, Home, Trash2 } from 'lucide-react';
+import {
+  Bath,
+  Bed,
+  Building2,
+  Edit,
+  Eye,
+  Home,
+  Trash2,
+  TrendingUp,
+} from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -325,7 +334,7 @@ const MyListings = () => {
   };
 
   return (
-    <div className='container mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
+    <div className='mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
       <h1 className='text-xl sm:text-2xl font-bold mb-4'>My Listings</h1>
 
       {isLoading ? (
@@ -340,43 +349,42 @@ const MyListings = () => {
               return (
                 <Card
                   key={listing.id}
-                  className='shadow-md rounded-md bg-[#F9FAFB]'
+                  className='shadow-md rounded-2xl bg-[#eff6ff] border'
                 >
-                  <CardContent className='p-2 sm:p-4 flex flex-col md:flex-row gap-4'>
-                    <div className='w-full md:w-[250px] lg:w-[300px] h-[200px] md:h-[250px] mx-auto md:mx-0 flex items-center justify-center p-1'>
+                  <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
+                    <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
                       <div className='relative w-full h-full'>
                         <Image
                           src={listing.mainImage || '/svg/no-results.svg'}
                           alt={listing.title}
                           fill
-                          className='object-cover rounded-md'
+                          className='object-cover rounded-2xl'
                           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                         />
                       </div>
                     </div>
-                    <div className='w-full md:w-3/4 flex flex-col justify-between'>
-                      <div>
-                        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2'>
-                          <h2 className='text-base sm:text-lg font-semibold'>
+
+                    <div className='w-full flex flex-col md:flex-row'>
+                      <div className='md:w-[70%] pt-4 md:pt-10'>
+                        <div className='flex flex-col justify-between items-center md:items-start mb-6'>
+                          <h2 className='text-base sm:text-xl font-semibold mb-2'>
                             {listing.title}
                           </h2>
-                          <div className='py-1 px-3 text-white bg-[#42A4AE] rounded-md text-sm mt-2 sm:mt-0'>
-                            {listing.views} Views
-                          </div>
+                          <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start'>
+                            {listing.description}
+                          </h3>
                         </div>
-                        <DescriptionWithReadMore
-                          description={listing.description}
-                        />
+
                         {propertyFeatures.length > 0 && (
-                          <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2 mt-2'>
+                          <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
                             {propertyFeatures.map((feature, index) => (
                               <Badge
                                 key={index}
                                 variant='outline'
-                                className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
+                                className=' border-none flex gap-1 justify-center items-center'
                               >
-                                <feature.icon className='w-[17.59px] h-[17.59px]' />
-                                <span className='font-medium text-sm ml-[2.93px]'>
+                                <feature.icon className='w-[14px] h-[14px]' />
+                                <span className='font-medium text-xs'>
                                   {feature.label}
                                 </span>
                               </Badge>
@@ -385,42 +393,41 @@ const MyListings = () => {
                         )}
                       </div>
 
-                      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 sm:mt-4'>
-                        <div className='mb-2 sm:mb-0'>
-                          <p className='font-medium flex flex-col text-xs sm:text-sm'>
-                            Rent{' '}
-                            <span className='text-base sm:text-lg'>
-                              ₹ {listing.price}
+                      <div className='flex flex-col items-center p-2 md:items-start '>
+                        <div className='flex gap-6 mb-4 flex-wrap md:flex-nowrap '>
+                          <div className='mb-1'>
+                            <p className='text-gray-500 text-xs'>Rent</p>
+                            <span className='text-black text-2xl font-semibold flex gap-2'>
+                              <span>₹</span> {listing.price}
                             </span>
-                          </p>
+                          </div>
+                          <div className='mb-1'>
+                            <p className='text-gray-500 text-xs'>Location:</p>
+                            <span className='text-black text-2xl font-semibold'>
+                              Ghaziabad
+                            </span>
+                          </div>
                         </div>
-                        <div className='flex flex-wrap gap-2'>
+
+                        <div className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'>
+                          <TrendingUp className='w-[17px] h-[17px]' />
+                          Views and Leads
+                        </div>
+
+                        <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
                           <Button
-                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                            variant='outline'
+                            className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
                             size='sm'
                             onClick={() => handleEdit(listing.id)}
                           >
-                            <Edit className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
                             Edit
                           </Button>
                           <Button
-                            className='text-white bg-[#42A4AE] text-xs sm:text-sm'
-                            variant='outline'
+                            className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
                             size='sm'
-                            onClick={() => handleViewDetails(listing.id)}
-                          >
-                            <Eye className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                            View
-                          </Button>
-                          <Button
-                            variant='destructive'
-                            size='sm'
-                            className='text-xs sm:text-sm'
                             onClick={() => handleDelete(listing.id)}
                           >
-                            <Trash2 className='h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2' />
-                            Delete
+                            Unpost
                           </Button>
                         </div>
                       </div>
@@ -437,73 +444,6 @@ const MyListings = () => {
           <AddListings page='edit' setIsDialogOpen={setIsDialogOpen} />
         </DialogContent>
       </Dialog>
-    </div>
-  );
-};
-
-interface DescriptionWithReadMoreProps {
-  description: string | null | undefined;
-}
-
-const DescriptionWithReadMore: React.FC<DescriptionWithReadMoreProps> = ({
-  description,
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showReadMore, setShowReadMore] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    const checkOverflow = () => {
-      if (textRef.current) {
-        setShowReadMore(
-          textRef.current.scrollHeight > textRef.current.clientHeight
-        );
-      }
-    };
-
-    checkOverflow();
-    window.addEventListener('resize', checkOverflow);
-
-    return () => {
-      window.removeEventListener('resize', checkOverflow);
-    };
-  }, [description]);
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  if (!description) {
-    return (
-      <p className='text-xs sm:text-sm text-gray-500'>
-        No description available.
-      </p>
-    );
-  }
-
-  return (
-    <div className='mt-2'>
-      <div className='relative'>
-        <p
-          ref={textRef}
-          className={`text-xs sm:text-sm text-gray-500  ${
-            isExpanded ? '' : 'line-clamp-2'
-          }`}
-          style={{ wordBreak: 'break-word' }}
-        >
-          {description}
-        </p>
-      </div>
-      {showReadMore && (
-        <div className='text-right mt-1'>
-          <button
-            onClick={toggleExpanded}
-            className='text-blue-500 text-xs sm:text-sm font-medium hover:underline'
-          >
-            {isExpanded ? 'Show Less' : 'Read More'}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

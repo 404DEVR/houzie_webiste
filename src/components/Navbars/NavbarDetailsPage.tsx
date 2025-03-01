@@ -2,8 +2,7 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { Bell, LogOut, User } from 'lucide-react';
-import { Menu, X } from 'lucide-react';
+import { Bell, CircleFadingArrowUp, LogOut, User, Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -62,33 +61,10 @@ const NavbarDetailsPage = () => {
   }, [auth]);
 
   return (
-    <nav className='w-full bg-[#42A4AE] px-4 sm:px-6'>
-      <div className='container max-w-full py-4 flex items-center justify-between'>
-        <div
-          onClick={() => router.push('/')}
-          className='flex items-center gap-1 sm:gap-1.5 p-0.5 cursor-pointer'
-        >
-          <Image
-            src='/svg/logo-house.svg'
-            alt='Houzie Logo'
-            width={24}
-            height={24}
-            priority
-            className='w-6 h-6 sm:w-7 sm:h-7'
-          />
-          <span className='font-medium text-white text-xl sm:text-2xl md:text-[32px] leading-tight sm:leading-[48px] font-sans'>
-            Houzie
-          </span>
-        </div>
-
-        <button
-          className='md:hidden text-white'
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        <div className='hidden md:flex items-center space-x-4'>
+    <nav className='w-full bg-[#579AFF] text-white'>
+      <div className='container max-w-full py-2 flex items-center justify-between px-4 sm:pl-6 sm:pr-16 rounded-full'>
+        {/* Left side - User info or Sign up links */}
+        <div className='flex items-center'>
           {auth ? (
             <>
               <Popover>
@@ -99,7 +75,7 @@ const NavbarDetailsPage = () => {
                         <User className='w-5 h-5 sm:w-6 sm:h-6 text-[#42A4AE]' />
                       </CardContent>
                     </Card>
-                    <span className='text-white text-sm sm:text-base'>
+                    <span className='text-white text-sm sm:text-base hidden sm:inline'>
                       {userData?.name}
                     </span>
                   </div>
@@ -123,6 +99,14 @@ const NavbarDetailsPage = () => {
                     </Button>
                     <Button
                       variant='outline'
+                      onClick={() => router.push('/subscriptions')}
+                      className='flex border-none justify-start items-center  space-x-2 hover:bg-gray-100 p-2 rounded'
+                    >
+                      <CircleFadingArrowUp size={18} />
+                      <span>Upgrade Plan</span>
+                    </Button>
+                    <Button
+                      variant='outline'
                       onClick={handleLogout}
                       className='flex border-none justify-start items-center  space-x-2 hover:bg-gray-100 p-2 rounded text-red-500 hover:text-red-500'
                     >
@@ -132,86 +116,93 @@ const NavbarDetailsPage = () => {
                   </div>
                 </PopoverContent>
               </Popover>
-              <Button
-                variant='outline'
-                asChild
-                className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
+              <Link
+                href='/broker'
+                className='py-2 px-3 sm:px-4 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
               >
-                <Link href='/broker'>Post Properties on Houzie</Link>
-              </Button>
-              <Button
-                asChild
-                className='bg-white text-[#42A4AE] hover:bg-opacity-90 transition-colors'
-              >
-                <Link href='/subscriptions'>Upgrade Plan</Link>
-              </Button>
+                Post Property
+              </Link>
             </>
           ) : (
-            <>
-              <Button
-                variant='outline'
-                asChild
-                className='bg-transparent border-white text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
+            <div className='flex items-center space-x-2 sm:space-x-4'>
+              <Link
+                href='/signUp'
+                className='py-2 px-3 sm:px-4 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
               >
-                <Link href='/brokerSignUp'>Post Properties on Houzie</Link>
-              </Button>
-              <Button
-                asChild
-                className='bg-white text-[#42A4AE] hover:bg-opacity-90 transition-colors'
+                Rent
+              </Link>
+              <Link
+                href='/brokerSignUp'
+                className='py-2 px-3 sm:px-4 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
               >
-                <Link href='/signUp'>Explore Properties on Houzie</Link>
-              </Button>
-            </>
+                Post Property
+              </Link>
+            </div>
           )}
+        </div>
+
+        {/* Center - Logo */}
+        <div onClick={() => router.push('/')} className='cursor-pointer'>
+          <Image
+            src='/svg/light-logo.svg'
+            alt='Houzie Logo'
+            width={100}
+            height={33}
+            priority
+            className='w-24 sm:w-32'
+          />
+        </div>
+
+        {/* Right side - Navigation links */}
+        <div className='hidden sm:flex items-center space-x-4'>
+          <Link
+            href='/about'
+            className='py-2 px-4 rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+          >
+            About
+          </Link>
+          <Link
+            href='/contact'
+            className='py-2 px-4 rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+          >
+            Contact
+          </Link>
+        </div>
+
+        {/* Mobile menu button */}
+        <div className='sm:hidden'>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <Menu className='h-6 w-6' />
+          </Button>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <div className='md:hidden bg-[#42A4AE] py-4'>
-          {auth ? (
-            <>
-              <div className='flex items-center gap-2 px-4 py-2'>
-                <Card className='w-8 h-8 bg-white rounded-[9px] overflow-hidden'>
-                  <CardContent className='p-1 flex items-center justify-center'>
-                    <User className='w-5 h-5 text-[#42A4AE]' />
-                  </CardContent>
-                </Card>
-                <span className='text-white text-sm'>{userData?.name}</span>
-              </div>
-              <Link
-                href='/broker'
-                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Post Properties on Houzie
-              </Link>
-              <button
-                onClick={handleLogout}
-                className='block w-full text-left px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Logout
-              </button>
-              <Link
-                href='/subscriptions'
-                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Upgrade Plan
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                href='/brokerSignUp'
-                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Post Properties on Houzie
-              </Link>
-              <Link
-                href='/signUp'
-                className='block px-4 py-2 text-white hover:bg-[#3a939c]'
-              >
-                Explore Properties on Houzie
-              </Link>
-            </>
+        <div className='sm:hidden bg-[#579AFF] px-4 py-2'>
+          <Link
+            href='/about'
+            className='block py-2 hover:bg-white hover:text-[#579AFF] transition-colors'
+          >
+            About
+          </Link>
+          <Link
+            href='/contact'
+            className='block py-2 hover:bg-white hover:text-[#579AFF] transition-colors'
+          >
+            Contact
+          </Link>
+          {auth && (
+            <Link
+              href='/broker'
+              className='block py-2 hover:bg-white hover:text-[#579AFF] transition-colors'
+            >
+              Post Property
+            </Link>
           )}
         </div>
       )}

@@ -29,12 +29,12 @@ const BrokerContent = () => {
   return (
     <Provider store={store}>
       <div className='sticky top-0 z-10 lg:mx-24 mx-4'>
-        <div className='flex items-center justify-start gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
+        <div className='flex items-center justify-center gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'dashboard' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center  ${
+              activeTab === 'dashboard' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
-            variant={activeTab === 'dashboard' ? 'default' : 'outline'}
+            variant='ghost'
             onClick={() => handleTabChange('dashboard')}
           >
             <LayoutDashboard className='mr-2 h-4 w-4' />
@@ -42,10 +42,10 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'myListing' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'myListing' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
-            variant={activeTab === 'myListing' ? 'default' : 'outline'}
+            variant='ghost'
             onClick={() => handleTabChange('myListing')}
           >
             <ListIcon className='mr-2 h-4 w-4' />
@@ -53,10 +53,10 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'addListing' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'addListing' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
-            variant={activeTab === 'addListing' ? 'default' : 'outline'}
+            variant='ghost'
             onClick={() => handleTabChange('addListing')}
           >
             <PlusIcon className='mr-2 h-4 w-4' />
@@ -64,10 +64,10 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'profile' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
-            variant={activeTab === 'profile' ? 'default' : 'outline'}
+            variant='ghost'
             onClick={() => handleTabChange('profile')}
           >
             <UserIcon className='mr-2 h-4 w-4' />
@@ -75,10 +75,10 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'settings' ? 'text-white bg-[#42A4AE]' : ''
+            className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'settings' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
-            variant={activeTab === 'settings' ? 'default' : 'outline'}
+            variant='ghost'
             onClick={() => handleTabChange('settings')}
           >
             <SettingsIcon className='mr-2 h-4 w-4' />

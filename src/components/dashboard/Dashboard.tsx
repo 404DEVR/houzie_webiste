@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className='text-2xl font'>
+      <h1 className='text-3xl font-semibold '>
         Welcome to {capitalizeName(brokerData?.name)}
       </h1>
       <MergedDashboard />

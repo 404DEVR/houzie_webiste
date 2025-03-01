@@ -3,13 +3,11 @@
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { BsTelephone } from 'react-icons/bs';
-import { CiMail } from 'react-icons/ci';
+import { FaPhoneAlt } from 'react-icons/fa';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Lead } from '@/interfaces/Interface';
@@ -48,11 +46,11 @@ const Brokerdetail = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <Card className='w-full rounded-lg shadow-2xl my-6'>
+    <Card className='w-full rounded-2xl  shadow-xl shadow-[#dadbe5] my-6 bg-[#ffffff]'>
       <CardHeader>
-        <CardTitle className='text-xl sm:text-2xl'>Leads Details</CardTitle>
+        <CardTitle className='text-xl font-semibold'>Leads Details</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className='px-4'>
         {leadsData?.length === 0 ? (
           <div>No leads data available</div>
         ) : (
@@ -60,60 +58,45 @@ const Brokerdetail = () => {
             {leadsData?.map((lead) => (
               <div
                 key={lead.id}
-                className='flex flex-col p-4 rounded-lg border space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between'
+                className='flex justify-between gap-4 bg-[#eff5ff] rounded-xl py-6 px-20 items-center border'
               >
-                <div className='flex flex-col sm:flex-row items-center sm:items-start gap-4'>
+                {/* Lead Info */}
+                <div className='flex items-center space-x-4'>
                   <Image
                     src='/images/Dummy profile.png'
                     alt={lead.name}
-                    width={60}
-                    height={60}
+                    width={50}
+                    height={50}
                     className='rounded-full object-cover'
                   />
-                  <div className='text-center sm:text-left'>
-                    <p className='text-xs font-medium'>Enquiry By</p>
+                  <div>
+                    <p className='text-md text-[#42A4AE]'>
+                      {new Date(lead.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </p>
                     <p className='text-md font-semibold'>{lead.name}</p>
-                    <div className='flex items-center justify-center sm:justify-start gap-2 font-medium'>
-                      <p className='text-xs leading-none'>Enquiry on</p>
-                      <p className='text-xs font-semibold text-teal-600'>
-                        {new Date(lead.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </p>
-                    </div>
                   </div>
                 </div>
 
-                <div className='flex flex-col sm:flex-row gap-4 sm:gap-6'>
-                  <div className='flex items-center gap-2'>
-                    <div className='w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0'>
-                      <BsTelephone className='w-5 h-5' />
-                    </div>
-                    <div className='flex flex-col'>
-                      <span className='text-[#42A4AE] text-sm'>Call us</span>
-                      <p className='text-xs'>{lead.phoneNumber}</p>
-                    </div>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <div className='w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0'>
-                      <CiMail className='w-5 h-5' />
-                    </div>
-                    <div className='flex flex-col'>
-                      <span className='text-[#42A4AE] text-sm'>Email</span>
-                      <p className='text-xs truncate max-w-[150px]'>
-                        {lead.email || 'N/A'}
-                      </p>
-                    </div>
-                  </div>
+                {/* Interested In */}
+                <div className=''>
+                  <p className='text-md text-[#42A4AE]'>Interested In</p>
+                  <p className='text-md font-semibold'>Property Name</p>
                 </div>
 
-                <Button className='text-white bg-[#42A4AE] font-normal w-full sm:w-auto'>
-                  <a href={`mailto:${lead.email}`} className='text-xs truncate'>
-                    Follow Up
-                  </a>
-                </Button>
+                {/* Contact Details */}
+                <div className='flex flex-col items-start justify-center'>
+                  <div className='text-md text-[#42A4AE]'>Contact Details</div>
+                  <div className='flex items-center justify-end space-x-2'>
+                    <FaPhoneAlt className='text-md font-semibold' />
+                    <p className='text-md font-semibold'>
+                      +91 {lead.phoneNumber}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

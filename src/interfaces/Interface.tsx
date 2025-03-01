@@ -150,6 +150,7 @@ export interface CardsInterface {
 export interface CardData {
   title: string;
   value: string;
+  bgcolor: string;
   trendStatus: 'up' | 'down';
   trend: string;
   icon: React.ReactNode;

@@ -227,7 +227,7 @@ const SignUpForm: React.FC = () => {
         {/* Increased max-w */}
         <CardHeader className='space-y-1 flex flex-col items-center'>
           <Image
-            src='/svg/logo light.svg'
+            src='/svg/houzie-logo.svg'
             alt='Houzie Logo'
             width={120}
             height={120}
