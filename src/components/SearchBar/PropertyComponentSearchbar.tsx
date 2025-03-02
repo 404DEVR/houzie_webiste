@@ -1,6 +1,5 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -174,7 +173,7 @@ const PropertyComponentSearchbar = () => {
       <div className='flex flex-col items-center justify-between w-full'>
         {options.map((option) => (
           <div key={option.id} className='border-b-gray-300 border-b-2 w-full'>
-            <label className='flex flex-col items-start space-x-2 cursor-pointer p-3 hover:bg-teal-100 rounded-2xl m-2'>
+            <label className='flex flex-col items-start space-x-2 cursor-pointer p-3 hover:bg-[#c1d2f5] rounded-2xl m-2'>
               <span className='flex flex-row items-center text-black text-base sm:text-lg font-poppins font-medium leading-5 tracking-tighter w-full'>
                 <input
                   type='checkbox'
@@ -217,14 +216,13 @@ const PropertyComponentSearchbar = () => {
 
   return (
     <div className='w-full '>
-      <label className='text-sm font-semibold block text-gray-800'>
+      <label className='text-2xl font-medium block text-gray-800 leading-none'>
         Property Type
       </label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div className='w-full rounded-md text-gray-700 text-sm bg-white focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between py-2'>
+          <div className='w-full rounded-md text-md text-gray-700 text-sm bg-white focus:ring focus:ring-[#3675ff] cursor-pointer flex items-center justify-between py-1'>
             <span>{getDisplayText()}</span>
-            <ChevronDown className='h-4 w-4 text-gray-500' />
           </div>
         </PopoverTrigger>
         <PopoverContent className='w-[90%] lg:w-[80vh] max-h-[80vh] overflow-y-auto'>
@@ -263,7 +261,7 @@ const PropertyComponentSearchbar = () => {
                 Clear All
               </Button>
               <Button
-                className='w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md'
+                className='w-full sm:w-auto bg-[#3675ff] hover:bg-[#729eff] text-white px-4 py-2 rounded-md'
                 onClick={handleApply}
               >
                 Apply

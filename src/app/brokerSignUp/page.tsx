@@ -355,12 +355,12 @@ const SignUpForm: React.FC = () => {
                 )}
               </div>
               <div className='grid gap-2'>
-                <Label htmlFor='adharNumber'>Adhar Number</Label>
+                <Label htmlFor='adharNumber'>Aadhaar Number</Label>
                 <div className='relative'>
                   <CreditCard className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
                   <Input
                     id='adharNumber'
-                    placeholder='Adhar Number'
+                    placeholder='Aadhaar Number'
                     type='tel'
                     className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                     {...register('adharNumber')}
@@ -373,7 +373,7 @@ const SignUpForm: React.FC = () => {
                 )}
               </div>
               <div className='grid gap-2 md:col-span-2'>
-                <Label htmlFor='role'>Registering as :</Label>
+                <Label htmlFor='role'>Register as :</Label>
                 <Controller
                   name='role'
                   control={control}
@@ -399,6 +399,12 @@ const SignUpForm: React.FC = () => {
                         <SelectItem value='FLAT_MATES'>
                           Current occupant, looking for flatmates
                         </SelectItem>
+                        {/* <SelectItem value='FLAT_MATES'>
+                          PG Owner/Property Manager Co - Living
+                        </SelectItem>
+                        <SelectItem value='FLAT_MATES'>
+                          Owner/Property Manager
+                        </SelectItem> */}
                       </SelectContent>
                     </Select>
                   )}

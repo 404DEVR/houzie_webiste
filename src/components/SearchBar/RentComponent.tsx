@@ -1,6 +1,5 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -50,12 +49,13 @@ const RentComponent = () => {
 
   return (
     <div className='w-full'>
-      <label className='text-sm font-semibold block text-gray-800'>Rent</label>
+      <label className='text-2xl font-medium block text-gray-800 leading-none'>
+        Rent
+      </label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div className='w-full rounded-md text-gray-700 text-sm bg-white focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between py-2'>
-            ₹ {minRent} - ₹ {maxRent}
-            <ChevronDown className='h-4 w-4 text-gray-500' />
+          <div className='w-full text-md rounded-md text-gray-700 text-sm bg-white focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between py-1'>
+            Choose From The List
           </div>
         </PopoverTrigger>
         <PopoverContent className='w-80'>
@@ -69,19 +69,19 @@ const RentComponent = () => {
                 onMouseLeave={() => setIsDragging(null)}
               >
                 <div
-                  className='absolute h-2 bg-teal-500 rounded-full'
+                  className='absolute h-2 bg-[#3675ff] rounded-full'
                   style={{
                     left: getLeftPosition(minRent),
                     right: `${100 - (maxRent / 10000) * 100}%`,
                   }}
                 />
                 <button
-                  className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                  className='absolute w-6 h-6 bg-white border-2 border-[#3675ff] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
                   style={{ left: getLeftPosition(minRent) }}
                   onMouseDown={() => setIsDragging('min')}
                 />
                 <button
-                  className='absolute w-6 h-6 bg-white border-2 border-teal-500 rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                  className='absolute w-6 h-6 bg-white border-2 border-[#3675ff] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
                   style={{ left: getLeftPosition(maxRent) }}
                   onMouseDown={() => setIsDragging('max')}
                 />
@@ -115,7 +115,7 @@ const RentComponent = () => {
             </div>
             <Button
               onClick={handleApply}
-              className='w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md'
+              className='w-full sm:w-auto bg-[#3675ff] hover:bg-[#729eff] text-white px-4 py-2 rounded-md'
             >
               Apply
             </Button>
