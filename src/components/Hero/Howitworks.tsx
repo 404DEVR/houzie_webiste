@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
+import MotionDiv from '@/components/MotionDiv';
 
 const ProcessComponent = () => {
   const controls = useAnimation();
@@ -56,7 +57,7 @@ const ProcessComponent = () => {
         className='lg:w-1/2 pl-20 flex flex-col justify-center mt-10 lg:mt-0 gap-24'
       >
         {['Search', 'Find', 'Move'].map((text, index) => (
-          <motion.div
+          <MotionDiv
             key={text}
             custom={index}
             initial='hidden'
@@ -71,7 +72,7 @@ const ProcessComponent = () => {
             {index < 2 && (
               <div className='absolute left-[30px] h-[95px] border-l-2 border-gray-300'></div>
             )}
-          </motion.div>
+          </MotionDiv>
         ))}
       </div>
     </div>

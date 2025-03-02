@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 
 import SearchBar from '@/components/SearchBar/SearchBar';
+import MotionDiv from '@/components/MotionDiv';
 
 export default function PropertyHero() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -59,7 +60,7 @@ export default function PropertyHero() {
       </div>
 
       <div className='container mx-auto px-4 mt-48 mb-10'>
-        <motion.div
+        <MotionDiv
           className='text-center mb-8'
           initial='hidden'
           animate='visible'
@@ -73,19 +74,19 @@ export default function PropertyHero() {
             },
           }}
         >
-          <motion.h1
+          <MotionDiv
             className='text-[60px] lg:text-[90px] font-normal leading-snug text-[#DBDBDB]'
             variants={textVariants}
           >
             Find. Move. Settle.
-          </motion.h1>
-          <motion.p
+          </MotionDiv>
+          <MotionDiv
             className='text-[60px] lg:text-[100px] leading-snug mx-auto text-white'
             variants={textVariants}
           >
             Renting Simplified!
-          </motion.p>
-        </motion.div>
+          </MotionDiv>
+        </MotionDiv>
 
         <SearchBar />
       </div>

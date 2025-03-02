@@ -21,6 +21,8 @@ import {
   selectSelectedSubscription,
 } from '@/redux/slices/subscriptionSlice';
 import useAuth from '@/hooks/useAuth';
+import { title } from 'process';
+import { toast } from '@/hooks/use-toast';
 
 const CartPage = () => {
   const { auth } = useAuth();
@@ -67,12 +69,13 @@ const CartPage = () => {
         });
         setPaymentSessionId(response.data.paymentSessionId);
         setOrderId(response.data.orderId);
-        console.log(response.data);
       } else if (selectedGateway === 'payu') {
         handlePayUPayment();
       }
     } catch (error) {
-      console.error('Error creating order:', error);
+      toast({
+        title: 'Error creating order:',
+      });
     }
   };
 
@@ -81,24 +84,30 @@ const CartPage = () => {
 
     const checkoutOptions = {
       paymentSessionId: paymentSessionId,
-      returnUrl: `${window.location.origin}/payment-status?order_id=${orderId}`, 
+      returnUrl: `${window.location.origin}/payment-status?order_id=${orderId}`,
     };
 
     try {
       const result = await cashfree.checkout(checkoutOptions);
 
       if (result.error) {
-        console.error('Payment error:', result.error.message);
-        window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`; 
+        toast({
+          title: 'Payment error:',
+        });
+        window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
         return;
       }
 
       if (result.redirect) {
-        console.log('Redirecting to payment page...');
+        toast({
+          title: 'Redirecting....',
+        });
       }
     } catch (error) {
-      console.error('Checkout error:', error);
-      window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`; 
+      toast({
+        title: 'Checkout error:',
+      });
+      window.location.href = `${window.location.origin}/payment-failure?order_id=${orderId}`;
     }
   };
 
@@ -115,7 +124,9 @@ const CartPage = () => {
       });
 
       if (response.data.error) {
-        console.error('Error generating hash:', response.data.error);
+        toast({
+          title: 'Error generating hash:',
+        });
         return;
       }
 
@@ -147,7 +158,9 @@ const CartPage = () => {
       document.body.appendChild(form);
       form.submit();
     } catch (error) {
-      console.error('Error initiating PayU payment:', error);
+      toast({
+        title: 'Error initiating PayU payment:',
+      });
     }
   };
 

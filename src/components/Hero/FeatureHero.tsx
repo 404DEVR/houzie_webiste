@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { MoveUpRight } from 'lucide-react';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import { useAnimation, useInView } from 'framer-motion';
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +13,8 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+
+import MotionDiv from '@/components/MotionDiv'; // Import the MotionDiv component
 
 const HeroSection = () => {
   const ref = useRef(null);
@@ -59,7 +63,7 @@ const HeroSection = () => {
   return (
     <TooltipProvider>
       <div id='feature' className='pt-28 px-4 sm:px-6 lg:px-8'>
-        <motion.div
+        <MotionDiv // Use MotionDiv
           ref={ref}
           variants={containerVariants}
           initial='hidden'
@@ -75,7 +79,7 @@ const HeroSection = () => {
           />
           <div className='absolute inset-0 bg-black opacity-20'></div>
 
-          <motion.div
+          <MotionDiv // Use MotionDiv
             variants={itemVariants}
             className='absolute top-24 md:top-20 left-8 md:left-8'
           >
@@ -95,9 +99,9 @@ const HeroSection = () => {
                 {tooltipContent.verifiedProperties}
               </TooltipContent>
             </Tooltip>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv // Use MotionDiv
             variants={itemVariants}
             className='absolute top-8 sm:top-16 md:top-20 right-8 md:right-8'
           >
@@ -117,9 +121,9 @@ const HeroSection = () => {
                 {tooltipContent.extensiveInventory}
               </TooltipContent>
             </Tooltip>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv // Use MotionDiv
             variants={itemVariants}
             className='absolute top-[45%] left-[50%] sm:left-[55%] transform -translate-x-1/2 -translate-y-1/2'
           >
@@ -139,9 +143,9 @@ const HeroSection = () => {
                 {tooltipContent.proximitySearch}
               </TooltipContent>
             </Tooltip>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv // Use MotionDiv
             variants={itemVariants}
             className='absolute bottom-8 sm:bottom-10 md:bottom-20 right-2 sm:right-8 md:right-12'
           >
@@ -161,9 +165,9 @@ const HeroSection = () => {
                 {tooltipContent.lifestyleFilters}
               </TooltipContent>
             </Tooltip>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv // Use MotionDiv
             variants={itemVariants}
             className='absolute bottom-4 sm:bottom-8 md:bottom-10 left-4 sm:left-8 md:left-10 rounded-3xl bg-white p-4 sm:p-6 md:p-8 h-[40%] w-[45%] md:w-1/2 shadow-lg'
           >
@@ -174,7 +178,6 @@ const HeroSection = () => {
             <h2 className='text-2xl sm:text-3xl md:text-5xl font-normal mb-4 sm:mb-6 md:mb-10 mt-2 sm:mt-3 md:mt-4'>
               Features
             </h2>
-
             <div className='flex'>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -193,8 +196,8 @@ const HeroSection = () => {
                 <MoveUpRight />
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </MotionDiv>
+        </MotionDiv>
         <div className='text-center mt-16 sm:mt-20 md:mt-28'>
           <Button
             variant='link'

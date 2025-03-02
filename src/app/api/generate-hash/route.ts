@@ -1,3 +1,4 @@
+import { toast } from '@/hooks/use-toast';
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 
@@ -21,12 +22,11 @@ export async function POST(request: Request) {
     const hash = crypto.createHash('sha512').update(hashString).digest('hex');
 
     return NextResponse.json({ hash });
-  } catch (error: any) {
-    console.error('Error generating hash:', error.message);
+  } catch {
+    toast({ title: 'Error generating hash:' });
     return NextResponse.json(
       {
         error: 'Failed to generate hash',
-        details: error.message || 'Unknown error',
       },
       { status: 500 }
     );

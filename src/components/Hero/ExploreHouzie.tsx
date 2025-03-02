@@ -1,7 +1,9 @@
-import { motion, useAnimation } from 'framer-motion';
+'use client';
+
+import React, { useEffect } from 'react';
+import { useAnimation } from 'framer-motion';
 import { ArrowRight, House } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import MotionDiv from '@/components/MotionDiv';
 
 const HeroText = () => {
   const controls = useAnimation();
@@ -76,7 +79,7 @@ const HeroText = () => {
         className='max-w-7xl mx-auto mt-8 sm:mt-12 md:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 px-4'
         ref={ref}
       >
-        <motion.div
+        <MotionDiv
           variants={cardVariants}
           initial='hidden'
           animate={controls}
@@ -95,7 +98,7 @@ const HeroText = () => {
                 <CardTitle className='text-2xl sm:text-3xl md:text-4xl font-medium text-white mb-4'>
                   Renting Made Easy.
                 </CardTitle>
-                <motion.button
+                <MotionDiv
                   className='bg-white text-gray-800 font-normal text-base sm:text-lg md:text-xl py-2 sm:py-3 md:py-4 rounded-full flex justify-between items-center space-x-2 hover:bg-gray-100'
                   initial={{ paddingLeft: 16, paddingRight: 16 }}
                   whileHover={{ paddingLeft: 24, paddingRight: 24 }}
@@ -103,13 +106,13 @@ const HeroText = () => {
                 >
                   <span className='font-medium'>Explore all services</span>
                   <ArrowRight className='h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8' />
-                </motion.button>
+                </MotionDiv>
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div variants={cardVariants} initial='hidden' animate={controls}>
+        <MotionDiv variants={cardVariants} initial='hidden' animate={controls}>
           <Card className='bg-[#4169E1] rounded-3xl overflow-hidden shadow-lg  h-[350px] lg:h-full'>
             <CardHeader className='p-4 sm:p-6 md:p-8'>
               <CardTitle className='text-2xl font-semibold text-white mb-2'>
@@ -142,7 +145,7 @@ const HeroText = () => {
               </Badge>
             </CardFooter>
           </Card>
-        </motion.div>
+        </MotionDiv>
       </div>
       <div className='text-center mt-16 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4'>
         <Button

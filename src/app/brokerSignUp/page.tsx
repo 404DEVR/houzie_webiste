@@ -399,12 +399,12 @@ const SignUpForm: React.FC = () => {
                         <SelectItem value='FLAT_MATES'>
                           Current occupant, looking for flatmates
                         </SelectItem>
-                        {/* <SelectItem value='FLAT_MATES'>
-                          PG Owner/Property Manager Co - Living
+                        <SelectItem value='PG_OWNER'>
+                          PG Owner/Property Manager
                         </SelectItem>
-                        <SelectItem value='FLAT_MATES'>
-                          Owner/Property Manager
-                        </SelectItem> */}
+                        <SelectItem value='CO_LIVING _OWNER'>
+                          Co - Living Owner/Property Manager
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   )}

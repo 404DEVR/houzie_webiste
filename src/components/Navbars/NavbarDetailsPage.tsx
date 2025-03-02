@@ -3,7 +3,6 @@
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
 import { Bell, CircleFadingArrowUp, LogOut, User, Menu } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
@@ -68,7 +67,7 @@ const NavbarDetailsPage = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      let newOpacity = Math.max(1 - scrollPosition / 300, 0.9);
+      const newOpacity = Math.max(1 - scrollPosition / 300, 0.9);
       setOpacity(newOpacity);
     };
 

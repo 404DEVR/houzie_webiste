@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import useCountUp from '@/hooks/useCountUp';
+import MotionDiv from '@/components/MotionDiv';
 
 const StatsSection: React.FC = () => {
   const [targetSatisfactionRate, setTargetSatisfactionRate] = useState(0);
@@ -62,53 +63,53 @@ const StatsSection: React.FC = () => {
     <div ref={ref} className='bg-white py-12'>
       <div className='max-w-[90%] sm:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='lg:grid lg:grid-cols-5 lg:gap-8'>
-          <motion.div
+          <MotionDiv
             className='grid grid-cols-2 gap-16 col-span-2'
             variants={textVariants}
             initial='hidden'
             animate={inView ? 'visible' : 'hidden'}
           >
             <div>
-              <motion.p
+              <MotionDiv
                 className='text-7xl font-medium text-black'
                 variants={numberVariants}
               >
                 {satisfactionRate}
                 <span className='text-blue-600'>%</span>
-              </motion.p>
+              </MotionDiv>
               <p className='mt-1 text-lg text-gray-500'>Satisfaction Rate</p>
             </div>
             <div>
-              <motion.p
+              <MotionDiv
                 className='text-7xl font-medium text-black'
                 variants={numberVariants}
               >
                 {propertiesAvailable}
                 <span className='text-blue-600'>+</span>
-              </motion.p>
+              </MotionDiv>
               <p className='mt-1 text-lg text-gray-500'>Properties Available</p>
             </div>
             <div>
-              <motion.p
+              <MotionDiv
                 className='text-7xl font-medium text-black'
                 variants={numberVariants}
               >
                 {satisfiedCustomers}
                 <span className='text-blue-600'>+</span>
-              </motion.p>
+              </MotionDiv>
               <p className='mt-1 text-lg text-gray-500'>Satisfied Customers</p>
             </div>
             <div>
-              <motion.p
+              <MotionDiv
                 className='text-7xl font-medium text-black'
                 variants={numberVariants}
               >
                 {cities}
-              </motion.p>
+              </MotionDiv>
               <p className='mt-1 text-lg text-gray-500'>Cities</p>
             </div>
-          </motion.div>
-          <motion.div
+          </MotionDiv>
+          <MotionDiv
             className='mt-8 lg:mt-0 lg:col-span-3'
             variants={textVariants}
             initial='hidden'
@@ -118,7 +119,7 @@ const StatsSection: React.FC = () => {
             <button className='mt-6 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded inline-flex items-center'>
               Our Services
             </button>
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </div>

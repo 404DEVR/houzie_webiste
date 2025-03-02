@@ -1,5 +1,7 @@
+import { toast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { NextResponse } from 'next/server';
+import { title } from 'process';
 
 const CASHFREE_API_URL = 'https://sandbox.cashfree.com/pg/orders';
 
@@ -41,16 +43,14 @@ export async function POST(request: Request) {
       paymentSessionId: response.data.payment_session_id,
       orderId: response.data.order_id,
     });
-  } catch (error: any) {
-    console.error(
-      'Error creating order:',
-      error.response?.data || error.message
-    );
+  } catch {
+    toast({
+      title: 'Error creating order:',
+    });
 
     return NextResponse.json(
       {
         error: 'Failed to create order',
-        details: error.response?.data || error.message || 'Unknown error',
       },
       { status: 500 }
     );

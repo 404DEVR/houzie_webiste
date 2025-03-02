@@ -1,4 +1,3 @@
-// Review.tsx (Modified)
 import api from 'axios';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,22 +47,11 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
       if (setActiveTab) {
         setActiveTab('myListing');
       }
-    } catch (error: any) {
-      if (
-        error.response?.status === 401 ||
-        error.message === 'No access token available'
-      ) {
-        toast({
-          title: 'Session expired. Please log in again.',
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title:
-            'Unable to publish listing at this moment. Please try again later',
-          variant: 'destructive',
-        });
-      }
+    } catch {
+      toast({
+        title: 'Session expired. Please log in again.',
+        variant: 'destructive',
+      });
     }
   };
 

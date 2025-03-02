@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import MotionDiv from '@/components/MotionDiv';
 
 interface AccordionItem {
   title: string;
@@ -83,7 +84,7 @@ const SmartSearch: React.FC = () => {
 
   return (
     <>
-      <motion.div
+      <MotionDiv
         id='services'
         ref={sectionRef}
         initial='hidden'
@@ -93,7 +94,7 @@ const SmartSearch: React.FC = () => {
       >
         <div ref={accordionRef} className='w-full lg:w-1/2 p-8'>
           {accordionData.map((item, index) => (
-            <motion.div
+            <MotionDiv
               key={index}
               className={`${index === 4 ? 'mb-0 ' : 'mb-12'}`}
               variants={itemVariants}
@@ -109,7 +110,7 @@ const SmartSearch: React.FC = () => {
                   <FaPlus className='text-2xl' />
                 )}
               </div>
-              <motion.div
+              <MotionDiv
                 ref={(el: any) => (contentRefs.current[index] = el)}
                 initial={{ height: 0, opacity: 0 }}
                 animate={{
@@ -120,18 +121,18 @@ const SmartSearch: React.FC = () => {
                 className='mt-2 text-gray-600 overflow-hidden'
               >
                 {item.description}
-              </motion.div>
-            </motion.div>
+              </MotionDiv>
+            </MotionDiv>
           ))}
         </div>
 
-        <motion.div
+        <MotionDiv
           className='w-full max-w-[90%] mx-auto lg:w-1/2 relative'
           variants={itemVariants}
           style={{ height: accordionHeight }}
         >
           <AnimatePresence mode='wait'>
-            <motion.div
+            <MotionDiv
               key={activeSection}
               initial={{ opacity: 0, scale: 0.2 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -149,10 +150,10 @@ const SmartSearch: React.FC = () => {
                 objectFit='cover'
                 className='rounded-3xl'
               />
-            </motion.div>
+            </MotionDiv>
           </AnimatePresence>
-        </motion.div>
-      </motion.div>
+        </MotionDiv>
+      </MotionDiv>
       <div className='text-center max-w-[90%] mx-auto mt-28 mb-16'>
         <Button
           variant='default'

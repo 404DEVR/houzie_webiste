@@ -3,16 +3,11 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import '@/lib/env';
-
-import DiscoverProperties from '@/components/DiscoverProperties';
-import FAQsAndBlogs from '@/components/FAQsAndBlogs';
 import Footer from '@/components/Footer';
 import ExploreHouzie from '@/components/Hero/ExploreHouzie';
 import Howitworks from '@/components/Hero/Howitworks';
 import PropertyHero from '@/components/Hero/PropertyHero';
-import KnowHouzie from '@/components/KnowHouzie';
 import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
-import StartJourney from '@/components/StartJourney';
 
 import store from '@/redux/store';
 import FeatureHero from '@/components/Hero/FeatureHero';
@@ -42,10 +37,6 @@ export default function HomePage() {
         <ComparisonTable />
         <StatsSection />
         <ExploreHeroSection />
-        {/* <KnowHouzie />
-        <DiscoverProperties />
-        <StartJourney />
-        <FAQsAndBlogs /> */}
         <Footer />
       </main>
     </Provider>

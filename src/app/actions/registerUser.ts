@@ -1,20 +1,20 @@
 'use server';
 import { z } from 'zod';
 
-const RegisterSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email format'),
-  phoneNumber: z
-    .string()
-    .regex(
-      /^\+91\d{10}$/,
-      'Invalid phone number format (should be +91 followed by 10 digits)'
-    ),
-  aadharNumber: z
-    .string()
-    .regex(/^\d{12}$/, 'Invalid Aadhar number (should be 12 digits)'),
-  role: z.enum(['ADMIN', 'USER'], { required_error: 'Role is required' }),
-});
+// const RegisterSchema = z.object({
+//   name: z.string().min(1, 'Name is required'),
+//   email: z.string().email('Invalid email format'),
+//   phoneNumber: z
+//     .string()
+//     .regex(
+//       /^\+91\d{10}$/,
+//       'Invalid phone number format (should be +91 followed by 10 digits)'
+//     ),
+//   aadharNumber: z
+//     .string()
+//     .regex(/^\d{12}$/, 'Invalid Aadhar number (should be 12 digits)'),
+//   role: z.enum(['ADMIN', 'USER'], { required_error: 'Role is required' }),
+// });
 
 export async function registerUser() {
   try {
