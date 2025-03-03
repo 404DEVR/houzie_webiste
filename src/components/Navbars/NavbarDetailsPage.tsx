@@ -2,10 +2,10 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { Bell, CircleFadingArrowUp, LogOut, User, Menu } from 'lucide-react';
+import { Bell, CircleFadingArrowUp, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
-import React, { useEffect, useState, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';

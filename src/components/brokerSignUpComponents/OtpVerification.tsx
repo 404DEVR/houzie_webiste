@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import React, { useState } from 'react';
+
 import { toast } from '@/hooks/use-toast';
+
 import { Button } from '@/components/ui/button';
 import {
   CardContent,
@@ -20,7 +21,6 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   phoneNumber,
   onVerificationSuccess,
 }) => {
-  const router = useRouter();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
 
   const handleChange = (element: HTMLInputElement, index: number) => {
@@ -60,7 +60,6 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
         });
       }
     } catch (error) {
-      console.error('OTP verification error:', error);
       toast({
         title: 'Verification Failed',
         description: 'An error occurred during verification.',

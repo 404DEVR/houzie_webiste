@@ -1,6 +1,6 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 
 import { setLocation } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
-import Image from 'next/image';
 
 const SearchBar = () => {
   const router = useRouter();

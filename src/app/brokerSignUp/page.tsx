@@ -43,8 +43,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
-
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -140,7 +138,6 @@ const SignUpForm: React.FC = () => {
         description: 'Please verify your phone number.',
       });
     } catch (error) {
-      console.log(error);
       setError(
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
@@ -403,7 +400,7 @@ const SignUpForm: React.FC = () => {
                           PG Owner/Property Manager
                         </SelectItem>
                         <SelectItem value='CO_LIVING _OWNER'>
-                          Co - Living Owner/Property Manager
+                          Co - Living Owner/Property Manager
                         </SelectItem>
                       </SelectContent>
                     </Select>

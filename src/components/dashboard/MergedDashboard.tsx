@@ -15,6 +15,7 @@ import {
   YAxis,
 } from 'recharts';
 
+import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -87,7 +88,7 @@ const MergedDashboard: React.FC = () => {
 
         setCardData(newCardData);
       } catch (error) {
-        console.error('Error fetching data:');
+        toast({ title: 'Error fetching data:' });
       }
     };
 

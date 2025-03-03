@@ -112,7 +112,9 @@ const DashboardGraph = () => {
               tickLine={false}
               tick={{ fontSize: 10 }}
             />
-            <Tooltip formatter={(value: any) => [`${value * 100}%`, 'Value']} />
+            <Tooltip
+              formatter={(value: number) => [`${value * 100}%`, 'Value']}
+            />
             <Area
               type='monotone'
               dataKey='value'

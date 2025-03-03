@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { motion } from 'framer-motion';
+
 import useCountUp from '@/hooks/useCountUp';
+
 import MotionDiv from '@/components/MotionDiv';
 
 const StatsSection: React.FC = () => {

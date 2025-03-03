@@ -1,19 +1,9 @@
 'use client';
 
 import axios from 'axios';
-import {
-  Bath,
-  Bed,
-  Building2,
-  Edit,
-  Eye,
-  Home,
-  Trash2,
-  TrendingUp,
-} from 'lucide-react';
+import { Bath, Bed, Building2, Home, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
@@ -40,7 +30,6 @@ const transformString = (str: string | null | undefined) => {
 };
 
 const MyListings = () => {
-  const router = useRouter();
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
@@ -278,9 +267,9 @@ const MyListings = () => {
     }
   };
 
-  const handleViewDetails = (id) => {
-    router.push(`/property/${id}`);
-  };
+  // const handleViewDetails = (id) => {
+  //   router.push(`/property/${id}`);
+  // };
 
   const handleDelete = async (id: string) => {
     try {

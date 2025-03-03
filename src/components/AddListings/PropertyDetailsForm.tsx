@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { cn } from '@/lib/utils'; // Import cn function
+import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
@@ -53,7 +53,6 @@ import { AppDispatch, RootState } from '@/redux/store';
 
 const PropertyDetailsForm = ({
   handleNext,
-  handleBack,
   page,
 }: PropertyDetailsForminteface) => {
   const [fieldErrors, setFieldErrors] = useState({});
@@ -737,7 +736,7 @@ const PropertyDetailsForm = ({
             });
             handleNext();
           } else {
-            console.error('Failed to update listing:', response.status);
+            toast({ title: 'Failed to update listing:' });
           }
         } else {
           toast({
@@ -747,7 +746,7 @@ const PropertyDetailsForm = ({
           handleNext();
         }
       } else {
-        console.error('Initial property details are not available');
+        toast({ title: 'Initial property details are not available' });
       }
     } catch (error) {
       toast({

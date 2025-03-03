@@ -3,7 +3,6 @@
 import axios from 'axios'; // Import Axios
 import { Camera } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { toast } from '@/hooks/use-toast';
@@ -28,7 +27,6 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const params = useParams();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -45,7 +43,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
           response.data.phoneNumber ? response.data.phoneNumber : ''
         );
       } catch (error) {
-        console.error('Failed to fetch profile:');
+        toast({ title: 'Failed to fetch profile:' });
         // Handle error appropriately (e.g., display an error message)
       } finally {
         setIsLoading(false);
@@ -53,7 +51,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
     };
 
     fetchProfile();
-  }, [auth?.userid]);
+  }, [auth?.userid, auth?.accessToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,7 +82,6 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
         alert('Profile Updated Successfully!');
       }
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Failed to Update',
         description: 'Failed to update profile. Please try again.',

@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { useAnimation } from 'framer-motion';
 import { ArrowRight, House } from 'lucide-react';
 import Image from 'next/image';
+import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+import MotionDiv from '@/components/MotionDiv';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import MotionDiv from '@/components/MotionDiv';
 
 const HeroText = () => {
   const controls = useAnimation();

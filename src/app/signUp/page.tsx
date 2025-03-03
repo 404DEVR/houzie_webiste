@@ -52,7 +52,6 @@ const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     getValues,
     formState: { errors },

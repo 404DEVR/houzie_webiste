@@ -17,7 +17,6 @@ import { Tabs, TabsContent } from '@/components/ui/tabs';
 
 import Property from '@/interfaces/Interface';
 import store from '@/redux/store';
-import useAuth from '@/hooks/useAuth';
 
 export default function DetailsPage() {
   const { filters, resetFilters } = useFilters();
@@ -90,7 +89,7 @@ export default function DetailsPage() {
 
   useEffect(() => {
     fetchProperties();
-  }, [filters]); //Now this will trigger when ANY filter changes
+  }, [filters]);
 
   useEffect(() => {
     async function preloadImages() {

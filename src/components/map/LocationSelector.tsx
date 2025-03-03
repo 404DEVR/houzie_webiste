@@ -1,32 +1,11 @@
 'use client';
 
-import L from 'leaflet';
-import { useState } from 'react';
-import { Marker, useMapEvents } from 'react-leaflet';
-import { useDispatch, useSelector } from 'react-redux';
-
 import 'leaflet/dist/leaflet.css';
 
-import { updateAddPropertyLocation } from '@/redux/slices/formslices';
-import { AppDispatch, RootState } from '@/redux/store';
-
-const customIcon = new L.Icon({
-  iconUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
 const LocationSelector = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const propertyLocation = useSelector(
-    (state: RootState) => state.addForm.propertyLocation
-  );
-  const [position, setPosition] = useState<[number, number]>(
-    propertyLocation.latitude && propertyLocation.longitude
-      ? [propertyLocation.latitude, propertyLocation.longitude]
-      : [19.076, 72.8777] // Default to Mumbai
-  );
+  // const propertyLocation = useSelector(
+  //   (state: RootState) => state.addForm.propertyLocation
+  // );
 
   // const LocationMarker = () => {
   //   useMapEvents({

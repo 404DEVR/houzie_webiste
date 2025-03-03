@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
 import React from 'react';
+
+import { Button } from '@/components/ui/button';
 
 const ComparisonTable: React.FC = () => {
   const features = [

@@ -161,7 +161,6 @@ const PropertyComponentSearchbar = () => {
   );
 
   const CheckBoxPropertyType = ({
-    title,
     options,
     category,
   }: {

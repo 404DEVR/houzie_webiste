@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import Brokerdetail from '@/components/dashboard/Brokerdetail';
@@ -27,7 +28,7 @@ export default function Dashboard() {
         ); // Fetch data from API
         setBrokerData(response.data);
       } catch (error) {
-        console.error('Failed to fetch broker data:', error);
+        toast({ title: 'Failed to fetch broker data:' });
         // Handle error appropriately (e.g., display an error message)
       } finally {
         setIsLoading(false);
@@ -35,7 +36,7 @@ export default function Dashboard() {
     };
 
     fetchBrokerData();
-  }, [brokerid]);
+  }, [brokerid, auth?.accessToken]);
 
   const capitalizeName = (name: string | undefined) => {
     if (!name) return '';

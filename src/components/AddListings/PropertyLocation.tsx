@@ -104,9 +104,6 @@ const PropertyLocation = ({
     dispatch,
   ]);
 
-  const formData = useSelector((state: RootState) => state.addForm);
-
-  const [isValidAddress, setIsValidAddress] = useState(false); // state to track if the address is entered
   const [isLocationSelected, setIsLocationSelected] = useState(false);
 
   // useEffect(() => {
@@ -241,7 +238,7 @@ const PropertyLocation = ({
           // handleNext();
         }
       } else {
-        console.error('Initial property location is not available');
+        toast({ title: 'Initial property location is not available' });
       }
     } catch (error) {
       toast({

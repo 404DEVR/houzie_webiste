@@ -1,11 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import SearchBar from '@/components/SearchBar/SearchBar';
 import MotionDiv from '@/components/MotionDiv';
+import SearchBar from '@/components/SearchBar/SearchBar';
 
 export default function PropertyHero() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -59,7 +58,7 @@ export default function PropertyHero() {
         </video>
       </div>
 
-      <div className='container mx-auto px-4 mt-48 mb-10'>
+      <div className='container mx-auto px-4 mt-32 md:mt-48 mb-10'>
         <MotionDiv
           className='text-center mb-8'
           initial='hidden'
@@ -75,13 +74,13 @@ export default function PropertyHero() {
           }}
         >
           <MotionDiv
-            className='text-[60px] lg:text-[90px] font-normal leading-snug text-[#DBDBDB]'
+            className='text-[60px] lg:text-[90px] font-normal leading-none md:leading-snug text-[#DBDBDB]'
             variants={textVariants}
           >
             Find. Move. Settle.
           </MotionDiv>
           <MotionDiv
-            className='text-[60px] lg:text-[100px] leading-snug mx-auto text-white'
+            className='text-[60px] lg:text-[100px] leading-none md:leading-snug mx-auto text-white'
             variants={textVariants}
           >
             Renting Simplified!

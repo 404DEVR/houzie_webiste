@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useSpring } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 const useCountUp = (end: number, duration = 2000) => {
   const [count, setCount] = useState(0);

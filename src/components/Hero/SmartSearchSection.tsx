@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { AnimatePresence, useInView } from 'framer-motion';
 import Image from 'next/image';
-import { FaPlus, FaMinus } from 'react-icons/fa';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useRef, useState } from 'react';
+import { FaMinus, FaPlus } from 'react-icons/fa';
+
 import MotionDiv from '@/components/MotionDiv';
+import { Button } from '@/components/ui/button';
 
 interface AccordionItem {
   title: string;

@@ -7,7 +7,6 @@ import { ProgressBarProps } from '@/interfaces/PropsInterface';
 const ProgressBar: React.FC<ProgressBarProps> = ({
   checkpoints,
   currentpage,
-  setCurrentPage,
   totalPages,
   page,
 }) => {
@@ -46,7 +45,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         {checkpoints.map((checkpoint, index) => {
           const isCompleted = checkpoint.placement < currentpage;
           const isCurrent = checkpoint.placement === currentpage;
-          const isPending = checkpoint.placement > currentpage;
 
           const circleColor = isCompleted
             ? 'bg-[#00C52E]'

@@ -36,8 +36,6 @@ const VerificationForm = ({
     (state: RootState) => state.addForm.verification
   );
 
-  const formData = useSelector((state: RootState) => state.addForm);
-
   const handleDateChange = (date: Date | undefined) => {
     dispatch(
       updateAddVerification({ selectedDate: date?.toISOString() || null })

@@ -1,5 +1,6 @@
+import { useAnimation } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+
 import MotionDiv from '@/components/MotionDiv';
 
 const ProcessComponent = () => {
@@ -7,6 +8,8 @@ const ProcessComponent = () => {
   const ref = useRef(null);
 
   useEffect(() => {
+    const currentRef = ref.current; // Capture the current value
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -16,13 +19,13 @@ const ProcessComponent = () => {
       { threshold: 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [controls]);

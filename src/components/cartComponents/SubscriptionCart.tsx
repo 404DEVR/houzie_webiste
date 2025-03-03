@@ -1,11 +1,8 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import {
-  selectSelectedSubscription,
-  selectSubscription,
-} from '@/redux/slices/subscriptionSlice';
+import { selectSubscription } from '@/redux/slices/subscriptionSlice';
 
 interface Subscription {
   id: string;
@@ -17,7 +14,6 @@ interface Subscription {
 
 const SubscriptionCart: React.FC = () => {
   const router = useRouter();
-  const selectedSubscription = useSelector(selectSelectedSubscription);
   const dispatch = useDispatch();
 
   const premiumSubscription: Subscription = {

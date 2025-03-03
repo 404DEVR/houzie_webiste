@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const PaymentStatus = () => {
   const router = useRouter();
@@ -38,7 +38,6 @@ const PaymentStatus = () => {
           );
         }
       } catch (error) {
-        console.error('Error verifying payment status:', error);
         setStatus('Error occurred.');
         setTimeout(() => router.push('/payment-failure'), 2000);
       }

@@ -1,11 +1,14 @@
-// app/cart/page.tsx
 'use client';
+
 import { load } from '@cashfreepayments/cashfree-js';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,9 +23,6 @@ import {
   removeSubscription,
   selectSelectedSubscription,
 } from '@/redux/slices/subscriptionSlice';
-import useAuth from '@/hooks/useAuth';
-import { title } from 'process';
-import { toast } from '@/hooks/use-toast';
 
 const CartPage = () => {
   const { auth } = useAuth();

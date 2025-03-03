@@ -1,5 +1,6 @@
 'use client';
 
+import { Toast } from '@radix-ui/react-toast';
 import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
 import { CiMail } from 'react-icons/ci';
 
+import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import LeadForm from '@/components/detailspage/LeadFrom';
@@ -47,7 +49,7 @@ const ProfileCard = ({
         const data = response.data;
         setStats(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        toast({ title: 'Error fetching data:' });
       }
     };
     fetchData();
@@ -67,7 +69,7 @@ const ProfileCard = ({
         );
         setBrokerData(response.data);
       } catch (error) {
-        console.error('Failed to fetch broker data:', error);
+        toast({ title: 'Failed to fetch broker data:' });
       } finally {
         setIsLoading(false);
       }
@@ -91,7 +93,7 @@ const ProfileCard = ({
         );
         setIsConnected(response.data.isConnected);
       } catch (error) {
-        console.error('Error checking connection status:', error);
+        toast({ title: 'Error checking connection status:' });
         setIsConnected(false);
       }
     };
@@ -119,7 +121,7 @@ const ProfileCard = ({
       });
       setIsConnected(true); // Update connection status after lead submission
     } catch (error) {
-      console.error('Error submitting lead:', error);
+      toast({ title: 'Error submitting lead:' });
     }
   };
 
@@ -136,13 +138,13 @@ const ProfileCard = ({
       );
       setIsConnected(true);
     } catch (error) {
-      console.error('Error connecting:', error);
+      Toast({ title: 'Error connecting:' });
     }
   };
 
   const handleEnquire = () => {
     // Implement enquiry logic here (e.g., open a modal, navigate to a page)
-    console.log('Enquire button clicked');
+    toast({ title: 'Enquire button clicked' });
     // You might want to open a modal or redirect to an enquiry page here.
   };
 

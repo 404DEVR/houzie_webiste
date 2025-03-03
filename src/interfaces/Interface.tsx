@@ -48,8 +48,8 @@ export interface PropertyPost {
   propertyType: string;
   mainImage: string;
   photos: string[];
-  isActive: boolean;
-  views: number;
+  isActive?: boolean;
+  views?: number;
   isPreoccupied: boolean;
   price: number;
   security: number;
@@ -72,13 +72,13 @@ export interface PropertyPost {
   amenities: string[];
   features: string[];
   furnishing: string;
-  furnishingExtras: any[];
+  furnishingExtras: string[];
   preferredTenant: string;
-  locationId: string;
-  brokerId: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
+  locationId?: string;
+  brokerId?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
   location: {
     id: string;
     city: string;

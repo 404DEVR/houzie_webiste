@@ -1,20 +1,19 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
-import { MoveUpRight } from 'lucide-react';
 import { useAnimation, useInView } from 'framer-motion';
+import { MoveUpRight } from 'lucide-react';
+import Image from 'next/image';
+import React, { useRef } from 'react';
+
+import MotionDiv from '@/components/MotionDiv'; // Import the MotionDiv component
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-
-import MotionDiv from '@/components/MotionDiv'; // Import the MotionDiv component
 
 const HeroSection = () => {
   const ref = useRef(null);
@@ -192,7 +191,7 @@ const HeroSection = () => {
                   {tooltipContent.getStarted}
                 </TooltipContent>
               </Tooltip>
-              <div className='bg-blue-500 hover:bg-blue-600 text-black text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 flex justify-center items-center ml-2'>
+              <div className='hidden md:flex bg-blue-500 hover:bg-blue-600 text-black text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 justify-center items-center'>
                 <MoveUpRight />
               </div>
             </div>

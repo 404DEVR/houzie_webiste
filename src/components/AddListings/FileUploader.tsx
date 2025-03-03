@@ -7,7 +7,6 @@ import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
-import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -41,7 +40,6 @@ const FileUploader = ({
   page,
   setIsDialogOpen,
 }: FileUploaderprops) => {
-  const { auth } = useAuth();
   const dispatch = useDispatch();
   const addphotos = useSelector((state: RootState) => state.addForm.photos);
   const editphotos = useSelector((state: RootState) => state.editForm.photos);

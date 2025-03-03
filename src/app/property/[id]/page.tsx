@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import ItemGrid from '@/components/cards/IconGrid';
@@ -77,7 +78,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
         const data = await response.json();
         setPropertyData(data);
       } catch (error) {
-        console.error('Error fetching property data:');
+        toast({ title: 'Error fetching property data:' });
       } finally {
         setIsLoading(false);
       }

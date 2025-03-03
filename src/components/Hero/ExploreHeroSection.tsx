@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useRef } from 'react';
 import { useInView } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
+import React, { useRef } from 'react';
+
+import { cn } from '@/lib/utils';
+
 import MotionDiv from '@/components/MotionDiv';
 
 interface CardProps {
