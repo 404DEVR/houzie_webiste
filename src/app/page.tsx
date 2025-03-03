@@ -10,6 +10,7 @@ import ExploreHeroSection from '@/components/Hero/ExploreHeroSection';
 import ExploreHouzie from '@/components/Hero/ExploreHouzie';
 import FeatureHero from '@/components/Hero/FeatureHero';
 import Howitworks from '@/components/Hero/Howitworks';
+import InfiniteCardScroll from '@/components/Hero/InfiniteCardScroll';
 import PropertyHero from '@/components/Hero/PropertyHero';
 import SmartSearchSection from '@/components/Hero/SmartSearchSection';
 import StatsSection from '@/components/Hero/StatsSection';
@@ -32,6 +33,7 @@ export default function HomePage() {
         <NavbarDetailsPage />
         <PropertyHero />
         <ExploreHouzie />
+        <InfiniteCardScroll />
         <Howitworks />
         <FeatureHero />
         <SmartSearchSection />

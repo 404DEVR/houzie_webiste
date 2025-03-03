@@ -20,9 +20,9 @@ export function ScalableImageCard({
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         />
       </div>
-      <div className='absolute top-4 left-4 px-4 py-2 bg-gray-800/60 rounded-md'>
+      {/* <div className='absolute top-4 left-4 px-4 py-2 bg-gray-800/60 rounded-md'>
         <span className='text-white text-lg font-medium'>{name}</span>
-      </div>
+      </div> */}
     </Card>
   );
 }
