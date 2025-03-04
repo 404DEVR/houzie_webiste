@@ -18,6 +18,7 @@ import SettingsPage from '@/components/settings/SettingsPage';
 import { Button } from '@/components/ui/button';
 
 import store from '@/redux/store';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const BrokerContent = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -63,16 +64,22 @@ const BrokerContent = () => {
             Add New Listing
           </Button>
 
-          <Button
-            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
-              activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
-            }`}
-            variant='ghost'
-            onClick={() => handleTabChange('profile')}
-          >
-            <UserIcon className='mr-2 h-4 w-4' />
-            Profile
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+                  activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
+                }`}
+                variant='ghost'
+              >
+                <UserIcon className='mr-2 h-4 w-4' />
+                Profile
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-[425px] shadow-md'>
+              <ProfileForm />
+            </DialogContent>
+          </Dialog>
 
           <Button
             className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
@@ -92,7 +99,6 @@ const BrokerContent = () => {
           {activeTab === 'addListing' && (
             <AddListings setActiveTab={setActiveTab} />
           )}
-          {activeTab === 'profile' && <ProfileForm />}
           {activeTab === 'settings' && <SettingsPage />}
         </div>
       </div>

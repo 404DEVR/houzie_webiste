@@ -515,6 +515,12 @@ const PropertyDetailsForm = ({
     { label: 'Flat/Apartment', value: 'FLAT_APARTMENT', url: '/svg/flat.svg' },
   ];
 
+  const preoccupiedpropertyOptions = [
+    { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
+    { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+    { label: 'Flat/Apartment', value: 'FLAT_APARTMENT', url: '/svg/flat.svg' },
+  ];
+
   const lockInPeriod = [
     { label: '15 Days', value: 'FIFTEEN_DAYS', url: '/svg/builder.svg' },
     { label: '1 Month', value: 'ONE_MONTH', url: '/svg/villa.svg' },
@@ -641,8 +647,6 @@ const PropertyDetailsForm = ({
       case 'PREOCCUPIED_PROPERTY':
         return [
           ...commonFields,
-          'roomType',
-          'sharingType',
           'units',
           'roomSize',
           'preoccupiedPropertyType',
@@ -807,7 +811,7 @@ const PropertyDetailsForm = ({
   };
 
   return (
-    <Card className='w-full max-w-4xl my-6 mx-auto md:p-8'>
+    <Card className='w-full max-w-4xl my-6 md:my-0 mx-auto md:p-8'>
       <CardHeader>
         <CardTitle className='text-2xl font-bold'>Property Details</CardTitle>
         <CardDescription>Enter details about the property.</CardDescription>
@@ -906,8 +910,7 @@ const PropertyDetailsForm = ({
           <div className='transition-opacity duration-500 ease-in-out flex flex-col gap-6'>
             {/* Room Type */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
+              propertyDetails.propertyType === 'PG') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Room Type<span className='text-red-500'>*</span>
@@ -939,8 +942,7 @@ const PropertyDetailsForm = ({
 
             {/* Sharing Type */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
+              propertyDetails.propertyType === 'PG') && (
               <div>
                 <Label className='text-lg font-bold'>
                   Sharing Type<span className='text-red-500'>*</span>
@@ -987,11 +989,11 @@ const PropertyDetailsForm = ({
                   }}
                   required
                 >
-                  <SelectTrigger className='w-full border focus:outline-none focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
+                  <SelectTrigger className='w-full border focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
                     <SelectValue placeholder='Select a preoccupied property type' />
                   </SelectTrigger>
                   <SelectContent>
-                    {propertyOptions.map((option) => (
+                    {preoccupiedpropertyOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         <div className='flex items-center'>
                           <Image
@@ -1615,14 +1617,15 @@ const PropertyDetailsForm = ({
             <Tooltip>
               <TooltipTrigger className='cursor-not-allowed'>
                 <Button
+                  variant='outline'
                   onClick={handleSubmit}
-                  className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+                  className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
                   // disabled={!isFormValid}
                 >
                   Next, Add Address
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className='bg-[#42A4AE] text-white'>
+              <TooltipContent className='bg-[#60a5fa] text-white'>
                 <p>Please fill out all required fields to proceed.</p>
               </TooltipContent>
             </Tooltip>
@@ -1630,7 +1633,7 @@ const PropertyDetailsForm = ({
         ) : page === 'edit' ? (
           <Button
             onClick={handleEdit}
-            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
             // disabled={!isFormValid}
           >
             Edit And Next
@@ -1638,7 +1641,7 @@ const PropertyDetailsForm = ({
         ) : (
           <Button
             onClick={handleSubmit}
-            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
             // disabled={!isFormValid}
           >
             Next, Add Address

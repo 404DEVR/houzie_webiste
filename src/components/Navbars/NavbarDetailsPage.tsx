@@ -175,16 +175,25 @@ const NavbarDetailsPage = () => {
         </div>
 
         <div className='hidden sm:flex items-center space-x-1 sm:space-x-2'>
-          <Link
-            href='/brokerSignUp'
-            className='py-1 px-2 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
-          >
-            Post Properties
-          </Link>
+          {!auth?.accessToken ? (
+            <Link
+              href='/brokerSignUp'
+              className='py-1 px-2 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+            >
+              Post Properties
+            </Link>
+          ) : (
+            <div
+              onClick={() => scrollToSection('hero')}
+              className='py-1 px-2 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+            >
+              Rent
+            </div>
+          )}
 
           <Button
             onClick={() => router.push('/signUp')}
-            className='bg-[#3675ff] text-white rounded-full text-sm sm:text-base py-1 px-2'
+            className='bg-[#3675ff] text-white rounded-full text-sm sm:text-base py-1 px-4'
           >
             Get Started
           </Button>
@@ -203,38 +212,35 @@ const NavbarDetailsPage = () => {
 
       {isMenuOpen && (
         <div className='sm:hidden bg-[#579AFF] px-4 py-3'>
-          <div
-            onClick={() => {
-              scrollToSection('feature');
-              setIsMenuOpen(false);
-            }}
-            className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors cursor-pointer'
-          >
-            Feature
-          </div>
-          <div
-            onClick={() => {
-              scrollToSection('services');
-              setIsMenuOpen(false);
-            }}
-            className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors cursor-pointer'
-          >
-            Services
-          </div>
+          {!auth?.accessToken ? (
+            <Link
+              href='/brokerSignUp'
+              className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors rounded-lg'
+            >
+              Post Properties
+            </Link>
+          ) : (
+            <>
+              <div
+                onClick={() => scrollToSection('hero')}
+                className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors rounded-lg  '
+              >
+                Rent
+              </div>
+              <Link
+                href='/broker'
+                className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors rounded-lg'
+              >
+                Post Property
+              </Link>
+            </>
+          )}
           <Link
             href='/about'
             className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors'
           >
             About
           </Link>
-          {auth && (
-            <Link
-              href='/broker'
-              className='block py-2 text-sm hover:bg-white hover:text-[#579AFF] transition-colors'
-            >
-              Post Property
-            </Link>
-          )}
         </div>
       )}
     </nav>

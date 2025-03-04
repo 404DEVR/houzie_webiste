@@ -6,10 +6,11 @@ import FileUploader from '@/components/AddListings/FileUploader';
 import PropertyDetailsForm from '@/components/AddListings/PropertyDetailsForm';
 import PropertyLocation from '@/components/AddListings/PropertyLocation';
 import Review from '@/components/AddListings/Review';
-import VerificationForm from '@/components/AddListings/VerificationForm';
-import ProgressBar from '@/components/ProgressBar';
 
 import { AddListingsProps } from '@/interfaces/PropsInterface';
+import { ProgressIndicator } from '@radix-ui/react-progress';
+import VerticalProgressBar from '@/components/VerticalProgressBar';
+import ProgressBar from '@/components/ProgressBar';
 
 const AddListings = ({
   page,
@@ -34,23 +35,27 @@ const AddListings = ({
             placement: 1,
           },
           {
-            label: 'Address',
+            label: 'Address & Photos',
             placement: 2,
           },
-          {
-            label: 'Photos',
-            placement: 3,
-          },
-          {
-            label: 'Verify',
-            placement: 4,
-          },
+          // {
+          //   label: 'Photos',
+          //   placement: 3,
+          // },
+          // {
+          //   label: 'Verify',
+          //   placement: 4,
+          // },
           {
             label: 'Review',
-            placement: 5,
+            placement: 3,
           },
         ];
   const [currentPage, setCurrentPage] = useState(1);
+  const steps =
+    page === 'edit'
+      ? ['Property Details', 'Photos']
+      : ['Property Details', 'Address & Photos', 'Review'];
   const totalPages = 6;
 
   const handleNext = () => {
@@ -88,47 +93,62 @@ const AddListings = ({
         </div>
       )}
 
-      <div className='md:max-w-4xl h-auto w-full px-1 md:mb-0 mb-16 py-1 md:py-8 md:px-8 mx-auto md:border border-gray-200 rounded-lg'>
-        <ProgressBar
-          page={page || ''}
-          currentpage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
-          checkpoints={ProgressBarCheckpoints}
-        />
+      <div className='md:flex md:space-x-8'>
+        {/* Progress Bar */}
+        <div className='md:w-1/4 w-full px-1 md:mb-0 mb-4 py-1 md:py-8 md:px-4 md:h-[350px] mx-auto md:border border-gray-200 rounded-lg md:sticky md:top-4'>
+          <VerticalProgressBar
+            page={page || ''}
+            currentpage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            checkpoints={ProgressBarCheckpoints}
+          />
+          <ProgressBar
+            page={page || ''}
+            currentpage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            checkpoints={ProgressBarCheckpoints}
+          />
+        </div>
+
+        {/* Content */}
+        <div className='md:w-3/4 w-full'>
+          {currentPage === 1 && (
+            <PropertyDetailsForm
+              handleNext={handleNext}
+              handleBack={handleBack}
+              page={page}
+            />
+          )}
+          {page !== 'edit' && currentPage === 2 && (
+            <PropertyLocation
+              handleNext={handleNext}
+              handleBack={handleBack}
+              page={page}
+              setIsDialogOpen={setIsDialogOpen}
+            />
+          )}
+          {page === 'edit' && currentPage === 2 && (
+            <FileUploader
+              handleNext={handleNext}
+              handleBack={handleBack}
+              page={page}
+              setIsDialogOpen={setIsDialogOpen}
+            />
+          )}
+          {/* {page !== 'edit' && currentPage === 4 && (
+            <VerificationForm handleNext={handleNext} handleBack={handleBack} />
+          )} */}
+          {page !== 'edit' && currentPage === 3 && (
+            <Review
+              handleBack={handleBack}
+              page={page}
+              setActiveTab={setActiveTab}
+            />
+          )}
+        </div>
       </div>
-      {currentPage === 1 && (
-        <PropertyDetailsForm
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-        />
-      )}
-      {page !== 'edit' && currentPage === 2 && (
-        <PropertyLocation
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-        />
-      )}
-      {(page === 'edit' ? currentPage === 2 : currentPage === 3) && (
-        <FileUploader
-          handleNext={handleNext}
-          handleBack={handleBack}
-          page={page}
-          setIsDialogOpen={setIsDialogOpen}
-        />
-      )}
-      {page !== 'edit' && currentPage === 4 && (
-        <VerificationForm handleNext={handleNext} handleBack={handleBack} />
-      )}
-      {page !== 'edit' && currentPage === 5 && (
-        <Review
-          handleBack={handleBack}
-          page={page}
-          setActiveTab={setActiveTab}
-        />
-      )}
     </div>
   );
 };

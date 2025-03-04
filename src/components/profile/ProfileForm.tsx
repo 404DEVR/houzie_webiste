@@ -95,11 +95,10 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
   return (
     <TooltipProvider>
-      <div className='container mx-auto pb-8 pt-4 '>
-        <div className='bg-white  p-6 md:w-[60%] mx-auto'>
-          <div className='flex flex-col md:flex-row items-start gap-16'>
-            {/* Avatar Section */}
-            <div className='flex flex-col items-center'>
+      <div className='mx-auto h-auto'>
+        <div className='bg-white p-6 mx-auto '>
+          <div className='flex flex-col items-center gap-16 relative shadow-lg shadow-white'>
+            <div className='flex flex-col items-center absolute -top-40'>
               <Avatar className='w-40 h-40 relative bg-gray-200 overflow-visible'>
                 <Image
                   src='/images/Dummy profile.png'
@@ -119,7 +118,6 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
               </Avatar>
             </div>
 
-            {/* Form Section */}
             <div className='w-full'>
               <h1 className='text-2xl font-semibold mb-4'>Profile</h1>
               <form onSubmit={handleSubmit} className='space-y-4'>
@@ -173,14 +171,14 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                 {page === 'user' ? (
                   <Button
                     type='submit'
-                    className='w-[50%] rounded-md text-white bg-[#42A4AE]'
+                    className='bg-[#f5f5fa] text-center text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
                   >
                     Save Changes
                   </Button>
                 ) : (
                   <Button
                     type='submit'
-                    className='w-[50%] rounded-md text-white bg-[#42A4AE]'
+                    className='bg-[#f5f5fa] text-center text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
                   >
                     Update Profile
                   </Button>

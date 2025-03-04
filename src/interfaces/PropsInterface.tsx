@@ -28,6 +28,7 @@ export interface PropertyLocationProps {
   handleNext: () => void;
   handleBack: () => void;
   page?: string;
+  setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface PropertyReviewProps {

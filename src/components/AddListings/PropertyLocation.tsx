@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
+import CurrentOccupantsProfile from '@/components/AddListings/CurrentOccupantsProfile';
+import FileUploader from '@/components/AddListings/FileUploader';
 import MapLocationSelecter from '@/components/map/MapLocationSelecter';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,6 +39,7 @@ const PropertyLocation = ({
   handleNext,
   handleBack,
   page,
+  setIsDialogOpen,
 }: PropertyLocationProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { auth } = useAuth();
@@ -260,12 +263,12 @@ const PropertyLocation = ({
   };
 
   return (
-    <Card className='w-full max-w-4xl my-6 mx-auto md:p-8'>
+    <Card className='w-full max-w-4xl my-6 md:my-0 mx-auto md:p-8'>
       <CardHeader>
         <CardTitle className='text-2xl font-bold'>Property Details</CardTitle>
       </CardHeader>
-      <CardContent className='grid gap-6'>
-        <div className='border rounded-md p-4'>
+      <CardContent className='grid'>
+        <div className='border rounded-xl p-8 mb-3'>
           <Label htmlFor='fullAddress' className='text-xl font-semibold mb-8'>
             Location
           </Label>
@@ -274,12 +277,20 @@ const PropertyLocation = ({
             initialLocation={getInitialLocation()}
           />
         </div>
+        <CurrentOccupantsProfile />
+        <FileUploader
+          handleNext={handleNext}
+          handleBack={handleBack}
+          page={page}
+          setIsDialogOpen={setIsDialogOpen}
+        />
       </CardContent>
+
       <CardFooter className='flex justify-end items-center gap-4'>
         <Button
           onClick={handleBack}
           variant='outline'
-          className='border-2 border-[#42A4AE] text-[#42A4AE]'
+          className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
         >
           Back
         </Button>
@@ -290,7 +301,7 @@ const PropertyLocation = ({
                 {page === 'edit' ? (
                   <Button
                     onClick={handleEdit}
-                    className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+                    className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
                     disabled={!isLocationSelected}
                   >
                     Edit And Next
@@ -298,14 +309,14 @@ const PropertyLocation = ({
                 ) : (
                   <Button
                     onClick={handleSubmit}
-                    className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+                    className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
                     disabled={!isLocationSelected}
                   >
                     Next, Add Address
                   </Button>
                 )}
               </TooltipTrigger>
-              <TooltipContent className='bg-[#42A4AE] text-white'>
+              <TooltipContent className='bg-[#60a5fa] text-white'>
                 {page === 'edit' ? (
                   <p>Please Update a location to proceed.</p>
                 ) : (
@@ -317,14 +328,14 @@ const PropertyLocation = ({
         ) : page === 'edit' ? (
           <Button
             onClick={handleEdit}
-            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
           >
             Edit And Next
           </Button>
         ) : (
           <Button
             onClick={handleSubmit}
-            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
           >
             Next, Add Address
           </Button>

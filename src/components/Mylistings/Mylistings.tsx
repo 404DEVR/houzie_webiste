@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { Listing, PropertyFeature } from '@/interfaces/Interface';
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
+import { useRouter } from 'next/navigation';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -30,6 +31,7 @@ const transformString = (str: string | null | undefined) => {
 };
 
 const MyListings = () => {
+  const router = useRouter();
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
@@ -398,10 +400,14 @@ const MyListings = () => {
                           </div>
                         </div>
 
-                        <div className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'>
+                        <Button
+                          variant='link'
+                          onClick={() => router.push(`/property?${listing.id}`)}
+                          className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
+                        >
                           <TrendingUp className='w-[17px] h-[17px]' />
                           Views and Leads
-                        </div>
+                        </Button>
 
                         <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
                           <Button

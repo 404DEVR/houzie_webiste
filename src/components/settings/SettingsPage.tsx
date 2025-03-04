@@ -2,8 +2,15 @@
 
 import { useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({
@@ -31,13 +38,10 @@ const SettingsPage = () => {
   return (
     <div className=' mx-auto pb-8 pt-0'>
       <Card className='max-w-2xl mx-auto border-none'>
-        <CardHeader className='space-y-1'>
-          <CardTitle className='text-2xl font-bold'>Settings</CardTitle>
-        </CardHeader>
         <CardContent className='grid gap-6'>
           {/* Account Settings */}
           <div className='space-y-4 border-b-2 pb-4'>
-            <h3 className='text-lg font-semibold mb-4'>Account Settings</h3>
+            <h3 className='text-2xl font-semibold mb-4'>Account Settings</h3>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='emailNotifications'
@@ -90,7 +94,7 @@ const SettingsPage = () => {
 
           {/* Privacy Settings */}
           <div className='space-y-4 border-b-2 pb-4'>
-            <h3 className='text-lg font-semibold mb-4'>Privacy Settings</h3>
+            <h3 className='text-2xl font-semibold mb-4'>Privacy Settings</h3>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='shareLocation'
@@ -144,7 +148,7 @@ const SettingsPage = () => {
 
           {/* Notification Preferences */}
           <div className='space-y-4 border-b-2 pb-4'>
-            <h3 className='text-lg font-semibold mb-4'>
+            <h3 className='text-2xl font-semibold mb-4'>
               Notification Preferences
             </h3>
             <div className='flex items-center justify-between'>
@@ -200,7 +204,7 @@ const SettingsPage = () => {
 
           {/* Security Settings */}
           <div className='space-y-4 pb-4'>
-            <h3 className='text-lg font-semibold mb-4'>Security Settings</h3>
+            <h3 className='text-2xl font-semibold mb-4'>Security Settings</h3>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='enableLoginAlerts'
@@ -251,6 +255,11 @@ const SettingsPage = () => {
             </div>
           </div>
         </CardContent>
+        <CardFooter className='flex justify-center items-center'>
+          <Button className='bg-[#f5f5fa] text-[#f66659] text-md font-semibold px-4 py-4 rounded-lg border-none'>
+            Delete Account
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

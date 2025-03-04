@@ -31,7 +31,10 @@ export default function PropertyHero() {
   };
 
   return (
-    <div className='relative min-h-[650px] flex items-center justify-center'>
+    <div
+      id='hero'
+      className='relative min-h-[650px] flex items-center justify-center'
+    >
       <div className='absolute inset-0 -z-10'>
         {!isVideoLoaded && (
           <Image

@@ -9,13 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { CardContent, CardFooter } from '@/components/ui/card';
 
 import { FileUploaderprops } from '@/interfaces/PropsInterface';
 import {
@@ -293,11 +287,12 @@ const FileUploader = ({
   const isContinueEnabled = photos.length > 0;
 
   return (
-    <Card className='rounded-xl bg-white md:p-8 shadow-sm max-w-4xl my-6 mx-auto border'>
-      <CardHeader>
-        <CardTitle className='text-2xl font-bold'>Upload Photos</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <>
+      {/* // <Card className='rounded-xl md:p-8 shadow-sm  my-6 md:my-0 mx-auto border '>
+    //   <CardHeader>
+    //     <CardTitle className='text-2xl font-bold'>Upload Photos</CardTitle>
+    //   </CardHeader> */}
+      <CardContent className='rounded-xl md:p-8 shadow-sm my-3 w-full border '>
         <div
           {...getRootProps()}
           className={`rounded-md p-8 text-center cursor-pointer border flex flex-col items-center justify-center border-dashed ${
@@ -367,32 +362,27 @@ const FileUploader = ({
           </div>
         )}
       </CardContent>
-      <CardFooter className='flex flex-col-reverse gap-y-4 md:flex-row justify-end items-center gap-x-4 mt-6'>
-        <Button
-          onClick={handleBack}
-          variant='outline'
-          className='border-2 border-[#42A4AE] text-[#42A4AE] w-full md:w-auto'
-        >
-          Back
-        </Button>
-        {page === 'edit' ? (
-          <Button
-            onClick={handleEdit}
-            className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
-          >
-            Edit And Next
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSubmit}
-            className='bg-[#42A4AE] text-white px-6 py-3 rounded-lg w-full md:w-auto'
-            disabled={!isContinueEnabled}
-          >
-            Continue
-          </Button>
+      <CardFooter className='flex flex-col-reverse gap-y-4 md:flex-row justify-end items-center gap-x-4'>
+        {page === 'edit' && (
+          <>
+            <Button
+              onClick={handleBack}
+              variant='outline'
+              className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleEdit}
+              className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+            >
+              Edit And Next
+            </Button>
+          </>
         )}
       </CardFooter>
-    </Card>
+    </>
+    // </Card>
   );
 };
 

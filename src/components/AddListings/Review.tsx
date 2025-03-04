@@ -56,7 +56,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
   };
 
   return (
-    <Card className='rounded-xl md:p-8 shadow-sm max-w-4xl my-6 mx-auto border border-gray-200'>
+    <Card className='rounded-xl md:p-8 shadow-sm max-w-4xl my-6 md:my-0 mx-auto border border-gray-200'>
       <CardHeader>
         <CardTitle className='text-2xl font-bold'>Review</CardTitle>
       </CardHeader>
@@ -73,13 +73,13 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
         <Button
           onClick={handleBack}
           variant='outline'
-          className='border-2 border-[#42A4AE] text-[#42A4AE] w-full md:w-auto'
+          className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
         >
           Back
         </Button>
         <Button
           onClick={handlePost}
-          className='bg-[#42A4AE] text-white px-4 font-normal py-4 rounded-lg'
+          className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
         >
           Post
         </Button>
