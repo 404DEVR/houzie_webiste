@@ -976,7 +976,7 @@ const PropertyDetailsForm = ({
             Property Type<span className='text-red-500'>*</span>
           </Label>
           <div className='flex flex-wrap gap-2 mt-2'>
-            {getPropetyTypes(auth && auth?.role).map((type) => (
+            {getPropetyTypes(auth?.role || '').map((type) => (
               <Button
                 key={type.value}
                 className={cn(
