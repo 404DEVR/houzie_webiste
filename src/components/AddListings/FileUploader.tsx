@@ -282,7 +282,6 @@ const FileUploader = ({
             description: 'Property details updated successfully.',
           });
           setIsDialogOpen && setIsDialogOpen(false);
-          window.location.reload();
         } else {
           console.error('Failed to update listing:', response.status);
           toast({
@@ -297,7 +296,6 @@ const FileUploader = ({
           description: 'No changes were made to the property details.',
         });
         setIsDialogOpen && setIsDialogOpen(false);
-        window.location.reload();
       }
     } catch (error) {
       console.error('Error during edit:', error);

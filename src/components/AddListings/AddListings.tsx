@@ -6,11 +6,10 @@ import FileUploader from '@/components/AddListings/FileUploader';
 import PropertyDetailsForm from '@/components/AddListings/PropertyDetailsForm';
 import PropertyLocation from '@/components/AddListings/PropertyLocation';
 import Review from '@/components/AddListings/Review';
+import ProgressBar from '@/components/ProgressBar';
+import VerticalProgressBar from '@/components/VerticalProgressBar';
 
 import { AddListingsProps } from '@/interfaces/PropsInterface';
-import { ProgressIndicator } from '@radix-ui/react-progress';
-import VerticalProgressBar from '@/components/VerticalProgressBar';
-import ProgressBar from '@/components/ProgressBar';
 
 const AddListings = ({
   page,

@@ -38,6 +38,7 @@ const MyListings = () => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const url = `https://api.houzie.in/broker/listings`;
+  const [refreshListings, setRefreshListings] = useState(false);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -65,7 +66,7 @@ const MyListings = () => {
     };
 
     fetchListings();
-  }, [auth?.accessToken, url]);
+  }, [auth?.accessToken, url, refreshListings]);
 
   const handleEdit = async (id) => {
     try {
@@ -270,9 +271,9 @@ const MyListings = () => {
     }
   };
 
-  // const handleViewDetails = (id) => {
-  //   router.push(`/property/${id}`);
-  // };
+  const handleViewDetails = (id) => {
+    router.push(`/property/${id}`);
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -403,7 +404,7 @@ const MyListings = () => {
 
                         <Button
                           variant='link'
-                          onClick={() => router.push(`/property/${listing.id}`)}
+                          onClick={() => handleViewDetails(listing.id)}
                           className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
                         >
                           <TrendingUp className='w-[17px] h-[17px]' />
@@ -434,7 +435,15 @@ const MyListings = () => {
             })}
         </div>
       )}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) {
+            setRefreshListings((prev) => !prev);
+          }
+        }}
+      >
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className='w-full sm:max-w-7xl h-[90%] my-auto overflow-y-auto'>
           <AddListings page='edit' setIsDialogOpen={setIsDialogOpen} />

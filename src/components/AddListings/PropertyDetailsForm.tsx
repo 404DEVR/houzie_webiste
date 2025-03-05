@@ -791,7 +791,7 @@ const PropertyDetailsForm = ({
     if (
       !isNaN(floorNumber) &&
       !isNaN(totalFloors) &&
-      floorNumber >= totalFloors
+      floorNumber <= totalFloors
     ) {
       errors['floornumber'] = true;
       errors['totalfloor'] = true;

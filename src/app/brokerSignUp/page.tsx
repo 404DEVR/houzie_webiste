@@ -106,7 +106,7 @@ const SignUpForm: React.FC = () => {
       phoneNumber: '+91',
       companyName: '',
       adharNumber: '',
-      role: 'REAL_ESTATE_AGENT',
+      role: 'BROKER',
     },
   });
 
@@ -404,10 +404,13 @@ const SignUpForm: React.FC = () => {
                         />
                       </SelectTrigger>
                       <SelectContent className='focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
-                        <SelectItem value='PROPERTY_OWNER'>Owner</SelectItem>
-                        <SelectItem value='REAL_ESTATE_AGENT'>
-                          Real estate agent
+                        <SelectItem value='PROPERTY_OWNER'>
+                          Property Owner
                         </SelectItem>
+                        <SelectItem value='BROKER'>Broker</SelectItem>
+                        {/* <SelectItem value='REAL_ESTATE_AGENT'>
+                          Real estate agent
+                        </SelectItem> */}
                         <SelectItem value='FLAT_MATES'>
                           Current occupant, looking for flatmates
                         </SelectItem>

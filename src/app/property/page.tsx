@@ -82,6 +82,7 @@ export default function DetailsPage() {
 
       setProperties(response.data.data);
       setLoading(false);
+      console.log(response.data.data);
     } catch (err) {
       setLoading(false);
     }
