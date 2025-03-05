@@ -396,7 +396,7 @@ const MyListings = () => {
                           <div className='mb-1'>
                             <p className='text-gray-500 text-xs'>Location:</p>
                             <span className='text-black text-2xl font-semibold'>
-                              Ghaziabad
+                              Gurgaon
                             </span>
                           </div>
                         </div>
