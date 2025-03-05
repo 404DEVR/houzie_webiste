@@ -403,7 +403,7 @@ const MyListings = () => {
 
                         <Button
                           variant='link'
-                          onClick={() => router.push(`/property?${listing.id}`)}
+                          onClick={() => router.push(`/property/${listing.id}`)}
                           className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
                         >
                           <TrendingUp className='w-[17px] h-[17px]' />
