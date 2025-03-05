@@ -12,6 +12,7 @@ import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
 import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
@@ -48,6 +55,15 @@ const formSchema = z.object({
 const SignUpForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const [showOTPForm, setShowOTPForm] = useState<boolean>(false);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [otp, setOtp] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1);
 
   const {
     register,
@@ -72,43 +88,119 @@ const SignUpForm = () => {
     }
   }, [setValue, getValues]);
 
+  // useEffect(() => {
+  //   const registrationComplete = localStorage.getItem('registrationComplete');
+  //   if (registrationComplete === 'true' && showOTPForm) {
+  //     router.push('/');
+  //   }
+  // }, [showOTPForm, router]);
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setError('');
+    setLoading(true);
+
     try {
-      await axios.post('https://api.houzie.in/auth/register', {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        phoneNumber: data.phoneNumber,
-        role: data.role,
+      const res = await fetch(`https://api.houzie.in/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.message || 'Registration failed');
+      }
+
+      setPhoneNumber(data.phoneNumber);
+      setEmail(data.email);
+      setShowOTPForm(true);
+      localStorage.setItem('registrationComplete', 'true');
+
       toast({
         title: 'Registration Successful',
-        description: 'You have successfully signed up. Redirecting...',
+        description: 'Please verify your phone number.',
       });
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : 'An unexpected error occurred'
+      );
+      toast({
+        title: 'Registration Failed',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInitiateLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch(`https://api.houzie.in/auth/login/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumber,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to send OTP');
+      }
+
+      setUserId(data.userId);
+      setStep(2);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await axios.post(
+        'https://api.houzie.in/auth/login/verify',
+        {
+          userId: userId,
+          otp: otp,
+        }
+      );
+      const userData = {
+        userid: result.data.user.id,
+        email: result.data.user.email,
+        accessToken: result.data.accessToken,
+        role: result.data.user.role,
+        refreshToken: result.data.refreshToken,
+        phoneNumber: result.data.user.phoneNumber,
+      };
+
+      login(userData);
+      localStorage.removeItem('registrationComplete');
+
       router.push('/');
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const responseData = error.response.data;
-        if (responseData.status === 'fail' && responseData.message) {
-          toast({
-            title: 'Registration Failed',
-            description: responseData.message,
-            variant: 'destructive',
-          });
-        } else {
-          toast({
-            title: 'Registration Failed',
-            description: 'An unexpected error occurred. Please try again.',
-            variant: 'destructive',
-          });
-        }
-      } else {
-        toast({
-          title: 'Registration Failed',
-          description: 'An unexpected error occurred. Please try again.',
-          variant: 'destructive',
-        });
-      }
+      setError(error instanceof Error ? error.message : 'Failed to verify OTP');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,88 +224,91 @@ const SignUpForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className='grid gap-4 w-[90%] mx-auto'>
-          <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-            <div className='grid gap-2'>
-              <Label htmlFor='name'>Name</Label>
-              <div className='relative'>
-                <User className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='name'
-                  placeholder='John Doe'
-                  type='text'
-                  className='pl-8'
-                  {...register('name')}
-                />
+          {!showOTPForm ? (
+            <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
+              <div className='grid gap-2'>
+                <Label htmlFor='name'>Name</Label>
+                <div className='relative'>
+                  <User className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='name'
+                    placeholder='John Doe'
+                    type='text'
+                    className='pl-8'
+                    {...register('name')}
+                  />
+                </div>
+                {errors.name && (
+                  <p className='text-red-500 text-sm'>{errors.name?.message}</p>
+                )}
               </div>
-              {errors.name && (
-                <p className='text-red-500 text-sm'>{errors.name?.message}</p>
-              )}
-            </div>
-            <div className='grid gap-2'>
-              <Label htmlFor='email'>Email Address</Label>
-              <div className='relative'>
-                <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='email'
-                  placeholder='hello@example.com'
-                  type='email'
-                  className='pl-8'
-                  {...register('email')}
-                />
+              <div className='grid gap-2'>
+                <Label htmlFor='email'>Email Address</Label>
+                <div className='relative'>
+                  <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='email'
+                    placeholder='hello@example.com'
+                    type='email'
+                    className='pl-8'
+                    {...register('email')}
+                  />
+                </div>
+                {errors.email && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.email?.message}
+                  </p>
+                )}
               </div>
-              {errors.email && (
-                <p className='text-red-500 text-sm'>{errors.email?.message}</p>
-              )}
-            </div>
-            <div className='grid gap-2'>
-              <Label htmlFor='password'>Password</Label>
-              <div className='relative'>
-                <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='password'
-                  placeholder='Password'
-                  type={showPassword ? 'text' : 'password'}
-                  className='pl-8'
-                  {...register('password')}
-                />
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
-                  onClick={() => setShowPassword(!showPassword)}
-                  type='button'
-                >
-                  <Eye className='h-4 w-4' />
-                  <span className='sr-only'>Show password</span>
-                </Button>
+              <div className='grid gap-2'>
+                <Label htmlFor='password'>Password</Label>
+                <div className='relative'>
+                  <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='password'
+                    placeholder='Password'
+                    type={showPassword ? 'text' : 'password'}
+                    className='pl-8'
+                    {...register('password')}
+                  />
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
+                    onClick={() => setShowPassword(!showPassword)}
+                    type='button'
+                  >
+                    <Eye className='h-4 w-4' />
+                    <span className='sr-only'>Show password</span>
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.password?.message}
+                  </p>
+                )}
               </div>
-              {errors.password && (
-                <p className='text-red-500 text-sm'>
-                  {errors.password?.message}
-                </p>
-              )}
-            </div>
-            {/* New Phone Number Field */}
-            <div className='grid gap-2'>
-              <Label htmlFor='phoneNumber'>Phone Number</Label>
-              <div className='relative'>
-                <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='phoneNumber'
-                  placeholder='Phone Number'
-                  type='tel'
-                  className='pl-8'
-                  {...register('phoneNumber')}
-                />
+              {/* New Phone Number Field */}
+              <div className='grid gap-2'>
+                <Label htmlFor='phoneNumber'>Phone Number</Label>
+                <div className='relative'>
+                  <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='phoneNumber'
+                    placeholder='Phone Number'
+                    type='tel'
+                    className='pl-8'
+                    {...register('phoneNumber')}
+                  />
+                </div>
+                {errors.phoneNumber && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.phoneNumber?.message}
+                  </p>
+                )}
               </div>
-              {errors.phoneNumber && (
-                <p className='text-red-500 text-sm'>
-                  {errors.phoneNumber?.message}
-                </p>
-              )}
-            </div>
 
-            {/* <div className='grid gap-2'>
+              {/* <div className='grid gap-2'>
               <Label htmlFor='role'>I am looking for</Label>
               <Controller
                 name='role'
@@ -234,45 +329,86 @@ const SignUpForm = () => {
                 )}
               />
             </div> */}
-            {/* <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
               <Checkbox id='keepSignedIn' {...register('keepSignedIn')} />
               <Label htmlFor='keepSignedIn'>Keep me signed in</Label>
             </div> */}
-          </form>
+            </form>
+          ) : (
+            <div className='grid gap-4'>
+              <CardDescription className='text-center mb-6'>
+                Please enter the OTP sent to your phone number {phoneNumber}
+              </CardDescription>
+              {step === 1 && (
+                <Button onClick={handleInitiateLogin} disabled={loading}>
+                  {loading ? 'Sending OTP...' : 'Send OTP'}
+                </Button>
+              )}
+              {step === 2 && (
+                <>
+                  <div className='flex gap-2 flex-col justify-center items-center text-center'>
+                    <Label htmlFor='otp' className='text-2xl mb-2'>
+                      Enter OTP
+                    </Label>
+                    <InputOTP maxLength={6}>
+                      <InputOTPGroup>
+                        {[0, 1, 2].map((index) => (
+                          <InputOTPSlot key={index} index={index} />
+                        ))}
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        {[3, 4, 5].map((index) => (
+                          <InputOTPSlot key={index} index={index} />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  <Button onClick={handleVerifyOTP} disabled={loading}>
+                    {loading ? 'Verifying...' : 'Verify OTP'}
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
         </CardContent>
         <CardFooter className='flex flex-col w-[90%] mx-auto items-center'>
-          <Button
-            size='custom'
-            className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
-            onClick={handleSubmit(onSubmit)}
-          >
-            Sign Up
-          </Button>
-          <div className='flex items-center justify-center w-full mt-4'>
-            <div className='border-t border-gray-400 flex-grow '></div>
-            <span className='mx-4 text-black'>Or</span>
-            <div className='border-t border-gray-400 flex-grow '></div>
-          </div>
-          <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
-            <Button
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <FcGoogle className='h-5 w-5 mr-2' /> Google
-            </Button>
-            <Button
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <Apple className='h-5 w-5 mr-2' /> Apple
-            </Button>
-            <Button
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <FaFacebook className='h-5 w-5 mr-2' /> Facebook
-            </Button>
-          </div>
+          {!showOTPForm && (
+            <>
+              <Button
+                size='custom'
+                className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
+                onClick={handleSubmit(onSubmit)}
+              >
+                Sign Up
+              </Button>
+              <div className='flex items-center justify-center w-full mt-4'>
+                <div className='border-t border-gray-400 flex-grow '></div>
+                <span className='mx-4 text-black'>Or</span>
+                <div className='border-t border-gray-400 flex-grow '></div>
+              </div>
+              <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
+                <Button
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <FcGoogle className='h-5 w-5 mr-2' /> Google
+                </Button>
+                <Button
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <Apple className='h-5 w-5 mr-2' /> Apple
+                </Button>
+                <Button
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <FaFacebook className='h-5 w-5 mr-2' /> Facebook
+                </Button>
+              </div>
+            </>
+          )}
         </CardFooter>
       </Card>
     </div>

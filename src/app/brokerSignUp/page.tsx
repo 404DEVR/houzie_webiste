@@ -116,12 +116,12 @@ const SignUpForm: React.FC = () => {
     }
   }, [setValue, getValues]);
 
-  useEffect(() => {
-    const registrationComplete = localStorage.getItem('registrationComplete');
-    if (registrationComplete === 'true' && showOTPForm) {
-      router.push('/');
-    }
-  }, [showOTPForm, router]);
+  // useEffect(() => {
+  //   const registrationComplete = localStorage.getItem('registrationComplete');
+  //   if (registrationComplete === 'true' && showOTPForm) {
+  //     router.push('/');
+  //   }
+  // }, [showOTPForm, router]);
 
   const onSubmit = async (data: FormData) => {
     setError('');
@@ -193,6 +193,7 @@ const SignUpForm: React.FC = () => {
       setUserId(data.userId);
       setStep(2);
     } catch (error) {
+      console.log(error);
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setLoading(false);
