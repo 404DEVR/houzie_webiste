@@ -21,14 +21,14 @@ const CustomInput = ({
   return (
     <div className='relative'>
       {label && (
-        <Label className='text-lg font-bold'>
+        <Label className='text-lg text-[#646464] font-normal'>
           {label} {required && <span className='text-red-500'>*</span>}
         </Label>
       )}
 
       <Input
         {...props}
-        className='placeholder:text-slate-700  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+        className='placeholder:text-[#646464] text-[#646464]  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
       />
 
       {unit && (

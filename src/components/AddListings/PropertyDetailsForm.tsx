@@ -291,22 +291,127 @@ const PropertyDetailsForm = ({
     setFieldErrors((prevErrors) => ({ ...prevErrors, features: false }));
   };
 
-  const propertyTypes = [
-    { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
-    { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
-    { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
-    {
-      label: 'Preoccupied Property',
-      value: 'PREOCCUPIED_PROPERTY',
-      url: '/svg/preoccupied.svg',
-    },
-    {
-      label: 'Flat/Apartment',
-      value: 'FLAT_APARTMENT',
-      url: '/svg/flat.svg',
-    },
-  ];
+  const getPropetyTypes = (role: string) => {
+    switch (role) {
+      case 'BROKER':
+        return [
+          {
+            label: 'Builder Floor',
+            value: 'BUILDER_FLOOR',
+            url: '/svg/builder.svg',
+          },
+          { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+          {
+            label: 'Preoccupied Property',
+            value: 'PREOCCUPIED_PROPERTY',
+            url: '/svg/preoccupied.svg',
+          },
+          {
+            label: 'Flat/Apartment',
+            value: 'FLAT_APARTMENT',
+            url: '/svg/flat.svg',
+          },
+        ];
+      case 'PROPERTY_OWNER':
+        return [
+          {
+            label: 'Builder Floor',
+            value: 'BUILDER_FLOOR',
+            url: '/svg/builder.svg',
+          },
+          { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+          {
+            label: 'Flat/Apartment',
+            value: 'FLAT_APARTMENT',
+            url: '/svg/flat.svg',
+          },
+        ];
+      case 'REAL_ESTATE_AGENT':
+        return [
+          {
+            label: 'Builder Floor',
+            value: 'BUILDER_FLOOR',
+            url: '/svg/builder.svg',
+          },
+          { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+          {
+            label: 'Preoccupied Property',
+            value: 'PREOCCUPIED_PROPERTY',
+            url: '/svg/preoccupied.svg',
+          },
+          {
+            label: 'Flat/Apartment',
+            value: 'FLAT_APARTMENT',
+            url: '/svg/flat.svg',
+          },
+        ];
+      case 'FLAT_MATES':
+        return [
+          {
+            label: 'Builder Floor',
+            value: 'BUILDER_FLOOR',
+            url: '/svg/builder.svg',
+          },
+          {
+            label: 'Flat/Apartment',
+            value: 'FLAT_APARTMENT',
+            url: '/svg/flat.svg',
+          },
+        ];
+      case 'PG_OWNER':
+        return [
+          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+        ];
+      case 'CO_LIVING_OWNER':
+        return [
+          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+        ];
+      default:
+        return [
+          {
+            label: 'Builder Floor',
+            value: 'BUILDER_FLOOR',
+            url: '/svg/builder.svg',
+          },
+          { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+          {
+            label: 'Preoccupied Property',
+            value: 'PREOCCUPIED_PROPERTY',
+            url: '/svg/preoccupied.svg',
+          },
+          {
+            label: 'Flat/Apartment',
+            value: 'FLAT_APARTMENT',
+            url: '/svg/flat.svg',
+          },
+        ];
+    }
+  };
+
+  // const propertyTypes = [
+  //   { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
+  //   { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+  //   { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+  //   { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+  //   {
+  //     label: 'Preoccupied Property',
+  //     value: 'PREOCCUPIED_PROPERTY',
+  //     url: '/svg/preoccupied.svg',
+  //   },
+  //   {
+  //     label: 'Flat/Apartment',
+  //     value: 'FLAT_APARTMENT',
+  //     url: '/svg/flat.svg',
+  //   },
+  // ];
 
   const getRoomTypes = (propertyType) => {
     switch (propertyType) {
@@ -529,39 +634,43 @@ const PropertyDetailsForm = ({
   ];
 
   const amenitiesList = [
-    { label: 'Wifi', value: 'WIFI', url: '/svg/wi-fi-icon.svg' },
-    { label: 'Power Backup', value: 'POWER_BACKUP', url: '/svg/charge.svg' },
+    { label: 'Wifi', value: 'WIFI', url: '/svg/material-symbols_wifi.svg' },
+    {
+      label: 'Power Backup',
+      value: 'POWER_BACKUP',
+      url: '/svg/ic_round-power.svg',
+    },
     {
       label: '4 Wheeler Parking',
       value: 'FOUR_WHEELER_PARKING',
-      url: '/svg/parking.svg',
+      url: '/svg/fluent_vehicle-car-parking-16-regular.svg',
     },
     {
       label: '2 Wheeler Parking',
       value: 'TWO_WHEELER_PARKING',
-      url: '/svg/parking (1).svg',
+      url: '/svg/material-symbols_directions-bike.svg',
     },
     {
       label: '24/7 Water Supply',
       value: 'WATER_SUPPLY_24_7',
-      url: '/svg/water supply.svg',
+      url: '/svg/famicons_water-sharp.svg',
     },
     {
       label: '24/7 Security',
       value: 'SECURITY_24_7',
-      url: '/svg/security.svg',
+      url: '/svg/healthicons_security-worker.svg',
     },
     {
       label: 'Daily House Keeping',
       value: 'DAILY_HOUSEKEEPING',
-      url: '/svg/house-keeping.svg',
+      url: '/svg/material-symbols-light_cleaning-bucket-rounded.svg',
     },
     {
       label: '24/7 CCTV Surveillance',
       value: 'CCTV',
-      url: '/svg/cctv.svg',
+      url: '/svg/ph_security-camera-fill.svg',
     },
-    { label: 'Meals', value: 'MEALS', url: '/svg/dinner.svg' },
+    { label: 'Meals', value: 'MEALS', url: '/svg/fluent_food-24-filled.svg' },
   ];
 
   const getTenantType = (propertyType) => {
@@ -828,7 +937,7 @@ const PropertyDetailsForm = ({
               onChange={handleInputChange}
               error={fieldErrors['title'] ? 'This field is required' : ''}
               className={cn(
-                'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                 {
                   'ring-2 ring-red-500 ring-offset-1': fieldErrors['title'],
                 }
@@ -849,7 +958,7 @@ const PropertyDetailsForm = ({
               onChange={handleInputChange}
               error={fieldErrors['description'] ? 'This field is required' : ''}
               className={cn(
-                'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                 {
                   'ring-2 ring-red-500 ring-offset-1':
                     fieldErrors['description'],
@@ -863,18 +972,18 @@ const PropertyDetailsForm = ({
 
         {/* Property Type */}
         <div className=''>
-          <Label className='text-lg font-bold'>
+          <Label className='text-lg text-[#646464] font-normal'>
             Property Type<span className='text-red-500'>*</span>
           </Label>
           <div className='flex flex-wrap gap-2 mt-2'>
-            {propertyTypes.map((type) => (
+            {getPropetyTypes(auth && auth?.role).map((type) => (
               <Button
                 key={type.value}
                 className={cn(
                   'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                   propertyDetails.propertyType === type.value
-                    ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                    ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                    : 'bg-white text-[#646464] border-gray-300 hover:bg-gray-100'
                 )}
                 onClick={() => handleButtonClick('propertyType', type.value)}
                 disabled={page === 'edit'}
@@ -884,13 +993,9 @@ const PropertyDetailsForm = ({
                   alt={type.label}
                   width={55}
                   height={55}
-                  className={`object-contain ${
-                    propertyDetails.propertyType === type.value
-                      ? 'brightness-0 invert'
-                      : ''
-                  }`}
+                  className={`object-contain `}
                 />
-                <div className='mt-2 text-center text-wrap'>{type.label}</div>
+                <div className=' text-center text-wrap'>{type.label}</div>
               </Button>
             ))}
           </div>
@@ -912,7 +1017,7 @@ const PropertyDetailsForm = ({
             {(propertyDetails.propertyType === 'CO_LIVING' ||
               propertyDetails.propertyType === 'PG') && (
               <div>
-                <Label className='text-lg font-bold'>
+                <Label className='text-lg text-[#646464] font-normal'>
                   Room Type<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex flex-wrap gap-2 mt-2'>
@@ -923,8 +1028,8 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.roomType === type.value
-                          ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-gray-700 '
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
                       )}
                       onClick={() => handleButtonClick('roomType', type.value)}
                     >
@@ -944,7 +1049,7 @@ const PropertyDetailsForm = ({
             {(propertyDetails.propertyType === 'CO_LIVING' ||
               propertyDetails.propertyType === 'PG') && (
               <div>
-                <Label className='text-lg font-bold'>
+                <Label className='text-lg text-[#646464] font-normal'>
                   Sharing Type<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex flex-wrap gap-2 mt-2'>
@@ -954,8 +1059,8 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.sharingType === type.value
-                          ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-gray-700 '
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
                         handleButtonClick('sharingType', type.value)
@@ -1022,7 +1127,7 @@ const PropertyDetailsForm = ({
               propertyDetails.propertyType === 'FLAT_APARTMENT' ||
               propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
-                <Label className='text-lg font-bold'>
+                <Label className='text-lg text-[#646464] font-normal'>
                   Configuration<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex flex-wrap gap-2 mt-2'>
@@ -1032,8 +1137,8 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.configuration === type.value
-                          ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-gray-700 '
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
                         handleButtonClick('configuration', type.value)
@@ -1066,7 +1171,7 @@ const PropertyDetailsForm = ({
                     onChange={handleInputChange}
                     error={fieldErrors['units'] ? 'This field is required' : ''}
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['units'],
@@ -1095,7 +1200,7 @@ const PropertyDetailsForm = ({
                       fieldErrors['roomSize'] ? 'This field is required' : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['roomSize'],
@@ -1109,7 +1214,10 @@ const PropertyDetailsForm = ({
 
             {/* Available From */}
             <div className='w-full lg:w-[48%] flex flex-col'>
-              <Label htmlFor='availableFrom' className='text-lg font-bold'>
+              <Label
+                htmlFor='availableFrom'
+                className='text-lg text-[#646464] font-normal'
+              >
                 Available From<span className='text-red-500'>*</span>
               </Label>
               <Popover>
@@ -1166,7 +1274,7 @@ const PropertyDetailsForm = ({
                       fieldErrors['bedroom'] ? 'This field is required' : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['bedroom'],
@@ -1188,7 +1296,7 @@ const PropertyDetailsForm = ({
                       fieldErrors['balcony'] ? 'This field is required' : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['balcony'],
@@ -1210,7 +1318,7 @@ const PropertyDetailsForm = ({
                       fieldErrors['bathroom'] ? 'This field is required' : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe]  ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['bathroom'],
@@ -1234,7 +1342,7 @@ const PropertyDetailsForm = ({
                         : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['maintenanceChargesAmount'],
@@ -1249,7 +1357,7 @@ const PropertyDetailsForm = ({
 
             {/* Furnishing Level */}
             <div>
-              <Label className='text-lg font-bold'>
+              <Label className='text-lg text-[#646464] font-normal'>
                 Furnishing Level<span className='text-red-500'>*</span>
               </Label>
               <div className='flex flex-wrap gap-2 mt-2'>
@@ -1259,8 +1367,8 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                       propertyDetails.furnishingLevel === level.value
-                        ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-gray-700 '
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] '
                     )}
                     onClick={() =>
                       handleButtonClick('furnishingLevel', level.value)
@@ -1281,7 +1389,9 @@ const PropertyDetailsForm = ({
             {(propertyDetails.furnishingLevel.includes('FULLY_FURNISHED') ||
               propertyDetails.furnishingLevel.includes('SEMI_FURNISHED')) && (
               <div>
-                <Label className='text-lg font-bold'>Furnishings</Label>
+                <Label className='text-lg text-[#646464] font-normal'>
+                  Furnishings
+                </Label>
                 <div className='flex flex-wrap gap-4 mt-2'>
                   {getFurnishings(propertyDetails.propertyType).map(
                     (furnishing) => (
@@ -1290,8 +1400,8 @@ const PropertyDetailsForm = ({
                         className={cn(
                           'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
                           propertyDetails.furnishings.includes(furnishing.value)
-                            ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                            : 'bg-white text-gray-700 border-gray-300 '
+                            ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                            : 'bg-white text-[#646464] border-gray-300 '
                         )}
                         onClick={() => handleFurnishingClick(furnishing.value)}
                       >
@@ -1300,13 +1410,7 @@ const PropertyDetailsForm = ({
                           alt={furnishing.label}
                           width={55}
                           height={55}
-                          className={`object-contain ${
-                            propertyDetails.furnishings.includes(
-                              furnishing.value
-                            )
-                              ? 'brightness-0 invert'
-                              : ''
-                          }`}
+                          className='object-contain'
                         />
                         <div className=' text-center text-wrap'>
                           {furnishing.label}
@@ -1320,7 +1424,9 @@ const PropertyDetailsForm = ({
 
             {/* Amenities */}
             <div>
-              <Label className='text-lg font-bold'>Amenities</Label>
+              <Label className='text-lg text-[#646464] font-normal'>
+                Amenities
+              </Label>
               <div className='flex flex-wrap gap-4 mt-2'>
                 {amenitiesList.map((amenity) => (
                   <Button
@@ -1328,8 +1434,8 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
                       propertyDetails.amenities.includes(amenity.value)
-                        ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-gray-700 border-gray-300 '
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] border-gray-300 '
                     )}
                     onClick={() => handleAmenityClick(amenity.value)}
                   >
@@ -1338,15 +1444,9 @@ const PropertyDetailsForm = ({
                       alt={amenity.label}
                       width={55}
                       height={55}
-                      className={`object-contain ${
-                        propertyDetails.amenities.includes(amenity.value)
-                          ? 'brightness-0 invert'
-                          : ''
-                      }`}
+                      className={`object-contain `}
                     />
-                    <div className='mt-2 text-center text-wrap'>
-                      {amenity.label}
-                    </div>
+                    <div className='text-center text-wrap'>{amenity.label}</div>
                   </Button>
                 ))}
               </div>
@@ -1354,7 +1454,9 @@ const PropertyDetailsForm = ({
 
             {/* Features */}
             <div>
-              <Label className='text-lg font-bold'>Features</Label>
+              <Label className='text-lg text-[#646464] font-normal'>
+                Features
+              </Label>
               <div className='flex flex-wrap gap-6 mt-2'>
                 {getFeature(propertyDetails.propertyType).map((feature) => (
                   <Button
@@ -1362,8 +1464,8 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                       propertyDetails.features.includes(feature.value)
-                        ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-gray-700 '
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] '
                     )}
                     onClick={() => handleFeatureClick(feature.value)}
                   >
@@ -1387,7 +1489,7 @@ const PropertyDetailsForm = ({
                     fieldErrors['monthlyRent'] ? 'This field is required' : ''
                   }
                   className={cn(
-                    'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
                         fieldErrors['monthlyRent'],
@@ -1413,7 +1515,7 @@ const PropertyDetailsForm = ({
                       : ''
                   }
                   className={cn(
-                    'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
                         fieldErrors['securityDepositamount'],
@@ -1426,7 +1528,7 @@ const PropertyDetailsForm = ({
 
               {/* Lock In Period */}
               <div>
-                <Label className='text-lg font-bold'>
+                <Label className='text-lg text-[#646464] font-normal'>
                   Lock In Period<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex flex-wrap gap-2 mt-2'>
@@ -1436,8 +1538,8 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.lockInPeriodMonths === level.value
-                          ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-gray-700 '
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
                         handleButtonClick('lockInPeriodMonths', level.value)
@@ -1468,7 +1570,7 @@ const PropertyDetailsForm = ({
                       fieldErrors['totalfloor'] ? 'This field is required' : ''
                     }
                     className={cn(
-                      'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['totalfloor'],
@@ -1496,7 +1598,7 @@ const PropertyDetailsForm = ({
                   fieldErrors['brokerageAmount'] ? 'This field is required' : ''
                 }
                 className={cn(
-                  'placeholder:text-slate-700 block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                  'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                   {
                     'ring-2 ring-red-500 ring-offset-1':
                       fieldErrors['brokerageAmount'],
@@ -1530,7 +1632,7 @@ const PropertyDetailsForm = ({
               propertyDetails.propertyType === 'VILLA' ||
               propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div>
-                <Label className='text-lg font-bold'>
+                <Label className='text-lg text-[#646464] font-normal'>
                   Preferred Tenant Type
                   <span className='text-red-500'>*</span>
                 </Label>
@@ -1543,8 +1645,8 @@ const PropertyDetailsForm = ({
                         propertyDetails.preferredTenantType.includes(
                           tenant.value
                         )
-                          ? 'bg-[#42a4ae] text-white shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-gray-700 '
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
                       )}
                       onClick={() => handleTenantClick(tenant.value)}
                     >
@@ -1565,7 +1667,7 @@ const PropertyDetailsForm = ({
               propertyDetails.propertyType === 'FLAT_APARTMENT' ||
               propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
               <div className='flex flex-col w-full lg:w-[60%]'>
-                <Label className='font-bold text-lg mb-2'>
+                <Label className='text-[#646464] font-normal text-lg mb-2'>
                   Floor Number<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex justify-start items-center gap-6'>
@@ -1576,7 +1678,7 @@ const PropertyDetailsForm = ({
                     value={propertyDetails.floornumber}
                     onChange={handleInputChange}
                     className={cn(
-                      'placeholder:text-slate-700 block w-full px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['floornumber'],
@@ -1594,7 +1696,7 @@ const PropertyDetailsForm = ({
                     value={propertyDetails.totalfloor}
                     onChange={handleInputChange}
                     className={cn(
-                      'placeholder:text-slate-700 block w-full px-4 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
                           fieldErrors['totalfloor'],
@@ -1619,7 +1721,7 @@ const PropertyDetailsForm = ({
                 <Button
                   variant='outline'
                   onClick={handleSubmit}
-                  className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+                  className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
                   // disabled={!isFormValid}
                 >
                   Next, Add Address
@@ -1633,7 +1735,7 @@ const PropertyDetailsForm = ({
         ) : page === 'edit' ? (
           <Button
             onClick={handleEdit}
-            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+            className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             // disabled={!isFormValid}
           >
             Edit And Next
@@ -1641,7 +1743,7 @@ const PropertyDetailsForm = ({
         ) : (
           <Button
             onClick={handleSubmit}
-            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+            className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             // disabled={!isFormValid}
           >
             Next, Add Address

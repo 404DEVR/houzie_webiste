@@ -98,7 +98,11 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
       <div className='mx-auto h-auto'>
         <div className='bg-white p-6 mx-auto '>
           <div className='flex flex-col items-center gap-16 relative shadow-lg shadow-white'>
-            <div className='flex flex-col items-center absolute -top-40'>
+            <div
+              className={`flex flex-col items-center ${
+                page === 'user' ? 'relative' : 'absolute -top-40'
+              } `}
+            >
               <Avatar className='w-40 h-40 relative bg-gray-200 overflow-visible'>
                 <Image
                   src='/images/Dummy profile.png'

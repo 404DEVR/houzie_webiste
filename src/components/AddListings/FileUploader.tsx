@@ -1,12 +1,15 @@
 'use client';
 
 import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
+import { isEqual } from 'lodash'; // Import isEqual
 import Image from 'next/image';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import { CardContent, CardFooter } from '@/components/ui/card';
@@ -23,6 +26,10 @@ import {
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
 
+interface FileUploaderProps extends FileUploaderprops {
+  onImageUploadStatusChange?: (hasImages: boolean) => void;
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -33,7 +40,9 @@ const FileUploader = ({
   handleBack,
   page,
   setIsDialogOpen,
-}: FileUploaderprops) => {
+  onImageUploadStatusChange,
+}: FileUploaderProps) => {
+  const { auth } = useAuth();
   const dispatch = useDispatch();
   const addphotos = useSelector((state: RootState) => state.addForm.photos);
   const editphotos = useSelector((state: RootState) => state.editForm.photos);
@@ -121,6 +130,10 @@ const FileUploader = ({
 
     return urlData.publicUrl;
   };
+
+  useEffect(() => {
+    onImageUploadStatusChange && onImageUploadStatusChange(photos.length > 0);
+  }, [photos, onImageUploadStatusChange]);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -234,65 +247,74 @@ const FileUploader = ({
     }
   };
 
-  const handleSubmit = () => {
-    handleNext();
-  };
-
   const handleEdit = async () => {
-    setIsDialogOpen && setIsDialogOpen(false);
-    window.location.reload();
-    // try {
-    //   const accessToken = auth?.accessToken;
-    //   if (!accessToken) {
-    //     throw new Error('No access token available');
-    //   }
-    //   const changedFields: any = {};
-    //   if (!isEqual(photos, initialPhotos)) {
-    //     changedFields.photos = photos;
-    //   }
-    //   if (propertyDetails?.mainImage !== initialMainImage) {
-    //     changedFields.mainImage = propertyDetails?.mainImage;
-    //   }
-    //   if (Object.keys(changedFields).length > 0) {
-    // const response = await axios.patch(
-    //   `https://api.houzie.in/listings/${editingListingId}`,
-    //   changedFields,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   }
-    // );
-    // if (response.status === 200) {
-    //   console.log('Listing updated successfully!');
-    //   handleNext();
-    // } else {
-    //   console.error('Failed to update listing:', response.status);
-    // }
-    //   } else {
-    //     toast({
-    //       title: 'No changes',
-    //       description: 'No changes were made to the  details.',
-    //     });
-    //     // handleNext();
-    //   }
-    // } catch (error) {
-    //   toast({
-    //     title: 'Edit Failed',
-    //     description: 'Failed To Edit Details',
-    //   });
-    // }
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const changedFields: any = {};
+
+      if (!isEqual(photos, initialPhotos)) {
+        changedFields.photos = photos.map((photo) => photo.preview);
+      }
+
+      if (propertyDetails?.mainImage !== initialMainImage) {
+        changedFields.mainImage = propertyDetails?.mainImage;
+      }
+
+      console.log(changedFields);
+
+      if (Object.keys(changedFields).length > 0) {
+        const response = await axios.patch(
+          `https://api.houzie.in/listings/${editingListingId}`,
+          changedFields,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          toast({
+            title: 'Success',
+            description: 'Property details updated successfully.',
+          });
+          setIsDialogOpen && setIsDialogOpen(false);
+          window.location.reload();
+        } else {
+          console.error('Failed to update listing:', response.status);
+          toast({
+            title: 'Update Failed',
+            description: 'Failed to update property details.',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        toast({
+          title: 'No changes',
+          description: 'No changes were made to the property details.',
+        });
+        setIsDialogOpen && setIsDialogOpen(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error during edit:', error);
+      toast({
+        title: 'Edit Failed',
+        description: 'An error occurred while editing property details.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const isContinueEnabled = photos.length > 0;
 
   return (
     <>
-      {/* // <Card className='rounded-xl md:p-8 shadow-sm  my-6 md:my-0 mx-auto border '>
-    //   <CardHeader>
-    //     <CardTitle className='text-2xl font-bold'>Upload Photos</CardTitle>
-    //   </CardHeader> */}
       <CardContent className='rounded-xl md:p-8 shadow-sm my-3 w-full border '>
+        <h1 className='text-[#646464] font-normal text-2xl mb-2'>Photos</h1>
         <div
           {...getRootProps()}
           className={`rounded-md p-8 text-center cursor-pointer border flex flex-col items-center justify-center border-dashed ${
@@ -353,7 +375,7 @@ const FileUploader = ({
                   )}
                 </div>
                 {photo.preview === mainImage && (
-                  <div className='absolute top-2 left-2 bg-[#42A4AE] text-white px-2 py-1 rounded-md text-sm'>
+                  <div className='absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded-md text-sm'>
                     Main Image
                   </div>
                 )}
@@ -368,13 +390,13 @@ const FileUploader = ({
             <Button
               onClick={handleBack}
               variant='outline'
-              className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
+              className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             >
               Back
             </Button>
             <Button
               onClick={handleEdit}
-              className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+              className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             >
               Edit And Next
             </Button>
@@ -382,7 +404,6 @@ const FileUploader = ({
         )}
       </CardFooter>
     </>
-    // </Card>
   );
 };
 

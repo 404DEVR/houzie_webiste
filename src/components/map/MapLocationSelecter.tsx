@@ -67,6 +67,12 @@ export default function MapLocationSelector({
 
   return (
     <div className='space-y-4'>
+      <Label
+        htmlFor='fullAddress'
+        className='text-2xl text-[#646464] font-normal mb-2'
+      >
+        Location
+      </Label>
       <div className='h-[400px] w-full'>
         <MapContainer
           center={location || defaultLocation}
@@ -88,6 +94,7 @@ export default function MapLocationSelector({
             type='number'
             id='latitude'
             value={location?.lat || ''}
+            className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
             readOnly
           />
         </div>
@@ -97,14 +104,14 @@ export default function MapLocationSelector({
             type='number'
             id='longitude'
             value={location?.lng || ''}
+            className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
             readOnly
           />
         </div>
       </div>
 
       <Button
-        variant='outline'
-        className='hover:bg-[#42A4AE] hover:text-white'
+        className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
         onClick={handleSaveLocation}
       >
         {initialLocation ? 'Update Location' : 'Save Location'}

@@ -47,39 +47,43 @@ const furnishinglist = [
 ];
 
 const amenitiesList = [
-  { label: 'Wifi', value: 'WIFI', url: '/svg/wi-fi-icon.svg' },
-  { label: 'Power Backup', value: 'POWER_BACKUP', url: '/svg/charge.svg' },
+  { label: 'Wifi', value: 'WIFI', url: '/svg/material-symbols_wifi.svg' },
+  {
+    label: 'Power Backup',
+    value: 'POWER_BACKUP',
+    url: '/svg/ic_round-power.svg',
+  },
   {
     label: '4 Wheeler Parking',
     value: 'FOUR_WHEELER_PARKING',
-    url: '/svg/parking.svg',
+    url: '/svg/fluent_vehicle-car-parking-16-regular.svg',
   },
   {
     label: '2 Wheeler Parking',
     value: 'TWO_WHEELER_PARKING',
-    url: '/svg/parking (1).svg',
+    url: '/svg/material-symbols_directions-bike.svg',
   },
   {
     label: '24/7 Water Supply',
     value: 'WATER_SUPPLY_24_7',
-    url: '/svg/water supply.svg',
+    url: '/svg/famicons_water-sharp.svg',
   },
   {
     label: '24/7 Security',
     value: 'SECURITY_24_7',
-    url: '/svg/security.svg',
+    url: '/svg/healthicons_security-worker.svg',
   },
   {
     label: 'Daily House Keeping',
     value: 'DAILY_HOUSEKEEPING',
-    url: '/svg/house-keeping.svg',
+    url: '/svg/material-symbols-light_cleaning-bucket-rounded.svg',
   },
   {
     label: '24/7 CCTV Surveillance',
     value: 'CCTV',
-    url: '/svg/cctv.svg',
+    url: '/svg/ph_security-camera-fill.svg',
   },
-  { label: 'Meals', value: 'MEALS', url: '/svg/dinner.svg' },
+  { label: 'Meals', value: 'MEALS', url: '/svg/fluent_food-24-filled.svg' },
 ];
 
 const AmenitiesDisplay = ({ data, type }: AmenitiesDisplayinterface) => {

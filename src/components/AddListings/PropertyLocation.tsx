@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import CurrentOccupantsProfile from '@/components/AddListings/CurrentOccupantsProfile';
@@ -18,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import {
   Tooltip,
   TooltipContent,
@@ -30,6 +28,7 @@ import { Location, PropertyLocationState } from '@/interfaces/Interface';
 import { PropertyLocationProps } from '@/interfaces/PropsInterface';
 import {
   populateEditForm,
+  restructureAddFormData,
   updateAddPropertyLocation,
   updateEditPropertyLocation,
 } from '@/redux/slices/formslices';
@@ -108,44 +107,16 @@ const PropertyLocation = ({
   ]);
 
   const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [hasImages, setHasImages] = useState(false);
+  const [isOccupantDataValid, setIsOccupantDataValid] = useState(true);
 
-  // useEffect(() => {
-  //   // Simulate fetching location data based on full address
-  //   const fetchLocationData = async () => {
-  //     // Replace this with actual geocoding API call (e.g., Google Maps Geocoding API)
-  //     // const response = await fetch(`https://api.example.com/geocode?address=${propertyLocation.fullAddress}`);
-  //     // const data = await response.json();
+  const handleImageUploadStatusChange = (hasImages: boolean) => {
+    setHasImages(hasImages);
+  };
 
-  //     // Simulate the response for the given location, change this
-  //     const simulatedData = {
-  //       city: 'Mumbai',
-  //       state: 'Maharashtra',
-  //       country: 'India',
-  //       latitude: 19.076,
-  //       longitude: 72.8777,
-  //     };
-
-  //     dispatch(updateAddPropertyLocation(simulatedData));
-  //     setIsValidAddress(true);
-  //   };
-
-  //   if (propertyLocation.fullAddress) {
-  //     // if address is non-empty
-  //     fetchLocationData();
-  //   } else {
-  //     // if address is empty, set to initial state
-  //     dispatch(
-  //       updateAddPropertyLocation({
-  //         city: '',
-  //         state: '',
-  //         country: '',
-  //         latitude: null,
-  //         longitude: null,
-  //       })
-  //     );
-  //     setIsValidAddress(false);
-  //   }
-  // }, [propertyLocation.fullAddress, dispatch]);
+  const handleOccupantDataChange = (isValid: boolean) => {
+    setIsOccupantDataValid(isValid);
+  };
 
   const handleLocationSave = (location: Location) => {
     page === 'edit'
@@ -168,86 +139,8 @@ const PropertyLocation = ({
 
   const handleSubmit = () => {
     if (isLocationSelected) {
+      dispatch(restructureAddFormData());
       handleNext();
-    }
-  };
-
-  const handleEdit = async () => {
-    try {
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-      interface ChangedFields {
-        location?: {
-          city: string;
-          state: string;
-          country: string;
-          latitude: number | null;
-          longitude: number | null;
-        };
-      }
-
-      const changedFields: ChangedFields = {};
-
-      if (initialPropertyLocation.current) {
-        const initialLocation = initialPropertyLocation.current;
-
-        const locationChanged =
-          initialLocation.latitude !== propertyLocation.latitude ||
-          initialLocation.longitude !== propertyLocation.longitude;
-
-        if (locationChanged) {
-          changedFields.location = {
-            city: propertyLocation.city,
-            state: propertyLocation.state,
-            country: propertyLocation.country,
-            latitude: propertyLocation.latitude,
-            longitude: propertyLocation.longitude,
-          };
-        }
-
-        // console.log(changedFields);
-
-        if (Object.keys(changedFields).length > 0) {
-          // const response = await axios.patch(
-          //   `https://api.houzie.in/listings/${editingListingId}`,
-          //   changedFields,
-          //   {
-          //     headers: {
-          //       Authorization: `Bearer ${accessToken}`,
-          //     },
-          //   }
-          // );
-          // if (response.status === 200) {
-          //   console.log('Location updated successfully!');
-          //   toast({
-          //     title: 'Success',
-          //     description: 'Property location updated successfully.',
-          //   });
-          //   handleNext();
-          // } else {
-          //   console.error('Failed to update location:', response.status);
-          //   toast({
-          //     title: 'Update Failed',
-          //     description: 'Failed to update property location.',
-          //   });
-          // }
-        } else {
-          toast({
-            title: 'No changes',
-            description: 'No changes were made to the property location.',
-          });
-          // handleNext();
-        }
-      } else {
-        toast({ title: 'Initial property location is not available' });
-      }
-    } catch (error) {
-      toast({
-        title: 'Edit Failed',
-        description: 'Failed to edit property location.',
-      });
     }
   };
 
@@ -262,6 +155,12 @@ const PropertyLocation = ({
     return null;
   };
 
+  const isNextButtonDisabled = !(
+    isLocationSelected &&
+    hasImages &&
+    isOccupantDataValid
+  );
+
   return (
     <Card className='w-full max-w-4xl my-6 md:my-0 mx-auto md:p-8'>
       <CardHeader>
@@ -269,73 +168,58 @@ const PropertyLocation = ({
       </CardHeader>
       <CardContent className='grid'>
         <div className='border rounded-xl p-8 mb-3'>
-          <Label htmlFor='fullAddress' className='text-xl font-semibold mb-8'>
-            Location
-          </Label>
           <MapLocationSelecter
             onLocationSave={handleLocationSave}
             initialLocation={getInitialLocation()}
           />
         </div>
-        <CurrentOccupantsProfile />
+        {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
+          <CurrentOccupantsProfile
+            onOccupantDataChange={handleOccupantDataChange}
+          />
+        )}
+
         <FileUploader
           handleNext={handleNext}
           handleBack={handleBack}
           page={page}
           setIsDialogOpen={setIsDialogOpen}
+          onImageUploadStatusChange={handleImageUploadStatusChange}
         />
       </CardContent>
-
       <CardFooter className='flex justify-end items-center gap-4'>
         <Button
           onClick={handleBack}
           variant='outline'
-          className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
+          className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
         >
           Back
         </Button>
-        {!isLocationSelected ? (
+        {!isLocationSelected || !hasImages || !isOccupantDataValid ? (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className='cursor-not-allowed'>
-                {page === 'edit' ? (
-                  <Button
-                    onClick={handleEdit}
-                    className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
-                    disabled={!isLocationSelected}
-                  >
-                    Edit And Next
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleSubmit}
-                    className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
-                    disabled={!isLocationSelected}
-                  >
-                    Next, Add Address
-                  </Button>
-                )}
+                <Button
+                  onClick={handleSubmit}
+                  className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+                  disabled={isNextButtonDisabled}
+                >
+                  Next, Add Address
+                </Button>
               </TooltipTrigger>
               <TooltipContent className='bg-[#60a5fa] text-white'>
-                {page === 'edit' ? (
-                  <p>Please Update a location to proceed.</p>
-                ) : (
-                  <p>Please Save a location to proceed.</p>
-                )}
+                <p>
+                  Please Save a location, add at least one image and complete
+                  the Current Occupants Profile to proceed.
+                </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        ) : page === 'edit' ? (
-          <Button
-            onClick={handleEdit}
-            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
-          >
-            Edit And Next
-          </Button>
         ) : (
           <Button
             onClick={handleSubmit}
-            className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+            className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+            disabled={isNextButtonDisabled}
           >
             Next, Add Address
           </Button>

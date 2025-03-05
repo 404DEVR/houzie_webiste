@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { Bath, Bed, Building2, Home, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -17,7 +18,6 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import { Listing, PropertyFeature } from '@/interfaces/Interface';
 import { populateEditForm, startEditing } from '@/redux/slices/formslices';
-import { useRouter } from 'next/navigation';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -53,6 +53,7 @@ const MyListings = () => {
           },
         });
         setListings(response.data);
+        console.log(response.data);
       } catch (error) {
         toast({
           title: 'Failed To Fetch Listings',

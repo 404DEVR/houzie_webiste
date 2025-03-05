@@ -34,6 +34,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -110,6 +116,13 @@ const SignUpForm: React.FC = () => {
     }
   }, [setValue, getValues]);
 
+  useEffect(() => {
+    const registrationComplete = localStorage.getItem('registrationComplete');
+    if (registrationComplete === 'true' && showOTPForm) {
+      router.push('/');
+    }
+  }, [showOTPForm, router]);
+
   const onSubmit = async (data: FormData) => {
     setError('');
     setLoading(true);
@@ -132,6 +145,7 @@ const SignUpForm: React.FC = () => {
       setPhoneNumber(data.phoneNumber);
       setEmail(data.email);
       setShowOTPForm(true);
+      localStorage.setItem('registrationComplete', 'true');
 
       toast({
         title: 'Registration Successful',
@@ -208,6 +222,7 @@ const SignUpForm: React.FC = () => {
       };
 
       login(userData);
+      localStorage.removeItem('registrationComplete');
 
       router.push('/');
     } catch (error) {
@@ -399,7 +414,7 @@ const SignUpForm: React.FC = () => {
                         <SelectItem value='PG_OWNER'>
                           PG Owner/Property Manager
                         </SelectItem>
-                        <SelectItem value='CO_LIVING _OWNER'>
+                        <SelectItem value='CO_LIVING_OWNER'>
                           Co - Living Owner/Property Manager
                         </SelectItem>
                       </SelectContent>
@@ -420,16 +435,23 @@ const SignUpForm: React.FC = () => {
               )}
               {step === 2 && (
                 <>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='otp'>OTP</Label>
-                    <Input
-                      id='otp'
-                      placeholder='Enter OTP'
-                      type='text'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                    />
+                  <div className='flex gap-2 flex-col justify-center items-center text-center'>
+                    <Label htmlFor='otp' className='text-2xl mb-2'>
+                      Enter OTP
+                    </Label>
+                    <InputOTP maxLength={6}>
+                      <InputOTPGroup>
+                        {[0, 1, 2].map((index) => (
+                          <InputOTPSlot key={index} index={index} />
+                        ))}
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        {[3, 4, 5].map((index) => (
+                          <InputOTPSlot key={index} index={index} />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
                   </div>
                   <Button onClick={handleVerifyOTP} disabled={loading}>
                     {loading ? 'Verifying...' : 'Verify OTP'}

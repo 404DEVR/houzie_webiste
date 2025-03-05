@@ -26,6 +26,8 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
     (state: RootState) => state.addForm.restructuredData
   );
 
+  console.log(restructuredData);
+
   const handlePost = async () => {
     try {
       const accessToken = auth?.accessToken;
@@ -73,13 +75,13 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
         <Button
           onClick={handleBack}
           variant='outline'
-          className='bg-[#f5f5fa] text-[#f66659] px-4 font-normal py-4 rounded-lg border-none'
+          className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
         >
           Back
         </Button>
         <Button
           onClick={handlePost}
-          className='bg-[#f5f5fa] text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+          className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
         >
           Post
         </Button>

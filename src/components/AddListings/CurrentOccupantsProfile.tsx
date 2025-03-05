@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils'; // Assuming you have this utility function
 
@@ -7,7 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-const CurrentOccupantsProfile = () => {
+interface CurrentOccupantsProfileProps {
+  onOccupantDataChange: (isValid: boolean) => void;
+}
+
+const CurrentOccupantsProfile = ({
+  onOccupantDataChange,
+}: CurrentOccupantsProfileProps) => {
   const [totalOccupants, setTotalOccupants] = useState('1 person');
   const [occupantData, setOccupantData] = useState([
     {
@@ -40,6 +48,13 @@ const CurrentOccupantsProfile = () => {
     setOccupantData(updatedOccupantData);
   };
 
+  const handleAgeChange = (index, e) => {
+    const value = Math.max(0, Number(e.target.value));
+    handleOccupantChange(index, {
+      target: { name: 'age', value: value.toString() },
+    });
+  };
+
   const occupantOptions = ['None', '1 person', '2 person', '3 person'];
 
   const getNumberOfOccupants = () => {
@@ -57,10 +72,46 @@ const CurrentOccupantsProfile = () => {
 
   const numberOfOccupants = getNumberOfOccupants();
 
+  const handleTotalOccupantsChange = (option) => {
+    setTotalOccupants(option);
+    if (option === 'None') {
+      setOccupantData([
+        { name: '', age: '', profession: '', about: '' },
+        { name: '', age: '', profession: '', about: '' },
+        { name: '', age: '', profession: '', about: '' },
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    const validateOccupantData = () => {
+      if (totalOccupants === 'None') {
+        return true;
+      }
+
+      for (let i = 0; i < numberOfOccupants; i++) {
+        if (
+          !occupantData[i]?.name ||
+          !occupantData[i]?.age ||
+          !occupantData[i]?.profession
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    const isValid = validateOccupantData();
+    onOccupantDataChange(isValid);
+  }, [totalOccupants, occupantData, numberOfOccupants, onOccupantDataChange]);
+
   return (
     <Card className='w-full my-3 mx-auto'>
       <CardHeader>
-        <CardTitle>Current Occupants Profile</CardTitle>
+        <CardTitle className='text-[#646464] font-normal'>
+          Current Occupants Profile
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className='space-y-6'>
@@ -76,7 +127,7 @@ const CurrentOccupantsProfile = () => {
                       ? 'bg-[#bfd7fe] text-primary-foreground hover:bg-primary/90'
                       : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                   )}
-                  onClick={() => setTotalOccupants(option)}
+                  onClick={() => handleTotalOccupantsChange(option)}
                 >
                   {option}
                 </button>
@@ -97,6 +148,7 @@ const CurrentOccupantsProfile = () => {
                     <Input
                       id={`name-${index}`}
                       name='name'
+                      className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
                       placeholder='Full Name'
                       value={occupantData[index]?.name || ''}
                       onChange={(e) => handleOccupantChange(index, e)}
@@ -113,8 +165,10 @@ const CurrentOccupantsProfile = () => {
                         name='age'
                         placeholder='Age'
                         type='number'
+                        min='0'
+                        className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
                         value={occupantData[index]?.age || ''}
-                        onChange={(e) => handleOccupantChange(index, e)}
+                        onChange={(e) => handleAgeChange(index, e)}
                       />
                       <Label htmlFor={`age-${index}`} className='text-sm'>
                         Years
@@ -130,6 +184,7 @@ const CurrentOccupantsProfile = () => {
                       id={`profession-${index}`}
                       name='profession'
                       placeholder='Profession'
+                      className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
                       value={occupantData[index]?.profession || ''}
                       onChange={(e) => handleOccupantChange(index, e)}
                     />
@@ -141,6 +196,7 @@ const CurrentOccupantsProfile = () => {
                       id={`about-${index}`}
                       name='about'
                       placeholder='About'
+                      className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
                       value={occupantData[index]?.about || ''}
                       onChange={(e) => handleOccupantChange(index, e)}
                     />
