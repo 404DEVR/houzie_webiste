@@ -83,10 +83,13 @@ const AddListings = ({
             Add New Property
           </h1>
           <p className='mt-2 text-sm text-muted-foreground'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            Add your properties to our platform and reach a vast audience of
+            potential buyers and renters. Our user-friendly interface allows you
+            to easily list your properties with detailed descriptions,
+            high-quality photos, and virtual tours. By showcasing your listings
+            here, you'll increase visibility, streamline client interactions,
+            and grow your business efficiently. Start adding your properties
+            today!
           </p>
           <p className='mt-4 text-sm'>Application Step {currentPage} of 5</p>
         </div>

@@ -106,9 +106,7 @@ export default function HeaderContainer({
           className='flex-1 sm:flex-initial items-center gap-2 bg-[#42A4AE] hover:bg-[#3a939c] text-white min-w-[100px] sm:min-w-fit py-2 px-4'
         >
           <Heart className='h-4 w-4' />
-          <span className='text-sm font-normal hidden sm:inline'>
-            Faivorite
-          </span>
+          <span className='text-sm font-normal hidden sm:inline'>Favorite</span>
         </Button>
       </div>
     </header>

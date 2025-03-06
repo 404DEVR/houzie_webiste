@@ -2,15 +2,9 @@
 
 import { useState } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({

@@ -1,12 +1,12 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { BsYoutube } from 'react-icons/bs';
 import { FaFacebookF, FaLinkedinIn, FaTwitter } from 'react-icons/fa6';
 import { RiInstagramFill } from 'react-icons/ri';
-import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (

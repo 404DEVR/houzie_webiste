@@ -16,9 +16,9 @@ import Mylistings from '@/components/Mylistings/Mylistings';
 import ProfileForm from '@/components/profile/ProfileForm';
 import SettingsPage from '@/components/settings/SettingsPage';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 import store from '@/redux/store';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const BrokerContent = () => {
   const [activeTab, setActiveTab] = useState('dashboard');

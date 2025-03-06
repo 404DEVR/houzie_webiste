@@ -1,7 +1,7 @@
-import { ScalableImageCard } from '@/components/cards/ScalableImageCard';
 import { motion, useInView } from 'framer-motion';
-import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
+
+import { ScalableImageCard } from '@/components/cards/ScalableImageCard';
 
 interface Property {
   name: string;

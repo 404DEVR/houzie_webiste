@@ -27,6 +27,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
@@ -46,6 +52,13 @@ const SignUpForm = () => {
   const searchParams = useSearchParams();
   const signUpRedirect = searchParams.get('signUpRedirect');
   const redirectPath = searchParams.get('redirect') || '/';
+  const [showOTPForm, setShowOTPForm] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [otp, setOtp] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1);
 
   const {
     register,
@@ -106,6 +119,70 @@ const SignUpForm = () => {
     }
   };
 
+  const handleInitiateLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch(`https://api.houzie.in/auth/login/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to send OTP');
+      }
+
+      setUserId(data.userId);
+      setStep(2);
+    } catch (error) {
+      console.log(error);
+      setError(error instanceof Error ? error.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await axios.post(
+        'https://api.houzie.in/auth/login/verify',
+        {
+          userId: userId,
+          otp: otp,
+        }
+      );
+      const userData = {
+        userid: result.data.user.id,
+        email: result.data.user.email,
+        accessToken: result.data.accessToken,
+        role: result.data.user.role,
+        refreshToken: result.data.refreshToken,
+        phoneNumber: result.data.user.phoneNumber,
+      };
+
+      login(userData);
+
+      router.push('/');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to verify OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGoogleSignUp = async () => {
     try {
       const response = await axios.post('https://api.houzie.in/auth/google');
@@ -151,106 +228,163 @@ const SignUpForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className='grid gap-4 w-[90%] mx-auto'>
-          <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-            {/* <div className='grid gap-2'>
-              <Label htmlFor='name'>Full Name</Label>
-              <div className='relative'>
-                <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='name'
-                  placeholder='hello'
-                  type='text'
-                  className='pl-8'
-                  {...register('name')}
-                />
+          {!showOTPForm ? (
+            <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
+              <div className='grid gap-2'>
+                <Label htmlFor='email'>Email Address</Label>
+                <div className='relative'>
+                  <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='email'
+                    placeholder='hello@example.com'
+                    type='email'
+                    className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                    {...register('email')}
+                  />
+                </div>
+                {errors.email && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.email?.message}
+                  </p>
+                )}
               </div>
-              {errors.email && (
-                <p className='text-red-500 text-sm'>{errors.email?.message}</p>
-              )}
-            </div> */}
-            <div className='grid gap-2'>
-              <Label htmlFor='email'>Email Address</Label>
-              <div className='relative'>
-                <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='email'
-                  placeholder='hello@example.com'
-                  type='email'
-                  className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                  {...register('email')}
-                />
+              <div className='grid gap-2'>
+                <Label htmlFor='password'>Password</Label>
+                <div className='relative'>
+                  <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                  <Input
+                    id='password'
+                    placeholder='Password'
+                    type={showPassword ? 'text' : 'password'}
+                    className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                    {...register('password')}
+                  />
+                  <Button
+                    variant='ghost'
+                    size='icon'
+                    type='button'
+                    className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <Eye className='h-4 w-4' />
+                    <span className='sr-only'>Show password</span>
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className='text-red-500 text-sm'>
+                    {errors.password?.message}
+                  </p>
+                )}
               </div>
-              {errors.email && (
-                <p className='text-red-500 text-sm'>{errors.email?.message}</p>
-              )}
-            </div>
-            <div className='grid gap-2'>
-              <Label htmlFor='password'>Password</Label>
-              <div className='relative'>
-                <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                <Input
-                  id='password'
-                  placeholder='Password'
-                  type={showPassword ? 'text' : 'password'}
-                  className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                  {...register('password')}
-                />
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  type='button'
-                  className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <Eye className='h-4 w-4' />
-                  <span className='sr-only'>Show password</span>
-                </Button>
+            </form>
+          ) : (
+            <>
+              <div className='grid gap-4'>
+                <div className='grid gap-2'>
+                  <Label htmlFor='email'>Email Address</Label>
+                  <div className='relative'>
+                    <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                    <Input
+                      id='email'
+                      placeholder='hello@example.com'
+                      type='email'
+                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className='text-red-500 text-sm'>
+                      {errors.email?.message}
+                    </p>
+                  )}
+                </div>
+                {step === 1 && (
+                  <Button onClick={handleInitiateLogin} disabled={loading}>
+                    {loading ? 'Sending OTP...' : 'Send OTP'}
+                  </Button>
+                )}
+                {step === 2 && (
+                  <>
+                    <div className='flex gap-2 flex-col justify-center items-center text-center'>
+                      <Label htmlFor='otp' className='text-2xl mb-2'>
+                        Enter OTP
+                      </Label>
+                      <InputOTP maxLength={6}>
+                        <InputOTPGroup>
+                          {[0, 1, 2].map((index) => (
+                            <InputOTPSlot key={index} index={index} />
+                          ))}
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
+                        <InputOTPGroup>
+                          {[3, 4, 5].map((index) => (
+                            <InputOTPSlot key={index} index={index} />
+                          ))}
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
+                    <Button onClick={handleVerifyOTP} disabled={loading}>
+                      {loading ? 'Verifying...' : 'Verify OTP'}
+                    </Button>
+                  </>
+                )}
               </div>
-              {errors.password && (
-                <p className='text-red-500 text-sm'>
-                  {errors.password?.message}
-                </p>
-              )}
-            </div>
-          </form>
+            </>
+          )}
         </CardContent>
         <CardFooter className='flex flex-col w-[90%] mx-auto items-center'>
-          <Button
-            size='custom'
-            className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
-            onClick={handleSubmit(onSubmit)}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </Button>
+          {!showOTPForm && (
+            <>
+              <Button
+                className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
+                onClick={handleSubmit(onSubmit)}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing In...' : 'Sign In'}
+              </Button>
 
-          <div className='flex items-center justify-center w-full mt-4'>
-            <div className='border-t border-gray-400 flex-grow'></div>
-            <span className='mx-4 text-black'>Or</span>
-            <div className='border-t border-gray-400 flex-grow'></div>
-          </div>
+              <div className='flex items-center justify-center w-full my-4'>
+                <div className='border-t border-gray-400 flex-grow'></div>
+                <span className='mx-4 text-black'>Or</span>
+                <div className='border-t border-gray-400 flex-grow'></div>
+              </div>
 
-          <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
-            <Button
-              onClick={handleGoogleSignUp}
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <FcGoogle className='h-5 w-5 mr-2' /> Google
-            </Button>
-            <Button
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <Apple className='h-5 w-5 mr-2' /> Apple
-            </Button>
-            <Button
-              variant='outline'
-              className='rounded-md p-2 flex items-center'
-            >
-              <FaFacebook className='h-5 w-5 mr-2' /> Facebook
-            </Button>
-          </div>
+              <Button
+                onClick={() => setShowOTPForm(true)}
+                className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
+              >
+                Login Using OTP
+              </Button>
+
+              <div className='flex items-center justify-center w-full mt-4'>
+                <div className='border-t border-gray-400 flex-grow'></div>
+                <span className='mx-4 text-black'>Or</span>
+                <div className='border-t border-gray-400 flex-grow'></div>
+              </div>
+
+              <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
+                <Button
+                  onClick={handleGoogleSignUp}
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <FcGoogle className='h-5 w-5 mr-2' /> Google
+                </Button>
+                <Button
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <Apple className='h-5 w-5 mr-2' /> Apple
+                </Button>
+                <Button
+                  variant='outline'
+                  className='rounded-md p-2 flex items-center'
+                >
+                  <FaFacebook className='h-5 w-5 mr-2' /> Facebook
+                </Button>
+              </div>
+            </>
+          )}
         </CardFooter>
       </Card>
     </div>

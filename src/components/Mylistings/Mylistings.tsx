@@ -424,7 +424,7 @@ const MyListings = () => {
                             size='sm'
                             onClick={() => handleDelete(listing.id)}
                           >
-                            Unpost
+                            Un post
                           </Button>
                         </div>
                       </div>

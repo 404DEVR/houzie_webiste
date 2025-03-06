@@ -103,7 +103,8 @@ export default function FAQsAndBlogs() {
               Frequently Asked Questions
             </h2>
             <p className='text-gray-600'>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit ultrices
+              Find answers to frequently asked questions about our services and
+              platform.
             </p>
           </div>
           <button
@@ -159,7 +160,8 @@ export default function FAQsAndBlogs() {
           <div>
             <h2 className='text-2xl font-bold mb-2'>Blogs</h2>
             <p className='text-gray-600'>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit ultrices
+              Explore insightful articles and updates on real estate trends,
+              market insights, and industry news.
             </p>
           </div>
           <button

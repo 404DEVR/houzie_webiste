@@ -3,13 +3,12 @@ import { Clock, Package, TrendingDown, TrendingUp, User2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { CardsInterface } from '@/interfaces/Interface';
-import { title } from 'process';
-import { toast } from '@/hooks/use-toast';
 
 const DashboardCards = () => {
   const [cardData, setCardData] = useState<CardsInterface[]>([]);

@@ -78,7 +78,7 @@ export default function RegisterForm() {
           </div>
 
           <div className='space-y-2'>
-            <Label htmlFor='aadharNumber'>Aadhar Number</Label>
+            <Label htmlFor='aadharNumber'>Aadhaar Number</Label>
             <Input
               id='aadharNumber'
               name='aadharNumber'
