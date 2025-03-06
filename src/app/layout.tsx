@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
 import * as React from 'react';
 
 import '@/styles/globals.css';
@@ -10,6 +11,12 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 import { siteConfig } from '@/constant/config';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
+});
 
 // !STARTERCONF Change these default meta
 export const metadata: Metadata = {
@@ -50,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang='en' className={poppins.variable}>
       <body>
         <AuthProviders>
           <Providers>

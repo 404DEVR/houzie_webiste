@@ -50,7 +50,7 @@ export const AuthProviders: React.FC<{ children: React.ReactNode }> = ({
   const login = useCallback((userData: User) => {
     setAuth(userData);
     setCookie('auth', JSON.stringify(userData), {
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: 60 * 60,
       path: '/',
       secure: window.location.protocol === 'https:',
       sameSite: 'strict',

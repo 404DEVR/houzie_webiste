@@ -30,7 +30,7 @@ const galleryImages = [
 const FullGallery = ({ images, title, mainImage }) => (
   <div className='flex flex-col gap-4'>
     {/* Main Image */}
-    <div className='relative aspect-[16/9] w-full'>
+    {/* <div className='relative aspect-[16/9] w-full'>
       <Image
         src={mainImage || '/svg/no-results.svg'}
         alt={`${title} - Main Image`}
@@ -38,7 +38,7 @@ const FullGallery = ({ images, title, mainImage }) => (
         objectFit='cover'
         className='rounded-lg'
       />
-    </div>
+    </div> */}
 
     {/* Grid of Other Images */}
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>

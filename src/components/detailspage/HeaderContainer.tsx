@@ -18,10 +18,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { HeaderContainerprops } from '@/interfaces/PropsInterface';
+import axios from 'axios';
+import { headers } from 'next/headers';
+import useAuth from '@/hooks/useAuth';
 
 export default function HeaderContainer({
   propertyData,
 }: HeaderContainerprops) {
+  const { auth } = useAuth();
   const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
@@ -43,6 +47,64 @@ export default function HeaderContainer({
         description: 'Failed to copy link. Please try again.',
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleFavorite = async (id: string) => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const response = await axios.post(
+        `https://api.houzie.in/profile/favorites/${id}`,
+        {}, // Empty object as the second parameter (data)
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          title: 'Success',
+          description: 'Property added to favorites.',
+        });
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message || 'Something went wrong';
+        const errorStatus = error.response?.status;
+
+        if (errorStatus === 401) {
+          toast({
+            title: 'Unauthorized',
+            description: 'You are not authorized to perform this action.',
+            variant: 'destructive',
+          });
+        } else if (errorStatus === 500) {
+          toast({
+            title: 'Server Error',
+            description: 'An internal server error occurred. Please try again.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Error',
+            description: errorMessage,
+            variant: 'destructive',
+          });
+        }
+      } else {
+        toast({
+          title: 'Unexpected Error',
+          description: 'An unexpected error occurred. Please try again.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
@@ -104,6 +166,7 @@ export default function HeaderContainer({
         <Button
           variant='default'
           className='flex-1 sm:flex-initial items-center gap-2 bg-[#42A4AE] hover:bg-[#3a939c] text-white min-w-[100px] sm:min-w-fit py-2 px-4'
+          onClick={() => handleFavorite(propertyData.id)}
         >
           <Heart className='h-4 w-4' />
           <span className='text-sm font-normal hidden sm:inline'>Favorite</span>

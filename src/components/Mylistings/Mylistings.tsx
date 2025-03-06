@@ -54,7 +54,6 @@ const MyListings = () => {
           },
         });
         setListings(response.data);
-        console.log(response.data);
       } catch (error) {
         toast({
           title: 'Failed To Fetch Listings',

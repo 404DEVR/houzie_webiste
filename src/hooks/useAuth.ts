@@ -29,7 +29,7 @@ const useAuth = () => {
     (userData: User) => {
       setAuth(userData);
       setCookie('auth', JSON.stringify(userData), {
-        maxAge: 7 * 24 * 60 * 60,
+        maxAge: 60 * 60,
         path: '/',
         secure: window.location.protocol === 'https:',
         sameSite: 'strict',
@@ -59,6 +59,7 @@ const useAuth = () => {
         const userData = JSON.parse(authCookie as string);
 
         if (isTokenExpired(userData.accessToken)) {
+          console.log('Token Expired');
           logout();
         } else {
           setAuth(userData);

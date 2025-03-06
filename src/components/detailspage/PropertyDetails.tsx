@@ -95,9 +95,7 @@ const PropertyDetails = ({ propertyData }: Overviewprops) => {
                               <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
                                 <ItemGrid
                                   title='Furnishings'
-                                  data={propertyData.furnishingExtras.map(
-                                    transformString
-                                  )}
+                                  data={propertyData.furnishingExtras}
                                   type='furnishing'
                                 />
                               </div>

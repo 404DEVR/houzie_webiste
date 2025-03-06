@@ -9,12 +9,16 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
+import { toast } from '@/hooks/use-toast';
+import axios from 'axios';
+import useAuth from '@/hooks/useAuth';
 
 export function PropertyCard({
   property,
   iscreate,
   loadImage,
 }: PropertyCardProps) {
+  const { auth } = useAuth();
   const router = useRouter();
   const [favorites, setFavorites] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -111,6 +115,42 @@ export function PropertyCard({
       }`,
     });
   }
+
+  const handleViewDetails = async (id: string) => {
+    const accessToken = auth?.accessToken;
+
+    if (!accessToken) {
+      console.error('Access token is missing');
+      toast({
+        title: 'Unauthorized',
+        description: 'You are not authorized.',
+        variant: 'destructive',
+      });
+      router.push('/login');
+      return;
+    }
+    try {
+      await axios.post(
+        `https://api.houzie.in/profile/visited/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      router.push(`/property/${id}`);
+    } catch (error: any) {
+      console.error('Error sending visited property request:', error);
+      toast({
+        title: 'Error',
+        description:
+          error.response?.data?.message || 'Failed to record visit. Try again.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <Card
@@ -224,7 +264,7 @@ export function PropertyCard({
             {!iscreate && (
               <div className='flex justify-end mt-auto pt-4'>
                 <Button
-                  onClick={() => router.push(`/property/${property.id}`)}
+                  onClick={() => handleViewDetails(property.id)}
                   className='w-full lg:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
                 >
                   View Details

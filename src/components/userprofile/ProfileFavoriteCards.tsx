@@ -1,6 +1,6 @@
 'use client';
 
-import axios from 'axios'; // Assuming you have axios configured
+import axios from 'axios';
 import {
   Bath,
   Bed,
@@ -30,7 +30,6 @@ import {
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
-  // Replace underscores with spaces and convert to title case
   return str
     .toLowerCase()
     .replace(/_/g, ' ')
@@ -42,9 +41,9 @@ const transformString = (str: string | null | undefined) => {
 const MyListings = () => {
   const router = useRouter();
   const { auth } = useAuth();
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const url = ``;
+  const url = `https://api.houzie.in/profile/favorites`;
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -59,11 +58,14 @@ const MyListings = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        setListings(response.data);
+
+        const listingsData = response.data.map((item: any) => item.listing);
+        setFavoriteListings(listingsData);
+        console.log(listingsData);
       } catch (error) {
         toast({
           title: 'Failed To Fetch Listings',
-          description: 'Please Check YOur Network Connection',
+          description: 'Please Check Your Network Connection',
         });
       } finally {
         setIsLoading(false);
@@ -126,18 +128,64 @@ const MyListings = () => {
     setFavorites(!favorites);
   };
 
+  const removefavorites = async (id: string) => {
+    try {
+      setIsLoading(true); // Disable the button while loading
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const deleteUrl = `https://api.houzie.in/profile/favorites/${id}`;
+      const response = await axios.delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        toast({
+          title: 'Success',
+          description: 'Property removed from favorites.',
+        });
+
+        // Optimistically update the UI by removing the item from the state
+        setFavoriteListings((prevListings) =>
+          prevListings.filter((listing) => listing.id !== id)
+        );
+      } else {
+        toast({
+          title: 'Failed to Remove',
+          description: 'Failed to remove property from favorites.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error: any) {
+      console.error('Error removing from favorites:', error);
+      toast({
+        title: 'Error',
+        description:
+          error.response?.data?.message ||
+          'Failed to remove property from favorites. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false); // Re-enable the button
+    }
+  };
+
   return (
     <div className='container mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
       <h1 className='text-xl sm:text-2xl font-bold mb-4'>My Favorites</h1>
 
       {isLoading ? (
         <p>Loading listings...</p>
-      ) : Array.isArray(listings) && listings.length === 0 ? (
+      ) : Array.isArray(favoriteListings) && favoriteListings.length === 0 ? (
         <p>No listings found.</p>
       ) : (
         <div className='space-y-4'>
-          {Array.isArray(listings) &&
-            listings.map((property) => {
+          {Array.isArray(favoriteListings) &&
+            favoriteListings.map((property) => {
               const propertyFeatures = getPropertyFeatures(property);
               const financialDetails = getFinancialDetails(property);
               const mainImageSrc = property.mainImage || '/svg/no-results.svg';
@@ -180,7 +228,6 @@ const MyListings = () => {
                         </button>
                       </div>
                     </div>
-
                     <div className='flex-1 p-4'>
                       <div className='space-y-4 h-full flex flex-col'>
                         <div>
@@ -250,6 +297,15 @@ const MyListings = () => {
                               className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
                             >
                               View Details
+                            </Button>
+                            <Button
+                              onClick={() => removefavorites(property.id)}
+                              className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
+                              disabled={isLoading} // Disable the button while loading
+                            >
+                              {isLoading
+                                ? 'Removing...'
+                                : 'Remove From Favorites'}
                             </Button>
                           </div>
                         )}

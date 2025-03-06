@@ -304,11 +304,6 @@ const PropertyDetailsForm = ({
           { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
           { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
           {
-            label: 'Preoccupied Property',
-            value: 'PREOCCUPIED_PROPERTY',
-            url: '/svg/preoccupied.svg',
-          },
-          {
             label: 'Flat/Apartment',
             value: 'FLAT_APARTMENT',
             url: '/svg/flat.svg',
@@ -322,8 +317,6 @@ const PropertyDetailsForm = ({
             url: '/svg/builder.svg',
           },
           { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-          { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
-          { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
           {
             label: 'Flat/Apartment',
             value: 'FLAT_APARTMENT',
@@ -395,23 +388,6 @@ const PropertyDetailsForm = ({
         ];
     }
   };
-
-  // const propertyTypes = [
-  //   { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
-  //   { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-  //   { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
-  //   { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
-  //   {
-  //     label: 'Preoccupied Property',
-  //     value: 'PREOCCUPIED_PROPERTY',
-  //     url: '/svg/preoccupied.svg',
-  //   },
-  //   {
-  //     label: 'Flat/Apartment',
-  //     value: 'FLAT_APARTMENT',
-  //     url: '/svg/flat.svg',
-  //   },
-  // ];
 
   const getRoomTypes = (propertyType) => {
     switch (propertyType) {
@@ -520,94 +496,198 @@ const PropertyDetailsForm = ({
           {
             label: 'Water Purifier',
             value: 'WATER_PURIFIER',
-            url: '/svg/water-dispenser.svg',
+            url: '/svg/material-symbols_water-loss.svg',
           },
-          { label: 'Cupboard', value: 'CUPBOARD', url: '/svg/cupboard.svg' },
-          { label: 'Geyser', value: 'GEYSER', url: '/svg/geyser.svg' },
+          {
+            label: 'Cupboard',
+            value: 'CUPBOARD',
+            url: '/svg/mdi_wardrobe.svg',
+          },
+          {
+            label: 'Geyser',
+            value: 'GEYSER',
+            url: '/svg/mdi_electric-water-heater.svg',
+          },
           { label: 'Fan', value: 'FAN', url: '/svg/fan.svg' },
-          { label: 'Microwave', value: 'MICROWAVE', url: '/svg/microvawe.svg' },
-          { label: 'Bed', value: 'BED', url: '/svg/double bed.svg' },
-          { label: 'Sofa', value: 'SOFA', url: '/svg/sofa.svg' },
+          {
+            label: 'Microwave',
+            value: 'MICROWAVE',
+            url: '/svg/material-symbols_microwave.svg',
+          },
+          {
+            label: 'Bed',
+            value: 'BED',
+            url: '/svg/material-symbols_bed-rounded.svg',
+          },
+          { label: 'Sofa', value: 'SOFA', url: '/svg/solar_sofa-bold.svg' },
           {
             label: 'Dining table',
             value: 'DINING_TABLE',
-            url: '/svg/dining.svg',
+            url: '/svg/game-icons_round-table.svg',
           },
-          { label: 'AC', value: 'AC', url: '/svg/air-conditioning.svg' },
-          { label: 'TV', value: 'TV', url: '/svg/tv.svg' },
+          {
+            label: 'AC',
+            value: 'AC',
+            url: '/svg/mynaui_air-conditioner-solid.svg',
+          },
+          { label: 'TV', value: 'TV', url: '/svg/mynaui_tv-solid.svg' },
           {
             label: 'Washing Machine',
             value: 'WASHING_MACHINE',
-            url: '/svg/washing-machine.svg',
+            url: '/svg/icon-park-solid_washing-machine.svg',
           },
-          { label: 'Fridge', value: 'FRIDGE', url: '/svg/fridge.svg' },
-          { label: 'Table', value: 'TABLE', url: '/svg/table.svg' },
+          {
+            label: 'Fridge',
+            value: 'FRIDGE',
+            url: '/svg/mdi_fridge-outline.svg',
+          },
+          {
+            label: 'Table',
+            value: 'TABLE',
+            url: '/svg/material-symbols_table-bar-rounded.svg',
+          },
         ];
       case 'PG':
         return [
           {
             label: 'Water Purifier',
             value: 'WATER_PURIFIER',
-            url: '/svg/water-dispenser.svg',
-          },
-          { label: 'Cupboard', value: 'CUPBOARD', url: '/svg/cupboard.svg' },
-          { label: 'Geyser', value: 'GEYSER', url: '/svg/geyser.svg' },
-          { label: 'Fan', value: 'FAN', url: '/svg/fan.svg' },
-          { label: 'Microwave', value: 'MICROWAVE', url: '/svg/microvawe.svg' },
-          {
-            label: 'Single Bed',
-            value: 'SINGLE_BED',
-            url: '/svg/single-bed.svg',
+            url: '/svg/material-symbols_water-loss.svg',
           },
           {
-            label: 'Double Bed',
-            value: 'DOUBLE_BED',
-            url: '/svg/double bed.svg',
+            label: 'Cupboard',
+            value: 'CUPBOARD',
+            url: '/svg/mdi_wardrobe.svg',
           },
-          { label: 'Sofa', value: 'SOFA', url: '/svg/sofa.svg' },
-          { label: 'Chair', value: 'CHAIR', url: '/svg/chair.svg' },
+          {
+            label: 'Geyser',
+            value: 'GEYSER',
+            url: '/svg/mdi_electric-water-heater.svg',
+          },
+          {
+            label: 'Fan',
+            value: 'FAN',
+            url: '/svg/fan.svg',
+          },
+          {
+            label: 'Microwave',
+            value: 'MICROWAVE',
+            url: '/svg/material-symbols_microwave.svg',
+          },
+          {
+            label: 'Bed',
+            value: 'BED',
+            url: '/svg/material-symbols_bed-rounded.svg',
+          },
+          {
+            label: 'Sofa',
+            value: 'SOFA',
+            url: '/svg/solar_sofa-bold.svg',
+          },
+          {
+            label: 'Chair',
+            value: 'CHAIR',
+            url: '/svg/chair.svg',
+          },
           {
             label: 'Dining table',
             value: 'DINING_TABLE',
-            url: '/svg/dining.svg',
+            url: '/svg/game-icons_round-table.svg',
           },
-          { label: 'AC', value: 'AC', url: '/svg/air-conditioning.svg' },
-          { label: 'TV', value: 'TV', url: '/svg/tv.svg' },
+          {
+            label: 'AC',
+            value: 'AC',
+            url: '/svg/mynaui_air-conditioner-solid.svg',
+          },
+          {
+            label: 'TV',
+            value: 'TV',
+            url: '/svg/mynaui_tv-solid.svg',
+          },
           {
             label: 'Washing Machine',
             value: 'WASHING_MACHINE',
-            url: '/svg/washing-machine.svg',
+            url: '/svg/icon-park-solid_washing-machine.svg',
           },
-          { label: 'Fridge', value: 'FRIDGE', url: '/svg/fridge.svg' },
-          { label: 'Table', value: 'TABLE', url: '/svg/table.svg' },
+          {
+            label: 'Fridge',
+            value: 'FRIDGE',
+            url: '/svg/mdi_fridge-outline.svg',
+          },
+          {
+            label: 'Table',
+            value: 'TABLE',
+            url: '/svg/material-symbols_table-bar-rounded.svg',
+          },
         ];
+
       default:
         return [
           {
             label: 'Water Purifier',
             value: 'WATER_PURIFIER',
-            url: '/svg/water-dispenser.svg',
+            url: '/svg/material-symbols_water-loss.svg',
           },
-          { label: 'Cupboard', value: 'CUPBOARD', url: '/svg/cupboard.svg' },
-          { label: 'Geyser', value: 'GEYSER', url: '/svg/geyser.svg' },
-          { label: 'Fan', value: 'FAN', url: '/svg/fan.svg' },
-          { label: 'Microwave', value: 'MICROWAVE', url: '/svg/microvawe.svg' },
-          { label: 'Bed', value: 'BED', url: '/svg/double bed.svg' },
-          { label: 'Sofa', value: 'SOFA', url: '/svg/sofa.svg' },
+          {
+            label: 'Cupboard',
+            value: 'CUPBOARD',
+            url: '/svg/mdi_wardrobe.svg',
+          },
+          {
+            label: 'Geyser',
+            value: 'GEYSER',
+            url: '/svg/mdi_electric-water-heater.svg',
+          },
+          {
+            label: 'Fan',
+            value: 'FAN',
+            url: '/svg/fan.svg',
+          },
+          {
+            label: 'Microwave',
+            value: 'MICROWAVE',
+            url: '/svg/material-symbols_microwave.svg',
+          },
+          {
+            label: 'Bed',
+            value: 'BED',
+            url: '/svg/material-symbols_bed-rounded.svg',
+          },
+          {
+            label: 'Sofa',
+            value: 'SOFA',
+            url: '/svg/solar_sofa-bold.svg',
+          },
           {
             label: 'Dining table',
             value: 'DINING_TABLE',
-            url: '/svg/dining.svg',
+            url: '/svg/game-icons_round-table.svg',
           },
-          { label: 'AC', value: 'AC', url: '/svg/air-conditioning.svg' },
-          { label: 'TV', value: 'TV', url: '/svg/tv.svg' },
+          {
+            label: 'AC',
+            value: 'AC',
+            url: '/svg/mynaui_air-conditioner-solid.svg',
+          },
+          {
+            label: 'TV',
+            value: 'TV',
+            url: '/svg/mynaui_tv-solid.svg',
+          },
           {
             label: 'Washing Machine',
             value: 'WASHING_MACHINE',
-            url: '/svg/washing-machine.svg',
+            url: '/svg/icon-park-solid_washing-machine.svg',
           },
-          { label: 'Fridge', value: 'FRIDGE', url: '/svg/fridge.svg' },
-          { label: 'Table', value: 'TABLE', url: '/svg/table.svg' },
+          {
+            label: 'Fridge',
+            value: 'FRIDGE',
+            url: '/svg/mdi_fridge-outline.svg',
+          },
+          {
+            label: 'Table',
+            value: 'TABLE',
+            url: '/svg/material-symbols_table-bar-rounded.svg',
+          },
         ];
     }
   };
