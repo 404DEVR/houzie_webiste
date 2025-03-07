@@ -23,6 +23,7 @@ import {
   restructured,
   startEditing,
 } from '@/redux/slices/formslices';
+import { FaPhoneAlt } from 'react-icons/fa';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -97,7 +98,7 @@ const MyListings = () => {
           bathroom: listingData.bathrooms?.toString() || '',
           amenities: listingData.amenities,
           bedroom: listingData.bedrooms?.toString() || '',
-          preoccupiedPropertyType: listingData.isPreoccupied ? 'Yes' : 'No',
+          preoccupiedPropertyType: listingData.propertyType,
           preferredTenantType: [listingData.preferredTenant],
           features: listingData.features,
           availableFrom: listingData.availableFrom,
@@ -245,11 +246,24 @@ const MyListings = () => {
     return features;
   };
 
-  const toggleCardExpansion = (id) => {
+  const toggleCardExpansion = async (id) => {
     if (expandedCardId === id) {
-      setExpandedCardId(null); // Collapse if already expanded
+      setExpandedCardId(null);
     } else {
-      setExpandedCardId(id); // Expand the clicked card
+      try {
+        const response = await axios.get(`https://api.houzie.in/leads/${id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
+        });
+        // console.log(response.data);
+        setLeadsData(response.data);
+      } catch {
+        setExpandedCardId(id);
+      }
+      setExpandedCardId(id);
+      console.log(id);
     }
   };
 
@@ -361,18 +375,70 @@ const MyListings = () => {
                   </div>
                 </div>
               </CardContent>
-              {expandedCardId === listing.id && (
-                <div className='mt-4 bg-white p-4 rounded-md shadow-inner max-h-[200px] overflow-y-auto w-full'>
-                  {/* Example content */}
-                  <ul>
-                    {Array.from({ length: 10 }, (_, i) => (
-                      <li key={i} className='py-1 border-b last:border-none'>
-                        Lead #{i + 1}: Example lead content here.
-                      </li>
+              {expandedCardId === listing.id &&
+                (leadsData?.length === 0 ? (
+                  <div className='text-center py-4 mx-2 mb-2 rounded-xl bg-[#eff5ff] border'>
+                    No leads data available
+                  </div>
+                ) : (
+                  <div className='space-y-4 mx-2 mb-2'>
+                    {leadsData?.map((lead) => (
+                      <div
+                        key={lead.id}
+                        className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'
+                      >
+                        {/* Lead Info */}
+                        <div className='flex items-center space-x-4 w-full sm:w-auto'>
+                          <Image
+                            src='/images/Dummy profile.png'
+                            alt={lead.name}
+                            width={50}
+                            height={50}
+                            className='rounded-full object-cover'
+                          />
+                          <div>
+                            <p className='text-sm md:text-md text-[#42A4AE]'>
+                              {new Date(lead.createdAt).toLocaleDateString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                }
+                              )}
+                            </p>
+                            <p className='text-sm md:text-md font-semibold'>
+                              {lead.name}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Interested In */}
+                        <div className='w-full sm:w-auto mt-2 sm:mt-0'>
+                          <p className='text-sm md:text-md text-[#42A4AE]'>
+                            Interested In
+                          </p>
+                          <p className='text-sm md:text-md font-semibold'>
+                            Property Name
+                          </p>
+                        </div>
+
+                        {/* Contact Details */}
+                        <div className='flex flex-col items-start justify-center w-full sm:w-auto mt-2 sm:mt-0'>
+                          <div className='text-sm md:text-md text-[#42A4AE]'>
+                            Contact Details
+                          </div>
+                          <div className='flex items-center justify-end space-x-2'>
+                            <FaPhoneAlt className='text-sm md:text-md font-semibold' />
+                            <p className='text-sm md:text-md font-semibold'>
+                              +91 {lead.phoneNumber}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
-                </div>
-              )}
+                  </div>
+                ))}
             </Card>
           ))}
         </div>

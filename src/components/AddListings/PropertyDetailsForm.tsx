@@ -154,7 +154,11 @@ const PropertyDetailsForm = ({
 
   useEffect(() => {
     if (auth?.role === 'FLAT_MATES') {
-      dispatch(updateAddPropertyDetails({ isPreoccupied: true }));
+      if (page === 'edit') {
+        dispatch(updateEditPropertyDetails({ isPreoccupied: true }));
+      } else {
+        dispatch(updateAddPropertyDetails({ isPreoccupied: true }));
+      }
     }
   }, [auth?.role]);
 
@@ -889,6 +893,7 @@ const PropertyDetailsForm = ({
 
     setIsNextClicked(true);
     handleNext();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleEdit = async () => {
@@ -976,7 +981,7 @@ const PropertyDetailsForm = ({
     try {
       const date = new Date(dateString);
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     } catch (error) {
@@ -1629,7 +1634,7 @@ const PropertyDetailsForm = ({
               propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
               propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
               <div className='flex flex-col w-full lg:w-[60%]'>
-                <Label className='text-[#646464] font-normal text-md mb-1'>
+                <Label className='text-black font-normal text-md mb-1'>
                   Floor Number<span className='text-red-500'>*</span>
                 </Label>
                 <div className='flex justify-start items-center gap-4'>

@@ -58,6 +58,11 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
     }
   };
 
+  const handleBackButton = () => {
+    handleBack();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Card className='rounded-xl md:p-8 shadow-sm max-w-4xl my-6 md:my-0 mx-auto border border-gray-200'>
       <CardHeader>
@@ -74,7 +79,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
       </CardContent>
       <CardFooter className='flex justify-end items-center gap-4'>
         <Button
-          onClick={handleBack}
+          onClick={handleBackButton}
           variant='outline'
           className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
         >
