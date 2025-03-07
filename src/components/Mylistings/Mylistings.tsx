@@ -1,10 +1,8 @@
-'use client';
-
 import axios from 'axios';
-import { Bath, Bed, Building2, Home, TrendingUp } from 'lucide-react';
+import { ArrowDown, Bath, Bed, Building2, Home } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
@@ -16,8 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
-import { Listing, PropertyFeature } from '@/interfaces/Interface';
-import { populateEditForm, startEditing } from '@/redux/slices/formslices';
+import { Lead, Listing, PropertyFeature } from '@/interfaces/Interface';
+import {
+  populateEditForm,
+  PropertyDetails,
+  PropertyLocation,
+  restructured,
+  startEditing,
+} from '@/redux/slices/formslices';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -32,6 +36,7 @@ const transformString = (str: string | null | undefined) => {
 
 const MyListings = () => {
   const router = useRouter();
+  const [leadsData, setLeadsData] = useState<Lead[] | null>([]);
   const { auth } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
@@ -39,6 +44,7 @@ const MyListings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const url = `https://api.houzie.in/broker/listings`;
   const [refreshListings, setRefreshListings] = useState(false);
+  const [expandedCardId, setExpandedCardId] = useState(null); // Track which card is expanded
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -57,7 +63,7 @@ const MyListings = () => {
       } catch (error) {
         toast({
           title: 'Failed To Fetch Listings',
-          description: 'Please Check YOur Network Connection',
+          description: 'Please Check Your Network Connection',
         });
       } finally {
         setIsLoading(false);
@@ -67,98 +73,10 @@ const MyListings = () => {
     fetchListings();
   }, [auth?.accessToken, url, refreshListings]);
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (id: string) => {
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data;
-
-      interface PropertyDetails {
-        title: string;
-        description: string;
-        propertyType: string;
-        roomType: string;
-        sharingType: string;
-        units: string;
-        mainImage: string;
-        roomSize: string;
-        roomSizeDetails: string;
-        furnishingLevel: string;
-        furnishings: string[];
-        configuration: string;
-        balcony: string;
-        bathroom: string;
-        amenities: string[];
-        bedroom: string;
-        preoccupiedPropertyType: string;
-        preferredTenantType: string[];
-        features: string[];
-        availableFrom: string;
-        totalfloor: string;
-        floornumber: string;
-        monthlyRent: string;
-        maintenanceCharges: string;
-        maintenanceChargesAmount: string;
-        securityDeposit: string;
-        securityDepositamount: string;
-        lockInPeriodMonths: string;
-        brokerageCharges: string;
-        brokerageAmount: string;
-        brokerageNegotiable: boolean;
-      }
-
-      interface PropertyLocation {
-        id: string;
-        fullAddress: string;
-        city: string;
-        state: string;
-        country: string;
-        latitude: number | null;
-        longitude: number | null;
-      }
-
-      interface Verification {
-        selectedDate: string | null;
-        phoneNumber: string;
-      }
-      interface Restructuredinterface {
-        title: string;
-        description: string;
-        propertyType: string;
-        location: {
-          city: string;
-          state: string;
-          country: string;
-          latitude: number | null;
-          longitude: number | null;
-        };
-        price: number | null;
-        security: number | null;
-        brokerage: number | null;
-        isNegotiable: boolean;
-        lockInPeriod: string;
-        availableFrom: string;
-        configuration: string;
-        bedrooms: number | null;
-        bathrooms: number | null;
-        balconies: number | null;
-        floorNumber: string;
-        totalFloors: number | null;
-        maintenanceCharges: number | null;
-        isMaintenanceIncluded: boolean;
-        roomType: string;
-        sharingType: string;
-        unitsAvailable: number | null;
-        roomSize: number | null;
-        furnishing: string;
-        furnishingExtras: string[];
-        amenities: string[];
-        features: string[];
-        preferredTenant: string;
-        mainImage: string;
-        photos: string[];
-        isPreoccupied: boolean;
-      }
-
       const editFormData = {
         currentPage: 1,
         propertyDetails: {
@@ -214,9 +132,9 @@ const MyListings = () => {
           preview: photoUrl,
         })),
         verification: {
-          selectedDate: null,
+          selectedDate: '',
           phoneNumber: '',
-        } as Verification,
+        },
         restructuredData: {
           title: '',
           description: '',
@@ -254,7 +172,10 @@ const MyListings = () => {
           mainImage: '',
           photos: [],
           isPreoccupied: false,
-        } as Restructuredinterface,
+          gender: '',
+          occupants: [],
+          totalOccupants: null,
+        } as restructured,
         isEditing: true,
         editingListingId: id,
       };
@@ -263,15 +184,37 @@ const MyListings = () => {
       dispatch(populateEditForm(editFormData));
       setIsDialogOpen(true);
     } catch (error) {
+      console.log(error);
       toast({
         title: 'Please Try Again',
-        description: 'Please Check Your Netwrok Connection',
+        description: 'Please Check Your Network Connection',
       });
     }
   };
 
   const handleViewDetails = (id) => {
-    router.push(`/property/${id}`);
+    const fetchLeads = async () => {
+      try {
+        const response = await axios.get(
+          'https://api.houzie.in/leads?query=Ma',
+          {
+            headers: {
+              Authorization: `Bearer ${auth?.accessToken}`,
+            },
+          }
+        );
+        setLeadsData(response.data);
+        setIsLoading(false);
+      } catch (err) {
+        toast({
+          title: 'Failed ',
+          description: 'Failed to fetch leads data',
+        });
+        setIsLoading(false);
+      }
+    };
+
+    fetchLeads();
   };
 
   const handleDelete = async (id: string) => {
@@ -325,6 +268,14 @@ const MyListings = () => {
     return features;
   };
 
+  const toggleCardExpansion = (id) => {
+    if (expandedCardId === id) {
+      setExpandedCardId(null); // Collapse if already expanded
+    } else {
+      setExpandedCardId(id); // Expand the clicked card
+    }
+  };
+
   return (
     <div className='mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
       <h1 className='text-xl sm:text-2xl font-bold mb-4'>My Listings</h1>
@@ -335,103 +286,118 @@ const MyListings = () => {
         <p>No listings found.</p>
       ) : (
         <div className='space-y-4'>
-          {Array.isArray(listings) &&
-            listings.map((listing) => {
-              const propertyFeatures = getPropertyFeatures(listing);
-              return (
-                <Card
-                  key={listing.id}
-                  className='shadow-md rounded-2xl bg-[#eff6ff] border'
-                >
-                  <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
-                    <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
-                      <div className='relative w-full h-full'>
-                        <Image
-                          src={listing.mainImage || '/svg/no-results.svg'}
-                          alt={listing.title}
-                          fill
-                          className='object-cover rounded-2xl'
-                          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                        />
+          {listings.map((listing) => (
+            <Card
+              key={listing.id}
+              className={`shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 ${
+                expandedCardId === listing.id
+                  ? 'max-h-[500px]'
+                  : 'max-h-[200px]'
+              } overflow-hidden`}
+            >
+              <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
+                <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
+                  <div className='relative w-full h-full'>
+                    <Image
+                      src={listing.mainImage || '/svg/no-results.svg'}
+                      alt={listing.title}
+                      fill
+                      className='object-cover rounded-2xl'
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                    />
+                  </div>
+                </div>
+
+                <div className='w-full flex flex-col md:flex-row'>
+                  <div className='md:w-[70%] pt-4 md:pt-10'>
+                    <div className='flex flex-col justify-between items-center md:items-start mb-6'>
+                      <h2 className='text-base sm:text-xl font-semibold mb-2'>
+                        {listing.title}
+                      </h2>
+                      <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start'>
+                        {listing.description}
+                      </h3>
+                    </div>
+
+                    {getPropertyFeatures(listing).length > 0 && (
+                      <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
+                        {getPropertyFeatures(listing).map((feature, index) => (
+                          <Badge
+                            key={index}
+                            variant='outline'
+                            className=' border-none flex gap-1 justify-center items-center'
+                          >
+                            <feature.icon className='w-[14px] h-[14px]' />
+                            <span className='font-medium text-xs'>
+                              {feature.label}
+                            </span>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='flex flex-col items-center p-2 md:items-start '>
+                    <div className='flex gap-6 mb-4 flex-wrap md:flex-nowrap '>
+                      <div className='mb-1'>
+                        <p className='text-gray-500 text-xs'>Rent</p>
+                        <span className='text-black text-2xl font-semibold flex gap-2'>
+                          <span>₹</span> {listing.price}
+                        </span>
+                      </div>
+                      <div className='mb-1'>
+                        <p className='text-gray-500 text-xs'>Location:</p>
+                        <span className='text-black text-2xl font-semibold'>
+                          Gurgaon
+                        </span>
                       </div>
                     </div>
 
-                    <div className='w-full flex flex-col md:flex-row'>
-                      <div className='md:w-[70%] pt-4 md:pt-10'>
-                        <div className='flex flex-col justify-between items-center md:items-start mb-6'>
-                          <h2 className='text-base sm:text-xl font-semibold mb-2'>
-                            {listing.title}
-                          </h2>
-                          <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start'>
-                            {listing.description}
-                          </h3>
-                        </div>
-
-                        {propertyFeatures.length > 0 && (
-                          <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
-                            {propertyFeatures.map((feature, index) => (
-                              <Badge
-                                key={index}
-                                variant='outline'
-                                className=' border-none flex gap-1 justify-center items-center'
-                              >
-                                <feature.icon className='w-[14px] h-[14px]' />
-                                <span className='font-medium text-xs'>
-                                  {feature.label}
-                                </span>
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className='flex flex-col items-center p-2 md:items-start '>
-                        <div className='flex gap-6 mb-4 flex-wrap md:flex-nowrap '>
-                          <div className='mb-1'>
-                            <p className='text-gray-500 text-xs'>Rent</p>
-                            <span className='text-black text-2xl font-semibold flex gap-2'>
-                              <span>₹</span> {listing.price}
-                            </span>
-                          </div>
-                          <div className='mb-1'>
-                            <p className='text-gray-500 text-xs'>Location:</p>
-                            <span className='text-black text-2xl font-semibold'>
-                              Gurgaon
-                            </span>
-                          </div>
-                        </div>
-
-                        <Button
-                          variant='link'
-                          onClick={() => handleViewDetails(listing.id)}
-                          className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
-                        >
-                          <TrendingUp className='w-[17px] h-[17px]' />
-                          Views and Leads
-                        </Button>
-
-                        <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
-                          <Button
-                            className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                            size='sm'
-                            onClick={() => handleEdit(listing.id)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                            size='sm'
-                            onClick={() => handleDelete(listing.id)}
-                          >
-                            Un post
-                          </Button>
-                        </div>
-                      </div>
+                    <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
+                      <Button
+                        className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
+                        size='sm'
+                        onClick={() => handleEdit(listing.id)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
+                        size='sm'
+                        onClick={() => handleDelete(listing.id)}
+                      >
+                        Un post
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    <Button
+                      variant='link'
+                      onClick={() => toggleCardExpansion(listing.id)}
+                      className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
+                    >
+                      <ArrowDown
+                        className={`w-[17px] h-[17px] transition-transform ${
+                          expandedCardId === listing.id ? 'rotate-180' : ''
+                        }`}
+                      />
+                      Views and Leads
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+              {expandedCardId === listing.id && (
+                <div className='mt-4 bg-white p-4 rounded-md shadow-inner max-h-[200px] overflow-y-auto w-full'>
+                  {/* Example content */}
+                  <ul>
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <li key={i} className='py-1 border-b last:border-none'>
+                        Lead #{i + 1}: Example lead content here.
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Card>
+          ))}
         </div>
       )}
       <Dialog

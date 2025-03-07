@@ -29,7 +29,7 @@ const useAuth = () => {
     (userData: User) => {
       setAuth(userData);
       setCookie('auth', JSON.stringify(userData), {
-        maxAge: 60 * 60,
+        maxAge: 7 * 24 * 60 * 60,
         path: '/',
         secure: window.location.protocol === 'https:',
         sameSite: 'strict',

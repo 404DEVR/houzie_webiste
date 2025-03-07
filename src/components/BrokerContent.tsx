@@ -64,7 +64,18 @@ const BrokerContent = () => {
             Add New Listing
           </Button>
 
-          <Dialog>
+          <Button
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
+            }`}
+            variant='ghost'
+            onClick={() => handleTabChange('profile')}
+          >
+            <UserIcon className='mr-2 h-4 w-4' />
+            Profile
+          </Button>
+
+          {/* <Dialog>
             <DialogTrigger asChild>
               <Button
                 className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
@@ -79,7 +90,7 @@ const BrokerContent = () => {
             <DialogContent className='sm:max-w-[425px] shadow-md'>
               <ProfileForm />
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
 
           <Button
             className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
@@ -99,6 +110,7 @@ const BrokerContent = () => {
           {activeTab === 'addListing' && (
             <AddListings setActiveTab={setActiveTab} />
           )}
+          {activeTab === 'profile' && <ProfileForm />}
           {activeTab === 'settings' && <SettingsPage />}
         </div>
       </div>

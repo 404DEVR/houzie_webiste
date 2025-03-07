@@ -30,13 +30,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -158,6 +151,12 @@ const PropertyDetailsForm = ({
     setFieldErrors((prevErrors) => ({ ...prevErrors, availableFrom: false }));
   };
 
+  useEffect(() => {
+    if (auth?.role === 'FLAT_MATES') {
+      dispatch(updateAddPropertyDetails({ isPreoccupied: true }));
+    }
+  }, [auth?.role]);
+
   const resetPropertyDetails = () => {
     const defaultState = {
       propertyType: propertyDetails.propertyType,
@@ -165,9 +164,13 @@ const PropertyDetailsForm = ({
       sharingType: '',
       units: '',
       roomSize: '',
-      preoccupiedPropertyType: '',
+      preoccupiedPropertyType:
+        auth?.role === 'FLAT_MATES'
+          ? ''
+          : propertyDetails.preoccupiedPropertyType,
       configuration: '',
       bedroom: '',
+      gender: '',
       bathroom: '',
       balcony: '',
       maintenanceChargesAmount: '',
@@ -199,6 +202,11 @@ const PropertyDetailsForm = ({
     if (name === 'propertyType' && !isNextClicked) {
       resetPropertyDetails();
     }
+
+    if (name === 'preoccupiedPropertyType' && !isNextClicked) {
+      resetPropertyDetails();
+    }
+
     if (page === 'edit') {
       dispatch(updateEditPropertyDetails({ [name]: value }));
     } else {
@@ -323,38 +331,6 @@ const PropertyDetailsForm = ({
             url: '/svg/flat.svg',
           },
         ];
-      case 'REAL_ESTATE_AGENT':
-        return [
-          {
-            label: 'Builder Floor',
-            value: 'BUILDER_FLOOR',
-            url: '/svg/builder.svg',
-          },
-          { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-          {
-            label: 'Preoccupied Property',
-            value: 'PREOCCUPIED_PROPERTY',
-            url: '/svg/preoccupied.svg',
-          },
-          {
-            label: 'Flat/Apartment',
-            value: 'FLAT_APARTMENT',
-            url: '/svg/flat.svg',
-          },
-        ];
-      case 'FLAT_MATES':
-        return [
-          {
-            label: 'Builder Floor',
-            value: 'BUILDER_FLOOR',
-            url: '/svg/builder.svg',
-          },
-          {
-            label: 'Flat/Apartment',
-            value: 'FLAT_APARTMENT',
-            url: '/svg/flat.svg',
-          },
-        ];
       case 'PG_OWNER':
         return [
           { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
@@ -375,11 +351,6 @@ const PropertyDetailsForm = ({
           { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
           { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
           { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
-          {
-            label: 'Preoccupied Property',
-            value: 'PREOCCUPIED_PROPERTY',
-            url: '/svg/preoccupied.svg',
-          },
           {
             label: 'Flat/Apartment',
             value: 'FLAT_APARTMENT',
@@ -701,9 +672,18 @@ const PropertyDetailsForm = ({
   ];
 
   const preoccupiedpropertyOptions = [
-    { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
+    {
+      label: 'Builder Floor',
+      value: 'BUILDER_FLOOR',
+      url: '/svg/builder.svg',
+    },
     { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
-    { label: 'Flat/Apartment', value: 'FLAT_APARTMENT', url: '/svg/flat.svg' },
+    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+    {
+      label: 'Flat/Apartment',
+      value: 'FLAT_APARTMENT',
+      url: '/svg/flat.svg',
+    },
   ];
 
   const lockInPeriod = [
@@ -711,6 +691,12 @@ const PropertyDetailsForm = ({
     { label: '1 Month', value: 'ONE_MONTH', url: '/svg/villa.svg' },
     { label: '3 Months', value: 'THREE_MONTHS', url: '/svg/coliving.svg' },
     { label: '6 Months', value: 'SIX_MONTHS', url: '/svg/PG.svg' },
+  ];
+
+  const gender = [
+    { label: 'Male', value: 'MALE' },
+    { label: 'Female', value: 'FEMALE' },
+    { label: 'Open to both', value: 'OTHER' },
   ];
 
   const amenitiesList = [
@@ -788,11 +774,10 @@ const PropertyDetailsForm = ({
     }
   };
 
-  const getRequiredFields = (propertyType) => {
+  const getRequiredFields = (propertyDetails) => {
     const commonFields = [
       'title',
       'description',
-      'propertyType',
       'furnishingLevel',
       'availableFrom',
       'monthlyRent',
@@ -801,61 +786,70 @@ const PropertyDetailsForm = ({
       'brokerageAmount',
     ];
 
-    switch (propertyType) {
-      case 'CO_LIVING':
-        return [
-          ...commonFields,
-          'roomType',
-          'sharingType',
-          'units',
-          'roomSize',
-        ];
-      case 'VILLA':
-        return [...commonFields, 'totalfloor', 'preferredTenantType'];
-      case 'PG':
-        return [
-          ...commonFields,
-          'roomType',
-          'sharingType',
-          'units',
-          'roomSize',
-        ];
-      case 'BUILDER_FLOOR':
-      case 'FLAT_APARTMENT':
-        return [
-          ...commonFields,
-          'configuration',
-          'bedroom',
-          'bathroom',
-          'balcony',
-          'maintenanceChargesAmount',
-          'preferredTenantType',
-          'floornumber',
-          'totalfloor',
-        ];
-      case 'PREOCCUPIED_PROPERTY':
-        return [
-          ...commonFields,
-          'units',
-          'roomSize',
-          'preoccupiedPropertyType',
-          'configuration',
-          'bedroom',
-          'bathroom',
-          'balcony',
-          'maintenanceChargesAmount',
-          'preferredTenantType',
-          'totalfloor',
-          'floornumber',
-        ];
-      default:
-        return commonFields;
+    if (propertyDetails.isPreoccupied) {
+      switch (propertyDetails.propertyType) {
+        case 'BUILDER_FLOOR':
+          return [
+            ...commonFields,
+            'configuration',
+            'preferredTenantType',
+            'floornumber',
+            'totalfloor',
+          ];
+        case 'FLAT_APARTMENT':
+          return [
+            ...commonFields,
+            'configuration',
+            'maintenanceChargesAmount',
+            'preferredTenantType',
+            'floornumber',
+            'totalfloor',
+          ];
+        case 'VILLA':
+          return [...commonFields, 'preferredTenantType'];
+        case 'CO_LIVING':
+          return [...commonFields, 'roomType', 'units'];
+        case 'PG':
+          return [...commonFields, 'roomType', 'units'];
+        default:
+          return commonFields;
+      }
+    } else {
+      switch (propertyDetails.propertyType) {
+        case 'CO_LIVING':
+          return [...commonFields, 'propertyType', 'roomType', 'units'];
+        case 'VILLA':
+          return [...commonFields, 'propertyType', 'preferredTenantType'];
+        case 'PG':
+          return [...commonFields, 'propertyType', 'roomType', 'units'];
+        case 'BUILDER_FLOOR':
+          return [
+            ...commonFields,
+            'configuration',
+            'propertyType',
+            'preferredTenantType',
+            'floornumber',
+            'totalfloor',
+          ];
+        case 'FLAT_APARTMENT':
+          return [
+            ...commonFields,
+            'configuration',
+            'propertyType',
+            'maintenanceChargesAmount',
+            'preferredTenantType',
+            'floornumber',
+            'totalfloor',
+          ];
+        default:
+          return commonFields;
+      }
     }
   };
 
   const validateForm = () => {
     const errors = {};
-    const requiredFields = getRequiredFields(propertyDetails.propertyType);
+    const requiredFields = getRequiredFields(propertyDetails);
 
     requiredFields.forEach((field) => {
       const value = propertyDetails[field];
@@ -871,13 +865,13 @@ const PropertyDetailsForm = ({
     if (
       !isNaN(floorNumber) &&
       !isNaN(totalFloors) &&
-      floorNumber <= totalFloors
+      floorNumber >= totalFloors
     ) {
       errors['floornumber'] = true;
       errors['totalfloor'] = true;
-      setFloorError('Floor number must be less than total floors');
-    } else {
       setFloorError('');
+    } else {
+      setFloorError('Floor number must be less than total floors');
     }
     return errors;
   };
@@ -955,15 +949,13 @@ const PropertyDetailsForm = ({
       return;
     }
 
-    const isValid = getRequiredFields(propertyDetails.propertyType).every(
-      (field) => {
-        const value = propertyDetails[field];
-        if (Array.isArray(value)) {
-          return value.length > 0;
-        }
-        return value !== null && value !== undefined && value !== '';
+    const isValid = getRequiredFields(propertyDetails).every((field) => {
+      const value = propertyDetails[field];
+      if (Array.isArray(value)) {
+        return value.length > 0;
       }
-    );
+      return value !== null && value !== undefined && value !== '';
+    });
 
     setIsFormValid(isValid);
   }, [propertyDetails, page]);
@@ -1051,509 +1043,138 @@ const PropertyDetailsForm = ({
         </div>
 
         {/* Property Type */}
-        <div className=''>
-          <Label className='text-lg text-[#646464] font-normal'>
-            Property Type<span className='text-red-500'>*</span>
-          </Label>
-          <div className='flex flex-wrap gap-2 mt-2'>
-            {getPropetyTypes(auth?.role || '').map((type) => (
-              <Button
-                key={type.value}
-                className={cn(
-                  'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                  propertyDetails.propertyType === type.value
-                    ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                    : 'bg-white text-[#646464] border-gray-300 hover:bg-gray-100'
-                )}
-                onClick={() => handleButtonClick('propertyType', type.value)}
-                disabled={page === 'edit'}
-              >
-                <Image
-                  src={type.url}
-                  alt={type.label}
-                  width={55}
-                  height={55}
-                  className={`object-contain `}
-                />
-                <div className=' text-center text-wrap'>{type.label}</div>
-              </Button>
-            ))}
+        {auth?.role !== 'FLAT_MATES' && (
+          <div className=''>
+            <Label className='text-md text-black font-normal'>
+              Property Type<span className='text-red-500'>*</span>
+            </Label>
+            <div className='flex flex-wrap gap-2 mt-2'>
+              {getPropetyTypes(auth?.role || '').map((type) => (
+                <Button
+                  key={type.value}
+                  className={cn(
+                    'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                    propertyDetails.propertyType === type.value
+                      ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                      : 'bg-white text-[#646464] border-gray-300 hover:bg-gray-100'
+                  )}
+                  onClick={() => handleButtonClick('propertyType', type.value)}
+                  disabled={page === 'edit'}
+                >
+                  <Image
+                    src={type.url}
+                    alt={type.label}
+                    width={55}
+                    height={55}
+                    className={`object-contain `}
+                  />
+                  <div className=' text-center text-wrap'>{type.label}</div>
+                </Button>
+              ))}
+            </div>
+            {fieldErrors['propertyType'] && (
+              <p className='text-red-500 text-sm mt-1'>
+                Please select a Property Type
+              </p>
+            )}
           </div>
-          {fieldErrors['propertyType'] && (
-            <p className='text-red-500 text-sm mt-1'>
-              Please select a Property Type
-            </p>
-          )}
-        </div>
+        )}
 
         {(propertyDetails.propertyType === 'CO_LIVING' ||
           propertyDetails.propertyType === 'VILLA' ||
-          propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' ||
           propertyDetails.propertyType === 'PG' ||
           propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-          propertyDetails.propertyType === 'FLAT_APARTMENT') && (
+          propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+          propertyDetails.isPreoccupied) && (
           <div className='transition-opacity duration-500 ease-in-out flex flex-col gap-6'>
-            {/* Room Type */}
-            {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
-              <div>
-                <Label className='text-lg text-[#646464] font-normal'>
-                  Room Type<span className='text-red-500'>*</span>
-                </Label>
-                <div className='flex flex-wrap gap-2 mt-2'>
-                  {getRoomTypes(propertyDetails.propertyType).map((type) => (
-                    <Button
-                      key={type.value}
-                      size='custom'
-                      className={cn(
-                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.roomType === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-[#646464] '
-                      )}
-                      onClick={() => handleButtonClick('roomType', type.value)}
-                    >
-                      {type.label}
-                    </Button>
-                  ))}
-                </div>
-                {fieldErrors['roomType'] && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    Please select a Room Type
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Sharing Type */}
-            {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG') && (
-              <div>
-                <Label className='text-lg text-[#646464] font-normal'>
-                  Sharing Type<span className='text-red-500'>*</span>
-                </Label>
-                <div className='flex flex-wrap gap-2 mt-2'>
-                  {getShareTypes(propertyDetails.propertyType).map((type) => (
-                    <Button
-                      key={type.value}
-                      className={cn(
-                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.sharingType === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-[#646464] '
-                      )}
-                      onClick={() =>
-                        handleButtonClick('sharingType', type.value)
-                      }
-                    >
-                      {type.label}
-                    </Button>
-                  ))}
-                </div>{' '}
-                {fieldErrors['sharingType'] && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    Please select a sharing Type
-                  </p>
-                )}
-              </div>
-            )}
-            {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
-              <div className='flex flex-col'>
-                <Label className='text-lg font-bold mb-2'>
-                  Preoccupied Property Type
-                  <span className='text-red-500'>*</span>
-                </Label>
-                <Select
-                  value={propertyDetails.preoccupiedPropertyType}
-                  onValueChange={(value) => {
-                    handleSelectChange('preoccupiedPropertyType', value);
-                    setFieldErrors((prevErrors) => ({
-                      ...prevErrors,
-                      preoccupiedPropertyType: false,
-                    }));
-                  }}
-                  required
-                >
-                  <SelectTrigger className='w-full border focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
-                    <SelectValue placeholder='Select a preoccupied property type' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {preoccupiedpropertyOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        <div className='flex items-center'>
-                          <Image
-                            src={option.url}
-                            alt={option.label}
-                            width={20}
-                            height={20}
-                            className='mr-2'
-                          />
-                          {option.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldErrors['preoccupiedPropertyType'] && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    Please select a preoccupied property type
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Configuration */}
-            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div>
-                <Label className='text-lg text-[#646464] font-normal'>
-                  Configuration<span className='text-red-500'>*</span>
-                </Label>
-                <div className='flex flex-wrap gap-2 mt-2'>
-                  {configuration.map((type) => (
-                    <Button
-                      key={type.value}
-                      className={cn(
-                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.configuration === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-[#646464] '
-                      )}
-                      onClick={() =>
-                        handleButtonClick('configuration', type.value)
-                      }
-                    >
-                      {type.label}
-                    </Button>
-                  ))}
-                </div>
-                {fieldErrors['configuration'] && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    Please select an Configuration
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Number of Units Available */}
-            {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div className=''>
-                <div className=''>
-                  <CustomInput
-                    type='number'
-                    name='units'
-                    label='Number Of Units Available'
-                    id='units'
-                    value={propertyDetails.units}
-                    onChange={handleInputChange}
-                    error={fieldErrors['units'] ? 'This field is required' : ''}
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['units'],
-                      }
-                    )}
-                    placeholder='Enter Number of Unts Available'
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Rooms Size */}
-            {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div className=''>
-                <div className=''>
-                  <CustomInput
-                    type='number'
-                    name='roomSize'
-                    label='Room Size'
-                    id='roomSize'
-                    value={propertyDetails.roomSize}
-                    onChange={handleInputChange}
-                    error={
-                      fieldErrors['roomSize'] ? 'This field is required' : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['roomSize'],
-                      }
-                    )}
-                    placeholder='Enter Rooms Size'
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Available From */}
-            <div className='w-full lg:w-[48%] flex flex-col'>
-              <Label
-                htmlFor='availableFrom'
-                className='text-lg text-[#646464] font-normal'
-              >
-                Available From<span className='text-red-500'>*</span>
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant='outline'
-                    className='w-full pl-3 text-left font-normal'
-                  >
-                    {propertyDetails.availableFrom ? (
-                      formatDateForInput(propertyDetails.availableFrom)
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    mode='single'
-                    selected={
-                      propertyDetails.availableFrom
-                        ? new Date(propertyDetails.availableFrom)
-                        : undefined
-                    }
-                    onDayClick={(date) => {
-                      handleDateChange(date);
-                    }}
-                    initialFocus
-                    disabled={(date) => date < new Date()} // Disable dates before today
-                    fromDate={new Date()} // Set minimum selectable date to today
-                  />
-                </PopoverContent>
-              </Popover>
-              {fieldErrors['availableFrom'] && (
-                <p className='text-red-500 text-sm mt-1'>
-                  Please select an available date
-                </p>
-              )}
-            </div>
-
-            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div className='flex flex-wrap gap-6'>
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    type='number'
-                    name='bedroom'
-                    id='bedroom'
-                    label='Number Of Bedroom'
-                    value={propertyDetails.bedroom}
-                    onChange={handleInputChange}
-                    error={
-                      fieldErrors['bedroom'] ? 'This field is required' : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['bedroom'],
-                      }
-                    )}
-                    placeholder='Number Of Bedroom'
-                    required
-                  />
-                </div>
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    type='number'
-                    name='balcony'
-                    id='balcony'
-                    label='Number Of Balcony'
-                    value={propertyDetails.balcony}
-                    onChange={handleInputChange}
-                    error={
-                      fieldErrors['balcony'] ? 'This field is required' : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['balcony'],
-                      }
-                    )}
-                    placeholder='Number Of Balcony'
-                    required
-                  />
-                </div>
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    type='number'
-                    name='bathroom'
-                    id='bathroom'
-                    label='Number Of Bathroom'
-                    value={propertyDetails.bathroom}
-                    onChange={handleInputChange}
-                    error={
-                      fieldErrors['bathroom'] ? 'This field is required' : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe]  ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['bathroom'],
-                      }
-                    )}
-                    placeholder='Enter Number Of Bathroom'
-                    required
-                  />
-                </div>
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    type='number'
-                    name='maintenanceChargesAmount'
-                    id='maintenanceChargesAmount'
-                    label='Maintenance Charge'
-                    value={propertyDetails.maintenanceChargesAmount}
-                    onChange={handleInputChange}
-                    error={
-                      fieldErrors['maintenanceChargesAmount']
-                        ? 'This field is required'
-                        : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['maintenanceChargesAmount'],
-                      }
-                    )}
-                    placeholder='Maintenance Charges (per month)*'
-                    required
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Furnishing Level */}
-            <div>
-              <Label className='text-lg text-[#646464] font-normal'>
-                Furnishing Level<span className='text-red-500'>*</span>
-              </Label>
-              <div className='flex flex-wrap gap-2 mt-2'>
-                {furnishingLevels.map((level) => (
-                  <Button
-                    key={level.value}
-                    className={cn(
-                      'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                      propertyDetails.furnishingLevel === level.value
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-[#646464] '
-                    )}
-                    onClick={() =>
-                      handleButtonClick('furnishingLevel', level.value)
-                    }
-                  >
-                    {level.label}
-                  </Button>
-                ))}
-              </div>
-              {fieldErrors['furnishingLevel'] && (
-                <p className='text-red-500 text-sm mt-1'>
-                  Please select a furnishing level
-                </p>
-              )}
-            </div>
-
-            {/* Furnishings (as array) */}
-            {(propertyDetails.furnishingLevel.includes('FULLY_FURNISHED') ||
-              propertyDetails.furnishingLevel.includes('SEMI_FURNISHED')) && (
-              <div>
-                <Label className='text-lg text-[#646464] font-normal'>
-                  Furnishings
-                </Label>
-                <div className='flex flex-wrap gap-4 mt-2'>
-                  {getFurnishings(propertyDetails.propertyType).map(
-                    (furnishing) => (
+            {propertyDetails.isPreoccupied && (
+              <>
+                <div className='w-full'>
+                  <Label className='text-md text-black font-normal'>
+                    Property Type
+                    <span className='text-red-500'>*</span>
+                  </Label>
+                  <div className='flex flex-wrap gap-2 mt-2'>
+                    {preoccupiedpropertyOptions.map((type) => (
                       <Button
-                        key={furnishing.value}
+                        key={type.value}
                         className={cn(
-                          'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                          propertyDetails.furnishings.includes(furnishing.value)
+                          'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                          propertyDetails.preoccupiedPropertyType === type.value
                             ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                            : 'bg-white text-[#646464] border-gray-300 '
+                            : 'bg-white text-[#646464] border-gray-300 hover:bg-gray-100'
                         )}
-                        onClick={() => handleFurnishingClick(furnishing.value)}
+                        onClick={() =>
+                          handleButtonClick(
+                            'preoccupiedPropertyType',
+                            type.value
+                          )
+                        }
+                        disabled={page === 'edit'}
                       >
                         <Image
-                          src={furnishing.url}
-                          alt={furnishing.label}
+                          src={type.url}
+                          alt={type.label}
                           width={55}
                           height={55}
-                          className='object-contain'
+                          className={`object-contain `}
                         />
                         <div className=' text-center text-wrap'>
-                          {furnishing.label}
+                          {type.label}
                         </div>
                       </Button>
-                    )
+                    ))}
+                  </div>
+                  {fieldErrors['propertyType'] && (
+                    <p className='text-red-500 text-sm mt-1'>
+                      Please select a Property Type
+                    </p>
                   )}
                 </div>
-              </div>
+                {/* <div className='flex flex-col'>
+                  <Label className='text-lg font-bold mb-2'>
+                    Preoccupied Property Type
+                    <span className='text-red-500'>*</span>
+                  </Label>
+                  <Select
+                    value={propertyDetails.preoccupiedPropertyType}
+                    onValueChange={(value) => {
+                      handleSelectChange('preoccupiedPropertyType', value);
+                      setFieldErrors((prevErrors) => ({
+                        ...prevErrors,
+                        preoccupiedPropertyType: false,
+                      }));
+                    }}
+                    required
+                  >
+                    <SelectTrigger className='w-full border focus:ring-0 ring-offset-transparent focus:border-none focus:ring-offset-0'>
+                      <SelectValue placeholder='Select a preoccupied property type' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {preoccupiedpropertyOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          <div className='flex items-center'>
+                            <Image
+                              src={option.url}
+                              alt={option.label}
+                              width={20}
+                              height={20}
+                              className='mr-2'
+                            />
+                            {option.label}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {fieldErrors['preoccupiedPropertyType'] && (
+                    <p className='text-red-500 text-sm mt-1'>
+                      Please select a preoccupied property type
+                    </p>
+                  )}
+                </div> */}
+              </>
             )}
-
-            {/* Amenities */}
-            <div>
-              <Label className='text-lg text-[#646464] font-normal'>
-                Amenities
-              </Label>
-              <div className='flex flex-wrap gap-4 mt-2'>
-                {amenitiesList.map((amenity) => (
-                  <Button
-                    key={amenity.value}
-                    className={cn(
-                      'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                      propertyDetails.amenities.includes(amenity.value)
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-[#646464] border-gray-300 '
-                    )}
-                    onClick={() => handleAmenityClick(amenity.value)}
-                  >
-                    <Image
-                      src={amenity.url}
-                      alt={amenity.label}
-                      width={55}
-                      height={55}
-                      className={`object-contain `}
-                    />
-                    <div className='text-center text-wrap'>{amenity.label}</div>
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Features */}
-            <div>
-              <Label className='text-lg text-[#646464] font-normal'>
-                Features
-              </Label>
-              <div className='flex flex-wrap gap-6 mt-2'>
-                {getFeature(propertyDetails.propertyType).map((feature) => (
-                  <Button
-                    key={feature.value}
-                    className={cn(
-                      'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                      propertyDetails.features.includes(feature.value)
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                        : 'bg-white text-[#646464] '
-                    )}
-                    onClick={() => handleFeatureClick(feature.value)}
-                  >
-                    {feature.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
 
             <div className='flex flex-wrap gap-6'>
               {/* Monthly Rent */}
@@ -1605,66 +1226,39 @@ const PropertyDetailsForm = ({
                   required
                 />
               </div>
-
-              {/* Lock In Period */}
-              <div>
-                <Label className='text-lg text-[#646464] font-normal'>
-                  Lock In Period<span className='text-red-500'>*</span>
-                </Label>
-                <div className='flex flex-wrap gap-2 mt-2'>
-                  {lockInPeriod.map((level) => (
-                    <Button
-                      key={level.value}
-                      className={cn(
-                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.lockInPeriodMonths === level.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                          : 'bg-white text-[#646464] '
-                      )}
-                      onClick={() =>
-                        handleButtonClick('lockInPeriodMonths', level.value)
-                      }
-                    >
-                      {level.label}
-                    </Button>
-                  ))}
-                </div>
-                {fieldErrors['lockInPeriodMonths'] && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    Please select a LockIn Period
-                  </p>
-                )}
-              </div>
-
-              {(propertyDetails.propertyType === 'VILLA' ||
-                propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-                <div className='w-full lg:w-[48%]'>
-                  <CustomInput
-                    label='Total Number Of Floors'
-                    type='number'
-                    name='totalfloor'
-                    id='totalfloor'
-                    placeholder='Enter Number Of Floors'
-                    value={propertyDetails.totalfloor}
-                    error={
-                      fieldErrors['totalfloor'] ? 'This field is required' : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['totalfloor'],
-                      }
-                    )}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              )}
             </div>
 
+            {/* Maintenance Charges */}
+            {(propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+              <div className='w-full'>
+                <CustomInput
+                  type='number'
+                  name='maintenanceChargesAmount'
+                  id='maintenanceChargesAmount'
+                  label='Maintenance Charge'
+                  value={propertyDetails.maintenanceChargesAmount}
+                  onChange={handleInputChange}
+                  error={
+                    fieldErrors['maintenanceChargesAmount']
+                      ? 'This field is required'
+                      : ''
+                  }
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['maintenanceChargesAmount'],
+                    }
+                  )}
+                  placeholder='Maintenance Charges (per month)*'
+                  required
+                />
+              </div>
+            )}
+
             {/* Brokerage */}
-            <div className=''>
+            <div className='w-full'>
               <CustomInput
                 type='number'
                 name='brokerageAmount'
@@ -1706,17 +1300,414 @@ const PropertyDetailsForm = ({
               </label>
             </div>
 
+            {/* Number of Units Available */}
+            {(propertyDetails.propertyType === 'CO_LIVING' ||
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+              <div className=''>
+                <div className=''>
+                  <CustomInput
+                    type='number'
+                    name='units'
+                    label='Number Of Units Available'
+                    id='units'
+                    value={propertyDetails.units}
+                    onChange={handleInputChange}
+                    error={fieldErrors['units'] ? 'This field is required' : ''}
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['units'],
+                      }
+                    )}
+                    placeholder='Enter Number of Unts Available'
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Available From */}
+
+            <div className='w-full flex flex-col'>
+              <Label
+                htmlFor='availableFrom'
+                className='text-md text-black font-normal mb-1'
+              >
+                Available From<span className='text-red-500'>*</span>
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant='outline'
+                    className='w-full pl-3 text-left font-normal'
+                  >
+                    {propertyDetails.availableFrom ? (
+                      formatDateForInput(propertyDetails.availableFrom)
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-auto p-0' align='start'>
+                  <Calendar
+                    mode='single'
+                    selected={
+                      propertyDetails.availableFrom
+                        ? new Date(propertyDetails.availableFrom)
+                        : undefined
+                    }
+                    onDayClick={(date) => {
+                      handleDateChange(date);
+                    }}
+                    initialFocus
+                    disabled={(date) => date < new Date()}
+                    fromDate={new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
+              {fieldErrors['availableFrom'] && (
+                <p className='text-red-500 text-sm mt-1'>
+                  Please select an available date
+                </p>
+              )}
+            </div>
+
+            {/* Lock In Period */}
+            <div className='w-full'>
+              <Label className='text-md text-black font-normal'>
+                Lock In Period<span className='text-red-500'>*</span>
+              </Label>
+              <div className='flex flex-wrap gap-2 mt-1'>
+                {lockInPeriod.map((level) => (
+                  <Button
+                    key={level.value}
+                    className={cn(
+                      'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                      propertyDetails.lockInPeriodMonths === level.value
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] '
+                    )}
+                    onClick={() =>
+                      handleButtonClick('lockInPeriodMonths', level.value)
+                    }
+                  >
+                    {level.label}
+                  </Button>
+                ))}
+              </div>
+              {fieldErrors['lockInPeriodMonths'] && (
+                <p className='text-red-500 text-sm mt-1'>
+                  Please select a LockIn Period
+                </p>
+              )}
+            </div>
+
+            {/* Room Type */}
+            {(propertyDetails.propertyType === 'CO_LIVING' ||
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Room Type<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex flex-wrap gap-2 mt-1'>
+                  {getRoomTypes(propertyDetails.propertyType).map((type) => (
+                    <Button
+                      key={type.value}
+                      size='custom'
+                      className={cn(
+                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                        propertyDetails.roomType === type.value
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
+                      )}
+                      onClick={() => handleButtonClick('roomType', type.value)}
+                    >
+                      {type.label}
+                    </Button>
+                  ))}
+                </div>
+                {fieldErrors['roomType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a Room Type
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Sharing Type */}
+            {(propertyDetails.propertyType === 'CO_LIVING' ||
+              propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
+              propertyDetails.preoccupiedPropertyType === 'VILLA' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'PG') && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Sharing Type<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex flex-wrap gap-2 mt-1'>
+                  {getShareTypes(propertyDetails.propertyType).map((type) => (
+                    <Button
+                      key={type.value}
+                      className={cn(
+                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                        propertyDetails.sharingType === type.value
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
+                      )}
+                      onClick={() =>
+                        handleButtonClick('sharingType', type.value)
+                      }
+                    >
+                      {type.label}
+                    </Button>
+                  ))}
+                </div>{' '}
+                {fieldErrors['sharingType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a sharing Type
+                  </p>
+                )}
+              </div>
+            )}
+
+            {(propertyDetails.propertyType === 'CO_LIVING' ||
+              propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
+              propertyDetails.preoccupiedPropertyType === 'VILLA' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'PG') && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Preferred Gender<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex flex-wrap gap-2 mt-1'>
+                  {gender.map((type) => (
+                    <Button
+                      key={type.value}
+                      className={cn(
+                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                        propertyDetails.gender === type.value
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
+                      )}
+                      onClick={() => handleButtonClick('gender', type.value)}
+                    >
+                      {type.label}
+                    </Button>
+                  ))}
+                </div>
+                {fieldErrors['sharingType'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a Gender
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Configuration */}
+            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Configuration<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex flex-wrap gap-2 mt-1'>
+                  {configuration.map((type) => (
+                    <Button
+                      key={type.value}
+                      className={cn(
+                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                        propertyDetails.configuration === type.value
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
+                      )}
+                      onClick={() =>
+                        handleButtonClick('configuration', type.value)
+                      }
+                    >
+                      {type.label}
+                    </Button>
+                  ))}
+                </div>
+                {fieldErrors['configuration'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select an Configuration
+                  </p>
+                )}
+              </div>
+            )}
+
+            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'VILLA' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'VILLA') && (
+              <div className='flex justify-between items-center gap-6'>
+                <div className='w-full '>
+                  <CustomInput
+                    type='number'
+                    name='bedroom'
+                    id='bedroom'
+                    variant='small'
+                    label='Bedroom'
+                    value={propertyDetails.bedroom}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['bedroom'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['bedroom'],
+                      }
+                    )}
+                    placeholder='Number Of Bedroom'
+                    required
+                  />
+                </div>
+                <div className='w-full '>
+                  <CustomInput
+                    type='number'
+                    name='balcony'
+                    id='balcony'
+                    variant='small'
+                    label='Balcony'
+                    value={propertyDetails.balcony}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['balcony'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['balcony'],
+                      }
+                    )}
+                    placeholder='Number Of Balcony'
+                    required
+                  />
+                </div>
+                <div className='w-full'>
+                  <CustomInput
+                    type='number'
+                    name='bathroom'
+                    variant='small'
+                    id='bathroom'
+                    label='Bathroom'
+                    value={propertyDetails.bathroom}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['bathroom'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe]  ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['bathroom'],
+                      }
+                    )}
+                    placeholder='Enter Number Of Bathroom'
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Floor Number */}
+            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+              <div className='flex flex-col w-full lg:w-[60%]'>
+                <Label className='text-[#646464] font-normal text-md mb-1'>
+                  Floor Number<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex justify-start items-center gap-4'>
+                  <Input
+                    type='number'
+                    name='floornumber'
+                    id='floornumber'
+                    value={propertyDetails.floornumber}
+                    onChange={handleInputChange}
+                    placeholder='Floor Number'
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['floornumber'],
+                      }
+                    )}
+                    required
+                  />
+                  <Label className='font-bold text-md text-[#646464] text-nowrap'>
+                    Out Of
+                  </Label>
+                  <Input
+                    type='number'
+                    name='totalfloor'
+                    id='totalfloor'
+                    value={propertyDetails.totalfloor}
+                    onChange={handleInputChange}
+                    placeholder='Total Floor'
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['totalfloor'],
+                      }
+                    )}
+                    required
+                  />
+                </div>
+                {floorError && (
+                  <p className='text-red-500 text-sm mt-1'>{floorError}</p>
+                )}
+              </div>
+            )}
+
+            {/* Features */}
+            <div>
+              <Label className='text-md text-black font-normal'>Features</Label>
+              <div className='flex flex-wrap gap-6 mt-1'>
+                {getFeature(propertyDetails.propertyType).map((feature) => (
+                  <Button
+                    key={feature.value}
+                    className={cn(
+                      'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                      propertyDetails.features.includes(feature.value)
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] '
+                    )}
+                    onClick={() => handleFeatureClick(feature.value)}
+                  >
+                    {feature.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
             {/* Preferred Tenant Type */}
             {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
               propertyDetails.propertyType === 'FLAT_APARTMENT' ||
               propertyDetails.propertyType === 'VILLA' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'VILLA') && (
               <div>
-                <Label className='text-lg text-[#646464] font-normal'>
+                <Label className='text-md text-black font-normal'>
                   Preferred Tenant Type
                   <span className='text-red-500'>*</span>
                 </Label>
-                <div className='flex flex-wrap gap-6 mt-2'>
+                <div className='flex flex-wrap gap-6 mt-1'>
                   {getTenantType(propertyDetails.propertyType).map((tenant) => (
                     <Button
                       key={tenant.value}
@@ -1742,54 +1733,164 @@ const PropertyDetailsForm = ({
               </div>
             )}
 
-            {/* Floor Number */}
-            {(propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-              propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY') && (
-              <div className='flex flex-col w-full lg:w-[60%]'>
-                <Label className='text-[#646464] font-normal text-lg mb-2'>
-                  Floor Number<span className='text-red-500'>*</span>
-                </Label>
-                <div className='flex justify-start items-center gap-6'>
-                  <Input
+            {/* {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
+              <div className='w-full lg:w-[48%]'>
+                <CustomInput
+                  label='Total Number Of Floors'
+                  type='number'
+                  name='totalfloor'
+                  id='totalfloor'
+                  placeholder='Enter Number Of Floors'
+                  value={propertyDetails.totalfloor}
+                  error={
+                    fieldErrors['totalfloor'] ? 'This field is required' : ''
+                  }
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['totalfloor'],
+                    }
+                  )}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            )} */}
+
+            {/* Rooms Size */}
+            {/* {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
+              <div className=''>
+                <div className=''>
+                  <CustomInput
                     type='number'
-                    name='floornumber'
-                    id='floornumber'
-                    value={propertyDetails.floornumber}
+                    name='roomSize'
+                    label='Room Size'
+                    id='roomSize'
+                    value={propertyDetails.roomSize}
                     onChange={handleInputChange}
+                    error={
+                      fieldErrors['roomSize'] ? 'This field is required' : ''
+                    }
                     className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['floornumber'],
+                          fieldErrors['roomSize'],
                       }
                     )}
-                    required
-                  />
-                  <Label className='font-bold text-lg text-nowrap'>
-                    Out Of
-                  </Label>
-                  <Input
-                    type='number'
-                    name='totalfloor'
-                    id='totalfloor'
-                    value={propertyDetails.totalfloor}
-                    onChange={handleInputChange}
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['totalfloor'],
-                      }
-                    )}
-                    required
+                    placeholder='Enter Rooms Size'
                   />
                 </div>
-                {floorError && (
-                  <p className='text-red-500 text-sm mt-1'>{floorError}</p>
+              </div>
+            )} */}
+
+            {/* Furnishing Level */}
+            {(propertyDetails.propertyType === 'CO_LIVING' ||
+              propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.propertyType === 'VILLA' ||
+              propertyDetails.propertyType === 'PG' ||
+              propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
+              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'VILLA') && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Furnishing Level<span className='text-red-500'>*</span>
+                </Label>
+                <div className='flex flex-wrap gap-2 mt-1'>
+                  {furnishingLevels.map((level) => (
+                    <Button
+                      key={level.value}
+                      className={cn(
+                        'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
+                        propertyDetails.furnishingLevel === level.value
+                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          : 'bg-white text-[#646464] '
+                      )}
+                      onClick={() =>
+                        handleButtonClick('furnishingLevel', level.value)
+                      }
+                    >
+                      {level.label}
+                    </Button>
+                  ))}
+                </div>
+                {fieldErrors['furnishingLevel'] && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    Please select a furnishing level
+                  </p>
                 )}
               </div>
             )}
+
+            {/* Furnishings (as array) */}
+            {(propertyDetails.furnishingLevel.includes('FULLY_FURNISHED') ||
+              propertyDetails.furnishingLevel.includes('SEMI_FURNISHED')) && (
+              <div>
+                <Label className='text-md text-black font-normal'>
+                  Furnishings
+                </Label>
+                <div className='flex flex-wrap gap-4 mt-1'>
+                  {getFurnishings(propertyDetails.propertyType).map(
+                    (furnishing) => (
+                      <Button
+                        key={furnishing.value}
+                        className={cn(
+                          'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                          propertyDetails.furnishings.includes(furnishing.value)
+                            ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                            : 'bg-white text-[#646464] border-gray-300 '
+                        )}
+                        onClick={() => handleFurnishingClick(furnishing.value)}
+                      >
+                        <Image
+                          src={furnishing.url}
+                          alt={furnishing.label}
+                          width={55}
+                          height={55}
+                          className='object-contain'
+                        />
+                        <div className=' text-center text-wrap'>
+                          {furnishing.label}
+                        </div>
+                      </Button>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Amenities */}
+            <div>
+              <Label className='text-md text-black font-normal'>
+                Amenities
+              </Label>
+              <div className='flex flex-wrap gap-4 mt-1'>
+                {amenitiesList.map((amenity) => (
+                  <Button
+                    key={amenity.value}
+                    className={cn(
+                      'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                      propertyDetails.amenities.includes(amenity.value)
+                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        : 'bg-white text-[#646464] border-gray-300 '
+                    )}
+                    onClick={() => handleAmenityClick(amenity.value)}
+                  >
+                    <Image
+                      src={amenity.url}
+                      alt={amenity.label}
+                      width={55}
+                      height={55}
+                      className={`object-contain `}
+                    />
+                    <div className='text-center text-wrap'>{amenity.label}</div>
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </CardContent>

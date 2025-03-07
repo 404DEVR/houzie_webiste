@@ -9,14 +9,16 @@ interface Photo {
   preview: string;
 }
 
-interface PropertyDetails {
+export interface PropertyDetails {
   title: string;
   description: string;
   propertyType: string;
+  isPreoccupied: boolean;
   roomType: string;
   sharingType: string;
   units: string;
   mainImage: string;
+  gender: string;
   roomSize: string;
   roomSizeDetails: string;
   furnishingLevel: string;
@@ -37,13 +39,21 @@ interface PropertyDetails {
   maintenanceChargesAmount: string;
   securityDeposit: string;
   securityDepositamount: string;
+  occupantData: Occupant[];
   lockInPeriodMonths: string;
   brokerageCharges: string;
   brokerageAmount: string;
   brokerageNegotiable: boolean;
 }
 
-interface PropertyLocation {
+export interface Occupant {
+  name: string;
+  age: number;
+  profession: string;
+  about: string;
+}
+
+export interface PropertyLocation {
   city: string;
   state: string;
   country: string;
@@ -51,12 +61,12 @@ interface PropertyLocation {
   longitude: number | null;
 }
 
-interface Verification {
+export interface Verification {
   selectedDate: string | null;
   phoneNumber: string;
 }
 
-interface restructured {
+export interface restructured {
   title: string;
   description: string;
   propertyType: string;
@@ -70,6 +80,7 @@ interface restructured {
   price: number | null;
   security: number | null;
   brokerage: number | null;
+  gender: string | null;
   isNegotiable: boolean | null;
   lockInPeriod: string | null;
   availableFrom: string | null;
@@ -93,6 +104,8 @@ interface restructured {
   mainImage: string | null;
   photos: string[];
   isPreoccupied: boolean | null;
+  occupants: Occupant[] | null;
+  totalOccupants: number | null;
 }
 
 // Define separate state interfaces
@@ -121,8 +134,10 @@ const initialAddFormState: AddFormState = {
   currentPage: 1,
   propertyDetails: {
     title: '',
+    isPreoccupied: false,
     description: '',
     propertyType: '',
+    gender: '',
     roomType: '',
     sharingType: '',
     configuration: '',
@@ -139,6 +154,7 @@ const initialAddFormState: AddFormState = {
     bathroom: '',
     amenities: [],
     units: '',
+    occupantData: [],
     preferredTenantType: [],
     features: [],
     availableFrom: '',
@@ -180,6 +196,7 @@ const initialAddFormState: AddFormState = {
     brokerage: null,
     isNegotiable: false,
     lockInPeriod: null,
+    gender: null,
     availableFrom: null,
     configuration: null,
     bedrooms: null,
@@ -201,6 +218,8 @@ const initialAddFormState: AddFormState = {
     mainImage: null,
     photos: [],
     isPreoccupied: false,
+    occupants: null,
+    totalOccupants: null,
   },
 };
 
@@ -208,11 +227,14 @@ const initialEditFormState: EditFormState = {
   currentPage: 1,
   propertyDetails: {
     title: '',
+    gender: '',
     description: '',
     propertyType: '',
+    isPreoccupied: false,
     roomType: '',
     sharingType: '',
     configuration: '',
+    occupantData: [],
     roomSize: '',
     roomSizeDetails: '',
     bedroom: '',
@@ -264,6 +286,7 @@ const initialEditFormState: EditFormState = {
     },
     price: null,
     security: null,
+    gender: null,
     brokerage: null,
     isNegotiable: false,
     lockInPeriod: null,
@@ -288,6 +311,8 @@ const initialEditFormState: EditFormState = {
     mainImage: null,
     photos: [],
     isPreoccupied: false,
+    occupants: null,
+    totalOccupants: null,
   },
   isEditing: false,
   editingListingId: null,
@@ -298,6 +323,21 @@ const addFormSlice = createSlice({
   name: 'addForm',
   initialState: initialAddFormState,
   reducers: {
+    updateAddOccupantData: (state, action: PayloadAction<Occupant[]>) => {
+      state.propertyDetails.occupantData = action.payload;
+    },
+    addAddOccupant: (state, action: PayloadAction<Occupant>) => {
+      state.propertyDetails.occupantData = [
+        ...state.propertyDetails.occupantData,
+        action.payload,
+      ];
+    },
+    removeAddOccupant: (state, action: PayloadAction<number>) => {
+      state.propertyDetails.occupantData =
+        state.propertyDetails.occupantData.filter(
+          (_, index) => index !== action.payload
+        );
+    },
     setAddCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
@@ -343,7 +383,9 @@ const addFormSlice = createSlice({
       state.restructuredData = {
         title: propertyDetails.title,
         description: propertyDetails.description,
-        propertyType: propertyDetails.propertyType.toUpperCase(),
+        propertyType: propertyDetails.isPreoccupied
+          ? propertyDetails.preoccupiedPropertyType.toUpperCase()
+          : propertyDetails.propertyType.toUpperCase(),
         location: {
           city: propertyLocation.city || '',
           state: propertyLocation.state || '',
@@ -357,6 +399,7 @@ const addFormSlice = createSlice({
         isNegotiable: propertyDetails.brokerageNegotiable,
         lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
         availableFrom: propertyDetails.availableFrom || null,
+        gender: propertyDetails.gender || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
         bedrooms: parseInt(propertyDetails.bedroom) || 0,
         bathrooms: parseInt(propertyDetails.bathroom) || 0,
@@ -389,7 +432,9 @@ const addFormSlice = createSlice({
         photos:
           photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
 
-        isPreoccupied: propertyDetails.preoccupiedPropertyType !== null,
+        isPreoccupied: propertyDetails.isPreoccupied || null,
+        occupants: propertyDetails.occupantData || null,
+        totalOccupants: propertyDetails.occupantData.length || null,
       };
     },
   },
@@ -399,6 +444,21 @@ const editFormSlice = createSlice({
   name: 'editForm',
   initialState: initialEditFormState,
   reducers: {
+    updateEditOccupantData: (state, action: PayloadAction<Occupant[]>) => {
+      state.propertyDetails.occupantData = action.payload;
+    },
+    addEditOccupant: (state, action: PayloadAction<Occupant>) => {
+      state.propertyDetails.occupantData = [
+        ...state.propertyDetails.occupantData,
+        action.payload,
+      ];
+    },
+    removeEditOccupant: (state, action: PayloadAction<number>) => {
+      state.propertyDetails.occupantData =
+        state.propertyDetails.occupantData.filter(
+          (_, index) => index !== action.payload
+        );
+    },
     startEditing: (state, action: PayloadAction<string>) => {
       state.isEditing = true;
       state.editingListingId = action.payload;
@@ -448,7 +508,9 @@ const editFormSlice = createSlice({
       state.restructuredData = {
         title: propertyDetails.title,
         description: propertyDetails.description,
-        propertyType: propertyDetails.propertyType.toUpperCase(),
+        propertyType: propertyDetails.isPreoccupied
+          ? propertyDetails.preoccupiedPropertyType.toUpperCase()
+          : propertyDetails.propertyType.toUpperCase(),
         location: {
           city: propertyLocation.city || '',
           state: propertyLocation.state || '',
@@ -460,6 +522,7 @@ const editFormSlice = createSlice({
         security: parseInt(propertyDetails.securityDepositamount) || 0,
         brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
         isNegotiable: propertyDetails.brokerageNegotiable,
+        gender: propertyDetails.gender || null,
         lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
         availableFrom: propertyDetails.availableFrom || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
@@ -494,7 +557,9 @@ const editFormSlice = createSlice({
         photos:
           photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
 
-        isPreoccupied: propertyDetails.preoccupiedPropertyType !== null,
+        isPreoccupied: propertyDetails.isPreoccupied || null,
+        occupants: propertyDetails.occupantData || null,
+        totalOccupants: propertyDetails.occupantData.length || null,
       };
     },
 
@@ -508,6 +573,9 @@ export const {
   setAddCurrentPage,
   updateAddPropertyDetails,
   updateAddPropertyLocation,
+  updateAddOccupantData,
+  removeAddOccupant,
+  addAddOccupant,
   setAddPhotos,
   removeAddPhoto,
   updateAddVerification,
@@ -517,6 +585,9 @@ export const {
 
 export const {
   startEditing,
+  updateEditOccupantData,
+  removeEditOccupant,
+  addEditOccupant,
   stopEditing,
   setEditCurrentPage,
   updateEditPropertyDetails,

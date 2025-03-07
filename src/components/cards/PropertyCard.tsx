@@ -129,6 +129,7 @@ export function PropertyCard({
       router.push('/login');
       return;
     }
+
     try {
       await axios.post(
         `https://api.houzie.in/profile/visited/${id}`,

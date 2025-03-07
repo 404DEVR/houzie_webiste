@@ -1,16 +1,17 @@
+// ProfileForm.jsx (Modified)
 'use client';
 
 import axios from 'axios'; // Import Axios
-import { Camera } from 'lucide-react';
+import { Camera, ChevronRight, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
-import { Avatar } from '@/components/ui/avatar';
+import ExplorePlans from '@/components/Subscription/ExplorePlans';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Tooltip,
@@ -27,6 +28,8 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [companyName, setCompanyName] = useState('');
+  const [showExplorePlans, setShowExplorePlans] = useState(false); // New State Variable
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -89,109 +92,181 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
     }
   };
 
+  const handleExplorePlansClick = () => {
+    setShowExplorePlans(true);
+  };
+
+  const handleBackToProfile = () => {
+    setShowExplorePlans(false);
+  };
+
   if (isLoading) {
     return <div>Loading profile...</div>;
   }
 
   return (
     <TooltipProvider>
-      <div className='mx-auto h-auto'>
-        <div className='bg-white p-6 mx-auto '>
-          <div className='flex flex-col items-center gap-16 relative shadow-lg shadow-white'>
-            <div
-              className={`flex flex-col items-center ${
-                page === 'user' ? 'relative' : 'absolute -top-40'
-              } `}
-            >
-              <Avatar className='w-40 h-40 relative bg-gray-200 overflow-visible'>
-                <Image
-                  src='/images/Dummy profile.png'
-                  alt='Profile Avatar'
-                  width={200}
-                  height={200}
-                  className='rounded-full object-cover'
-                />
-                <Button
-                  variant='secondary'
-                  size='icon'
-                  className='absolute bottom-0 right-0 rounded-full shadow-md'
-                  style={{ backgroundColor: '#1E88E5', color: 'white' }}
-                >
-                  <Camera className='h-4 w-4' />
-                </Button>
-              </Avatar>
-            </div>
-
-            <div className='w-full'>
-              <h1 className='text-2xl font-semibold mb-4'>Profile</h1>
-              <form onSubmit={handleSubmit} className='space-y-4'>
-                <div>
-                  <Label htmlFor='fullName'>Full Name</Label>
-                  <Input
-                    type='text'
-                    id='fullName'
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder='Enter your full name'
-                    className='rounded-md'
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor='emailAddress'>Email Address</Label>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-start'>
-                      <Input
-                        type='email'
-                        id='emailAddress'
-                        value={emailAddress}
-                        disabled
-                        className='w-full rounded-md bg-gray-100 cursor-not-allowed'
+      {showExplorePlans ? (
+        <ExplorePlans onBack={handleBackToProfile} />
+      ) : (
+        <div className='flex flex-col gap-4 p-4 max-w-6xl mx-auto'>
+          {/* Profile Section */}
+          <div className='flex w-full gap-8 '>
+            <div className='bg-[#eff5ff] rounded-lg p-6 w-full md:w-1/2 shadow-2xl border'>
+              <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4 '>
+                {/* User Details */}
+                <TooltipProvider>
+                  <div className='col-span-1 flex flex-col gap-2 pb-8'>
+                    <div className='flex flex-col gap-'>
+                      <Label className='text-xs'>Name</Label>
+                      <input
+                        type='text'
+                        id='fullName'
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className='border-none h-8 bg-transparent  w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                        aria-label='Full Name'
                       />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      This email address cannot be Changed.
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className='flex flex-col gap-0'>
+                          <Label className='text-xs'>Email Address</Label>
+                          <input
+                            type='email'
+                            id='emailAddress'
+                            value={emailAddress}
+                            readOnly
+                            className='border-none bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                            aria-label='Email Address'
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Email cannot be changed</p>
+                      </TooltipContent>
+                    </Tooltip>
 
-                <div>
-                  <Label htmlFor='phoneNumber'>Phone Number</Label>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full'>
-                      <Input
-                        type='tel'
-                        id='phoneNumber'
-                        value={phoneNumber}
-                        disabled
-                        className='w-full rounded-md bg-gray-100 cursor-not-allowed'
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className='flex flex-col gap-0'>
+                          <Label className='text-xs'>Phone Number</Label>
+                          <input
+                            type='tel'
+                            id='phoneNumber'
+                            value={phoneNumber}
+                            readOnly
+                            className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                            aria-label='Phone Number'
+                            placeholder='+910000000000'
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Phone number cannot be changed</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <div className='flex flex-col gap-0'>
+                      <Label className='text-xs'>Company Name</Label>
+                      <input
+                        type='text'
+                        id='companyName'
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                        aria-label='Company Name'
+                        placeholder='Houzie'
                       />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      This phone number cannot be Changed.
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                {page === 'user' ? (
+                    </div>
+                  </div>
+                </TooltipProvider>
+                {/* Avatar with Camera Icon */}
+                <div className='flex flex-col justify-between items-center col-span-1 h-full'>
+                  <div className='relative h-40 w-40'>
+                    <Avatar className='w-40 h-40'>
+                      <Image
+                        src='/images/Dummy profile.png'
+                        alt='Avatar'
+                        width={160}
+                        height={160}
+                      />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                    <Button
+                      variant='secondary'
+                      size='icon'
+                      className='absolute bottom-0 right-0 rounded-full shadow-md'
+                      style={{ backgroundColor: '#1E88E5', color: 'white' }}
+                    >
+                      <Camera className='h-4 w-4' />
+                    </Button>
+                  </div>
+
                   <Button
                     type='submit'
-                    className='bg-[#f5f5fa] text-center text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
+                    className='bg-blue-500 text-white rounded-md hover:bg-blue-600 col-span-2'
                   >
-                    Save Changes
+                    Edit <Edit className='h-4 w-4 ml-2' />
                   </Button>
-                ) : (
-                  <Button
-                    type='submit'
-                    className='bg-[#f5f5fa] text-center text-[#60a5fa] px-4 font-normal py-4 rounded-lg border-none'
-                  >
-                    Update Profile
-                  </Button>
-                )}
+                </div>
               </form>
             </div>
+
+            {/* Subscription Summary */}
+            <div className='bg-[#eff5ff] rounded-lg shadow-2xl p-6 w-full md:w-1/2 border'>
+              <h2 className='text-3xl font-semibold mt-6 mb-8'>
+                Subscription Summary
+              </h2>
+
+              <div>
+                <div className='flex justify-between items-center mb-2'>
+                  <div className='text-lg'>Listing's Usage</div>
+                  <div className='text-lg text-gray-500'>10%</div>
+                </div>
+                <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
+                  <div
+                    className='bg-blue-600 h-2.5 rounded-full'
+                    style={{ width: '10%' }}
+                  ></div>
+                </div>
+              </div>
+
+              <div>
+                <div className='flex justify-between items-center mb-2'>
+                  <div className='text-lg'>Leads Usage</div>
+                  <div className='text-lg text-gray-500'>20%</div>
+                </div>
+                <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
+                  <div
+                    className='bg-blue-600 h-2.5 rounded-full'
+                    style={{ width: '20%' }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className='flex flex-col md:flex-row items-center justify-between mt-4 bg-[#eff5ff] rounded-lg shadow-xl border p-6 w-full md:w-full'>
+            <div>
+              <div className='text-sm text-[#3b82f6]'>Plan Purchased</div>
+              <div className='font-semibold'>
+                Standard <span className='text-xs font-normal'>/month</span>
+              </div>
+            </div>
+            <div>
+              <div className='text-sm text-[#3b82f6]'>Expires In</div>
+              <div className='font-semibold'>24th March 2025</div>
+            </div>
+            <Button
+              className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600'
+              onClick={handleExplorePlansClick}
+            >
+              Explore Plans <ChevronRight className='' />
+            </Button>
           </div>
         </div>
-      </div>
+      )}
     </TooltipProvider>
   );
 };

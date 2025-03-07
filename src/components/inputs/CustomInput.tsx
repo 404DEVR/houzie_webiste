@@ -8,6 +8,7 @@ interface CustomInputInterface
   unit?: string;
   customunit?: boolean;
   error?: string;
+  variant?: string;
 }
 
 const CustomInput = ({
@@ -16,19 +17,26 @@ const CustomInput = ({
   unit,
   customunit,
   error,
+  variant,
   ...props
 }: CustomInputInterface) => {
   return (
     <div className='relative'>
       {label && (
-        <Label className='text-lg text-[#646464] font-normal'>
+        <Label
+          className={`${
+            variant === 'small' ? 'text-md' : 'text-md'
+          } text-black font-normal`}
+        >
           {label} {required && <span className='text-red-500'>*</span>}
         </Label>
       )}
 
       <Input
         {...props}
-        className='placeholder:text-[#646464] text-[#646464]  block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+        className={`placeholder:text-[#646464] text-[#646464]  block w-full ${
+          variant === 'small' ? 'mt-0' : 'mt-1'
+        } px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow`}
       />
 
       {unit && (

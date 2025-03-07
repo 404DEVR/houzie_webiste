@@ -49,12 +49,19 @@ const PropertyLocation = ({
     (state: RootState) => state.editForm.propertyLocation
   );
 
+  const addPropertyDetails = useSelector(
+    (state: RootState) => state.addForm.propertyDetails
+  );
+  const editPropertyDetails = useSelector(
+    (state: RootState) => state.editForm.propertyDetails
+  );
+
   const propertyLocation: PropertyLocationState =
     page === 'edit' ? editPropertyLocation : addPropertyLocation;
 
-  const propertyDetails = useSelector(
-    (state: RootState) => state.editForm.propertyDetails
-  );
+  const propertyDetails =
+    page === 'edit' ? editPropertyDetails : addPropertyDetails;
+
   const photos = useSelector((state: RootState) => state.editForm.photos);
   const verification = useSelector(
     (state: RootState) => state.editForm.verification
@@ -69,10 +76,11 @@ const PropertyLocation = ({
   const currentPage = useSelector(
     (state: RootState) => state.editForm.currentPage
   );
+  const formdata = useSelector((state: RootState) => state.addForm);
 
   const initialPropertyLocation = useRef<PropertyLocationState | null>(null);
 
-  const isInitialValueSet = useRef(false); // Track if initial value is set
+  const isInitialValueSet = useRef(false);
 
   useEffect(() => {
     if (page === 'edit' && !isInitialValueSet.current) {
@@ -140,6 +148,7 @@ const PropertyLocation = ({
   const handleSubmit = () => {
     if (isLocationSelected) {
       dispatch(restructureAddFormData());
+      console.log(formdata);
       handleNext();
     }
   };
@@ -173,7 +182,7 @@ const PropertyLocation = ({
             initialLocation={getInitialLocation()}
           />
         </div>
-        {propertyDetails.propertyType === 'PREOCCUPIED_PROPERTY' && (
+        {propertyDetails.isPreoccupied && (
           <CurrentOccupantsProfile
             onOccupantDataChange={handleOccupantDataChange}
           />

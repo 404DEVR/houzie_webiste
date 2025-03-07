@@ -26,7 +26,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
     (state: RootState) => state.addForm.restructuredData
   );
 
-  console.log(restructuredData);
+  // console.log(restructuredData);
 
   const handlePost = async () => {
     try {
@@ -49,7 +49,8 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
       if (setActiveTab) {
         setActiveTab('myListing');
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       toast({
         title: 'Session expired. Please log in again.',
         variant: 'destructive',

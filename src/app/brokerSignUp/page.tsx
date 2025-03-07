@@ -132,19 +132,19 @@ const SignUpForm: React.FC = () => {
     setLoading(true);
 
     try {
-      // const res = await fetch(`https://api.houzie.in/auth/register`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(data),
-      // });
+      const res = await fetch(`https://api.houzie.in/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-      // const responseData = await res.json();
+      const responseData = await res.json();
 
-      // if (!res.ok) {
-      //   throw new Error(responseData.message || 'Registration failed');
-      // }
+      if (!res.ok) {
+        throw new Error(responseData.message || 'Registration failed');
+      }
 
       setPhoneNumber(data.phoneNumber);
       setEmail(data.email);
@@ -332,14 +332,14 @@ const SignUpForm: React.FC = () => {
                       className='flex flex-col gap-2'
                     >
                       <div className='grid gap-2'>
-                        <Label htmlFor='name'>Name</Label>
+                        <Label htmlFor='name'>Full Name</Label>
                         <div className='relative'>
-                          <User className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <User className='absolute left-2 top-2 h-4 w-4 text-gray-400' />
                           <Input
                             id='name'
                             placeholder='John Doe'
                             type='text'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-7 h-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('name')}
                           />
                         </div>
@@ -352,12 +352,12 @@ const SignUpForm: React.FC = () => {
                       <div className='grid gap-2'>
                         <Label htmlFor='email'>Email Address</Label>
                         <div className='relative'>
-                          <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <Mail className='absolute left-2.5 top-2.5 h-3.5 w-3.5 text-gray-400' />
                           <Input
                             id='email'
                             placeholder='hello@example.com'
                             type='email'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-7 h-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('email')}
                           />
                         </div>
@@ -370,12 +370,12 @@ const SignUpForm: React.FC = () => {
                       <div className='grid gap-2'>
                         <Label htmlFor='password'>Password</Label>
                         <div className='relative'>
-                          <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <Lock className='absolute left-2 top-2 h-3.5 w-3.5 text-gray-400' />
                           <Input
                             id='password'
                             placeholder='Password'
                             type={showPassword ? 'text' : 'password'}
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-7 h-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('password')}
                           />
                           <Button
@@ -398,12 +398,12 @@ const SignUpForm: React.FC = () => {
                       <div className='grid gap-2'>
                         <Label htmlFor='phoneNumber'>Phone Number</Label>
                         <div className='relative'>
-                          <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <Phone className='absolute left-2 top-2 h-3.5 w-3.5 text-gray-400' />
                           <Input
                             id='phoneNumber'
                             placeholder='Phone Number'
                             type='tel'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-7 h-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('phoneNumber')}
                           />
                         </div>
@@ -416,12 +416,12 @@ const SignUpForm: React.FC = () => {
                       <div className='grid gap-2'>
                         <Label htmlFor='companyName'>Company Name</Label>
                         <div className='relative'>
-                          <Building2 className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <Building2 className='absolute left-2 top-2 h-3.5 w-3.5 text-gray-400' />
                           <Input
                             id='companyName'
                             placeholder='Company Name'
                             type='text'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-7 h-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('companyName')}
                           />
                         </div>
@@ -443,7 +443,7 @@ const SignUpForm: React.FC = () => {
                             >
                               <SelectTrigger
                                 id='role'
-                                className='focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                                className='h-8 focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                               >
                                 <SelectValue
                                   placeholder='Select Role'
@@ -595,275 +595,6 @@ const SignUpForm: React.FC = () => {
           </div>
         </Card>
       </div>
-      {/* <div className='flex justify-center items-center min-h-screen bg-gray-100'>
-        <Card className='w-full max-w-3xl shadow-md'>
-          <CardHeader className='space-y-1 flex flex-col items-center'>
-            <Image
-              src='/svg/houzie-logo.svg'
-              alt='Houzie Logo'
-              width={120}
-              height={120}
-              className='mb-2'
-            />
-            <CardTitle className='text-3xl text-center'>
-              {showOTPForm ? 'Verify Phone Number' : 'Sign Up'}
-            </CardTitle>
-            {!showOTPForm && (
-              <CardDescription className='text-center'>
-                Already Have An Account?{' '}
-                <a
-                  href='/login?signUpRedirect=brokerSignUp'
-                  className='text-[#42A4AE]'
-                >
-                  Sign In Here
-                </a>
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent className='w-[90%] mx-auto'>
-            {!showOTPForm ? (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className='grid gap-4 md:grid-cols-2'
-              >
-                <div className='grid gap-2'>
-                  <Label htmlFor='name'>Name</Label>
-                  <div className='relative'>
-                    <User className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='name'
-                      placeholder='John Doe'
-                      type='text'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('name')}
-                    />
-                  </div>
-                  {errors.name && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.name?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='email'>Email Address</Label>
-                  <div className='relative'>
-                    <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='email'
-                      placeholder='hello@example.com'
-                      type='email'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('email')}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.email?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='password'>Password</Label>
-                  <div className='relative'>
-                    <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='password'
-                      placeholder='Password'
-                      type={showPassword ? 'text' : 'password'}
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('password')}
-                    />
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
-                      onClick={() => setShowPassword(!showPassword)}
-                      type='button'
-                    >
-                      <Eye className='h-4 w-4' />
-                      <span className='sr-only'>Show password</span>
-                    </Button>
-                  </div>
-                  {errors.password && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.password?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='phoneNumber'>Phone Number</Label>
-                  <div className='relative'>
-                    <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='phoneNumber'
-                      placeholder='Phone Number'
-                      type='tel'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('phoneNumber')}
-                    />
-                  </div>
-                  {errors.phoneNumber && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.phoneNumber?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='companyName'>Company Name</Label>
-                  <div className='relative'>
-                    <Building2 className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='companyName'
-                      placeholder='Company Name'
-                      type='text'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('companyName')}
-                    />
-                  </div>
-                  {errors.companyName && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.companyName?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='adharNumber'>Aadhaar Number</Label>
-                  <div className='relative'>
-                    <CreditCard className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='adharNumber'
-                      placeholder='Aadhaar Number'
-                      type='tel'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('adharNumber')}
-                    />
-                  </div>
-                  {errors.adharNumber && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.adharNumber?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2 md:col-span-2'>
-                  <Label htmlFor='role'>Register as :</Label>
-                  <Controller
-                    name='role'
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger
-                          id='role'
-                          className='focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        >
-                          <SelectValue
-                            placeholder='Select Role'
-                            className='text-gray-500'
-                          />
-                        </SelectTrigger>
-                        <SelectContent className='focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
-                          <SelectItem value='PROPERTY_OWNER'>
-                            Property Owner
-                          </SelectItem>
-                          <SelectItem value='BROKER'>Broker</SelectItem>
-                          <SelectItem value='FLAT_MATES'>
-                            Current occupant, looking for flatmates
-                          </SelectItem>
-                          <SelectItem value='PG_OWNER'>
-                            PG Owner/Property Manager
-                          </SelectItem>
-                          <SelectItem value='CO_LIVING_OWNER'>
-                            Co - Living Owner/Property Manager
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
-              </form>
-            ) : (
-              <div className='grid gap-4'>
-                <CardDescription className='text-center mb-6'>
-                  Please enter the OTP sent to your phone number {phoneNumber}
-                </CardDescription>
-                {step === 1 && (
-                  <Button onClick={handleInitiateLogin} disabled={loading}>
-                    {loading ? 'Sending OTP...' : 'Send OTP'}
-                  </Button>
-                )}
-                {step === 2 && (
-                  <>
-                    <div className='flex gap-2 flex-col justify-center items-center text-center'>
-                      <Label htmlFor='otp' className='text-2xl mb-2'>
-                        Enter OTP
-                      </Label>
-                      <InputOTP maxLength={6}>
-                        <InputOTPGroup>
-                          {[0, 1, 2].map((index) => (
-                            <InputOTPSlot key={index} index={index} />
-                          ))}
-                        </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                          {[3, 4, 5].map((index) => (
-                            <InputOTPSlot key={index} index={index} />
-                          ))}
-                        </InputOTPGroup>
-                      </InputOTP>
-                    </div>
-                    <Button onClick={handleVerifyOTP} disabled={loading}>
-                      {loading ? 'Verifying...' : 'Verify OTP'}
-                    </Button>
-                  </>
-                )}
-              </div>
-            )}
-          </CardContent>
-          <CardFooter className='flex flex-col w-[90%] mx-auto items-center'>
-            {!showOTPForm && (
-              <Button
-                size='custom'
-                className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
-                onClick={handleSubmit(onSubmit)}
-                disabled={loading}
-              >
-                {loading ? 'Signing Up...' : 'Sign Up'}
-              </Button>
-            )}
-            {!showOTPForm && (
-              <>
-                <div className='flex items-center justify-center w-full mt-4'>
-                  <div className='border-t border-gray-400 flex-grow '></div>
-                  <span className='mx-4 text-black'>Or</span>
-                  <div className='border-t border-gray-400 flex-grow '></div>
-                </div>
-                <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
-                  <Button
-                    variant='outline'
-                    className='rounded-md p-2 flex items-center'
-                  >
-                    <FcGoogle className='h-5 w-5 mr-2' /> Google
-                  </Button>
-                  <Button
-                    variant='outline'
-                    className=' rounded-md p-2 flex items-center'
-                  >
-                    <Apple className='h-5 w-5 mr-2' /> Apple
-                  </Button>
-                  <Button
-                    variant='outline'
-                    className=' rounded-md p-2 flex items-center'
-                  >
-                    <FaFacebook className='h-5 w-5 mr-2' /> Facebook
-                  </Button>
-                </div>
-              </>
-            )}
-          </CardFooter>
-        </Card>
-      </div> */}
     </>
   );
 };
