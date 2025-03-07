@@ -42,6 +42,11 @@ const PropertyLocation = ({
 }: PropertyLocationProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { auth } = useAuth();
+  const editform = useSelector(
+    (state: RootState) => state.addForm.propertyDetails
+  );
+
+  console.log(editform);
   const addPropertyLocation = useSelector(
     (state: RootState) => state.addForm.propertyLocation
   );
@@ -76,7 +81,6 @@ const PropertyLocation = ({
   const currentPage = useSelector(
     (state: RootState) => state.editForm.currentPage
   );
-  const formdata = useSelector((state: RootState) => state.addForm);
 
   const initialPropertyLocation = useRef<PropertyLocationState | null>(null);
 
@@ -148,7 +152,6 @@ const PropertyLocation = ({
   const handleSubmit = () => {
     if (isLocationSelected) {
       dispatch(restructureAddFormData());
-      console.log(formdata);
       handleNext();
     }
   };
@@ -185,6 +188,7 @@ const PropertyLocation = ({
         {propertyDetails.isPreoccupied && (
           <CurrentOccupantsProfile
             onOccupantDataChange={handleOccupantDataChange}
+            page={page}
           />
         )}
 

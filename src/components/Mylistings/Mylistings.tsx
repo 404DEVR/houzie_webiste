@@ -1,3 +1,4 @@
+import { DialogTitle } from '@radix-ui/react-dialog';
 import axios from 'axios';
 import { ArrowDown, Bath, Bed, Building2, Home } from 'lucide-react';
 import Image from 'next/image';
@@ -76,7 +77,7 @@ const MyListings = () => {
   const handleEdit = async (id: string) => {
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
-      const listingData = response.data;
+      const listingData = response.data.data;
       const editFormData = {
         currentPage: 1,
         propertyDetails: {
@@ -116,21 +117,22 @@ const MyListings = () => {
           brokerageNegotiable: listingData.isNegotiable,
         } as PropertyDetails,
         propertyLocation: {
-          id: listingData.location.id,
-          fullAddress: '',
-          city: listingData.location.city,
-          state: listingData.location.state,
-          country: listingData.location.country,
-          latitude: listingData.location.latitude,
-          longitude: listingData.location.longitude,
+          city: (listingData.location && listingData.location.city) || '',
+          state: (listingData.location && listingData.location.state) || '',
+          country: (listingData.location && listingData.location.country) || '',
+          latitude: listingData.location && listingData.location.latitude,
+          longitude: listingData.location && listingData.location.longitude,
         } as PropertyLocation,
-        photos: listingData.photos.map((photoUrl) => ({
-          name: 'image',
-          size: 0,
-          type: 'image/jpeg',
-          lastModified: 0,
-          preview: photoUrl,
-        })),
+        photos:
+          listingData.photos && Array.isArray(listingData.photos)
+            ? listingData.photos.map((photoUrl) => ({
+                name: 'image',
+                size: 0,
+                type: 'image/jpeg',
+                lastModified: 0,
+                preview: photoUrl,
+              }))
+            : [],
         verification: {
           selectedDate: '',
           phoneNumber: '',
@@ -190,31 +192,6 @@ const MyListings = () => {
         description: 'Please Check Your Network Connection',
       });
     }
-  };
-
-  const handleViewDetails = (id) => {
-    const fetchLeads = async () => {
-      try {
-        const response = await axios.get(
-          'https://api.houzie.in/leads?query=Ma',
-          {
-            headers: {
-              Authorization: `Bearer ${auth?.accessToken}`,
-            },
-          }
-        );
-        setLeadsData(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        toast({
-          title: 'Failed ',
-          description: 'Failed to fetch leads data',
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchLeads();
   };
 
   const handleDelete = async (id: string) => {
@@ -411,6 +388,7 @@ const MyListings = () => {
       >
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className='w-full sm:max-w-7xl h-[90%] my-auto overflow-y-auto'>
+          <DialogTitle></DialogTitle>
           <AddListings page='edit' setIsDialogOpen={setIsDialogOpen} />
         </DialogContent>
       </Dialog>

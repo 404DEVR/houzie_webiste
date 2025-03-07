@@ -58,6 +58,7 @@ const PropertyDetailsForm = ({
   const addPropertyDetails = useSelector(
     (state: RootState) => state.addForm.propertyDetails
   );
+
   const editPropertyDetails = useSelector(
     (state: RootState) => state.editForm.propertyDetails
   );
