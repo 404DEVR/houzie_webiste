@@ -149,6 +149,7 @@ const SmartSearch: React.FC = () => {
                 alt='Accordion Image'
                 layout='fill'
                 objectFit='cover'
+                priority
                 className='rounded-3xl'
               />
             </MotionDiv>

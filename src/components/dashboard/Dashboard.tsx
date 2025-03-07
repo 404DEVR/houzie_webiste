@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [brokerData, setBrokerData] = useState<ProfileCardProps>();
   const [isLoading, setIsLoading] = useState(true);
   const brokerid = auth?.userid;
+  console.log(auth);
   useEffect(() => {
     const fetchBrokerData = async () => {
       setIsLoading(true);
@@ -28,9 +29,7 @@ export default function Dashboard() {
         ); // Fetch data from API
         setBrokerData(response.data);
       } catch (error) {
-        toast({ title: 'Failed to fetch broker data:' });
-        // Handle error appropriately (e.g., display an error message)
-      } finally {
+        console.log(error);
         setIsLoading(false);
       }
     };

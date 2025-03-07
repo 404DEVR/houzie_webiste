@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
@@ -42,6 +40,7 @@ export default function PropertyHero() {
             alt='Modern living room'
             fill
             priority
+            loading='eager'
             className='object-cover brightness-[0.85]'
             quality={100}
           />

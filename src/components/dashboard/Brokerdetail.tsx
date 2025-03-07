@@ -30,11 +30,7 @@ const Brokerdetail = () => {
         );
         setLeadsData(response.data);
         setIsLoading(false);
-      } catch (err) {
-        toast({
-          title: 'Failed ',
-          description: 'Failed to fetch leads data',
-        });
+      } catch {
         setIsLoading(false);
       }
     };

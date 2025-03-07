@@ -92,6 +92,7 @@ const Footer = () => {
             alt='Additional SVG'
             layout='fill'
             objectFit='contain'
+            priority
           />
         </motion.div>
       </div>

@@ -53,6 +53,7 @@ const HeroText = () => {
             alt='Home'
             width={90}
             height={50}
+            priority
             className='inline-block mx-2 rounded-full object-cover w-16 h-12 md:w-20 md:h-16'
           />
           close to work
@@ -71,6 +72,7 @@ const HeroText = () => {
             alt='Transparency'
             width={90}
             height={50}
+            priority
             className='inline-block mx-2 rounded-full object-cover  w-16 h-12 md:w-20 md:h-16'
           />
         </p>
@@ -92,6 +94,7 @@ const HeroText = () => {
                 alt='Building'
                 width={800}
                 height={600}
+                priority
                 className='absolute inset-0 object-cover'
               />
               <div className='relative flex flex-col h-full justify-between px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16'>
