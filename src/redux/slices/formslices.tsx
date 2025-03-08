@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Define types
 interface Photo {
   name: string;
   size: number;
@@ -16,34 +15,34 @@ export interface PropertyDetails {
   isPreoccupied: boolean;
   roomType: string;
   sharingType: string;
-  units: string;
+  unitsAvailable: string;
   mainImage: string;
   preferredGender: string[];
   roomSize: string;
   roomSizeDetails: string;
-  furnishingLevel: string;
-  furnishings: string[];
+  furnishing: string;
+  furnishingExtras: string[];
   configuration: string;
   amenities: string[];
   bedrooms: string;
   bathrooms: string;
   balconies: string;
   preoccupiedPropertyType: string;
-  preferredTenantType: string[];
+  preferredTenant: string[];
   features: string[];
   availableFrom: string;
-  totalfloor: string;
-  floornumber: string;
-  monthlyRent: string;
+  totalFloors: string;
+  floorNumber: string;
+  price: string;
   maintenanceCharges: string;
   maintenanceChargesAmount: string;
   securityDeposit: string;
-  securityDepositamount: string;
+  security: string;
   occupantData: Occupant[];
-  lockInPeriodMonths: string;
+  lockInPeriod: string;
   brokerageCharges: string;
-  brokerageAmount: string;
-  brokerageNegotiable: boolean;
+  brokerage: string;
+  isNegotiable: boolean;
 }
 
 export interface Occupant {
@@ -145,29 +144,29 @@ const initialAddFormState: AddFormState = {
     roomSize: '',
     roomSizeDetails: '',
     bedrooms: '',
-    furnishingLevel: '',
-    floornumber: '',
-    totalfloor: '',
+    furnishing: '',
+    floorNumber: '',
+    totalFloors: '',
     preoccupiedPropertyType: '',
-    furnishings: [],
+    furnishingExtras: [],
     balconies: '',
     mainImage: '',
     bathrooms: '',
     amenities: [],
-    units: '',
+    unitsAvailable: '',
     occupantData: [],
-    preferredTenantType: [],
+    preferredTenant: [],
     features: [],
     availableFrom: '',
-    monthlyRent: '',
+    price: '',
     maintenanceCharges: '',
     maintenanceChargesAmount: '',
     securityDeposit: '',
-    securityDepositamount: '',
-    lockInPeriodMonths: '',
+    security: '',
+    lockInPeriod: '',
     brokerageCharges: '',
-    brokerageAmount: '',
-    brokerageNegotiable: false,
+    brokerage: '',
+    isNegotiable: false,
   },
   propertyLocation: {
     city: '',
@@ -239,28 +238,28 @@ const initialEditFormState: EditFormState = {
     roomSize: '',
     roomSizeDetails: '',
     bedrooms: '',
-    furnishingLevel: '',
-    floornumber: '',
-    totalfloor: '',
+    furnishing: '',
+    floorNumber: '',
+    totalFloors: '',
     preoccupiedPropertyType: '',
-    furnishings: [],
+    furnishingExtras: [],
     balconies: '',
     mainImage: '',
     bathrooms: '',
     amenities: [],
-    units: '',
-    preferredTenantType: [],
+    unitsAvailable: '',
+    preferredTenant: [],
     features: [],
     availableFrom: '',
-    monthlyRent: '',
+    price: '',
     maintenanceCharges: '',
     maintenanceChargesAmount: '',
     securityDeposit: '',
-    securityDepositamount: '',
-    lockInPeriodMonths: '',
+    security: '',
+    lockInPeriod: '',
     brokerageCharges: '',
-    brokerageAmount: '',
-    brokerageNegotiable: false,
+    brokerage: '',
+    isNegotiable: false,
   },
   propertyLocation: {
     city: '',
@@ -395,18 +394,18 @@ const addFormSlice = createSlice({
           latitude: propertyLocation.latitude || 0,
           longitude: propertyLocation.longitude || 0,
         },
-        price: parseInt(propertyDetails.monthlyRent) || 0,
-        security: parseInt(propertyDetails.securityDepositamount) || 0,
-        brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
-        isNegotiable: propertyDetails.brokerageNegotiable,
-        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase() || '',
+        price: parseInt(propertyDetails.price) || 0,
+        security: parseInt(propertyDetails.security) || 0,
+        brokerage: parseInt(propertyDetails.brokerage) || 0,
+        isNegotiable: propertyDetails.isNegotiable,
+        lockInPeriod: propertyDetails.lockInPeriod.toUpperCase() || '',
         availableFrom: propertyDetails.availableFrom || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
         bedrooms: parseInt(propertyDetails.bedrooms) || 0,
         bathrooms: parseInt(propertyDetails.bathrooms) || 0,
         balconies: parseInt(propertyDetails.balconies) || 0,
-        floorNumber: propertyDetails.floornumber || null,
-        totalFloors: parseInt(propertyDetails.totalfloor) || 0,
+        floorNumber: propertyDetails.floorNumber || null,
+        totalFloors: parseInt(propertyDetails.totalFloors) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
@@ -415,12 +414,12 @@ const addFormSlice = createSlice({
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
           : null,
-        unitsAvailable: parseInt(propertyDetails.units) || 0,
+        unitsAvailable: parseInt(propertyDetails.unitsAvailable) || 0,
         roomSize: parseInt(propertyDetails.roomSize) || 0,
-        furnishing: propertyDetails.furnishingLevel
-          ? propertyDetails.furnishingLevel.toUpperCase()
+        furnishing: propertyDetails.furnishing
+          ? propertyDetails.furnishing.toUpperCase()
           : null,
-        furnishingExtras: propertyDetails.furnishings || [],
+        furnishingExtras: propertyDetails.furnishingExtras || [],
         amenities: propertyDetails.amenities.map((amenity) =>
           amenity.toUpperCase()
         ),
@@ -428,7 +427,7 @@ const addFormSlice = createSlice({
           feature.toUpperCase()
         ),
         preferredTenant:
-          propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+          propertyDetails.preferredTenant[0]?.toUpperCase() || null,
         preferredGender: propertyDetails.preferredGender || [],
         mainImage: propertyDetails.mainImage || null,
         photos:
@@ -525,18 +524,18 @@ const editFormSlice = createSlice({
           latitude: propertyLocation.latitude || 0,
           longitude: propertyLocation.longitude || 0,
         },
-        price: parseInt(propertyDetails.monthlyRent) || 0,
-        security: parseInt(propertyDetails.securityDepositamount) || 0,
-        brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
-        isNegotiable: propertyDetails.brokerageNegotiable,
-        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase() || '',
+        price: parseInt(propertyDetails.price) || 0,
+        security: parseInt(propertyDetails.security) || 0,
+        brokerage: parseInt(propertyDetails.brokerage) || 0,
+        isNegotiable: propertyDetails.isNegotiable,
+        lockInPeriod: propertyDetails.lockInPeriod.toUpperCase() || '',
         availableFrom: propertyDetails.availableFrom || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
         bedrooms: parseInt(propertyDetails.bedrooms) || 0,
         bathrooms: parseInt(propertyDetails.bathrooms) || 0,
         balconies: parseInt(propertyDetails.balconies) || 0,
-        floorNumber: propertyDetails.floornumber || null,
-        totalFloors: parseInt(propertyDetails.totalfloor) || 0,
+        floorNumber: propertyDetails.floorNumber || null,
+        totalFloors: parseInt(propertyDetails.totalFloors) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
@@ -545,12 +544,12 @@ const editFormSlice = createSlice({
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
           : null,
-        unitsAvailable: parseInt(propertyDetails.units) || 0,
+        unitsAvailable: parseInt(propertyDetails.unitsAvailable) || 0,
         roomSize: parseInt(propertyDetails.roomSize) || 0,
-        furnishing: propertyDetails.furnishingLevel
-          ? propertyDetails.furnishingLevel.toUpperCase()
+        furnishing: propertyDetails.furnishing
+          ? propertyDetails.furnishing.toUpperCase()
           : null,
-        furnishingExtras: propertyDetails.furnishings || [],
+        furnishingExtras: propertyDetails.furnishingExtras || [],
         amenities: propertyDetails.amenities.map((amenity) =>
           amenity.toUpperCase()
         ),
@@ -558,7 +557,7 @@ const editFormSlice = createSlice({
           feature.toUpperCase()
         ),
         preferredTenant:
-          propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+          propertyDetails.preferredTenant[0]?.toUpperCase() || null,
         preferredGender: propertyDetails.preferredGender || [],
         mainImage: propertyDetails.mainImage || null,
         photos:

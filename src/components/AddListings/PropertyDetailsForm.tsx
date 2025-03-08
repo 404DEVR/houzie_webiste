@@ -184,7 +184,7 @@ const PropertyDetailsForm = ({
       totalfloor: '',
       brokerageNegotiable: false,
       amenities: [],
-      furnishings: [],
+      furnishingExtras: [],
       features: [],
       title: propertyDetails.title,
       description: propertyDetails.description,
@@ -244,44 +244,47 @@ const PropertyDetailsForm = ({
   };
 
   const handleFurnishingClick = (value: string) => {
-    const isSelected = propertyDetails.furnishings.includes(value);
+    const isSelected = propertyDetails.furnishingExtras.includes(value);
     let updatedFurnishings;
 
     if (isSelected) {
-      updatedFurnishings = propertyDetails.furnishings.filter(
+      updatedFurnishings = propertyDetails.furnishingExtras.filter(
         (item) => item !== value
       );
     } else {
-      updatedFurnishings = [...propertyDetails.furnishings, value];
+      updatedFurnishings = [...propertyDetails.furnishingExtras, value];
     }
 
     if (page === 'edit') {
-      dispatch(updateEditPropertyDetails({ furnishings: updatedFurnishings }));
+      dispatch(
+        updateEditPropertyDetails({ furnishingExtras: updatedFurnishings })
+      );
     } else {
-      dispatch(updateAddPropertyDetails({ furnishings: updatedFurnishings }));
+      dispatch(
+        updateAddPropertyDetails({ furnishingExtras: updatedFurnishings })
+      );
     }
-    setFieldErrors((prevErrors) => ({ ...prevErrors, furnishings: false }));
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      furnishingExtras: false,
+    }));
   };
 
   const handleTenantClick = (value: string) => {
-    const isSelected = propertyDetails.preferredTenantType.includes(value);
+    const isSelected = propertyDetails.preferredTenant.includes(value);
     let updatedTenants;
 
     if (isSelected) {
-      updatedTenants = propertyDetails.preferredTenantType.filter(
+      updatedTenants = propertyDetails.preferredTenant.filter(
         (item) => item !== value
       );
     } else {
-      updatedTenants = [...propertyDetails.preferredTenantType, value];
+      updatedTenants = [...propertyDetails.preferredTenant, value];
     }
     if (page === 'edit') {
-      dispatch(
-        updateEditPropertyDetails({ preferredTenantType: updatedTenants })
-      );
+      dispatch(updateEditPropertyDetails({ preferredTenant: updatedTenants }));
     } else {
-      dispatch(
-        updateAddPropertyDetails({ preferredTenantType: updatedTenants })
-      );
+      dispatch(updateAddPropertyDetails({ preferredTenant: updatedTenants }));
     }
     setFieldErrors((prevErrors) => ({
       ...prevErrors,
@@ -901,8 +904,8 @@ const PropertyDetailsForm = ({
             ...commonFields,
             'configuration',
             'preferredTenantType',
-            'floornumber',
-            'totalfloor',
+            'floorNumber',
+            'totalFloors',
           ];
         case 'FLAT_APARTMENT':
           return [
@@ -910,8 +913,8 @@ const PropertyDetailsForm = ({
             'configuration',
             'maintenanceChargesAmount',
             'preferredTenantType',
-            'floornumber',
-            'totalfloor',
+            'floorNumber',
+            'totalFloors',
           ];
         case 'VILLA':
           return [...commonFields, 'preferredTenantType'];
@@ -936,8 +939,8 @@ const PropertyDetailsForm = ({
             'configuration',
             'propertyType',
             'preferredTenantType',
-            'floornumber',
-            'totalfloor',
+            'floorNumber',
+            'totalFloors',
           ];
         case 'FLAT_APARTMENT':
           return [
@@ -946,8 +949,8 @@ const PropertyDetailsForm = ({
             'propertyType',
             'maintenanceChargesAmount',
             'preferredTenantType',
-            'floornumber',
-            'totalfloor',
+            'floorNumber',
+            'totalFloors',
           ];
         default:
           return commonFields;
@@ -968,16 +971,16 @@ const PropertyDetailsForm = ({
       }
     });
 
-    const floorNumber = parseInt(propertyDetails.floornumber);
-    const totalFloors = parseInt(propertyDetails.totalfloor);
+    const floorNumber = parseInt(propertyDetails.floorNumber);
+    const totalFloors = parseInt(propertyDetails.totalFloors);
 
     if (
       !isNaN(floorNumber) &&
       !isNaN(totalFloors) &&
       floorNumber > totalFloors
     ) {
-      errors['floornumber'] = true;
-      errors['totalfloor'] = true;
+      errors['floorNumber'] = true;
+      errors['totalFloors'] = true;
       setFloorError('Floor number must be less than or equal to total floors');
     } else {
       setFloorError('');
@@ -1293,19 +1296,16 @@ const PropertyDetailsForm = ({
               <div className='w-full lg:w-[48%]'>
                 <CustomInput
                   type='number'
-                  name='monthlyRent'
-                  id='monthlyRent'
+                  name='price'
+                  id='price'
                   label='Monthly Rent'
-                  value={propertyDetails.monthlyRent}
+                  value={propertyDetails.price}
                   onChange={handleInputChange}
-                  error={
-                    fieldErrors['monthlyRent'] ? 'This field is required' : ''
-                  }
+                  error={fieldErrors['price'] ? 'This field is required' : ''}
                   className={cn(
                     'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                     {
-                      'ring-2 ring-red-500 ring-offset-1':
-                        fieldErrors['monthlyRent'],
+                      'ring-2 ring-red-500 ring-offset-1': fieldErrors['price'],
                     }
                   )}
                   placeholder='Enter Monthly Rent'
@@ -1317,21 +1317,19 @@ const PropertyDetailsForm = ({
               <div className='w-full lg:w-[48%]'>
                 <CustomInput
                   type='number'
-                  name='securityDepositamount'
-                  id='securityDepositamount'
+                  name='security'
+                  id='security'
                   label='Security Deposit'
-                  value={propertyDetails.securityDepositamount}
+                  value={propertyDetails.security}
                   onChange={handleInputChange}
                   error={
-                    fieldErrors['securityDepositamount']
-                      ? 'This field is required'
-                      : ''
+                    fieldErrors['security'] ? 'This field is required' : ''
                   }
                   className={cn(
                     'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
-                        fieldErrors['securityDepositamount'],
+                        fieldErrors['security'],
                     }
                   )}
                   placeholder='Enter Security Deposit'
@@ -1373,21 +1371,19 @@ const PropertyDetailsForm = ({
             <div className='w-full'>
               <CustomInput
                 type='number'
-                name='brokerageAmount'
+                name='brokerage'
                 label='Brokerage Amount'
-                id='brokerageAmount'
-                value={propertyDetails.brokerageAmount}
+                id='brokerage'
+                value={propertyDetails.brokerage}
                 onChange={handleInputChange}
                 placeholder='Enter Brokerage (In Rupees)'
                 required
-                error={
-                  fieldErrors['brokerageAmount'] ? 'This field is required' : ''
-                }
+                error={fieldErrors['brokerage'] ? 'This field is required' : ''}
                 className={cn(
                   'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                   {
                     'ring-2 ring-red-500 ring-offset-1':
-                      fieldErrors['brokerageAmount'],
+                      fieldErrors['brokerage'],
                   }
                 )}
               />
@@ -1395,14 +1391,14 @@ const PropertyDetailsForm = ({
               <label className='inline-flex items-center mt-3 border px-4 py-2 rounded-md '>
                 <Input
                   type='checkbox'
-                  name='brokerageNegotiable'
-                  checked={propertyDetails.brokerageNegotiable}
+                  name='isNegotiable'
+                  checked={propertyDetails.isNegotiable}
                   onChange={handleInputChange}
                   className={cn(
                     'form-checkbox h-5 w-4 text-[#42A4AE] border-2 focus:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
-                        fieldErrors['brokerageNegotiable'],
+                        fieldErrors['isNegotiable'],
                     }
                   )}
                 />
@@ -1420,20 +1416,24 @@ const PropertyDetailsForm = ({
                 <div className=''>
                   <CustomInput
                     type='number'
-                    name='units'
+                    name='unitsAvailable'
                     label='Number Of Units Available'
-                    id='units'
-                    value={propertyDetails.units}
+                    id='unitsAvailable'
+                    value={propertyDetails.unitsAvailable}
                     onChange={handleInputChange}
-                    error={fieldErrors['units'] ? 'This field is required' : ''}
+                    error={
+                      fieldErrors['unitsAvailable']
+                        ? 'This field is required'
+                        : ''
+                    }
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['units'],
+                          fieldErrors['unitsAvailable'],
                       }
                     )}
-                    placeholder='Enter Number of Unts Available'
+                    placeholder='Enter Number of Units Available'
                   />
                 </div>
               </div>
@@ -1497,19 +1497,19 @@ const PropertyDetailsForm = ({
                     key={level.value}
                     className={cn(
                       'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                      propertyDetails.lockInPeriodMonths === level.value
+                      propertyDetails.lockInPeriod === level.value
                         ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
                         : 'bg-white text-[#646464] '
                     )}
                     onClick={() =>
-                      handleButtonClick('lockInPeriodMonths', level.value)
+                      handleButtonClick('lockInPeriod', level.value)
                     }
                   >
                     {level.label}
                   </Button>
                 ))}
               </div>
-              {fieldErrors['lockInPeriodMonths'] && (
+              {fieldErrors['lockInPeriod'] && (
                 <p className='text-red-500 text-sm mt-1'>
                   Please select a LockIn Period
                 </p>
@@ -1756,16 +1756,16 @@ const PropertyDetailsForm = ({
                 <div className='flex justify-start items-center gap-4'>
                   <Input
                     type='number'
-                    name='floornumber'
-                    id='floornumber'
-                    value={propertyDetails.floornumber}
+                    name='floorNumber'
+                    id='floorNumber'
+                    value={propertyDetails.floorNumber}
                     onChange={handleInputChange}
                     placeholder='Floor Number'
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['floornumber'],
+                          fieldErrors['floorNumber'],
                       }
                     )}
                     required
@@ -1775,16 +1775,16 @@ const PropertyDetailsForm = ({
                   </Label>
                   <Input
                     type='number'
-                    name='totalfloor'
-                    id='totalfloor'
-                    value={propertyDetails.totalfloor}
+                    name='totalFloors'
+                    id='totalFloors'
+                    value={propertyDetails.totalFloors}
                     onChange={handleInputChange}
                     placeholder='Total Floor'
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['totalfloor'],
+                          fieldErrors['totalFloors'],
                       }
                     )}
                     required
@@ -1835,9 +1835,7 @@ const PropertyDetailsForm = ({
                       key={tenant.value}
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.preferredTenantType.includes(
-                          tenant.value
-                        )
+                        propertyDetails.preferredTenant.includes(tenant.value)
                           ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
                           : 'bg-white text-[#646464] '
                       )}
@@ -1847,7 +1845,7 @@ const PropertyDetailsForm = ({
                     </Button>
                   ))}
                 </div>
-                {fieldErrors['preferredTenantType'] && (
+                {fieldErrors['preferredTenant'] && (
                   <p className='text-red-500 text-sm mt-1'>
                     Please select a Tenant Type
                   </p>
@@ -1927,19 +1925,19 @@ const PropertyDetailsForm = ({
                       key={level.value}
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.furnishingLevel === level.value
+                        propertyDetails.furnishing === level.value
                           ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
-                        handleButtonClick('furnishingLevel', level.value)
+                        handleButtonClick('furnishing', level.value)
                       }
                     >
                       {level.label}
                     </Button>
                   ))}
                 </div>
-                {fieldErrors['furnishingLevel'] && (
+                {fieldErrors['furnishing'] && (
                   <p className='text-red-500 text-sm mt-1'>
                     Please select a furnishing level
                   </p>
@@ -1948,8 +1946,8 @@ const PropertyDetailsForm = ({
             )}
 
             {/* Furnishings (as array) */}
-            {(propertyDetails.furnishingLevel.includes('FULLY_FURNISHED') ||
-              propertyDetails.furnishingLevel.includes('SEMI_FURNISHED')) && (
+            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
+              propertyDetails.furnishing.includes('SEMI_FURNISHED')) && (
               <div>
                 <Label className='text-md text-black font-normal'>
                   Furnishings
@@ -1961,7 +1959,9 @@ const PropertyDetailsForm = ({
                         key={furnishing.value}
                         className={cn(
                           'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                          propertyDetails.furnishings.includes(furnishing.value)
+                          propertyDetails.furnishingExtras.includes(
+                            furnishing.value
+                          )
                             ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
                             : 'bg-white text-[#646464] border-gray-300 '
                         )}

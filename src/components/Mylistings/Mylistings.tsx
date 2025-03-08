@@ -76,11 +76,9 @@ const MyListings = () => {
   }, [auth?.accessToken, url, refreshListings]);
 
   const handleEdit = async (id: string) => {
-    console.log(id);
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data.data;
-      console.log(listingData);
       const editFormData = {
         currentPage: 1,
         propertyDetails: {
@@ -89,35 +87,35 @@ const MyListings = () => {
           propertyType: listingData.propertyType,
           roomType: listingData.roomType || '',
           sharingType: listingData.sharingType || '',
-          units: listingData.unitsAvailable || '',
+          unitsAvailable: listingData.unitsAvailable || '',
           mainImage: listingData.mainImage,
           roomSize: listingData.roomSize || '',
           roomSizeDetails: '',
-          furnishingLevel: listingData.furnishing || '',
-          furnishings: listingData.furnishingExtras || [],
+          furnishing: listingData.furnishing || '',
+          furnishingExtras: listingData.furnishingExtras || [],
           configuration: listingData.configuration,
           balconies: listingData.balconies?.toString() || '',
           bathrooms: listingData.bathrooms?.toString() || '',
           amenities: listingData.amenities,
           bedrooms: listingData.bedrooms?.toString() || '',
           preoccupiedPropertyType: listingData.propertyType,
-          preferredTenantType: [listingData.preferredTenant],
+          preferredTenant: [listingData.preferredTenant],
           features: listingData.features,
           availableFrom: listingData.availableFrom,
-          totalfloor: listingData.totalFloors?.toString() || '',
-          floornumber: listingData.floorNumber,
-          monthlyRent: listingData.price?.toString() || '',
+          totalFloors: listingData.totalFloors?.toString() || '',
+          floorNumber: listingData.floorNumber,
+          price: listingData.price?.toString() || '',
           maintenanceCharges: listingData.isMaintenanceIncluded
             ? 'Included'
             : 'Excluded',
           maintenanceChargesAmount:
             listingData.maintenanceCharges?.toString() || '',
           securityDeposit: 'Fixed',
-          securityDepositamount: listingData.security?.toString() || '',
-          lockInPeriodMonths: listingData.lockInPeriod,
+          security: listingData.security?.toString() || '',
+          lockInPeriod: listingData.lockInPeriod,
           brokerageCharges: 'Fixed',
-          brokerageAmount: listingData.brokerage?.toString() || '',
-          brokerageNegotiable: listingData.isNegotiable,
+          brokerage: listingData.brokerage?.toString() || '',
+          isNegotiable: listingData.isNegotiable,
           preferredGender: listingData.preferredGender,
         } as PropertyDetails,
         propertyLocation: {
@@ -186,13 +184,10 @@ const MyListings = () => {
         editingListingId: id,
       };
 
-      console.log(editFormData);
-
       dispatch(startEditing(id));
       dispatch(populateEditForm(editFormData));
       setIsDialogOpen(true);
     } catch (error) {
-      console.log(error);
       toast({
         title: 'Please Try Again',
         description: 'Please Check Your Network Connection',

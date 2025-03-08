@@ -183,6 +183,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                           readOnly
                           className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Phone Number'
+                          placeholder='No Phone Number'
                         />
                       </div>
                     </TooltipTrigger>
