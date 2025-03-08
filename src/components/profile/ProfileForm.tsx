@@ -1,10 +1,7 @@
-// ProfileForm.jsx (Modified)
-'use client';
-
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import { Camera, ChevronRight, Edit } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
@@ -22,14 +19,27 @@ import {
 
 import { ProfileFormInterface } from '@/interfaces/PropsInterface';
 
+interface originalData {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  companyName: string;
+}
+
 const ProfileForm = ({ page }: ProfileFormInterface) => {
   const { auth } = useAuth();
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [companyName, setCompanyName] = useState('');
-  const [showExplorePlans, setShowExplorePlans] = useState(false); // New State Variable
+  const [originalData, setOriginalData] = useState<originalData>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    companyName: '',
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [showExplorePlans, setShowExplorePlans] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -45,9 +55,17 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
         setPhoneNumber(
           response.data.phoneNumber ? response.data.phoneNumber : ''
         );
+        setCompanyName(
+          response.data.companyName ? response.data.companyName : ''
+        );
+        setOriginalData({
+          name: response.data.name || '',
+          email: response.data.email || '',
+          phoneNumber: response.data.phoneNumber || '',
+          companyName: response.data.companyName || '',
+        });
       } catch (error) {
         toast({ title: 'Failed to fetch profile:' });
-        // Handle error appropriately (e.g., display an error message)
       } finally {
         setIsLoading(false);
       }
@@ -61,8 +79,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
     const data = {
       name: fullName,
-      email: emailAddress,
-      phoneNumber: phoneNumber,
+      companyName: companyName,
     };
 
     try {
@@ -75,14 +92,18 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
           },
         }
       );
-
       if (response.data) {
         const updatedProfile = response.data;
         setFullName(updatedProfile.name);
         setEmailAddress(updatedProfile.email);
         setPhoneNumber(updatedProfile.phoneNumber);
-
-        alert('Profile Updated Successfully!');
+        setCompanyName(updatedProfile.companyName);
+        setOriginalData({
+          name: updatedProfile.name,
+          email: updatedProfile.email,
+          phoneNumber: updatedProfile.phoneNumber,
+          companyName: updatedProfile.companyName,
+        });
       }
     } catch (error) {
       toast({
@@ -100,6 +121,12 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
     setShowExplorePlans(false);
   };
 
+  const hasChanges = () => {
+    return (
+      fullName !== originalData.name || companyName !== originalData.companyName
+    );
+  };
+
   if (isLoading) {
     return <div>Loading profile...</div>;
   }
@@ -111,76 +138,72 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
       ) : (
         <div className='flex flex-col gap-4 p-4 max-w-6xl mx-auto'>
           {/* Profile Section */}
-          <div className='flex w-full gap-8 '>
+          <div className='flex flex-col md:flex-row w-full gap-8'>
             <div className='bg-[#eff5ff] rounded-lg p-6 w-full md:w-1/2 shadow-2xl border'>
-              <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4 '>
+              <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4'>
                 {/* User Details */}
-                <TooltipProvider>
-                  <div className='col-span-1 flex flex-col gap-2 pb-8'>
-                    <div className='flex flex-col gap-'>
-                      <Label className='text-xs'>Name</Label>
-                      <input
-                        type='text'
-                        id='fullName'
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className='border-none h-8 bg-transparent  w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        aria-label='Full Name'
-                      />
-                    </div>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className='flex flex-col gap-0'>
-                          <Label className='text-xs'>Email Address</Label>
-                          <input
-                            type='email'
-                            id='emailAddress'
-                            value={emailAddress}
-                            readOnly
-                            className='border-none bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
-                            aria-label='Email Address'
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Email cannot be changed</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className='flex flex-col gap-0'>
-                          <Label className='text-xs'>Phone Number</Label>
-                          <input
-                            type='tel'
-                            id='phoneNumber'
-                            value={phoneNumber}
-                            readOnly
-                            className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
-                            aria-label='Phone Number'
-                            placeholder='+910000000000'
-                          />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Phone number cannot be changed</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <div className='flex flex-col gap-0'>
-                      <Label className='text-xs'>Company Name</Label>
-                      <input
-                        type='text'
-                        id='companyName'
-                        value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
-                        className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        aria-label='Company Name'
-                        placeholder='Houzie'
-                      />
-                    </div>
+                <div className='col-span-1 flex flex-col gap-2 pb-8'>
+                  <div className='flex flex-col gap-'>
+                    <Label className='text-xs'>Name</Label>
+                    <input
+                      type='text'
+                      id='fullName'
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      aria-label='Full Name'
+                    />
                   </div>
-                </TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className='flex flex-col gap-0'>
+                        <Label className='text-xs'>Email Address</Label>
+                        <input
+                          type='email'
+                          id='emailAddress'
+                          value={emailAddress}
+                          readOnly
+                          className='border-none bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          aria-label='Email Address'
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Email cannot be changed</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className='flex flex-col gap-0'>
+                        <Label className='text-xs'>Phone Number</Label>
+                        <input
+                          type='tel'
+                          id='phoneNumber'
+                          value={phoneNumber}
+                          readOnly
+                          className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          aria-label='Phone Number'
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Phone number cannot be changed</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <div className='flex flex-col gap-0'>
+                    <Label className='text-xs'>Company Name</Label>
+                    <input
+                      type='text'
+                      id='companyName'
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      aria-label='Company Name'
+                      placeholder='Please Update Company Name'
+                    />
+                  </div>
+                </div>
                 {/* Avatar with Camera Icon */}
                 <div className='flex flex-col justify-between items-center col-span-1 h-full'>
                   <div className='relative h-40 w-40'>
@@ -189,6 +212,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                         src='/images/Dummy profile.png'
                         alt='Avatar'
                         width={160}
+                        priority
                         height={160}
                       />
                       <AvatarFallback>JD</AvatarFallback>
@@ -202,13 +226,22 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                       <Camera className='h-4 w-4' />
                     </Button>
                   </div>
-
-                  <Button
-                    type='submit'
-                    className='bg-blue-500 text-white rounded-md hover:bg-blue-600 col-span-2'
-                  >
-                    Edit <Edit className='h-4 w-4 ml-2' />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Button
+                          type='submit'
+                          disabled={!hasChanges()}
+                          className='bg-blue-500 text-white rounded-md hover:bg-blue-600 col-span-2'
+                        >
+                          Edit <Edit className='h-4 w-4 ml-2' />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className='bg-blue-500 text-white border-none shadow-lg shadow-slate-600 '>
+                        <p>No changes detected. Please update a field.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </form>
             </div>
@@ -219,35 +252,39 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                 Subscription Summary
               </h2>
 
-              <div>
+              <div className='mb-4'>
                 <div className='flex justify-between items-center mb-2'>
                   <div className='text-lg'>Listing's Usage</div>
                   <div className='text-lg text-gray-500'>10%</div>
                 </div>
-                <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
-                  <div
-                    className='bg-blue-600 h-2.5 rounded-full'
-                    style={{ width: '10%' }}
-                  ></div>
+                <div className='w-full'>
+                  <div className='bg-gray-200 rounded-full h-2 w-full'>
+                    <div
+                      className='bg-blue-500 rounded-full h-2'
+                      style={{ width: '10%' }}
+                    ></div>
+                  </div>
                 </div>
               </div>
 
-              <div>
+              <div className='mb-4'>
                 <div className='flex justify-between items-center mb-2'>
                   <div className='text-lg'>Leads Usage</div>
                   <div className='text-lg text-gray-500'>20%</div>
                 </div>
-                <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
-                  <div
-                    className='bg-blue-600 h-2.5 rounded-full'
-                    style={{ width: '20%' }}
-                  ></div>
+                <div className='w-full '>
+                  <div className='bg-gray-200 rounded-full h-2 w-full'>
+                    <div
+                      className='bg-blue-500 rounded-full h-2'
+                      style={{ width: '20%' }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className='flex flex-col md:flex-row items-center justify-between mt-4 bg-[#eff5ff] rounded-lg shadow-xl border p-6 w-full md:w-full'>
+          <div className='flex flex-col md:flex-row items-start md:items-center md:justify-between mt-4 bg-[#eff5ff] rounded-lg shadow-xl border gap-4 p-6 w-full'>
             <div>
               <div className='text-sm text-[#3b82f6]'>Plan Purchased</div>
               <div className='font-semibold'>
@@ -259,7 +296,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
               <div className='font-semibold'>24th March 2025</div>
             </div>
             <Button
-              className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600'
+              className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600 ml-auto md:ml-0'
               onClick={handleExplorePlansClick}
             >
               Explore Plans <ChevronRight className='' />

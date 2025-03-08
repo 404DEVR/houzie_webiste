@@ -1,41 +1,30 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import Brokerdetail from '@/components/dashboard/Brokerdetail';
 import MergedDashboard from '@/components/dashboard/MergedDashboard';
 
-import { ProfileCardProps } from '@/interfaces/PropsInterface';
+import { UserData } from '@/interfaces/Interface';
 
 export default function Dashboard() {
   const { auth } = useAuth();
-  const [brokerData, setBrokerData] = useState<ProfileCardProps>();
-  const [isLoading, setIsLoading] = useState(true);
-  const brokerid = auth?.userid;
-  console.log(auth);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
   useEffect(() => {
-    const fetchBrokerData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `https://api.houzie.in/broker/${brokerid}`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth?.accessToken}`,
-            },
-          }
-        ); // Fetch data from API
-        setBrokerData(response.data);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
+    const fetchUserData = async () => {
+      if (auth?.userid) {
+        const response = await axios.get(`https://api.houzie.in/profile`, {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        });
+        setUserData(response.data);
       }
     };
-
-    fetchBrokerData();
-  }, [brokerid, auth?.accessToken]);
+    fetchUserData();
+  }, [auth]);
 
   const capitalizeName = (name: string | undefined) => {
     if (!name) return '';
@@ -45,7 +34,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1 className='text-3xl font-semibold '>
-        Welcome to {capitalizeName(brokerData?.name)}
+        Welcome {capitalizeName(userData?.name)}
       </h1>
       <MergedDashboard />
       <Brokerdetail />

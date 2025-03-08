@@ -82,8 +82,6 @@ const FileUploader = ({
 
   useEffect(() => {
     if (page === 'edit' && restructuredData) {
-      // Set initial values from restructuredData
-
       setInitialPhotos(restructuredData.photos || []);
 
       setInitialMainImage(restructuredData?.mainImage || '');

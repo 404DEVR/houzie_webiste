@@ -52,6 +52,7 @@ function LocationMarker({
 
 export default function MapLocationSelector({
   onLocationSave,
+  handleLocationUploadStatusChange,
   initialLocation = null,
 }: MapLocationSelectorProps) {
   const defaultLocation: Location = { lat: 28.4595, lng: 77.0266 };

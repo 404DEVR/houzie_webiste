@@ -29,12 +29,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 import { PropertyDetailsForminteface } from '@/interfaces/PropsInterface';
 import {
@@ -174,10 +168,10 @@ const PropertyDetailsForm = ({
           ? ''
           : propertyDetails.preoccupiedPropertyType,
       configuration: '',
-      bedroom: '',
-      gender: '',
-      bathroom: '',
-      balcony: '',
+      bedrooms: '',
+      preferredGender: [],
+      bathrooms: '',
+      balconies: '',
       maintenanceChargesAmount: '',
       furnishingLevel: '',
       availableFrom: '',
@@ -212,11 +206,21 @@ const PropertyDetailsForm = ({
       resetPropertyDetails();
     }
 
-    if (page === 'edit') {
-      dispatch(updateEditPropertyDetails({ [name]: value }));
+    if (name === 'preferredGender') {
+      // Handle gender as an array with a single value
+      if (page === 'edit') {
+        dispatch(updateEditPropertyDetails({ preferredGender: [value] }));
+      } else {
+        dispatch(updateAddPropertyDetails({ preferredGender: [value] }));
+      }
     } else {
-      dispatch(updateAddPropertyDetails({ [name]: value }));
+      if (page === 'edit') {
+        dispatch(updateEditPropertyDetails({ [name]: value }));
+      } else {
+        dispatch(updateAddPropertyDetails({ [name]: value }));
+      }
     }
+
     setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
   };
 
@@ -395,7 +399,7 @@ const PropertyDetailsForm = ({
       case 'PG':
         return [
           { label: 'Double Sharing', value: 'DOUBLE_SHARING' },
-          { label: 'Tripple Sharing', value: 'TRIPPLE_SHARING' },
+          { label: 'Triple Sharing', value: 'TRIPPLE_SHARING' },
         ];
       default:
         return [
@@ -412,47 +416,97 @@ const PropertyDetailsForm = ({
   ];
 
   const getFeature = (propertyType) => {
-    switch (propertyType) {
-      case 'CO_LIVING':
-        return [
-          { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
-          { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
-          { label: 'Owner Free', value: 'OWNER_FREE' },
-          { label: 'Balcony', value: 'BALCONY' },
-          { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
-        ];
-      case 'PG':
-        return [
-          { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
-          { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
-          { label: 'Owner Free', value: 'OWNER_FREE' },
-          { label: 'Balcony', value: 'BALCONY' },
-          { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
-        ];
-      case 'BUILDER_FLOOR':
-        return [
-          { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
-          { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
-          { label: 'Owner Free', value: 'OWNER_FREE' },
-          { label: 'Gated Community', value: 'GATED_COMMUNITY' },
-          { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
-        ];
-      case 'FLAT_APARTMENT':
-        return [
-          { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
-          { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
-          { label: 'Owner Free', value: 'OWNER_FREE' },
-          { label: 'Gated Community', value: 'GATED_COMMUNITY' },
-          { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
-        ];
-      default:
-        return [
-          { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
-          { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
-          { label: 'Owner Free', value: 'OWNER_FREE' },
-          { label: 'Balcony', value: 'BALCONY' },
-          { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
-        ];
+    if (propertyDetails.isPreoccupied) {
+      switch (propertyType) {
+        case 'CO_LIVING':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        case 'PG':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        case 'BUILDER_FLOOR':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Gated Community', value: 'GATED_COMMUNITY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        case 'FLAT_APARTMENT':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Gated Community', value: 'GATED_COMMUNITY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        default:
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+      }
+    } else {
+      switch (propertyType) {
+        case 'CO_LIVING':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        case 'PG':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+        case 'BUILDER_FLOOR':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Gated Community', value: 'GATED_COMMUNITY' },
+          ];
+        case 'FLAT_APARTMENT':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Gated Community', value: 'GATED_COMMUNITY' },
+          ];
+        case 'VILLA':
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Gated Community', value: 'GATED_COMMUNITY' },
+          ];
+        default:
+          return [
+            { label: 'Couple Friendly', value: 'COUPLE_FRIENDLY' },
+            { label: 'Pet Friendly', value: 'PET_FRIENDLY' },
+            { label: 'Owner Free', value: 'OWNER_FREE' },
+            { label: 'Balcony', value: 'BALCONY' },
+            { label: 'Attached Bathroom', value: 'ATTACHED_BATHROOM' },
+          ];
+      }
     }
   };
 
@@ -704,45 +758,94 @@ const PropertyDetailsForm = ({
     { label: 'Open to both', value: 'OTHER' },
   ];
 
-  const amenitiesList = [
-    { label: 'Wifi', value: 'WIFI', url: '/svg/material-symbols_wifi.svg' },
-    {
-      label: 'Power Backup',
-      value: 'POWER_BACKUP',
-      url: '/svg/ic_round-power.svg',
-    },
-    {
-      label: '4 Wheeler Parking',
-      value: 'FOUR_WHEELER_PARKING',
-      url: '/svg/fluent_vehicle-car-parking-16-regular.svg',
-    },
-    {
-      label: '2 Wheeler Parking',
-      value: 'TWO_WHEELER_PARKING',
-      url: '/svg/material-symbols_directions-bike.svg',
-    },
-    {
-      label: '24/7 Water Supply',
-      value: 'WATER_SUPPLY_24_7',
-      url: '/svg/famicons_water-sharp.svg',
-    },
-    {
-      label: '24/7 Security',
-      value: 'SECURITY_24_7',
-      url: '/svg/healthicons_security-worker.svg',
-    },
-    {
-      label: 'Daily House Keeping',
-      value: 'DAILY_HOUSEKEEPING',
-      url: '/svg/material-symbols-light_cleaning-bucket-rounded.svg',
-    },
-    {
-      label: '24/7 CCTV Surveillance',
-      value: 'CCTV',
-      url: '/svg/ph_security-camera-fill.svg',
-    },
-    { label: 'Meals', value: 'MEALS', url: '/svg/fluent_food-24-filled.svg' },
-  ];
+  const getAmenitiesList = (property) => {
+    if (
+      property.propertyType === 'VILLA' ||
+      property.propertyType === 'BUILDER_FLOOR' ||
+      property.propertyType === 'FLAT_APARTMENT' ||
+      property.preoccupiedPropertyType === 'VILLA' ||
+      property.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+      property.preoccupiedPropertyType === 'FLAT_APARTMENT'
+    ) {
+      return [
+        { label: 'Wifi', value: 'WIFI', url: '/svg/material-symbols_wifi.svg' },
+        {
+          label: 'Power Backup',
+          value: 'POWER_BACKUP',
+          url: '/svg/ic_round-power.svg',
+        },
+        {
+          label: '4 Wheeler Parking',
+          value: 'FOUR_WHEELER_PARKING',
+          url: '/svg/fluent_vehicle-car-parking-16-regular.svg',
+        },
+        {
+          label: '2 Wheeler Parking',
+          value: 'TWO_WHEELER_PARKING',
+          url: '/svg/material-symbols_directions-bike.svg',
+        },
+        {
+          label: '24/7 Water Supply',
+          value: 'WATER_SUPPLY_24_7',
+          url: '/svg/famicons_water-sharp.svg',
+        },
+        {
+          label: '24/7 Security',
+          value: 'SECURITY_24_7',
+          url: '/svg/healthicons_security-worker.svg',
+        },
+        {
+          label: '24/7 CCTV Surveillance',
+          value: 'CCTV',
+          url: '/svg/ph_security-camera-fill.svg',
+        },
+      ];
+    } else {
+      return [
+        { label: 'Wifi', value: 'WIFI', url: '/svg/material-symbols_wifi.svg' },
+        {
+          label: 'Power Backup',
+          value: 'POWER_BACKUP',
+          url: '/svg/ic_round-power.svg',
+        },
+        {
+          label: '4 Wheeler Parking',
+          value: 'FOUR_WHEELER_PARKING',
+          url: '/svg/fluent_vehicle-car-parking-16-regular.svg',
+        },
+        {
+          label: '2 Wheeler Parking',
+          value: 'TWO_WHEELER_PARKING',
+          url: '/svg/material-symbols_directions-bike.svg',
+        },
+        {
+          label: '24/7 Water Supply',
+          value: 'WATER_SUPPLY_24_7',
+          url: '/svg/famicons_water-sharp.svg',
+        },
+        {
+          label: '24/7 Security',
+          value: 'SECURITY_24_7',
+          url: '/svg/healthicons_security-worker.svg',
+        },
+        {
+          label: 'Daily House Keeping',
+          value: 'DAILY_HOUSEKEEPING',
+          url: '/svg/material-symbols-light_cleaning-bucket-rounded.svg',
+        },
+        {
+          label: '24/7 CCTV Surveillance',
+          value: 'CCTV',
+          url: '/svg/ph_security-camera-fill.svg',
+        },
+        {
+          label: 'Meals',
+          value: 'MEALS',
+          url: '/svg/fluent_food-24-filled.svg',
+        },
+      ];
+    }
+  };
 
   const getTenantType = (propertyType) => {
     switch (propertyType) {
@@ -864,20 +967,22 @@ const PropertyDetailsForm = ({
         errors[field] = !value;
       }
     });
+
     const floorNumber = parseInt(propertyDetails.floornumber);
     const totalFloors = parseInt(propertyDetails.totalfloor);
 
     if (
       !isNaN(floorNumber) &&
       !isNaN(totalFloors) &&
-      floorNumber >= totalFloors
+      floorNumber > totalFloors
     ) {
       errors['floornumber'] = true;
       errors['totalfloor'] = true;
-      setFloorError('');
+      setFloorError('Floor number must be less than or equal to total floors');
     } else {
-      setFloorError('Floor number must be less than total floors');
+      setFloorError('');
     }
+
     return errors;
   };
 
@@ -912,6 +1017,7 @@ const PropertyDetailsForm = ({
             changedFields[key] = propertyDetails[key];
           }
         }
+        console.log(changedFields);
         if (Object.keys(changedFields).length > 0) {
           const response = await axios.patch(
             `https://api.houzie.in/listings/${editingListingId}`,
@@ -1445,10 +1551,14 @@ const PropertyDetailsForm = ({
 
             {/* Sharing Type */}
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
-              propertyDetails.preoccupiedPropertyType === 'VILLA' ||
-              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              (propertyDetails.preoccupiedPropertyType === 'CO_LIVING' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'VILLA' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' &&
+                propertyDetails.isPreoccupied) ||
               propertyDetails.propertyType === 'PG') && (
               <div>
                 <Label className='text-md text-black font-normal'>
@@ -1481,10 +1591,14 @@ const PropertyDetailsForm = ({
             )}
 
             {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
-              propertyDetails.preoccupiedPropertyType === 'VILLA' ||
-              propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
-              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+              (propertyDetails.preoccupiedPropertyType === 'CO_LIVING' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'VILLA' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' &&
+                propertyDetails.isPreoccupied) ||
+              (propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' &&
+                propertyDetails.isPreoccupied) ||
               propertyDetails.propertyType === 'PG') && (
               <div>
                 <Label className='text-md text-black font-normal'>
@@ -1496,17 +1610,19 @@ const PropertyDetailsForm = ({
                       key={type.value}
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-                        propertyDetails.gender === type.value
+                        propertyDetails.preferredGender.includes(type.value)
                           ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
                           : 'bg-white text-[#646464] '
                       )}
-                      onClick={() => handleButtonClick('gender', type.value)}
+                      onClick={() =>
+                        handleButtonClick('preferredGender', type.value)
+                      }
                     >
                       {type.label}
                     </Button>
                   ))}
                 </div>
-                {fieldErrors['sharingType'] && (
+                {fieldErrors['preferredGender'] && (
                   <p className='text-red-500 text-sm mt-1'>
                     Please select a Gender
                   </p>
@@ -1559,20 +1675,20 @@ const PropertyDetailsForm = ({
                 <div className='w-full '>
                   <CustomInput
                     type='number'
-                    name='bedroom'
-                    id='bedroom'
+                    name='bedrooms'
+                    id='bedrooms'
                     variant='small'
                     label='Bedroom'
-                    value={propertyDetails.bedroom}
+                    value={propertyDetails.bedrooms}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['bedroom'] ? 'This field is required' : ''
+                      fieldErrors['bedrooms'] ? 'This field is required' : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['bedroom'],
+                          fieldErrors['bedrooms'],
                       }
                     )}
                     placeholder='Number Of Bedroom'
@@ -1582,20 +1698,20 @@ const PropertyDetailsForm = ({
                 <div className='w-full '>
                   <CustomInput
                     type='number'
-                    name='balcony'
-                    id='balcony'
+                    name='balconies'
+                    id='balconies'
                     variant='small'
                     label='Balcony'
-                    value={propertyDetails.balcony}
+                    value={propertyDetails.balconies}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['balcony'] ? 'This field is required' : ''
+                      fieldErrors['balconies'] ? 'This field is required' : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['balcony'],
+                          fieldErrors['balconies'],
                       }
                     )}
                     placeholder='Number Of Balcony'
@@ -1605,20 +1721,20 @@ const PropertyDetailsForm = ({
                 <div className='w-full'>
                   <CustomInput
                     type='number'
-                    name='bathroom'
+                    name='bathrooms'
                     variant='small'
-                    id='bathroom'
+                    id='bathrooms'
                     label='Bathroom'
-                    value={propertyDetails.bathroom}
+                    value={propertyDetails.bathrooms}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['bathroom'] ? 'This field is required' : ''
+                      fieldErrors['bedrooms'] ? 'This field is required' : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe]  ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['bathroom'],
+                          fieldErrors['bedrooms'],
                       }
                     )}
                     placeholder='Enter Number Of Bathroom'
@@ -1874,7 +1990,7 @@ const PropertyDetailsForm = ({
                 Amenities
               </Label>
               <div className='flex flex-wrap gap-4 mt-1'>
-                {amenitiesList.map((amenity) => (
+                {getAmenitiesList(propertyDetails).map((amenity) => (
                   <Button
                     key={amenity.value}
                     className={cn(
@@ -1901,25 +2017,7 @@ const PropertyDetailsForm = ({
         )}
       </CardContent>
       <CardFooter className='flex justify-end items-center gap-4'>
-        {!isFormValid ? (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className='cursor-not-allowed'>
-                <Button
-                  variant='outline'
-                  onClick={handleSubmit}
-                  className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
-                  // disabled={!isFormValid}
-                >
-                  Next, Add Address
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className='bg-[#60a5fa] text-white'>
-                <p>Please fill out all required fields to proceed.</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ) : page === 'edit' ? (
+        {page === 'edit' ? (
           <Button
             onClick={handleEdit}
             className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'

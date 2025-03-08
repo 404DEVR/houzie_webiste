@@ -108,8 +108,8 @@ const ExplorePlans = ({ onBack }) => {
   return (
     <div className='bg-gray-50 min-h-screen py-2 max-w-5xl mx-auto'>
       <div className='container mx-auto px-4'>
-        <div className='flex gap-6 justify-center items-center'>
-          <h1 className='text-4xl font-bold text-center mb-4'>
+        <div className='flex flex-col md:flex-row gap-6 justify-center items-center'>
+          <h1 className=' text-md md:text-4xl font-bold text-center md:mb-4'>
             Purchase a subscription
           </h1>
           <Button

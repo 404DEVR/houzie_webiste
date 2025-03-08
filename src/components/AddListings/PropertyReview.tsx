@@ -59,6 +59,14 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
     (data.photos && data.photos[0]) ||
     '/placeholder-image.jpg';
 
+  const formatDateString = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
   return (
     <Card className='w-full mx-auto overflow-hidden shadow-2xl max-w-full'>
       <div className='flex flex-col lg:flex-row'>
@@ -101,22 +109,20 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
               )}
             </div>
 
-            <div className='flex flex-wrap items-start justify-center md:justify-start gap-2'>
-              {propertyFeatures.map((feature, index) => (
-                <Badge
-                  key={index}
-                  variant='outline'
-                  className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
-                >
-                  {feature.icon && (
-                    <feature.icon className='w-[17.59px] h-[17.59px]' />
-                  )}
-                  <span className='font-medium text-sm ml-[2.93px]'>
-                    {feature.label}
-                  </span>
-                </Badge>
-              ))}
-            </div>
+            {propertyFeatures.length > 0 && (
+              <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
+                {propertyFeatures.map((feature, index) => (
+                  <Badge
+                    key={index}
+                    variant='outline'
+                    className=' border-none flex gap-1 justify-center items-center'
+                  >
+                    <feature.icon className='w-[14px] h-[14px]' />
+                    <span className='font-medium text-xs'>{feature.label}</span>
+                  </Badge>
+                ))}
+              </div>
+            )}
 
             <div className='flex flex-wrap items-start mx-auto md:mx-0 gap-2 max-w-2xl'>
               {financialDetails.map((detail, index) => (
@@ -187,7 +193,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 <div>{data.balconies}</div>
               </div>
             )}
-            {data.roomSize && (
+            {data.roomSize !== 0 && data.roomSize !== null && (
               <div>
                 <h6 className='font-semibold text-md text-gray-800'>
                   Room Size
@@ -200,7 +206,11 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 <h6 className='font-semibold text-md text-gray-800'>
                   Furnishing
                 </h6>
-                <div>{transformString(data.furnishing)}</div>
+                <div>
+                  {data.furnishing === 'NONE'
+                    ? 'Unfurnished'
+                    : transformString(data.furnishing)}
+                </div>
               </div>
             )}
             {data.sharingType && (
@@ -211,22 +221,21 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 <div>{transformString(data.sharingType)}</div>
               </div>
             )}
-            {data.unitsAvailable !== null &&
-              data.unitsAvailable !== undefined && (
-                <div>
-                  <h6 className='font-semibold text-md text-gray-800'>
-                    Units Available
-                  </h6>
-                  <div>{data.unitsAvailable}</div>
-                </div>
-              )}
+            {data.unitsAvailable !== 0 && data.unitsAvailable !== null && (
+              <div>
+                <h6 className='font-semibold text-md text-gray-800'>
+                  Units Available
+                </h6>
+                <div>{data.unitsAvailable}</div>
+              </div>
+            )}
           </div>
         </div>
 
         <div>
           <h4 className='font-bold text-xl'>Financial Details</h4>
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-            {data.brokerage !== null && data.brokerage !== undefined && (
+            {data.brokerage && (
               <div>
                 <h6 className='font-semibold text-md text-gray-800'>
                   Brokerage
@@ -244,8 +253,8 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 <div>{transformString(data.lockInPeriod)}</div>
               </div>
             )}
-            {data.maintenanceCharges !== null &&
-              data.maintenanceCharges !== undefined && (
+            {data.maintenanceCharges !== 0 &&
+              data.maintenanceCharges !== null && (
                 <div>
                   <h6 className='font-semibold text-md text-gray-800'>
                     Maintenance
@@ -264,7 +273,6 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
         <div>
           {data.availableFrom || data.preferredTenant ? (
             <>
-              {' '}
               <h4 className='font-bold text-xl'>Additional Information</h4>
               <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
                 {data.availableFrom && (
@@ -272,7 +280,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                     <h6 className='font-semibold text-md text-gray-800'>
                       Available From
                     </h6>
-                    <div>{transformString(data.availableFrom)}</div>
+                    <div>{formatDateString(data.availableFrom)}</div>
                   </div>
                 )}
                 {data.preferredTenant && (

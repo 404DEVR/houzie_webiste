@@ -138,6 +138,7 @@ export interface MapLocationDisplayProps {
 export interface MapLocationSelectorProps {
   onLocationSave: (location: Location) => void;
   initialLocation?: Location | null;
+  handleLocationUploadStatusChange?: (hasImages: boolean) => void;
 }
 
 export interface ProfileFormInterface {

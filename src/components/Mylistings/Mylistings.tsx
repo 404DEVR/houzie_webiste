@@ -4,6 +4,7 @@ import { ArrowDown, Bath, Bed, Building2, Home } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { FaPhoneAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
 import { toast } from '@/hooks/use-toast';
@@ -23,7 +24,6 @@ import {
   restructured,
   startEditing,
 } from '@/redux/slices/formslices';
-import { FaPhoneAlt } from 'react-icons/fa';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -76,9 +76,11 @@ const MyListings = () => {
   }, [auth?.accessToken, url, refreshListings]);
 
   const handleEdit = async (id: string) => {
+    console.log(id);
     try {
       const response = await axios.get(`https://api.houzie.in/listings/${id}`);
       const listingData = response.data.data;
+      console.log(listingData);
       const editFormData = {
         currentPage: 1,
         propertyDetails: {
@@ -94,10 +96,10 @@ const MyListings = () => {
           furnishingLevel: listingData.furnishing || '',
           furnishings: listingData.furnishingExtras || [],
           configuration: listingData.configuration,
-          balcony: listingData.balconies?.toString() || '',
-          bathroom: listingData.bathrooms?.toString() || '',
+          balconies: listingData.balconies?.toString() || '',
+          bathrooms: listingData.bathrooms?.toString() || '',
           amenities: listingData.amenities,
-          bedroom: listingData.bedrooms?.toString() || '',
+          bedrooms: listingData.bedrooms?.toString() || '',
           preoccupiedPropertyType: listingData.propertyType,
           preferredTenantType: [listingData.preferredTenant],
           features: listingData.features,
@@ -116,6 +118,7 @@ const MyListings = () => {
           brokerageCharges: 'Fixed',
           brokerageAmount: listingData.brokerage?.toString() || '',
           brokerageNegotiable: listingData.isNegotiable,
+          preferredGender: listingData.preferredGender,
         } as PropertyDetails,
         propertyLocation: {
           city: (listingData.location && listingData.location.city) || '',
@@ -175,13 +178,15 @@ const MyListings = () => {
           mainImage: '',
           photos: [],
           isPreoccupied: false,
-          gender: '',
+          preferredGender: [],
           occupants: [],
           totalOccupants: null,
         } as restructured,
         isEditing: true,
         editingListingId: id,
       };
+
+      console.log(editFormData);
 
       dispatch(startEditing(id));
       dispatch(populateEditForm(editFormData));
@@ -257,7 +262,6 @@ const MyListings = () => {
             Authorization: `Bearer ${auth?.accessToken}`,
           },
         });
-        // console.log(response.data);
         setLeadsData(response.data);
       } catch {
         setExpandedCardId(id);

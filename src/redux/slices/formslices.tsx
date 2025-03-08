@@ -18,16 +18,16 @@ export interface PropertyDetails {
   sharingType: string;
   units: string;
   mainImage: string;
-  gender: string;
+  preferredGender: string[];
   roomSize: string;
   roomSizeDetails: string;
   furnishingLevel: string;
   furnishings: string[];
   configuration: string;
-  balcony: string;
-  bathroom: string;
   amenities: string[];
-  bedroom: string;
+  bedrooms: string;
+  bathrooms: string;
+  balconies: string;
   preoccupiedPropertyType: string;
   preferredTenantType: string[];
   features: string[];
@@ -47,10 +47,11 @@ export interface PropertyDetails {
 }
 
 export interface Occupant {
-  name: string;
-  age: number;
-  profession: string;
-  about: string;
+  name: string | null;
+  age: number | null;
+  profession: string | null;
+  about: string | null;
+  gender: string | null;
 }
 
 export interface PropertyLocation {
@@ -80,7 +81,7 @@ export interface restructured {
   price: number | null;
   security: number | null;
   brokerage: number | null;
-  gender: string | null;
+  preferredGender: string[] | null;
   isNegotiable: boolean | null;
   lockInPeriod: string | null;
   availableFrom: string | null;
@@ -104,8 +105,8 @@ export interface restructured {
   mainImage: string | null;
   photos: string[];
   isPreoccupied: boolean | null;
-  occupants: Occupant[] | null;
-  totalOccupants: number | null;
+  occupants?: Occupant[] | null;
+  totalOccupants?: number | null;
 }
 
 // Define separate state interfaces
@@ -137,21 +138,21 @@ const initialAddFormState: AddFormState = {
     isPreoccupied: false,
     description: '',
     propertyType: '',
-    gender: '',
+    preferredGender: [],
     roomType: '',
     sharingType: '',
     configuration: '',
     roomSize: '',
     roomSizeDetails: '',
-    bedroom: '',
+    bedrooms: '',
     furnishingLevel: '',
     floornumber: '',
     totalfloor: '',
     preoccupiedPropertyType: '',
     furnishings: [],
-    balcony: '',
+    balconies: '',
     mainImage: '',
-    bathroom: '',
+    bathrooms: '',
     amenities: [],
     units: '',
     occupantData: [],
@@ -196,7 +197,7 @@ const initialAddFormState: AddFormState = {
     brokerage: null,
     isNegotiable: false,
     lockInPeriod: null,
-    gender: null,
+    preferredGender: null,
     availableFrom: null,
     configuration: null,
     bedrooms: null,
@@ -227,7 +228,7 @@ const initialEditFormState: EditFormState = {
   currentPage: 1,
   propertyDetails: {
     title: '',
-    gender: '',
+    preferredGender: [],
     description: '',
     propertyType: '',
     isPreoccupied: false,
@@ -237,15 +238,15 @@ const initialEditFormState: EditFormState = {
     occupantData: [],
     roomSize: '',
     roomSizeDetails: '',
-    bedroom: '',
+    bedrooms: '',
     furnishingLevel: '',
     floornumber: '',
     totalfloor: '',
     preoccupiedPropertyType: '',
     furnishings: [],
-    balcony: '',
+    balconies: '',
     mainImage: '',
-    bathroom: '',
+    bathrooms: '',
     amenities: [],
     units: '',
     preferredTenantType: [],
@@ -286,7 +287,7 @@ const initialEditFormState: EditFormState = {
     },
     price: null,
     security: null,
-    gender: null,
+    preferredGender: null,
     brokerage: null,
     isNegotiable: false,
     lockInPeriod: null,
@@ -380,9 +381,10 @@ const addFormSlice = createSlice({
     },
     restructureAddFormData(state) {
       const { propertyDetails, propertyLocation, photos } = state;
+
       state.restructuredData = {
-        title: propertyDetails.title,
-        description: propertyDetails.description,
+        title: propertyDetails.title || '',
+        description: propertyDetails.description || '',
         propertyType: propertyDetails.isPreoccupied
           ? propertyDetails.preoccupiedPropertyType.toUpperCase()
           : propertyDetails.propertyType.toUpperCase(),
@@ -397,20 +399,19 @@ const addFormSlice = createSlice({
         security: parseInt(propertyDetails.securityDepositamount) || 0,
         brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
         isNegotiable: propertyDetails.brokerageNegotiable,
-        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
+        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase() || '',
         availableFrom: propertyDetails.availableFrom || null,
-        gender: propertyDetails.gender || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
-        bedrooms: parseInt(propertyDetails.bedroom) || 0,
-        bathrooms: parseInt(propertyDetails.bathroom) || 0,
-        balconies: parseInt(propertyDetails.balcony) || 0,
+        bedrooms: parseInt(propertyDetails.bedrooms) || 0,
+        bathrooms: parseInt(propertyDetails.bathrooms) || 0,
+        balconies: parseInt(propertyDetails.balconies) || 0,
         floorNumber: propertyDetails.floornumber || null,
         totalFloors: parseInt(propertyDetails.totalfloor) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
-          propertyDetails.maintenanceCharges === 'Included',
-        roomType: propertyDetails.roomType || null,
+          propertyDetails.maintenanceCharges === 'INCLUDED',
+        roomType: propertyDetails.roomType || '',
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
           : null,
@@ -428,14 +429,19 @@ const addFormSlice = createSlice({
         ),
         preferredTenant:
           propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+        preferredGender: propertyDetails.preferredGender || [],
         mainImage: propertyDetails.mainImage || null,
         photos:
           photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
 
-        isPreoccupied: propertyDetails.isPreoccupied || null,
-        occupants: propertyDetails.occupantData || null,
-        totalOccupants: propertyDetails.occupantData.length || null,
+        isPreoccupied: propertyDetails.isPreoccupied || false,
       };
+
+      if (propertyDetails.isPreoccupied) {
+        state.restructuredData.occupants = propertyDetails.occupantData;
+        // state.restructuredData.totalOccupants =
+        //   propertyDetails.occupantData.length;
+      }
     },
   },
 });
@@ -505,9 +511,10 @@ const editFormSlice = createSlice({
     },
     restructureEditFormData(state) {
       const { propertyDetails, propertyLocation, photos } = state;
+
       state.restructuredData = {
-        title: propertyDetails.title,
-        description: propertyDetails.description,
+        title: propertyDetails.title || '',
+        description: propertyDetails.description || '',
         propertyType: propertyDetails.isPreoccupied
           ? propertyDetails.preoccupiedPropertyType.toUpperCase()
           : propertyDetails.propertyType.toUpperCase(),
@@ -522,20 +529,19 @@ const editFormSlice = createSlice({
         security: parseInt(propertyDetails.securityDepositamount) || 0,
         brokerage: parseInt(propertyDetails.brokerageAmount) || 0,
         isNegotiable: propertyDetails.brokerageNegotiable,
-        gender: propertyDetails.gender || null,
-        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase(),
+        lockInPeriod: propertyDetails.lockInPeriodMonths.toUpperCase() || '',
         availableFrom: propertyDetails.availableFrom || null,
         configuration: propertyDetails.configuration.toUpperCase() || null,
-        bedrooms: parseInt(propertyDetails.bedroom) || 0,
-        bathrooms: parseInt(propertyDetails.bathroom) || 0,
-        balconies: parseInt(propertyDetails.balcony) || 0,
+        bedrooms: parseInt(propertyDetails.bedrooms) || 0,
+        bathrooms: parseInt(propertyDetails.bathrooms) || 0,
+        balconies: parseInt(propertyDetails.balconies) || 0,
         floorNumber: propertyDetails.floornumber || null,
         totalFloors: parseInt(propertyDetails.totalfloor) || 0,
         maintenanceCharges:
           parseInt(propertyDetails.maintenanceChargesAmount) || 0,
         isMaintenanceIncluded:
-          propertyDetails.maintenanceCharges === 'Included',
-        roomType: propertyDetails.roomType || null,
+          propertyDetails.maintenanceCharges === 'INCLUDED',
+        roomType: propertyDetails.roomType || '',
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
           : null,
@@ -553,14 +559,19 @@ const editFormSlice = createSlice({
         ),
         preferredTenant:
           propertyDetails.preferredTenantType[0]?.toUpperCase() || null,
+        preferredGender: propertyDetails.preferredGender || [],
         mainImage: propertyDetails.mainImage || null,
         photos:
           photos.length > 0 ? photos.map((photo) => photo.preview || '') : [],
 
-        isPreoccupied: propertyDetails.isPreoccupied || null,
-        occupants: propertyDetails.occupantData || null,
-        totalOccupants: propertyDetails.occupantData.length || null,
+        isPreoccupied: propertyDetails.isPreoccupied || false,
       };
+
+      if (propertyDetails.isPreoccupied) {
+        state.restructuredData.occupants = propertyDetails.occupantData;
+        // state.restructuredData.totalOccupants =
+        //   propertyDetails.occupantData.length;
+      }
     },
 
     populateEditForm: (state, action: PayloadAction<EditFormState>) => {

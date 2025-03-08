@@ -45,8 +45,6 @@ const PropertyLocation = ({
   const editform = useSelector(
     (state: RootState) => state.addForm.propertyDetails
   );
-
-  console.log(editform);
   const addPropertyLocation = useSelector(
     (state: RootState) => state.addForm.propertyLocation
   );
@@ -101,9 +99,8 @@ const PropertyLocation = ({
         })
       );
 
-      // Initialize initialPropertyLocation.current ONLY ONCE
       initialPropertyLocation.current = { ...propertyLocation };
-      isInitialValueSet.current = true; // Mark as initialized
+      isInitialValueSet.current = true;
     }
   }, [
     page,
@@ -124,6 +121,10 @@ const PropertyLocation = ({
 
   const handleImageUploadStatusChange = (hasImages: boolean) => {
     setHasImages(hasImages);
+  };
+
+  const handleLocationUploadStatusChange = (isLocationSelected: boolean) => {
+    setIsLocationSelected(isLocationSelected);
   };
 
   const handleOccupantDataChange = (isValid: boolean) => {
@@ -179,6 +180,30 @@ const PropertyLocation = ({
     isOccupantDataValid
   );
 
+  const getTooltipMessage = () => {
+    if (!isLocationSelected) {
+      return 'Please save a location to proceed.';
+    } else if (!hasImages) {
+      return 'Please add at least one image to proceed.';
+    } else if (!isOccupantDataValid) {
+      return 'Please complete the Current Occupants Profile to proceed.';
+    } else {
+      return '';
+    }
+  };
+
+  useEffect(() => {
+    handleLocationUploadStatusChange &&
+      handleLocationUploadStatusChange(
+        propertyLocation.longitude !== null &&
+          propertyLocation.latitude !== null
+      );
+  }, [
+    handleLocationUploadStatusChange,
+    propertyLocation.longitude,
+    propertyLocation.latitude,
+  ]);
+
   return (
     <Card className='w-full max-w-4xl my-6 md:my-0 mx-auto md:p-8'>
       <CardHeader>
@@ -189,6 +214,7 @@ const PropertyLocation = ({
           <MapLocationSelecter
             onLocationSave={handleLocationSave}
             initialLocation={getInitialLocation()}
+            handleLocationUploadStatusChange={handleLocationUploadStatusChange}
           />
         </div>
         {propertyDetails.isPreoccupied && (
@@ -223,14 +249,11 @@ const PropertyLocation = ({
                   className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
                   disabled={isNextButtonDisabled}
                 >
-                  Next, Add Address
+                  save and review
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className='bg-[#60a5fa] text-white'>
-                <p>
-                  Please Save a location, add at least one image and complete
-                  the Current Occupants Profile to proceed.
-                </p>
+              <TooltipContent className='bg-blue-500 text-white border-none shadow-lg shadow-slate-600'>
+                <p>{getTooltipMessage()}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -240,7 +263,7 @@ const PropertyLocation = ({
             className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             disabled={isNextButtonDisabled}
           >
-            Next, Add Address
+            save and review
           </Button>
         )}
       </CardFooter>
