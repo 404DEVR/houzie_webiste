@@ -2,7 +2,6 @@ import api from 'axios';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { PropertyReview } from '@/components/AddListings/PropertyReview';
@@ -18,15 +17,17 @@ import {
 import { ReviewProps } from '@/interfaces/PropsInterface';
 import { resetAddForm } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
+  const toast = useCustomToast();
   const dispatch = useDispatch();
   const { auth } = useAuth();
   const restructuredData = useSelector(
     (state: RootState) => state.addForm.restructuredData
   );
 
-  console.log(JSON.stringify(restructuredData));
+  console.log(restructuredData);
 
   const handlePost = async () => {
     try {
@@ -41,8 +42,10 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
         },
       });
 
-      toast({
+      toast.success({
         title: 'Listing Posted Successfully',
+        description: 'Congrats you have successfully posted a listing',
+        duration: 5000,
       });
       dispatch(resetAddForm());
 
@@ -50,9 +53,9 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
         setActiveTab('myListing');
       }
     } catch (error) {
-      toast({
-        title: 'Something went wrong please try again',
-        variant: 'destructive',
+      toast.error({
+        title: 'Error',
+        description: 'Something went wrong please try again',
       });
     }
   };

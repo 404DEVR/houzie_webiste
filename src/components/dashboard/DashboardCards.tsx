@@ -3,14 +3,15 @@ import { Clock, Package, TrendingDown, TrendingUp, User2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils';
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { CardsInterface } from '@/interfaces/Interface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const DashboardCards = () => {
+  const toast = useCustomToast();
   const [cardData, setCardData] = useState<CardsInterface[]>([]);
   const { auth } = useAuth();
 
@@ -61,7 +62,7 @@ const DashboardCards = () => {
 
         setCardData(newCardData);
       } catch (error) {
-        toast({ title: 'Error fetching data:' });
+        toast.error({ title: 'Error', description: 'Error fetching data:' });
       }
     };
 

@@ -15,7 +15,6 @@ import {
   YAxis,
 } from 'recharts';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,8 +27,10 @@ import {
 } from '@/components/ui/select';
 
 import { ApiData, CardData } from '@/interfaces/Interface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const MergedDashboard: React.FC = () => {
+  const toast = useCustomToast();
   const [cardData, setCardData] = useState<CardData[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('October');
   const { auth } = useAuth();
@@ -88,7 +89,7 @@ const MergedDashboard: React.FC = () => {
 
         setCardData(newCardData);
       } catch (error) {
-        toast({ title: 'Error fetching data:' });
+        toast.error({ title: 'Error', description: 'Error fetching data:' });
       }
     };
 

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
-
 import { Button } from '@/components/ui/button';
 import {
   CardContent,
@@ -11,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface OTPVerificationProps {
   phoneNumber: string;
@@ -21,6 +20,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   phoneNumber,
   onVerificationSuccess,
 }) => {
+  const toast = useCustomToast();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
 
   const handleChange = (element: HTMLInputElement, index: number) => {
@@ -46,24 +46,22 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
       );
 
       if (response.data.status === 'success') {
-        toast({
+        toast.success({
           title: 'Verification Successful',
           description: 'Your phone number has been verified.',
         });
 
         onVerificationSuccess();
       } else {
-        toast({
+        toast.error({
           title: 'Verification Failed',
           description: response.data.message || 'Invalid OTP.',
-          variant: 'destructive',
         });
       }
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Verification Failed',
         description: 'An error occurred during verification.',
-        variant: 'destructive',
       });
     }
   };

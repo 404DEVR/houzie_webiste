@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cn } from '@/lib/utils';
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import CustomInput from '@/components/inputs/CustomInput';
@@ -37,11 +36,13 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const PropertyDetailsForm = ({
   handleNext,
   page,
 }: PropertyDetailsForminteface) => {
+  const toast = useCustomToast();
   const [fieldErrors, setFieldErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isNextClicked, setIsNextClicked] = useState(false);
@@ -172,17 +173,17 @@ const PropertyDetailsForm = ({
       preferredGender: [],
       bathrooms: '',
       balconies: '',
-      maintenanceChargesAmount: '',
-      furnishingLevel: '',
+      maintenanceCharges: '',
+      furnishing: '',
       availableFrom: '',
-      monthlyRent: '',
-      securityDepositamount: '',
-      lockInPeriodMonths: '',
-      brokerageAmount: '',
-      preferredTenantType: [],
-      floornumber: '',
-      totalfloor: '',
-      brokerageNegotiable: false,
+      price: '',
+      security: '',
+      lockInPeriod: '',
+      brokerage: '',
+      preferredTenant: [],
+      floorNumber: '',
+      totalFloors: '',
+      isNegotiable: false,
       amenities: [],
       furnishingExtras: [],
       features: [],
@@ -889,12 +890,12 @@ const PropertyDetailsForm = ({
     const commonFields = [
       'title',
       'description',
-      'furnishingLevel',
+      'furnishing',
       'availableFrom',
-      'monthlyRent',
-      'securityDepositamount',
-      'lockInPeriodMonths',
-      'brokerageAmount',
+      'price',
+      'security',
+      'lockInPeriod',
+      'brokerage',
     ];
 
     if (propertyDetails.isPreoccupied) {
@@ -903,7 +904,7 @@ const PropertyDetailsForm = ({
           return [
             ...commonFields,
             'configuration',
-            'preferredTenantType',
+            'preferredTenant',
             'floorNumber',
             'totalFloors',
           ];
@@ -911,34 +912,44 @@ const PropertyDetailsForm = ({
           return [
             ...commonFields,
             'configuration',
-            'maintenanceChargesAmount',
-            'preferredTenantType',
+            'maintenanceCharges',
+            'preferredTenant',
             'floorNumber',
             'totalFloors',
           ];
         case 'VILLA':
-          return [...commonFields, 'preferredTenantType'];
+          return [...commonFields, 'preferredTenant'];
         case 'CO_LIVING':
-          return [...commonFields, 'roomType', 'units'];
+          return [...commonFields, 'roomType', 'unitsAvailable'];
         case 'PG':
-          return [...commonFields, 'roomType', 'units'];
+          return [...commonFields, 'roomType', 'unitsAvailable'];
         default:
           return commonFields;
       }
     } else {
       switch (propertyDetails.propertyType) {
         case 'CO_LIVING':
-          return [...commonFields, 'propertyType', 'roomType', 'units'];
+          return [
+            ...commonFields,
+            'propertyType',
+            'roomType',
+            'unitsAvailable',
+          ];
         case 'VILLA':
-          return [...commonFields, 'propertyType', 'preferredTenantType'];
+          return [...commonFields, 'propertyType', 'preferredTenant'];
         case 'PG':
-          return [...commonFields, 'propertyType', 'roomType', 'units'];
+          return [
+            ...commonFields,
+            'propertyType',
+            'roomType',
+            'unitsAvailable',
+          ];
         case 'BUILDER_FLOOR':
           return [
             ...commonFields,
             'configuration',
             'propertyType',
-            'preferredTenantType',
+            'preferredTenant',
             'floorNumber',
             'totalFloors',
           ];
@@ -947,8 +958,8 @@ const PropertyDetailsForm = ({
             ...commonFields,
             'configuration',
             'propertyType',
-            'maintenanceChargesAmount',
-            'preferredTenantType',
+            'maintenanceCharges',
+            'preferredTenant',
             'floorNumber',
             'totalFloors',
           ];
@@ -1032,28 +1043,39 @@ const PropertyDetailsForm = ({
             }
           );
           if (response.status === 200) {
-            toast({
-              title: 'Success',
+            toast.success({
+              title: 'Success!',
               description: 'Listing Updated Successfully',
             });
             handleNext();
           } else {
-            toast({ title: 'Failed to update listing:' });
+            toast.info({
+              title: 'Information',
+              description:
+                'This is an informational notification with the requested color scheme.',
+            });
+            toast.error({
+              title: 'Error',
+              description: 'Failed to update listing Please Try again later',
+            });
           }
         } else {
-          toast({
+          toast.info({
             title: 'No changes',
             description: 'No changes were made to the property details.',
           });
           handleNext();
         }
       } else {
-        toast({ title: 'Initial property details are not available' });
+        toast.info({
+          title: 'No changes',
+          description: 'Initial property details are not available',
+        });
       }
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Edit Failed',
-        description: 'Failed To Edit Details',
+        description: 'There was a problem while editing please try again later',
       });
     }
   };
@@ -1395,7 +1417,7 @@ const PropertyDetailsForm = ({
                   checked={propertyDetails.isNegotiable}
                   onChange={handleInputChange}
                   className={cn(
-                    'form-checkbox h-5 w-4 text-[#42A4AE] border-2 focus:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                    'form-checkbox h-5 w-4 text-[#729eff] border-2 focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
                         fieldErrors['isNegotiable'],

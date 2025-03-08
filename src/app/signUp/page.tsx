@@ -19,7 +19,6 @@ import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -40,6 +39,7 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -61,6 +61,7 @@ const formSchema = z.object({
 });
 
 const SignUpForm = () => {
+  const toast = useCustomToast();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
@@ -130,7 +131,7 @@ const SignUpForm = () => {
       setShowOTPForm(true);
       localStorage.setItem('registrationComplete', 'true');
 
-      toast({
+      toast.success({
         title: 'Registration Successful',
         description: 'Please verify your phone number.',
       });
@@ -138,13 +139,12 @@ const SignUpForm = () => {
       setError(
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
-      toast({
+      toast.error({
         title: 'Registration Failed',
         description:
           error instanceof Error
             ? error.message
             : 'An unexpected error occurred',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -260,7 +260,7 @@ const SignUpForm = () => {
         throw new Error(data.message || 'Failed to resend OTP');
       }
 
-      toast({
+      toast.success({
         title: 'OTP Resent',
         description: 'A new OTP has been sent to your phone number.',
       });

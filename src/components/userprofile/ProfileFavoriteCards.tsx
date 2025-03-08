@@ -15,7 +15,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +26,7 @@ import {
   Listing,
   PropertyFeature,
 } from '@/interfaces/Interface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -39,6 +39,7 @@ const transformString = (str: string | null | undefined) => {
 };
 
 const MyListings = () => {
+  const toast = useCustomToast();
   const router = useRouter();
   const { auth } = useAuth();
   const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
@@ -63,10 +64,7 @@ const MyListings = () => {
         setFavoriteListings(listingsData);
         console.log(listingsData);
       } catch (error) {
-        toast({
-          title: 'Failed To Fetch Listings',
-          description: 'Please Check Your Network Connection',
-        });
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -144,7 +142,7 @@ const MyListings = () => {
       });
 
       if (response.status === 200) {
-        toast({
+        toast.success({
           title: 'Success',
           description: 'Property removed from favorites.',
         });
@@ -154,23 +152,15 @@ const MyListings = () => {
           prevListings.filter((listing) => listing.id !== id)
         );
       } else {
-        toast({
+        toast.error({
           title: 'Failed to Remove',
           description: 'Failed to remove property from favorites.',
-          variant: 'destructive',
         });
       }
     } catch (error: any) {
-      console.error('Error removing from favorites:', error);
-      toast({
-        title: 'Error',
-        description:
-          error.response?.data?.message ||
-          'Failed to remove property from favorites. Please try again.',
-        variant: 'destructive',
-      });
+      setIsLoading(false);
     } finally {
-      setIsLoading(false); // Re-enable the button
+      setIsLoading(false);
     }
   };
 

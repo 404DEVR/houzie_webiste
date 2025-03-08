@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 import { siteConfig } from '@/constant/config';
+import { ToastProvider } from '@/hooks/use-custom-toast';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -59,14 +60,19 @@ export default function RootLayout({
   return (
     <html lang='en' className={poppins.variable}>
       <body>
-        <AuthProviders>
-          <Providers>
-            <ThemeProvider attribute='class' defaultTheme='light' enableSystem>
-              {children}
-              <Toaster />
-            </ThemeProvider>
-          </Providers>
-        </AuthProviders>
+        <ToastProvider>
+          <AuthProviders>
+            <Providers>
+              <ThemeProvider
+                attribute='class'
+                defaultTheme='light'
+                enableSystem
+              >
+                {children}
+              </ThemeProvider>
+            </Providers>
+          </AuthProviders>
+        </ToastProvider>
       </body>
     </html>
   );

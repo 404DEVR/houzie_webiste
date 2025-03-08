@@ -5,7 +5,6 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,14 +19,11 @@ const Brokerdetail = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get(
-          'https://api.houzie.in/leads?query=Ma',
-          {
-            headers: {
-              Authorization: `Bearer ${auth?.accessToken}`,
-            },
-          }
-        );
+        const response = await axios.get('https://api.houzie.in/leads', {
+          headers: {
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
+        });
         setLeadsData(response.data);
         setIsLoading(false);
       } catch {
@@ -84,6 +80,7 @@ const Brokerdetail = () => {
                     Interested In
                   </p>
                   <p className='text-sm md:text-md font-semibold'>
+                    {/* {lead.propertyName ? lead.propertyName : 'Property Name'} */}
                     Property Name
                   </p>
                 </div>

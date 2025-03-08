@@ -19,7 +19,7 @@ const VerticalProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   return (
-    <div className='bg-white rounded-lg p-4 shadow-md h-[300px] hidden md:block'>
+    <div className=' h-[300px] p-4 hidden md:block'>
       <div className='relative w-full mx-auto h-full'>
         <div className='flex flex-col items-start h-full'>
           {checkpoints.map((checkpoint, index) => {
@@ -31,7 +31,7 @@ const VerticalProgressBar: React.FC<ProgressBarProps> = ({
               <div key={index} className='flex flex-col items-start'>
                 <div className=' flex gap-2 justify-center items-center '>
                   <div
-                    onClick={() => handleCircleClick(checkpoint)}
+                    // onClick={() => handleCircleClick(checkpoint)}
                     className={cn(
                       'w-5 h-5 rounded-full flex items-center justify-center  ',
                       isCompleted

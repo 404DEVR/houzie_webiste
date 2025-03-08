@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import AddListings from '@/components/AddListings/AddListings';
@@ -24,6 +23,7 @@ import {
   restructured,
   startEditing,
 } from '@/redux/slices/formslices';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -37,6 +37,7 @@ const transformString = (str: string | null | undefined) => {
 };
 
 const MyListings = () => {
+  const toast = useCustomToast();
   const router = useRouter();
   const [leadsData, setLeadsData] = useState<Lead[] | null>([]);
   const { auth } = useAuth();
@@ -63,10 +64,7 @@ const MyListings = () => {
         });
         setListings(response.data);
       } catch (error) {
-        toast({
-          title: 'Failed To Fetch Listings',
-          description: 'Please Check Your Network Connection',
-        });
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -188,7 +186,7 @@ const MyListings = () => {
       dispatch(populateEditForm(editFormData));
       setIsDialogOpen(true);
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Please Try Again',
         description: 'Please Check Your Network Connection',
       });
@@ -212,14 +210,14 @@ const MyListings = () => {
         prevListings.filter((listing) => listing.id !== id)
       );
 
-      toast({
-        title: 'Listing deleted successfully!',
+      toast.success({
+        title: 'Delte successfull',
+        description: 'Listing deleted successfully!',
       });
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Failed to delete listing.',
         description: 'Please try again later.',
-        variant: 'destructive',
       });
     }
   };
@@ -247,22 +245,26 @@ const MyListings = () => {
   };
 
   const toggleCardExpansion = async (id) => {
+    console.log(id);
+    console.log(auth?.accessToken);
     if (expandedCardId === id) {
       setExpandedCardId(null);
     } else {
       try {
-        const response = await axios.get(`https://api.houzie.in/leads/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${auth?.accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `https://api.houzie.in/leads/filter/listing?listingId=${id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${auth?.accessToken}`,
+            },
+          }
+        );
         setLeadsData(response.data);
       } catch {
         setExpandedCardId(id);
       }
       setExpandedCardId(id);
-      console.log(id);
     }
   };
 
@@ -375,11 +377,7 @@ const MyListings = () => {
                 </div>
               </CardContent>
               {expandedCardId === listing.id &&
-                (leadsData?.length === 0 ? (
-                  <div className='text-center py-4 mx-2 mb-2 rounded-xl bg-[#eff5ff] border'>
-                    No leads data available
-                  </div>
-                ) : (
+                (Array.isArray(leadsData) && leadsData.length > 0 ? (
                   <div className='space-y-4 mx-2 mb-2'>
                     {leadsData?.map((lead) => (
                       <div
@@ -436,6 +434,10 @@ const MyListings = () => {
                         </div>
                       </div>
                     ))}
+                  </div>
+                ) : (
+                  <div className='text-center py-4 mx-2 mb-2 rounded-xl bg-[#eff5ff] border'>
+                    No leads data available
                   </div>
                 ))}
             </Card>

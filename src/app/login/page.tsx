@@ -9,11 +9,9 @@ import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Suspense } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -30,10 +28,10 @@ import { Input } from '@/components/ui/input';
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -45,6 +43,7 @@ const formSchema = z.object({
 const LOGIN_URL = 'https://api.houzie.in/auth/login/email/pw';
 
 const SignUpForm = () => {
+  const toast = useCustomToast();
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -63,6 +62,7 @@ const SignUpForm = () => {
   const [phoneNumberError, setPhoneNumberError] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState<number>(0);
   const [canResend, setCanResend] = useState<boolean>(true);
+  const originalpath = redirectPath === 'broker' ? redirectPath : '/';
 
   const {
     register,
@@ -99,12 +99,14 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push(redirectPath);
+      router.push(`/${originalpath}`);
+      console.log(redirectPath);
 
       // console.log(redirectPath);
-      toast({
-        title: 'Login Successful',
-        description: 'Successfully signed in',
+      toast.success({
+        title: `Welcome ${response.data.user.email}`,
+        description: 'You have successfully logged In',
+        duration: 5000,
       });
     } catch (error) {
       let errorMessage = 'An unexpected error occurred';
@@ -113,10 +115,9 @@ const SignUpForm = () => {
       } else if (error instanceof Error) {
         errorMessage = error.message;
       }
-      toast({
+      toast.error({
         title: 'Login Failed',
-        description: errorMessage,
-        variant: 'destructive',
+        description: 'There was a problem Please Try again Later',
       });
     } finally {
       setIsLoading(false);
@@ -179,6 +180,11 @@ const SignUpForm = () => {
 
       login(userData);
 
+      toast.success({
+        title: `Welcome ${result.data.user.email}`,
+        description: 'You have successfully logged In',
+        duration: 5000,
+      });
       router.push('/');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to verify OTP');
@@ -192,9 +198,9 @@ const SignUpForm = () => {
       const response = await axios.post('https://api.houzie.in/auth/google');
       if (response.status === 200) {
         const { redirectUrl, message } = response.data;
-        toast({
+        toast.success({
           title: 'Google Sign Up Successful',
-          description: message || 'Successfully signed up with Google.',
+          description: 'Successfully signed up with Google.',
         });
         if (redirectUrl && typeof redirectUrl === 'string') {
           router.push(redirectUrl);
@@ -203,11 +209,10 @@ const SignUpForm = () => {
         }
       }
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Google Sign Up Failed',
         description:
           'An error occurred during Google sign up. Please try again.',
-        variant: 'destructive',
       });
     }
   };
@@ -257,9 +262,9 @@ const SignUpForm = () => {
         throw new Error(data.message || 'Failed to resend OTP');
       }
 
-      toast({
-        title: 'OTP Resent',
-        description: 'A new OTP has been sent to your phone number.',
+      toast.success({
+        title: 'OTP Resent!',
+        description: 'A new OTP has been sent to your phone number',
       });
 
       startResendCooldown();

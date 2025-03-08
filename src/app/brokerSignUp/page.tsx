@@ -6,7 +6,6 @@ import {
   Apple,
   Building2,
   ChevronRight,
-  CreditCard,
   Eye,
   Lock,
   Mail,
@@ -17,11 +16,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -38,7 +35,6 @@ import { Input } from '@/components/ui/input';
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
@@ -49,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -79,6 +76,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const SignUpForm: React.FC = () => {
+  const toast = useCustomToast();
   const router = useRouter();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -151,7 +149,7 @@ const SignUpForm: React.FC = () => {
       setShowOTPForm(true);
       localStorage.setItem('registrationComplete', 'true');
 
-      toast({
+      toast.success({
         title: 'Registration Successful',
         description: 'Please verify your phone number.',
       });
@@ -159,13 +157,12 @@ const SignUpForm: React.FC = () => {
       setError(
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
-      toast({
+      toast.error({
         title: 'Registration Failed',
         description:
           error instanceof Error
             ? error.message
             : 'An unexpected error occurred',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -282,7 +279,7 @@ const SignUpForm: React.FC = () => {
         throw new Error(data.message || 'Failed to resend OTP');
       }
 
-      toast({
+      toast.success({
         title: 'OTP Resent',
         description: 'A new OTP has been sent to your phone number.',
       });
@@ -559,7 +556,7 @@ const SignUpForm: React.FC = () => {
                     <p className='text-center text-xs flex gap-1'>
                       Already Have An Account?
                       <a
-                        href='/login?signUpRedirect=brokerSignUp'
+                        href='/login?signUpRedirect=brokerSignUp&redirect=broker'
                         className='text-[#3b82f6]'
                       >
                         Sign In Here

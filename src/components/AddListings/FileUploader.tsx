@@ -8,7 +8,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -25,6 +24,7 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface FileUploaderProps extends FileUploaderprops {
   onImageUploadStatusChange?: (hasImages: boolean) => void;
@@ -42,6 +42,7 @@ const FileUploader = ({
   setIsDialogOpen,
   onImageUploadStatusChange,
 }: FileUploaderProps) => {
+  const toast = useCustomToast();
   const { auth } = useAuth();
   const dispatch = useDispatch();
   const addphotos = useSelector((state: RootState) => state.addForm.photos);
@@ -172,16 +173,14 @@ const FileUploader = ({
             );
           }
         }
-        toast({
+        toast.success({
           title: 'Images uploaded successfully',
           description: `${uniquePhotos.length} new image(s) added`,
-          variant: 'default',
         });
       } catch (error) {
-        toast({
+        toast.error({
           title: 'Error uploading image(s)',
           description: 'Please try again later',
-          variant: 'destructive',
         });
       } finally {
         setIsUploading(false);
@@ -223,16 +222,15 @@ const FileUploader = ({
 
       if (error) throw error;
 
-      toast({
-        title: 'Photo removed successfully',
-        variant: 'default',
+      toast.success({
+        title: 'Success',
+        description: 'Photo removed successfully',
       });
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Error removing photo',
         description:
           'The photo was removed from the form but may still exist in storage.',
-        variant: 'destructive',
       });
     }
   };
@@ -275,21 +273,20 @@ const FileUploader = ({
           }
         );
         if (response.status === 200) {
-          toast({
+          toast.success({
             title: 'Success',
             description: 'Property details updated successfully.',
           });
           setIsDialogOpen && setIsDialogOpen(false);
         } else {
           console.error('Failed to update listing:', response.status);
-          toast({
+          toast.error({
             title: 'Update Failed',
             description: 'Failed to update property details.',
-            variant: 'destructive',
           });
         }
       } else {
-        toast({
+        toast.info({
           title: 'No changes',
           description: 'No changes were made to the property details.',
         });
@@ -297,10 +294,9 @@ const FileUploader = ({
       }
     } catch (error) {
       console.error('Error during edit:', error);
-      toast({
+      toast.error({
         title: 'Edit Failed',
         description: 'An error occurred while editing property details.',
-        variant: 'destructive',
       });
     }
   };

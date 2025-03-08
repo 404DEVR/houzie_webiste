@@ -1,8 +1,6 @@
 import { Copy, Heart, Share } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
-
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,10 +19,12 @@ import { HeaderContainerprops } from '@/interfaces/PropsInterface';
 import axios from 'axios';
 import { headers } from 'next/headers';
 import useAuth from '@/hooks/useAuth';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 export default function HeaderContainer({
   propertyData,
 }: HeaderContainerprops) {
+  const toast = useCustomToast();
   const { auth } = useAuth();
   const [currentUrl, setCurrentUrl] = useState('');
 
@@ -37,15 +37,14 @@ export default function HeaderContainer({
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(currentUrl);
-      toast({
+      toast.info({
         title: 'Copied!',
         description: 'Link copied to clipboard.',
       });
     } catch (err) {
-      toast({
+      toast.error({
         title: 'Copy failed',
         description: 'Failed to copy link. Please try again.',
-        variant: 'destructive',
       });
     }
   };
@@ -59,7 +58,7 @@ export default function HeaderContainer({
 
       const response = await axios.post(
         `https://api.houzie.in/profile/favorites/${id}`,
-        {}, // Empty object as the second parameter (data)
+        {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -68,7 +67,7 @@ export default function HeaderContainer({
       );
 
       if (response.status === 200) {
-        toast({
+        toast.success({
           title: 'Success',
           description: 'Property added to favorites.',
         });
@@ -80,29 +79,25 @@ export default function HeaderContainer({
         const errorStatus = error.response?.status;
 
         if (errorStatus === 401) {
-          toast({
+          toast.error({
             title: 'Unauthorized',
             description: 'You are not authorized to perform this action.',
-            variant: 'destructive',
           });
         } else if (errorStatus === 500) {
-          toast({
+          toast.error({
             title: 'Server Error',
             description: 'An internal server error occurred. Please try again.',
-            variant: 'destructive',
           });
         } else {
-          toast({
+          toast.error({
             title: 'Error',
             description: errorMessage,
-            variant: 'destructive',
           });
         }
       } else {
-        toast({
+        toast.error({
           title: 'Unexpected Error',
           description: 'An unexpected error occurred. Please try again.',
-          variant: 'destructive',
         });
       }
     }

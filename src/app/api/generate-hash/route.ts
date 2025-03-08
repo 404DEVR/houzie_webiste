@@ -1,8 +1,6 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 
-import { toast } from '@/hooks/use-toast';
-
 const PAYU_KEY = process.env.NEXT_PUBLIC_PAYU_KEY;
 const PAYU_SALT = process.env.NEXT_PUBLIC_PAYU_SALT;
 
@@ -24,7 +22,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ hash });
   } catch {
-    toast({ title: 'Error generating hash:' });
     return NextResponse.json(
       {
         error: 'Failed to generate hash',

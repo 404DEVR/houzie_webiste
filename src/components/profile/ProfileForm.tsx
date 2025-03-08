@@ -3,7 +3,6 @@ import { Camera, ChevronRight, Edit } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import ExplorePlans from '@/components/Subscription/ExplorePlans';
@@ -18,6 +17,7 @@ import {
 } from '@/components/ui/tooltip';
 
 import { ProfileFormInterface } from '@/interfaces/PropsInterface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface originalData {
   name: string;
@@ -27,6 +27,7 @@ interface originalData {
 }
 
 const ProfileForm = ({ page }: ProfileFormInterface) => {
+  const toast = useCustomToast();
   const { auth } = useAuth();
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
@@ -65,7 +66,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
           companyName: response.data.companyName || '',
         });
       } catch (error) {
-        toast({ title: 'Failed to fetch profile:' });
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -105,8 +106,12 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
           companyName: updatedProfile.companyName,
         });
       }
+      toast.success({
+        title: 'Success!',
+        description: 'Profile updated successfully.',
+      });
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Failed to Update',
         description: 'Failed to update profile. Please try again.',
       });

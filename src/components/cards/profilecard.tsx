@@ -1,6 +1,5 @@
 'use client';
 
-import { Toast } from '@radix-ui/react-toast';
 import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -8,7 +7,6 @@ import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
 import { CiMail } from 'react-icons/ci';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import LeadForm from '@/components/detailspage/LeadFrom';
@@ -25,12 +23,14 @@ import {
 
 import { Stats } from '@/interfaces/Interface';
 import { ProfileCardProps } from '@/interfaces/PropsInterface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const ProfileCard = ({
   propertyData,
   postedDate,
   avatarUrl,
 }: ProfileCardProps) => {
+  const toast = useCustomToast();
   const { auth } = useAuth();
   const [brokerData, setBrokerData] = useState<ProfileCardProps>();
   const [stats, setStats] = useState<Stats | null>(null);
@@ -49,7 +49,7 @@ const ProfileCard = ({
         const data = response.data;
         setStats(data);
       } catch (error) {
-        toast({ title: 'Error fetching data:' });
+        toast.error({ title: 'Error', description: 'Error fetching data' });
       }
     };
     fetchData();
@@ -69,7 +69,7 @@ const ProfileCard = ({
         );
         setBrokerData(response.data);
       } catch (error) {
-        toast({ title: 'Failed to fetch broker data:' });
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
@@ -93,7 +93,10 @@ const ProfileCard = ({
         );
         setIsConnected(response.data.isConnected);
       } catch (error) {
-        toast({ title: 'Error checking connection status:' });
+        toast.error({
+          title: 'Error',
+          description: 'Error checking connection status:',
+        });
         setIsConnected(false);
       }
     };
@@ -121,31 +124,29 @@ const ProfileCard = ({
       });
       setIsConnected(true); // Update connection status after lead submission
     } catch (error) {
-      toast({ title: 'Error submitting lead:' });
+      toast.error({ title: 'Error', description: 'Error submitting lead' });
     }
   };
 
-  const handleConnect = async () => {
-    try {
-      await axios.post(
-        `https://api.houzie.in/connection/connect/${brokerid}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${auth?.accessToken}`,
-          },
-        }
-      );
-      setIsConnected(true);
-    } catch (error) {
-      Toast({ title: 'Error connecting:' });
-    }
-  };
+  // const handleConnect = async () => {
+  //   try {
+  //     await axios.post(
+  //       `https://api.houzie.in/connection/connect/${brokerid}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${auth?.accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     setIsConnected(true);
+  //   } catch (error) {
+  //     Toast({ title: 'Error connecting:' });
+  //   }
+  // };
 
   const handleEnquire = () => {
-    // Implement enquiry logic here (e.g., open a modal, navigate to a page)
-    toast({ title: 'Enquire button clicked' });
-    // You might want to open a modal or redirect to an enquiry page here.
+    toast.info({ title: 'Info', description: 'Enquire button clicked' });
   };
 
   if (isLoading) {

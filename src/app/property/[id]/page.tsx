@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import ItemGrid from '@/components/cards/IconGrid';
@@ -21,6 +20,7 @@ import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -60,6 +60,7 @@ const ProfileCardWithOverlay = ({ children, showOverlay, buttonClick }) => (
 );
 
 export default function DetailsPageClient({ params }: DetailsPageClientProps) {
+  const toast = useCustomToast();
   const [propertyData, setPropertyData] = useState<PropertyPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -78,7 +79,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
         const data = await response.json();
         setPropertyData(data);
       } catch (error) {
-        toast({ title: 'Error fetching property data:' });
+        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }

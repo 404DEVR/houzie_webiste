@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
-import { toast } from '@/hooks/use-toast';
-
 const CASHFREE_API_URL = 'https://sandbox.cashfree.com/pg/orders';
 
 export async function POST(request: Request) {
@@ -44,10 +42,6 @@ export async function POST(request: Request) {
       orderId: response.data.order_id,
     });
   } catch {
-    toast({
-      title: 'Error creating order:',
-    });
-
     return NextResponse.json(
       {
         error: 'Failed to create order',

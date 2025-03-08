@@ -226,6 +226,7 @@ export interface UserData {
   aadharNumber: string | null;
   createdAt: string;
   updatedAt: string;
+  companyName?: string;
 }
 
 export interface PropertyType {

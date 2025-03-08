@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
-import { toast } from '@/hooks/use-toast';
 const CASHFREE_API_URL = 'https://sandbox.cashfree.com/pg/orders';
 
 export async function GET(request: Request) {
@@ -23,9 +22,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json(response.data);
   } catch {
-    toast({
-      title: 'Error fetching payment status:',
-    });
     return NextResponse.json(
       {
         error: 'Failed to fetch payment status',
