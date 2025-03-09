@@ -35,7 +35,6 @@ export interface PropertyDetails {
   floorNumber: string;
   price: string;
   maintenanceCharges: string;
-  maintenanceChargesAmount: string;
   securityDeposit: string;
   security: string;
   occupantData: Occupant[];
@@ -160,7 +159,6 @@ const initialAddFormState: AddFormState = {
     availableFrom: '',
     price: '',
     maintenanceCharges: '',
-    maintenanceChargesAmount: '',
     securityDeposit: '',
     security: '',
     lockInPeriod: '',
@@ -253,7 +251,6 @@ const initialEditFormState: EditFormState = {
     availableFrom: '',
     price: '',
     maintenanceCharges: '',
-    maintenanceChargesAmount: '',
     securityDeposit: '',
     security: '',
     lockInPeriod: '',
@@ -406,10 +403,9 @@ const addFormSlice = createSlice({
         balconies: parseInt(propertyDetails.balconies) || 0,
         floorNumber: propertyDetails.floorNumber || null,
         totalFloors: parseInt(propertyDetails.totalFloors) || 0,
-        maintenanceCharges:
-          parseInt(propertyDetails.maintenanceChargesAmount) || 0,
+        maintenanceCharges: parseInt(propertyDetails.maintenanceCharges) || 0,
         isMaintenanceIncluded:
-          propertyDetails.maintenanceCharges === 'INCLUDED',
+          parseInt(propertyDetails.maintenanceCharges) > 0 ? true : false,
         roomType: propertyDetails.roomType || '',
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()
@@ -536,10 +532,9 @@ const editFormSlice = createSlice({
         balconies: parseInt(propertyDetails.balconies) || 0,
         floorNumber: propertyDetails.floorNumber || null,
         totalFloors: parseInt(propertyDetails.totalFloors) || 0,
-        maintenanceCharges:
-          parseInt(propertyDetails.maintenanceChargesAmount) || 0,
+        maintenanceCharges: parseInt(propertyDetails.maintenanceCharges) || 0,
         isMaintenanceIncluded:
-          propertyDetails.maintenanceCharges === 'INCLUDED',
+          parseInt(propertyDetails.maintenanceCharges) > 0 ? true : false,
         roomType: propertyDetails.roomType || '',
         sharingType: propertyDetails.sharingType
           ? propertyDetails.sharingType.toUpperCase()

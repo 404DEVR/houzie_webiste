@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import AddListings from '@/components/AddListings/AddListings';
@@ -23,7 +24,6 @@ import {
   restructured,
   startEditing,
 } from '@/redux/slices/formslices';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -103,11 +103,7 @@ const MyListings = () => {
           totalFloors: listingData.totalFloors?.toString() || '',
           floorNumber: listingData.floorNumber,
           price: listingData.price?.toString() || '',
-          maintenanceCharges: listingData.isMaintenanceIncluded
-            ? 'Included'
-            : 'Excluded',
-          maintenanceChargesAmount:
-            listingData.maintenanceCharges?.toString() || '',
+          maintenanceCharges: listingData.maintenanceCharges,
           securityDeposit: 'Fixed',
           security: listingData.security?.toString() || '',
           lockInPeriod: listingData.lockInPeriod,

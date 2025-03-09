@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { cn } from '@/lib/utils';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import CustomInput from '@/components/inputs/CustomInput';
@@ -36,7 +37,6 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { AppDispatch, RootState } from '@/redux/store';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const PropertyDetailsForm = ({
   handleNext,
@@ -47,7 +47,12 @@ const PropertyDetailsForm = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [isNextClicked, setIsNextClicked] = useState(false);
   const [floorError, setFloorError] = useState('');
-
+  const [additionalCharges, setAdditionalCharges] = useState({
+    maidCharges: 0,
+    cookCharges: 0,
+    wifiCharges: 0,
+    otherCharges: 0,
+  });
   const { auth } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const addPropertyDetails = useSelector(
@@ -101,6 +106,62 @@ const PropertyDetailsForm = ({
     }
   }, [page]);
 
+  useEffect(() => {
+    const totalMaintenanceCharges =
+      additionalCharges.maidCharges +
+      additionalCharges.cookCharges +
+      additionalCharges.wifiCharges +
+      additionalCharges.otherCharges;
+
+    if (page === 'edit') {
+      dispatch(
+        updateEditPropertyDetails({
+          maintenanceCharges: String(totalMaintenanceCharges),
+        })
+      );
+    } else {
+      dispatch(
+        updateAddPropertyDetails({
+          maintenanceCharges: String(totalMaintenanceCharges),
+        })
+      );
+    }
+  }, [additionalCharges]);
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value, type, checked } = e.target;
+  //   let formattedValue = value;
+
+  //   if (type === 'number') {
+  //     formattedValue = Number(value) < 0 ? '0' : value;
+  //   }
+
+  //   formattedValue =
+  //     name === 'availableFrom'
+  //       ? formatDateForAPI(formattedValue)
+  //       : formattedValue;
+
+  //   if (page === 'edit') {
+  //     dispatch(
+  //       updateEditPropertyDetails({
+  //         [name]: type === 'checkbox' ? checked : formattedValue,
+  //       })
+  //     );
+  //   } else {
+  //     dispatch(
+  //       updateAddPropertyDetails({
+  //         [name]: type === 'checkbox' ? checked : formattedValue,
+  //       })
+  //     );
+  //   }
+
+  //   setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
+
+  //   if (name === 'floorNumbers' || name === 'totalFloor') {
+  //     validateForm();
+  //   }
+  // };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     let formattedValue = value;
@@ -114,23 +175,56 @@ const PropertyDetailsForm = ({
         ? formatDateForAPI(formattedValue)
         : formattedValue;
 
-    if (page === 'edit') {
-      dispatch(
-        updateEditPropertyDetails({
-          [name]: type === 'checkbox' ? checked : formattedValue,
-        })
-      );
+    if (
+      ['maidCharges', 'cookCharges', 'wifiCharges', 'otherCharges'].includes(
+        name
+      )
+    ) {
+      setAdditionalCharges((prevCharges) => ({
+        ...prevCharges,
+        [name]: Number(formattedValue),
+      }));
+
+      const totalMaintenanceCharges =
+        (additionalCharges.maidCharges || 0) +
+        (additionalCharges.cookCharges || 0) +
+        (additionalCharges.wifiCharges || 0) +
+        (additionalCharges.otherCharges || 0) +
+        Number(formattedValue) -
+        (additionalCharges[name] || 0);
+
+      if (page === 'edit') {
+        dispatch(
+          updateEditPropertyDetails({
+            maintenanceCharges: String(totalMaintenanceCharges),
+          })
+        );
+      } else {
+        dispatch(
+          updateAddPropertyDetails({
+            maintenanceCharges: String(totalMaintenanceCharges),
+          })
+        );
+      }
     } else {
-      dispatch(
-        updateAddPropertyDetails({
-          [name]: type === 'checkbox' ? checked : formattedValue,
-        })
-      );
+      if (page === 'edit') {
+        dispatch(
+          updateEditPropertyDetails({
+            [name]: type === 'checkbox' ? checked : formattedValue,
+          })
+        );
+      } else {
+        dispatch(
+          updateAddPropertyDetails({
+            [name]: type === 'checkbox' ? checked : formattedValue,
+          })
+        );
+      }
     }
 
     setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
 
-    if (name === 'floornumber' || name === 'totalfloor') {
+    if (name === 'floorNumbers' || name === 'totalFloor') {
       validateForm();
     }
   };
@@ -521,6 +615,77 @@ const PropertyDetailsForm = ({
     { label: '3 BHK', value: 'THREE_BHK' },
     { label: '4 BHK', value: 'FOUR_BHK' },
     { label: '4+ BHK', value: 'FOUR_PLUS_BHK' },
+  ];
+
+  const RoomFurnishing = [
+    {
+      label: 'AC',
+      value: 'AC',
+      url: '/svg/mynaui_air-conditioner-solid.svg',
+    },
+    {
+      label: 'Bed',
+      value: 'BED',
+      url: '/svg/material-symbols_bed-rounded.svg',
+    },
+    {
+      label: 'Cupboard',
+      value: 'CUPBOARD',
+      url: '/svg/mdi_wardrobe.svg',
+    },
+    {
+      label: 'Study Table',
+      value: 'TABLE',
+      url: '/svg/material-symbols_table-bar-rounded.svg',
+    },
+    {
+      label: 'Chair',
+      value: 'CHAIR',
+      url: '/svg/chair.svg',
+    },
+    {
+      label: 'Geyser',
+      value: 'GEYSER',
+      url: '/svg/mdi_electric-water-heater.svg',
+    },
+    {
+      label: 'Exhaust',
+      value: 'EXHAUST',
+      url: '/svg/exhaust.svg',
+    },
+    {
+      label: 'Mattress',
+      value: 'MATTRESS',
+      url: '/svg/mattress.svg',
+    },
+  ];
+
+  const HouseFurnishing = [
+    {
+      label: 'Water Purifier',
+      value: 'WATER_PURIFIER',
+      url: '/svg/material-symbols_water-loss.svg',
+    },
+    {
+      label: 'TV',
+      value: 'TV',
+      url: '/svg/mynaui_tv-solid.svg',
+    },
+    {
+      label: 'Sofa',
+      value: 'SOFA',
+      url: '/svg/solar_sofa-bold.svg',
+    },
+    {
+      label: 'Fridge',
+      value: 'FRIDGE',
+      url: '/svg/mdi_fridge-outline.svg',
+    },
+    {
+      label: 'Dining table',
+      value: 'DINING_TABLE',
+      url: '/svg/game-icons_round-table.svg',
+    },
   ];
 
   const getFurnishings = (propertyType) => {
@@ -1321,6 +1486,7 @@ const PropertyDetailsForm = ({
                   name='price'
                   id='price'
                   label='Monthly Rent'
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                   value={propertyDetails.price}
                   onChange={handleInputChange}
                   error={fieldErrors['price'] ? 'This field is required' : ''}
@@ -1341,6 +1507,7 @@ const PropertyDetailsForm = ({
                   type='number'
                   name='security'
                   id='security'
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                   label='Security Deposit'
                   value={propertyDetails.security}
                   onChange={handleInputChange}
@@ -1363,16 +1530,142 @@ const PropertyDetailsForm = ({
             {/* Maintenance Charges */}
             {(propertyDetails.propertyType === 'FLAT_APARTMENT' ||
               propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+              <div className='w-full grid grid-cols-1'>
+                <Label className='text-md text-black font-normal mb-2'>
+                  Maintenance Charge
+                </Label>
+                <div className='ml-6 col-span-1 grid grid-cols-2 gap-4'>
+                  <CustomInput
+                    type='number'
+                    name='maidCharges'
+                    id='maidCharges'
+                    label='Maid (Cleaning + Utensils)'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                    value={additionalCharges.maidCharges || ''}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['maidCharges'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['maidCharges'],
+                      }
+                    )}
+                    placeholder='Maid Charges (per month)'
+                  />
+
+                  <CustomInput
+                    type='number'
+                    name='cookCharges'
+                    id='cookCharges'
+                    label='Cook'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                    value={additionalCharges.cookCharges || ''}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['cookCharges'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['cookCharges'],
+                      }
+                    )}
+                    placeholder='Cook Charges (per month)'
+                  />
+
+                  <CustomInput
+                    type='number'
+                    name='wifiCharges'
+                    id='wifiCharges'
+                    label='Wifi'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                    value={additionalCharges.wifiCharges || ''}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['wifiCharges'] ? 'This field is required' : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['wifiCharges'],
+                      }
+                    )}
+                    placeholder='Wifi Charges (per month)'
+                  />
+
+                  <CustomInput
+                    type='number'
+                    name='otherCharges'
+                    id='otherCharges'
+                    label='Any Other'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                    value={additionalCharges.otherCharges || ''}
+                    onChange={handleInputChange}
+                    error={
+                      fieldErrors['otherCharges']
+                        ? 'This field is required'
+                        : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['otherCharges'],
+                      }
+                    )}
+                    placeholder='Other Charges (per month)'
+                  />
+                </div>
+
+                <div className='mt-4 ml-6 col-span-1'>
+                  <CustomInput
+                    type='number'
+                    name='maintenanceCharges'
+                    id='maintenanceCharges'
+                    label='Total Maintenance Charge'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                    value={propertyDetails.maintenanceCharges || 0}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                    }}
+                    error={
+                      fieldErrors['maintenanceCharges']
+                        ? 'This field is required'
+                        : ''
+                    }
+                    className={cn(
+                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['maintenanceCharges'],
+                      }
+                    )}
+                    placeholder='Total Maintenance Charges (per month)*'
+                    required
+                    disabled // Disable editing directly; it's calculated from other fields
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* {(propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
               <div className='w-full'>
                 <CustomInput
                   type='number'
-                  name='maintenanceChargesAmount'
-                  id='maintenanceChargesAmount'
+                  name='maintenanceCharges'
+                  id='maintenanceCharges'
                   label='Maintenance Charge'
-                  value={propertyDetails.maintenanceChargesAmount}
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                  value={propertyDetails.maintenanceCharges}
                   onChange={handleInputChange}
                   error={
-                    fieldErrors['maintenanceChargesAmount']
+                    fieldErrors['maintenanceCharges']
                       ? 'This field is required'
                       : ''
                   }
@@ -1380,14 +1673,14 @@ const PropertyDetailsForm = ({
                     'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                     {
                       'ring-2 ring-red-500 ring-offset-1':
-                        fieldErrors['maintenanceChargesAmount'],
+                        fieldErrors['maintenanceCharges'],
                     }
                   )}
                   placeholder='Maintenance Charges (per month)*'
                   required
                 />
               </div>
-            )}
+            )} */}
 
             {/* Brokerage */}
             <div className='w-full'>
@@ -1396,6 +1689,7 @@ const PropertyDetailsForm = ({
                 name='brokerage'
                 label='Brokerage Amount'
                 id='brokerage'
+                onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                 value={propertyDetails.brokerage}
                 onChange={handleInputChange}
                 placeholder='Enter Brokerage (In Rupees)'
@@ -1441,6 +1735,7 @@ const PropertyDetailsForm = ({
                     name='unitsAvailable'
                     label='Number Of Units Available'
                     id='unitsAvailable'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     value={propertyDetails.unitsAvailable}
                     onChange={handleInputChange}
                     error={
@@ -1700,6 +1995,7 @@ const PropertyDetailsForm = ({
                     name='bedrooms'
                     id='bedrooms'
                     variant='small'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     label='Bedroom'
                     value={propertyDetails.bedrooms}
                     onChange={handleInputChange}
@@ -1724,6 +2020,7 @@ const PropertyDetailsForm = ({
                     id='balconies'
                     variant='small'
                     label='Balcony'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     value={propertyDetails.balconies}
                     onChange={handleInputChange}
                     error={
@@ -1747,6 +2044,7 @@ const PropertyDetailsForm = ({
                     variant='small'
                     id='bathrooms'
                     label='Bathroom'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     value={propertyDetails.bathrooms}
                     onChange={handleInputChange}
                     error={
@@ -1780,6 +2078,7 @@ const PropertyDetailsForm = ({
                     type='number'
                     name='floorNumber'
                     id='floorNumber'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     value={propertyDetails.floorNumber}
                     onChange={handleInputChange}
                     placeholder='Floor Number'
@@ -1799,6 +2098,7 @@ const PropertyDetailsForm = ({
                     type='number'
                     name='totalFloors'
                     id='totalFloors'
+                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                     value={propertyDetails.totalFloors}
                     onChange={handleInputChange}
                     placeholder='Total Floor'
@@ -1967,44 +2267,140 @@ const PropertyDetailsForm = ({
               </div>
             )}
 
-            {/* Furnishings (as array) */}
-            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
-              propertyDetails.furnishing.includes('SEMI_FURNISHED')) && (
-              <div>
-                <Label className='text-md text-black font-normal'>
-                  Furnishings
-                </Label>
-                <div className='flex flex-wrap gap-4 mt-1'>
-                  {getFurnishings(propertyDetails.propertyType).map(
-                    (furnishing) => (
-                      <Button
-                        key={furnishing.value}
-                        className={cn(
-                          'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                          propertyDetails.furnishingExtras.includes(
-                            furnishing.value
-                          )
-                            ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                            : 'bg-white text-[#646464] border-gray-300 '
-                        )}
-                        onClick={() => handleFurnishingClick(furnishing.value)}
-                      >
-                        <Image
-                          src={furnishing.url}
-                          alt={furnishing.label}
-                          width={55}
-                          height={55}
-                          className='object-contain'
-                        />
-                        <div className=' text-center text-wrap'>
-                          {furnishing.label}
-                        </div>
-                      </Button>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
+            {/* Furnishings (as array) Not Preoccupied*/}
+            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') &&
+              (propertyDetails.propertyType === 'CO_LIVING' ||
+                propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+                propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+                propertyDetails.propertyType === 'VILLA' ||
+                propertyDetails.propertyType === 'PG' ||
+                propertyDetails.preoccupiedPropertyType === 'CO_LIVING')) ||
+              (propertyDetails.furnishing.includes('SEMI_FURNISHED') &&
+                (propertyDetails.propertyType === 'CO_LIVING' ||
+                  propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+                  propertyDetails.propertyType === 'FLAT_APARTMENT' ||
+                  propertyDetails.propertyType === 'VILLA' ||
+                  propertyDetails.propertyType === 'PG' ||
+                  propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+                  <div>
+                    <Label className='text-md text-black font-normal'>
+                      Furnishings
+                    </Label>
+                    <div className='flex flex-wrap gap-4 mt-1'>
+                      {getFurnishings(propertyDetails.propertyType).map(
+                        (furnishing) => (
+                          <Button
+                            key={furnishing.value}
+                            className={cn(
+                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                              propertyDetails.furnishingExtras.includes(
+                                furnishing.value
+                              )
+                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                                : 'bg-white text-[#646464] border-gray-300 '
+                            )}
+                            onClick={() =>
+                              handleFurnishingClick(furnishing.value)
+                            }
+                          >
+                            <Image
+                              src={furnishing.url}
+                              alt={furnishing.label}
+                              width={55}
+                              height={55}
+                              className='object-contain'
+                            />
+                            <div className=' text-center text-wrap'>
+                              {furnishing.label}
+                            </div>
+                          </Button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+            {/* Furnishings (as array) Preoccupied*/}
+            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') &&
+              (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+                propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
+                propertyDetails.preoccupiedPropertyType === 'VILLA')) ||
+              (propertyDetails.furnishing.includes('SEMI_FURNISHED') &&
+                (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
+                  propertyDetails.preoccupiedPropertyType ===
+                    'FLAT_APARTMENT' ||
+                  propertyDetails.preoccupiedPropertyType === 'VILLA') && (
+                  <>
+                    <div>
+                      <Label className='text-md text-black font-normal'>
+                        Room Furnishings
+                      </Label>
+                      <div className='flex flex-wrap gap-4 mt-1'>
+                        {RoomFurnishing.map((furnishing) => (
+                          <Button
+                            key={furnishing.value}
+                            className={cn(
+                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                              propertyDetails.furnishingExtras.includes(
+                                furnishing.value
+                              )
+                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                                : 'bg-white text-[#646464] border-gray-300 '
+                            )}
+                            onClick={() =>
+                              handleFurnishingClick(furnishing.value)
+                            }
+                          >
+                            <Image
+                              src={furnishing.url}
+                              alt={furnishing.label}
+                              width={55}
+                              height={55}
+                              className='object-contain'
+                            />
+                            <div className=' text-center text-wrap'>
+                              {furnishing.label}
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <Label className='text-md text-black font-normal'>
+                        House Furnishings
+                      </Label>
+                      <div className='flex flex-wrap gap-4 mt-1'>
+                        {HouseFurnishing.map((furnishing) => (
+                          <Button
+                            key={furnishing.value}
+                            className={cn(
+                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                              propertyDetails.furnishingExtras.includes(
+                                furnishing.value
+                              )
+                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                                : 'bg-white text-[#646464] border-gray-300 '
+                            )}
+                            onClick={() =>
+                              handleFurnishingClick(furnishing.value)
+                            }
+                          >
+                            <Image
+                              src={furnishing.url}
+                              alt={furnishing.label}
+                              width={55}
+                              height={55}
+                              className='object-contain'
+                            />
+                            <div className=' text-center text-wrap'>
+                              {furnishing.label}
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ))}
 
             {/* Amenities */}
             <div>

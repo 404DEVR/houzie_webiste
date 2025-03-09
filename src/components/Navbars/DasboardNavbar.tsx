@@ -2,22 +2,12 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import {
-  AlignRight,
-  BadgeInfo,
-  Bell,
-  CircleFadingArrowUp,
-  Contact,
-  List,
-  LogOut,
-  Menu,
-  User,
-} from 'lucide-react';
-import Link from 'next/link';
+import { BadgeInfo, Bell, Contact, LogOut, Menu } from 'lucide-react';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { toast } from '@/hooks/use-toast';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -29,10 +19,9 @@ import {
 } from '@/components/ui/popover';
 
 import { UserData } from '@/interfaces/Interface';
-import { FcAbout } from 'react-icons/fc';
-import Image from 'next/image';
 
 const DasboardNavbar = () => {
+  const toast = useCustomToast();
   const { auth, setAuth } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -47,16 +36,15 @@ const DasboardNavbar = () => {
     try {
       setAuth(null);
       deleteCookie('auth');
-      toast({
-        title: 'Logged Out',
+      toast.success({
+        title: 'Logged Out Successful',
         description: 'You have been successfully logged out.',
       });
       router.push('/');
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Log Out Failed',
         description: 'An error occurred during Log Out. Please try again.',
-        variant: 'destructive',
       });
     }
   };
@@ -105,7 +93,7 @@ const DasboardNavbar = () => {
         <div className='flex items-center'>
           <Popover>
             <PopoverTrigger asChild>
-              <Card className='bg-transparent border-none  rounded-[9px] overflow-hidden p-0'>
+              <Card className='bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0'>
                 <CardContent className='bg-transparent flex items-center justify-center p-0'>
                   <Image
                     src='/svg/account.svg'
@@ -146,7 +134,7 @@ const DasboardNavbar = () => {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Card className='bg-transparent border-none  rounded-[9px] overflow-hidden  p-0'>
+            <Card className='bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden  p-0'>
               <CardContent className='bg-transparent flex items-center justify-center p-0'>
                 <Image
                   src='/svg/list.svg'
