@@ -207,7 +207,6 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-import { useToast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -220,9 +219,10 @@ import {
 } from '@/components/ui/popover';
 
 import type { UserData } from '@/interfaces/Interface';
+import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const DashboardNavbar = () => {
-  const { toast } = useToast();
+  const toast = useCustomToast();
   const { auth, setAuth } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -244,16 +244,15 @@ const DashboardNavbar = () => {
     try {
       setAuth(null);
       deleteCookie('auth');
-      toast({
+      toast.success({
         title: 'Logged Out Successful',
         description: 'You have been successfully logged out.',
       });
       router.push('/');
     } catch (error) {
-      toast({
+      toast.error({
         title: 'Log Out Failed',
         description: 'An error occurred during Log Out. Please try again.',
-        variant: 'destructive',
       });
     }
   };

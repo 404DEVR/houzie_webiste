@@ -98,7 +98,7 @@ const tabContentVariants = {
   },
 };
 
-const ExplorePlans = ({}) => {
+const ExplorePlans = () => {
   const [selectedPlan, setSelectedPlan] = useState('Classic Plan');
 
   const handlePlanClick = (planName) => {
