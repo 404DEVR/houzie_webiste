@@ -1,6 +1,13 @@
 import { DialogTitle } from '@radix-ui/react-dialog';
 import axios from 'axios';
-import { ArrowDown, Bath, Bed, Building2, Home } from 'lucide-react';
+import {
+  ArrowDown,
+  Bath,
+  Bed,
+  Building2,
+  ChevronDown,
+  Home,
+} from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -207,7 +214,7 @@ const MyListings = () => {
       );
 
       toast.success({
-        title: 'Delte successfull',
+        title: 'Deleted successfully',
         description: 'Listing deleted successfully!',
       });
     } catch (error) {
@@ -354,7 +361,7 @@ const MyListings = () => {
                         size='sm'
                         onClick={() => handleDelete(listing.id)}
                       >
-                        Un post
+                        Unpost
                       </Button>
                     </div>
                     <Button
@@ -362,12 +369,12 @@ const MyListings = () => {
                       onClick={() => toggleCardExpansion(listing.id)}
                       className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
                     >
-                      <ArrowDown
+                      Views and Leads
+                      <ChevronDown
                         className={`w-[17px] h-[17px] transition-transform ${
                           expandedCardId === listing.id ? 'rotate-180' : ''
                         }`}
                       />
-                      Views and Leads
                     </Button>
                   </div>
                 </div>

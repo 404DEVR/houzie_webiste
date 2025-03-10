@@ -66,7 +66,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
   };
 
   return (
-    <Card className='rounded-xl md:p-8 shadow-sm max-w-4xl my-6 md:my-0 mx-auto border border-gray-200'>
+    <Card className='rounded-xl md:p-4 shadow-sm max-w-4xl my-6 md:my-0 mx-auto border border-gray-200'>
       <CardHeader>
         <CardTitle className='text-2xl font-bold'>Review</CardTitle>
       </CardHeader>

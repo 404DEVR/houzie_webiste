@@ -98,7 +98,7 @@ const tabContentVariants = {
   },
 };
 
-const ExplorePlans = ({ onBack }) => {
+const ExplorePlans = ({}) => {
   const [selectedPlan, setSelectedPlan] = useState('Classic Plan');
 
   const handlePlanClick = (planName) => {
@@ -112,12 +112,6 @@ const ExplorePlans = ({ onBack }) => {
           <h1 className=' text-md md:text-4xl font-bold text-center md:mb-4'>
             Purchase a subscription
           </h1>
-          <Button
-            onClick={onBack}
-            className='mb-4 bg-gray-200 text-gray-700 hover:bg-gray-300'
-          >
-            <ChevronLeft className='mr-2' /> Back to Profile
-          </Button>
         </div>
 
         <p className='text-gray-600 text-md text-center mb-8'>

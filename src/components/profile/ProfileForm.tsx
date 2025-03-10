@@ -3,6 +3,7 @@ import { Camera, ChevronRight, Edit } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import ExplorePlans from '@/components/Subscription/ExplorePlans';
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/tooltip';
 
 import { ProfileFormInterface } from '@/interfaces/PropsInterface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface originalData {
   name: string;
@@ -122,10 +122,6 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
     setShowExplorePlans(true);
   };
 
-  const handleBackToProfile = () => {
-    setShowExplorePlans(false);
-  };
-
   const hasChanges = () => {
     return (
       fullName !== originalData.name || companyName !== originalData.companyName
@@ -139,36 +135,39 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
   return (
     <TooltipProvider>
       {showExplorePlans ? (
-        <ExplorePlans onBack={handleBackToProfile} />
+        <ExplorePlans />
       ) : (
-        <div className='flex flex-col gap-4 p-4 max-w-6xl mx-auto'>
+        <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
           {/* Profile Section */}
           <div className='flex flex-col md:flex-row w-full gap-8'>
-            <div className='bg-[#eff5ff] rounded-lg p-6 w-full md:w-1/2 shadow-2xl border'>
-              <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-4'>
+            <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-[400px] md:w-1/2 shadow-2xl border'>
+              <form
+                onSubmit={handleSubmit}
+                className=' flex justify-center pt-10 h-full'
+              >
                 {/* User Details */}
-                <div className='col-span-1 flex flex-col gap-2 pb-8'>
+                <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8'>
                   <div className='flex flex-col gap-'>
-                    <Label className='text-xs'>Name</Label>
+                    <Label className='text-md'>Name</Label>
                     <input
                       type='text'
                       id='fullName'
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                       aria-label='Full Name'
                     />
                   </div>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className='flex flex-col gap-0'>
-                        <Label className='text-xs'>Email Address</Label>
+                        <Label className='text-md'>Email Address</Label>
                         <input
                           type='email'
                           id='emailAddress'
                           value={emailAddress}
                           readOnly
-                          className='border-none bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Email Address'
                         />
                       </div>
@@ -180,13 +179,13 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className='flex flex-col gap-0'>
-                        <Label className='text-xs'>Phone Number</Label>
+                        <Label className='text-md'>Phone Number</Label>
                         <input
                           type='tel'
                           id='phoneNumber'
                           value={phoneNumber}
                           readOnly
-                          className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Phone Number'
                           placeholder='No Phone Number'
                         />
@@ -198,20 +197,20 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                   </Tooltip>
 
                   <div className='flex flex-col gap-0'>
-                    <Label className='text-xs'>Company Name</Label>
+                    <Label className='text-md'>Company Name</Label>
                     <input
                       type='text'
                       id='companyName'
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                       aria-label='Company Name'
                       placeholder='Please Update Company Name'
                     />
                   </div>
                 </div>
                 {/* Avatar with Camera Icon */}
-                <div className='flex flex-col justify-between items-center col-span-1 h-full'>
+                <div className='flex flex-col flex-[1] justify-start gap-16 items-center h-full'>
                   <div className='relative h-40 w-40'>
                     <Avatar className='w-40 h-40'>
                       <Image
@@ -254,11 +253,11 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
             {/* Subscription Summary */}
             <div className='bg-[#eff5ff] rounded-lg shadow-2xl p-6 w-full md:w-1/2 border'>
-              <h2 className='text-3xl font-semibold mt-6 mb-8'>
+              <h2 className='text-3xl font-semibold mt-14 mb-12'>
                 Subscription Summary
               </h2>
 
-              <div className='mb-4'>
+              <div className='mb-8'>
                 <div className='flex justify-between items-center mb-2'>
                   <div className='text-lg'>Listing's Usage</div>
                   <div className='text-lg text-gray-500'>10%</div>

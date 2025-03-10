@@ -178,7 +178,8 @@ const PropertyDetailsForm = ({
     if (
       ['maidCharges', 'cookCharges', 'wifiCharges', 'otherCharges'].includes(
         name
-      )
+      ) &&
+      propertyDetails.isPreoccupied
     ) {
       setAdditionalCharges((prevCharges) => ({
         ...prevCharges,
@@ -1350,14 +1351,14 @@ const PropertyDetailsForm = ({
             <Label className='text-md text-black font-normal'>
               Property Type<span className='text-red-500'>*</span>
             </Label>
-            <div className='flex flex-wrap gap-2 mt-2'>
+            <div className='flex flex-wrap gap-4 mt-2'>
               {getPropetyTypes(auth?.role || '').map((type) => (
                 <Button
                   key={type.value}
                   className={cn(
                     'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                     propertyDetails.propertyType === type.value
-                      ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                      ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                       : 'bg-white text-[#646464] border-gray-300 hover:bg-gray-100'
                   )}
                   onClick={() => handleButtonClick('propertyType', type.value)}
@@ -1528,13 +1529,12 @@ const PropertyDetailsForm = ({
             </div>
 
             {/* Maintenance Charges */}
-            {(propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+            {propertyDetails.isPreoccupied && (
               <div className='w-full grid grid-cols-1'>
                 <Label className='text-md text-black font-normal mb-2'>
                   Maintenance Charge
                 </Label>
-                <div className='ml-6 col-span-1 grid grid-cols-2 gap-4'>
+                <div className='ml-2 col-span-1 grid grid-cols-2 gap-4 border rounded-md border-[#dddada] p-2'>
                   <CustomInput
                     type='number'
                     name='maidCharges'
@@ -1622,7 +1622,7 @@ const PropertyDetailsForm = ({
                   />
                 </div>
 
-                <div className='mt-4 ml-6 col-span-1'>
+                <div className='mt-4 ml-2 col-span-1'>
                   <CustomInput
                     type='number'
                     name='maintenanceCharges'
@@ -1647,14 +1647,13 @@ const PropertyDetailsForm = ({
                     )}
                     placeholder='Total Maintenance Charges (per month)*'
                     required
-                    disabled // Disable editing directly; it's calculated from other fields
+                    disabled
                   />
                 </div>
               </div>
             )}
 
-            {/* {(propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-              propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT') && (
+            {propertyDetails.propertyType === 'FLAT_APARTMENT' && (
               <div className='w-full'>
                 <CustomInput
                   type='number'
@@ -1680,7 +1679,7 @@ const PropertyDetailsForm = ({
                   required
                 />
               </div>
-            )} */}
+            )}
 
             {/* Brokerage */}
             <div className='w-full'>
@@ -1815,7 +1814,7 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                       propertyDetails.lockInPeriod === level.value
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                         : 'bg-white text-[#646464] '
                     )}
                     onClick={() =>
@@ -1849,7 +1848,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.roomType === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() => handleButtonClick('roomType', type.value)}
@@ -1888,7 +1887,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.sharingType === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
@@ -1928,7 +1927,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.preferredGender.includes(type.value)
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
@@ -1963,7 +1962,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.configuration === type.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
@@ -2128,7 +2127,7 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                       propertyDetails.features.includes(feature.value)
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                         : 'bg-white text-[#646464] '
                     )}
                     onClick={() => handleFeatureClick(feature.value)}
@@ -2158,7 +2157,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.preferredTenant.includes(tenant.value)
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() => handleTenantClick(tenant.value)}
@@ -2248,7 +2247,7 @@ const PropertyDetailsForm = ({
                       className={cn(
                         'rounded-lg px-4 py-2 border border-gray-300 text-sm font-medium transition-colors disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
                         propertyDetails.furnishing === level.value
-                          ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                          ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                           : 'bg-white text-[#646464] '
                       )}
                       onClick={() =>
@@ -2268,139 +2267,129 @@ const PropertyDetailsForm = ({
             )}
 
             {/* Furnishings (as array) Not Preoccupied*/}
-            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') &&
+            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
+              propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
               (propertyDetails.propertyType === 'CO_LIVING' ||
                 propertyDetails.propertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.propertyType === 'FLAT_APARTMENT' ||
                 propertyDetails.propertyType === 'VILLA' ||
                 propertyDetails.propertyType === 'PG' ||
-                propertyDetails.preoccupiedPropertyType === 'CO_LIVING')) ||
-              (propertyDetails.furnishing.includes('SEMI_FURNISHED') &&
-                (propertyDetails.propertyType === 'CO_LIVING' ||
-                  propertyDetails.propertyType === 'BUILDER_FLOOR' ||
-                  propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-                  propertyDetails.propertyType === 'VILLA' ||
-                  propertyDetails.propertyType === 'PG' ||
-                  propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
-                  <div>
-                    <Label className='text-md text-black font-normal'>
-                      Furnishings
-                    </Label>
-                    <div className='flex flex-wrap gap-4 mt-1'>
-                      {getFurnishings(propertyDetails.propertyType).map(
-                        (furnishing) => (
-                          <Button
-                            key={furnishing.value}
-                            className={cn(
-                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                              propertyDetails.furnishingExtras.includes(
-                                furnishing.value
-                              )
-                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                                : 'bg-white text-[#646464] border-gray-300 '
-                            )}
-                            onClick={() =>
-                              handleFurnishingClick(furnishing.value)
-                            }
-                          >
-                            <Image
-                              src={furnishing.url}
-                              alt={furnishing.label}
-                              width={55}
-                              height={55}
-                              className='object-contain'
-                            />
-                            <div className=' text-center text-wrap'>
-                              {furnishing.label}
-                            </div>
-                          </Button>
-                        )
-                      )}
-                    </div>
+                propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+                <div>
+                  <Label className='text-md text-black font-normal'>
+                    Furnishings
+                  </Label>
+                  <div className='flex flex-wrap gap-4 mt-1'>
+                    {getFurnishings(propertyDetails.propertyType).map(
+                      (furnishing) => (
+                        <Button
+                          key={furnishing.value}
+                          className={cn(
+                            'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                            propertyDetails.furnishingExtras.includes(
+                              furnishing.value
+                            )
+                              ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
+                              : 'bg-white text-[#646464] border-gray-300 '
+                          )}
+                          onClick={() =>
+                            handleFurnishingClick(furnishing.value)
+                          }
+                        >
+                          <Image
+                            src={furnishing.url}
+                            alt={furnishing.label}
+                            width={55}
+                            height={55}
+                            className='object-contain'
+                          />
+                          <div className=' text-center text-wrap'>
+                            {furnishing.label}
+                          </div>
+                        </Button>
+                      )
+                    )}
                   </div>
-                ))}
+                </div>
+              )}
 
             {/* Furnishings (as array) Preoccupied*/}
-            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') &&
+            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
+              propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
               (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
-                propertyDetails.preoccupiedPropertyType === 'VILLA')) ||
-              (propertyDetails.furnishing.includes('SEMI_FURNISHED') &&
-                (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
-                  propertyDetails.preoccupiedPropertyType ===
-                    'FLAT_APARTMENT' ||
-                  propertyDetails.preoccupiedPropertyType === 'VILLA') && (
-                  <>
-                    <div>
-                      <Label className='text-md text-black font-normal'>
-                        Room Furnishings
-                      </Label>
-                      <div className='flex flex-wrap gap-4 mt-1'>
-                        {RoomFurnishing.map((furnishing) => (
-                          <Button
-                            key={furnishing.value}
-                            className={cn(
-                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                              propertyDetails.furnishingExtras.includes(
-                                furnishing.value
-                              )
-                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                                : 'bg-white text-[#646464] border-gray-300 '
-                            )}
-                            onClick={() =>
-                              handleFurnishingClick(furnishing.value)
-                            }
-                          >
-                            <Image
-                              src={furnishing.url}
-                              alt={furnishing.label}
-                              width={55}
-                              height={55}
-                              className='object-contain'
-                            />
-                            <div className=' text-center text-wrap'>
-                              {furnishing.label}
-                            </div>
-                          </Button>
-                        ))}
-                      </div>
+                propertyDetails.preoccupiedPropertyType === 'VILLA') && (
+                <>
+                  <div>
+                    <Label className='text-md text-black font-normal'>
+                      Room Furnishings
+                    </Label>
+                    <div className='flex flex-wrap gap-4 mt-1'>
+                      {RoomFurnishing.map((furnishing) => (
+                        <Button
+                          key={furnishing.value}
+                          className={cn(
+                            'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                            propertyDetails.furnishingExtras.includes(
+                              furnishing.value
+                            )
+                              ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
+                              : 'bg-white text-[#646464] border-gray-300 '
+                          )}
+                          onClick={() =>
+                            handleFurnishingClick(furnishing.value)
+                          }
+                        >
+                          <Image
+                            src={furnishing.url}
+                            alt={furnishing.label}
+                            width={55}
+                            height={55}
+                            className='object-contain'
+                          />
+                          <div className=' text-center text-wrap'>
+                            {furnishing.label}
+                          </div>
+                        </Button>
+                      ))}
                     </div>
-                    <div>
-                      <Label className='text-md text-black font-normal'>
-                        House Furnishings
-                      </Label>
-                      <div className='flex flex-wrap gap-4 mt-1'>
-                        {HouseFurnishing.map((furnishing) => (
-                          <Button
-                            key={furnishing.value}
-                            className={cn(
-                              'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                              propertyDetails.furnishingExtras.includes(
-                                furnishing.value
-                              )
-                                ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
-                                : 'bg-white text-[#646464] border-gray-300 '
-                            )}
-                            onClick={() =>
-                              handleFurnishingClick(furnishing.value)
-                            }
-                          >
-                            <Image
-                              src={furnishing.url}
-                              alt={furnishing.label}
-                              width={55}
-                              height={55}
-                              className='object-contain'
-                            />
-                            <div className=' text-center text-wrap'>
-                              {furnishing.label}
-                            </div>
-                          </Button>
-                        ))}
-                      </div>
+                  </div>
+                  <div>
+                    <Label className='text-md text-black font-normal'>
+                      House Furnishings
+                    </Label>
+                    <div className='flex flex-wrap gap-4 mt-1'>
+                      {HouseFurnishing.map((furnishing) => (
+                        <Button
+                          key={furnishing.value}
+                          className={cn(
+                            'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
+                            propertyDetails.furnishingExtras.includes(
+                              furnishing.value
+                            )
+                              ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
+                              : 'bg-white text-[#646464] border-gray-300 '
+                          )}
+                          onClick={() =>
+                            handleFurnishingClick(furnishing.value)
+                          }
+                        >
+                          <Image
+                            src={furnishing.url}
+                            alt={furnishing.label}
+                            width={55}
+                            height={55}
+                            className='object-contain'
+                          />
+                          <div className=' text-center text-wrap'>
+                            {furnishing.label}
+                          </div>
+                        </Button>
+                      ))}
                     </div>
-                  </>
-                ))}
+                  </div>
+                </>
+              )}
 
             {/* Amenities */}
             <div>
@@ -2414,7 +2403,7 @@ const PropertyDetailsForm = ({
                     className={cn(
                       'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
                       propertyDetails.amenities.includes(amenity.value)
-                        ? 'bg-[#bfd7fe] text-[#646464] shadow-slate-500 border-none shadow-lg'
+                        ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                         : 'bg-white text-[#646464] border-gray-300 '
                     )}
                     onClick={() => handleAmenityClick(amenity.value)}

@@ -1,16 +1,16 @@
 'use client';
 
-import * as React from 'react';
 import {
   AlertCircle,
-  CheckCircle2,
-  Info,
-  XCircle,
   Bell,
+  CheckCircle2,
   Crown,
+  Info,
   Moon,
   Sun,
+  XCircle,
 } from 'lucide-react';
+import * as React from 'react';
 
 type ToastType =
   | 'success'
@@ -21,7 +21,11 @@ type ToastType =
   | 'warning'
   | 'premium'
   | 'dark'
-  | 'light';
+  | 'light'
+  | 'neutral'
+  | 'muted'
+  | 'glass'
+  | 'outline';
 
 interface Toast {
   id: string;
@@ -82,7 +86,7 @@ const ToastContainer = () => {
   const { toasts, removeToast } = context;
 
   return (
-    <div className='fixed top-4 right-4 z-50 flex flex-col gap-2 w-full max-w-md'>
+    <div className='fixed top-4 right-4 z-[100] flex flex-col gap-2 w-full max-w-md'>
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}
@@ -239,6 +243,34 @@ export const useCustomToast = () => {
       addToast({
         type: 'light',
         icon: <Sun className='h-6 w-6' />,
+        ...props,
+      });
+    },
+    neutral: (props: Omit<Toast, 'id' | 'type' | 'icon'>) => {
+      addToast({
+        type: 'neutral',
+        icon: <Bell className='h-6 w-6' />,
+        ...props,
+      });
+    },
+    muted: (props: Omit<Toast, 'id' | 'type' | 'icon'>) => {
+      addToast({
+        type: 'muted',
+        icon: <Bell className='h-6 w-6' />,
+        ...props,
+      });
+    },
+    glass: (props: Omit<Toast, 'id' | 'type' | 'icon'>) => {
+      addToast({
+        type: 'glass',
+        icon: <Bell className='h-6 w-6' />,
+        ...props,
+      });
+    },
+    outline: (props: Omit<Toast, 'id' | 'type' | 'icon'>) => {
+      addToast({
+        type: 'outline',
+        icon: <Bell className='h-6 w-6' />,
         ...props,
       });
     },

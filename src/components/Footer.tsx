@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <footer className='bg-white py-8 relative'>
       <div className='container mx-auto px-4 py-8'>
-        <div className='flex flex-wrap justify-center text-sm sm:text-base md:text-lg font-semibold text-[#464545] items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-center mb-6'>
+        <div className='flex flex-wrap justify-center text-sm sm:text-base md:text-lg font-semibold text-[#464545] items-center gap-3 sm:gap-4 md:gap-6 lg:gap-24 text-center mb-6'>
           <Link href='#' className='hover:underline'>
             About
           </Link>
@@ -33,7 +33,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className='mt-4 sm:mt-6 gap-2 sm:gap-4 md:gap-6 text-[#464545] text-center flex flex-wrap justify-center items-center'>
+        <div className='mt-4 sm:mt-6 gap-2 sm:gap-4 md:gap-20 text-[#464545] text-center flex flex-wrap justify-center items-center'>
           <p className='text-xs sm:text-sm'>
             © 2021 Houzie, All rights reserved.
           </p>
@@ -48,7 +48,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className='mt-6 sm:mt-8 flex justify-center space-x-4 sm:space-x-6'>
+        <div className='mt-6 sm:mt-12 flex justify-center space-x-4 sm:space-x-6'>
           <Link href='#' className='text-blue-500 hover:text-blue-700'>
             <FaFacebookF size={16} className='sm:w-5 sm:h-5' />
           </Link>
@@ -67,7 +67,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className='relative w-full mt-16 '>
+      <div className='relative w-[90%] mx-auto mt-16 '>
         <div className='absolute w-full' style={{ paddingBottom: '15%' }}>
           <Image
             src='/svg/HOUZIE.svg'
@@ -78,7 +78,7 @@ const Footer = () => {
           />
         </div>
         <motion.div
-          className='absolute bottom-0 right-[18%] sm:right-[20%] w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24'
+          className='absolute bottom-0 right-[18%] sm:right-[19.5%] w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24'
           animate={{ y: [0, -40, 0] }}
           transition={{
             repeat: Infinity,
