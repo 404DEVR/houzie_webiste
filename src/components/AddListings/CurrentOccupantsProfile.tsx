@@ -28,12 +28,6 @@ const CurrentOccupantsProfile = ({
 
   const [currentTab, setCurrentTab] = useState(0);
 
-  const gender = [
-    { label: 'Male', value: 'MALE' },
-    { label: 'Female', value: 'FEMALE' },
-    { label: 'Open to both', value: 'OTHER' },
-  ];
-
   const occupantData =
     page !== 'edit'
       ? addFormState.propertyDetails.occupantData
@@ -46,7 +40,7 @@ const CurrentOccupantsProfile = ({
         age: 0,
         profession: '',
         about: '',
-        gender: '',
+        gender: 'OTHER', // Default gender is 'OTHER'
       };
 
       if (page !== 'edit') {
@@ -102,7 +96,7 @@ const CurrentOccupantsProfile = ({
         age: 0,
         profession: '',
         about: '',
-        gender: '',
+        gender: 'OTHER',
       };
 
       const updatedOccupantData = [...occupantData, newOccupant];
@@ -151,38 +145,13 @@ const CurrentOccupantsProfile = ({
     }
   };
 
-  const handleGenderChange = (e) => {
-    if (occupantData[currentTab]) {
-      const updatedOccupantData = [...occupantData];
-      updatedOccupantData[currentTab] = {
-        ...updatedOccupantData[currentTab],
-        gender: e.target.value,
-      };
-
-      if (page !== 'edit') {
-        dispatch(
-          updateAddPropertyDetails({
-            occupantData: updatedOccupantData,
-          })
-        );
-      } else {
-        dispatch(
-          updateEditPropertyDetails({
-            occupantData: updatedOccupantData,
-          })
-        );
-      }
-    }
-  };
-
   useEffect(() => {
     const validateOccupantData = () => {
       for (let i = 0; i < occupantData.length; i++) {
         if (
           !occupantData[i]?.name ||
           occupantData[i].age === 0 ||
-          !occupantData[i]?.profession ||
-          !occupantData[i]?.gender
+          !occupantData[i]?.profession
         ) {
           return false;
         }
@@ -276,24 +245,15 @@ const CurrentOccupantsProfile = ({
 
           {/* <div>
             <Label className='text-md text-black font-normal'>
-              Preferred Gender<span className='text-red-500'>*</span>
+              Preferred Gender
             </Label>
-            <div className='flex flex-wrap gap-2 mt-1 ml-4'>
-              {gender.map((type) => (
-                <label key={type.value} className='flex items-center'>
-                  <input
-                    type='radio'
-                    id={type.value}
-                    name='gender'
-                    value={type.value}
-                    checked={occupantData[currentTab]?.gender === type.value}
-                    onChange={handleGenderChange}
-                    
-                  />
-                  <span className='ml-2'>{type.label}</span>
-                </label>
-              ))}
-            </div>
+            <Input
+              id={`gender-${currentTab}`}
+              name='gender'
+              value='OTHER'
+              disabled
+              className='placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+            />
           </div> */}
 
           <div>

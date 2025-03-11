@@ -75,12 +75,12 @@ export default function DetailsPage() {
       }
 
       const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
+      console.log(url);
 
       const response = await axios.get(url);
 
       setProperties(response.data.data);
       setLoading(false);
-      console.log(response.data.data);
     } catch (err) {
       setLoading(false);
     }

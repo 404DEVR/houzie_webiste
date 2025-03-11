@@ -2,6 +2,7 @@ import api from 'axios';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { PropertyReview } from '@/components/AddListings/PropertyReview';
@@ -17,7 +18,6 @@ import {
 import { ReviewProps } from '@/interfaces/PropsInterface';
 import { resetAddForm } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
   const toast = useCustomToast();
@@ -53,6 +53,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
         setActiveTab('myListing');
       }
     } catch (error) {
+      console.log(error);
       toast.error({
         title: 'Error',
         description: 'Something went wrong please try again',
