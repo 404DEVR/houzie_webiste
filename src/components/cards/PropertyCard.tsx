@@ -1,7 +1,11 @@
+import axios from 'axios';
 import { Bath, Bed, Heart, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+import { useCustomToast } from '@/hooks/use-custom-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,15 +13,13 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
-import { toast } from '@/hooks/use-toast';
-import axios from 'axios';
-import useAuth from '@/hooks/useAuth';
 
 export function PropertyCard({
   property,
   iscreate,
   loadImage,
 }: PropertyCardProps) {
+  const toast = useCustomToast();
   const { auth } = useAuth();
   const router = useRouter();
   const [favorites, setFavorites] = useState(false);
@@ -120,13 +122,11 @@ export function PropertyCard({
     const accessToken = auth?.accessToken;
 
     if (!accessToken) {
-      console.error('Access token is missing');
-      toast({
+      toast.error({
         title: 'Unauthorized',
         description: 'You are not authorized.',
-        variant: 'destructive',
       });
-      router.push('/login');
+      router.push(`/login?redirect=property/${id}`);
       return;
     }
 
@@ -143,12 +143,10 @@ export function PropertyCard({
 
       router.push(`/property/${id}`);
     } catch (error: any) {
-      console.error('Error sending visited property request:', error);
-      toast({
+      toast.error({
         title: 'Error',
         description:
           error.response?.data?.message || 'Failed to record visit. Try again.',
-        variant: 'destructive',
       });
     }
   };

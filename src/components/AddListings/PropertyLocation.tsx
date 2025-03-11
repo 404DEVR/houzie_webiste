@@ -217,7 +217,7 @@ const PropertyLocation = ({
             handleLocationUploadStatusChange={handleLocationUploadStatusChange}
           />
         </div>
-        {propertyDetails.isPreoccupied && (
+        {propertyDetails.preoccupiedPropertyType !== 'CO_LIVING' && (
           <CurrentOccupantsProfile
             onOccupantDataChange={handleOccupantDataChange}
             page={page}

@@ -309,6 +309,31 @@ const PropertyDetailsForm = ({
       } else {
         dispatch(updateAddPropertyDetails({ preferredGender: [value] }));
       }
+    } else if (name === 'furnishing') {
+      // Clear furnishing extras if unfurnished is selected
+      if (value === 'NONE') {
+        if (page === 'edit') {
+          dispatch(
+            updateEditPropertyDetails({
+              furnishing: value,
+              furnishingExtras: [],
+            })
+          );
+        } else {
+          dispatch(
+            updateAddPropertyDetails({
+              furnishing: value,
+              furnishingExtras: [],
+            })
+          );
+        }
+      } else {
+        if (page === 'edit') {
+          dispatch(updateEditPropertyDetails({ furnishing: value }));
+        } else {
+          dispatch(updateAddPropertyDetails({ furnishing: value }));
+        }
+      }
     } else {
       if (page === 'edit') {
         dispatch(updateEditPropertyDetails({ [name]: value }));
@@ -370,13 +395,30 @@ const PropertyDetailsForm = ({
     const isSelected = propertyDetails.preferredTenant.includes(value);
     let updatedTenants;
 
-    if (isSelected) {
-      updatedTenants = propertyDetails.preferredTenant.filter(
-        (item) => item !== value
-      );
+    if (value === 'ANY') {
+      // If 'Any' is selected, remove all other selections
+      if (isSelected) {
+        updatedTenants = propertyDetails.preferredTenant.filter(
+          (item) => item !== value
+        );
+      } else {
+        updatedTenants = ['ANY'];
+      }
     } else {
-      updatedTenants = [...propertyDetails.preferredTenant, value];
+      // If 'Any' is already selected, remove it before adding other types
+      if (propertyDetails.preferredTenant.includes('ANY')) {
+        updatedTenants = [value];
+      } else {
+        if (isSelected) {
+          updatedTenants = propertyDetails.preferredTenant.filter(
+            (item) => item !== value
+          );
+        } else {
+          updatedTenants = [...propertyDetails.preferredTenant, value];
+        }
+      }
     }
+
     if (page === 'edit') {
       dispatch(updateEditPropertyDetails({ preferredTenant: updatedTenants }));
     } else {
@@ -1197,7 +1239,6 @@ const PropertyDetailsForm = ({
             changedFields[key] = propertyDetails[key];
           }
         }
-        console.log(changedFields);
         if (Object.keys(changedFields).length > 0) {
           const response = await axios.patch(
             `https://api.houzie.in/listings/${editingListingId}`,
@@ -1209,34 +1250,17 @@ const PropertyDetailsForm = ({
             }
           );
           if (response.status === 200) {
-            toast.success({
-              title: 'Success!',
-              description: 'Listing Updated Successfully',
-            });
             handleNext();
           } else {
-            toast.info({
-              title: 'Information',
-              description:
-                'This is an informational notification with the requested color scheme.',
-            });
             toast.error({
-              title: 'Error',
-              description: 'Failed to update listing Please Try again later',
+              title: 'Edit Failed',
+              description:
+                'There was a problem while editing please try again later',
             });
           }
         } else {
-          toast.info({
-            title: 'No changes',
-            description: 'No changes were made to the property details.',
-          });
           handleNext();
         }
-      } else {
-        toast.info({
-          title: 'No changes',
-          description: 'Initial property details are not available',
-        });
       }
     } catch (error) {
       toast.error({
@@ -1702,25 +1726,26 @@ const PropertyDetailsForm = ({
                   }
                 )}
               />
-
-              <label className='inline-flex items-center mt-3 border px-4 py-2 rounded-md '>
-                <Input
-                  type='checkbox'
-                  name='isNegotiable'
-                  checked={propertyDetails.isNegotiable}
-                  onChange={handleInputChange}
-                  className={cn(
-                    'form-checkbox h-5 w-4 text-[#729eff] border-2 focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
-                    {
-                      'ring-2 ring-red-500 ring-offset-1':
-                        fieldErrors['isNegotiable'],
-                    }
-                  )}
-                />
-                <span className='ml-2 text-gray-700 text-sm'>
-                  Brokerage Negotiable
-                </span>
-              </label>
+              {propertyDetails.brokerage !== '' && (
+                <label className='inline-flex items-center mt-3 border px-4 py-2 rounded-md '>
+                  <Input
+                    type='checkbox'
+                    name='isNegotiable'
+                    checked={propertyDetails.isNegotiable}
+                    onChange={handleInputChange}
+                    className={cn(
+                      'form-checkbox h-5 w-4 text-[#729eff] border-2 focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                      {
+                        'ring-2 ring-red-500 ring-offset-1':
+                          fieldErrors['isNegotiable'],
+                      }
+                    )}
+                  />
+                  <span className='ml-2 text-gray-700 text-sm'>
+                    Brokerage Negotiable
+                  </span>
+                </label>
+              )}
             </div>
 
             {/* Number of Units Available */}
@@ -2267,8 +2292,9 @@ const PropertyDetailsForm = ({
             )}
 
             {/* Furnishings (as array) Not Preoccupied*/}
-            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
-              propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
+            {propertyDetails.furnishing !== 'UNFURNISHED' &&
+              (propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
+                propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
               (propertyDetails.propertyType === 'CO_LIVING' ||
                 propertyDetails.propertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.propertyType === 'FLAT_APARTMENT' ||
@@ -2314,7 +2340,8 @@ const PropertyDetailsForm = ({
               )}
 
             {/* Furnishings (as array) Preoccupied*/}
-            {(propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
+            {((propertyDetails.furnishing !== 'UNFURNISHED' &&
+              propertyDetails.furnishing.includes('FULLY_FURNISHED')) ||
               propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
               (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||

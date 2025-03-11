@@ -9,7 +9,6 @@ import { useFilters } from '@/lib/context/FilterContext';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
-// Import PropertyComponent
 import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHeader';
 import { Button } from '@/components/ui/button';
@@ -50,7 +49,6 @@ export default function DetailsPage() {
     try {
       setLoading(true);
 
-      // Build the query string from the filters
       const queryParams = new URLSearchParams();
 
       //Price Range

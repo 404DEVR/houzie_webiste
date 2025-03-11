@@ -150,7 +150,7 @@ const HeroSection = () => {
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className='flex justify-between bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
+                <button className='flex justify-between bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 items-center '>
                   Lifestyle Filters
                   <div className='text-black relative right-0 text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 border border-black ml-2 sm:ml-4 md:ml-6 h-full flex items-center justify-center'>
                     <MoveUpRight />

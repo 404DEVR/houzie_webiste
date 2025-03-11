@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -31,7 +32,6 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -62,7 +62,6 @@ const SignUpForm = () => {
   const [phoneNumberError, setPhoneNumberError] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState<number>(0);
   const [canResend, setCanResend] = useState<boolean>(true);
-  const originalpath = redirectPath === 'broker' ? redirectPath : '/';
 
   const {
     register,
@@ -99,8 +98,8 @@ const SignUpForm = () => {
       };
 
       login(userData);
-      router.push(`/${originalpath}`);
-      console.log(redirectPath);
+      router.push(`/${redirectPath}`);
+      // console.log(redirectPath);
 
       // console.log(redirectPath);
       toast.success({

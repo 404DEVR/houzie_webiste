@@ -4,6 +4,7 @@ export interface AddListingsProps {
   page?: string;
   setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
   setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefreshListings?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface AmenitiesDisplayinterface {

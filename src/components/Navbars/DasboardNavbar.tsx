@@ -207,6 +207,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -219,7 +220,6 @@ import {
 } from '@/components/ui/popover';
 
 import type { UserData } from '@/interfaces/Interface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const DashboardNavbar = () => {
   const toast = useCustomToast();
@@ -317,11 +317,11 @@ const DashboardNavbar = () => {
       <nav
         ref={navRef}
         style={{ backgroundColor: `rgba(114, 158, 255, ${opacity})` }}
-        className={`w-full text-black transition-colors duration-300 h-16 border-none z-50 ${
+        className={`w-full bg-black text-black transition-colors duration-300 h-16 border-none z-50 ${
           isHomePage ? 'sticky top-0' : ''
         }`}
       >
-        <div className=' max-w-full md:max-w-7xl h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
+        <div className=' max-w-full md:w-[80%] h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
           <div className='flex items-center'>
             <Popover
               open={

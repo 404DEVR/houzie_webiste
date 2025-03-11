@@ -1,5 +1,7 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -29,6 +31,11 @@ const SettingsPage = () => {
     }));
   };
 
+  const [isPasswordDropdownOpen, setIsPasswordDropdownOpen] = useState(false);
+
+  const togglePasswordDropdown = () => {
+    setIsPasswordDropdownOpen((prev) => !prev);
+  };
   return (
     <div className=' mx-auto pb-8 pt-0'>
       <Card className='max-w-2xl mx-auto border-none'>
@@ -246,6 +253,68 @@ const SettingsPage = () => {
                 checked={settings.logoutFromOtherDevices}
                 onCheckedChange={() => handleToggle('logoutFromOtherDevices')}
               />
+            </div>
+
+            <div>
+              <button
+                onClick={togglePasswordDropdown}
+                className='flex items-center justify-between w-full text-left text-sm font-medium'
+              >
+                Change Password
+                <span>
+                  {isPasswordDropdownOpen ? (
+                    <ChevronUp /> // Down arrow
+                  ) : (
+                    <ChevronDown /> // Up arrow
+                  )}
+                </span>
+              </button>
+
+              {/* Animated Dropdown */}
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={
+                  isPasswordDropdownOpen
+                    ? { height: 'auto', opacity: 1 }
+                    : { height: 0, opacity: 0 }
+                }
+                transition={{ duration: 0.3 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div className='mt-4 space-y-4'>
+                  {/* Old Password */}
+                  <div>
+                    <label
+                      htmlFor='old-password'
+                      className='block text-sm font-medium'
+                    >
+                      Old Password
+                    </label>
+                    <input
+                      type='password'
+                      id='old-password'
+                      placeholder='Enter old password'
+                      className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
+                    />
+                  </div>
+
+                  {/* New Password */}
+                  <div>
+                    <label
+                      htmlFor='new-password'
+                      className='block text-sm font-medium'
+                    >
+                      New Password
+                    </label>
+                    <input
+                      type='password'
+                      id='new-password'
+                      placeholder='Enter new password'
+                      className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
+                    />
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
         </CardContent>

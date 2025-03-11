@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -24,10 +25,10 @@ import {
   updateEditPropertyDetails,
 } from '@/redux/slices/formslices';
 import { RootState } from '@/redux/store';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface FileUploaderProps extends FileUploaderprops {
   onImageUploadStatusChange?: (hasImages: boolean) => void;
+  setRefreshListings?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const supabase = createClient(
@@ -41,6 +42,7 @@ const FileUploader = ({
   page,
   setIsDialogOpen,
   onImageUploadStatusChange,
+  setRefreshListings,
 }: FileUploaderProps) => {
   const toast = useCustomToast();
   const { auth } = useAuth();
@@ -260,8 +262,6 @@ const FileUploader = ({
         changedFields.mainImage = propertyDetails?.mainImage;
       }
 
-      console.log(changedFields);
-
       if (Object.keys(changedFields).length > 0) {
         const response = await axios.patch(
           `https://api.houzie.in/listings/${editingListingId}`,
@@ -277,9 +277,9 @@ const FileUploader = ({
             title: 'Success',
             description: 'Property details updated successfully.',
           });
+          setRefreshListings && setRefreshListings((prev) => !prev);
           setIsDialogOpen && setIsDialogOpen(false);
         } else {
-          console.error('Failed to update listing:', response.status);
           toast.error({
             title: 'Update Failed',
             description: 'Failed to update property details.',

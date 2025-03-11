@@ -7,6 +7,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
 import { CiMail } from 'react-icons/ci';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import LeadForm from '@/components/detailspage/LeadFrom';
@@ -23,7 +24,6 @@ import {
 
 import { Stats } from '@/interfaces/Interface';
 import { ProfileCardProps } from '@/interfaces/PropsInterface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const ProfileCard = ({
   propertyData,
@@ -49,7 +49,7 @@ const ProfileCard = ({
         const data = response.data;
         setStats(data);
       } catch (error) {
-        toast.error({ title: 'Error', description: 'Error fetching data' });
+        console.log(error);
       }
     };
     fetchData();
@@ -93,10 +93,6 @@ const ProfileCard = ({
         );
         setIsConnected(response.data.isConnected);
       } catch (error) {
-        toast.error({
-          title: 'Error',
-          description: 'Error checking connection status:',
-        });
         setIsConnected(false);
       }
     };

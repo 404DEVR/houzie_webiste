@@ -5,6 +5,7 @@ import axios from 'axios';
 import {
   Apple,
   Building2,
+  ChevronLeft,
   ChevronRight,
   Eye,
   Lock,
@@ -19,6 +20,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -45,7 +47,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -120,10 +121,10 @@ const SignUpForm: React.FC = () => {
 
   // useEffect(() => {
   //   const registrationComplete = localStorage.getItem('registrationComplete');
-  //   if (registrationComplete === 'true' && showOTPForm) {
+  //   if (registrationComplete === 'true') {
   //     router.push('/');
   //   }
-  // }, [showOTPForm, router]);
+  // }, [router]);
 
   const onSubmit = async (data: FormData) => {
     setError('');
@@ -146,7 +147,7 @@ const SignUpForm: React.FC = () => {
 
       setPhoneNumber(data.phoneNumber);
       setEmail(data.email);
-      setShowOTPForm(true);
+      setStep(2);
       localStorage.setItem('registrationComplete', 'true');
 
       toast.success({
@@ -192,7 +193,7 @@ const SignUpForm: React.FC = () => {
       }
 
       setUserId(data.userId);
-      setStep(2);
+      setStep(3);
     } catch (error) {
       console.log(error);
       setError(error instanceof Error ? error.message : 'An error occurred');
@@ -286,7 +287,6 @@ const SignUpForm: React.FC = () => {
 
       startResendCooldown();
     } catch (error) {
-      console.log(error);
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setLoading(false);
@@ -392,7 +392,7 @@ const SignUpForm: React.FC = () => {
                           </p>
                         )}
                       </div>
-                      <div className='grid gap-2'>
+                      {/* <div className='grid gap-2'>
                         <Label htmlFor='phoneNumber'>Phone Number</Label>
                         <div className='relative'>
                           <Phone className='absolute left-2 top-2 h-3.5 w-3.5 text-gray-400' />
@@ -409,7 +409,7 @@ const SignUpForm: React.FC = () => {
                             {errors.phoneNumber?.message}
                           </p>
                         )}
-                      </div>
+                      </div> */}
                       <div className='grid gap-2'>
                         <Label htmlFor='companyName'>Company Name</Label>
                         <div className='relative'>
@@ -478,16 +478,62 @@ const SignUpForm: React.FC = () => {
                   </CardHeader>
                   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
                     <div className='grid gap-4'>
-                      <CardDescription className=' mb-2'>
-                        Please enter the OTP sent to your phone number
-                        {phoneNumber}
+                      <CardDescription className=' mb-2 w-full'>
+                        {step === 1 && (
+                          <Button
+                            variant='outline'
+                            size='custom'
+                            className=' border text-slate-600 border-slate-600 p-1 rounded-full mb-2'
+                            onClick={() => setShowOTPForm(false)}
+                          >
+                            <div className='flex gap-1 justify-center items-center  '>
+                              <ChevronLeft className='' />
+                            </div>
+                          </Button>
+                        )}
+                        <div className='grid gap-2 mb-3'>
+                          <Label htmlFor='phoneNumber'>Phone Number</Label>
+                          <div className='relative'>
+                            <Phone className='absolute left-3.5 top-3 h-3.5 w-3.5 text-gray-400' />
+                            <Input
+                              id='phoneNumber'
+                              placeholder='Phone Number'
+                              type='tel'
+                              disabled={step === 3 || step === 2}
+                              className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                              {...register('phoneNumber')}
+                            />
+                          </div>
+                          {errors.phoneNumber && (
+                            <p className='text-red-500 text-sm'>
+                              {errors.phoneNumber?.message}
+                            </p>
+                          )}
+                        </div>
+                        {step === 1 && (
+                          <div className='w-full flex justify-center items-center'>
+                            <Button
+                              size='custom'
+                              className='  bg-[#3b82f6] text-white hover:bg-[#6190dc] py-3 px-6 rounded-lg mb-2'
+                              onClick={handleSubmit(onSubmit)}
+                            >
+                              {loading ? (
+                                'Signing Up...'
+                              ) : (
+                                <div className='flex gap-1 justify-center items-center'>
+                                  <p>Sign Up</p> <ChevronRight className='' />
+                                </div>
+                              )}
+                            </Button>
+                          </div>
+                        )}
                       </CardDescription>
-                      {step === 1 && (
+                      {step === 2 && (
                         <Button onClick={handleInitiateLogin}>
                           {loading ? 'Sending OTP...' : 'Send OTP'}
                         </Button>
                       )}
-                      {step === 2 && (
+                      {step === 3 && (
                         <>
                           <div className='flex gap-2 flex-col justify-center items-start text-center'>
                             <Label htmlFor='otp' className='text-black mb-2'>
@@ -542,14 +588,13 @@ const SignUpForm: React.FC = () => {
                     <Button
                       size='custom'
                       className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-2'
-                      onClick={handleSubmit(onSubmit)}
-                      disabled={loading}
+                      onClick={() => setShowOTPForm(true)}
                     >
                       {loading ? (
                         'Signing Up...'
                       ) : (
                         <div className='flex gap-1 justify-center items-center'>
-                          <p>Sign Up</p> <ChevronRight className='' />
+                          <p>Next</p> <ChevronRight className='' />
                         </div>
                       )}
                     </Button>

@@ -1,13 +1,6 @@
 import { DialogTitle } from '@radix-ui/react-dialog';
 import axios from 'axios';
-import {
-  ArrowDown,
-  Bath,
-  Bed,
-  Building2,
-  ChevronDown,
-  Home,
-} from 'lucide-react';
+import { Bath, Bed, Building2, ChevronDown, Home } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -459,7 +452,11 @@ const MyListings = () => {
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className='w-full sm:max-w-7xl h-[90%] my-auto overflow-y-auto'>
           <DialogTitle></DialogTitle>
-          <AddListings page='edit' setIsDialogOpen={setIsDialogOpen} />
+          <AddListings
+            page='edit'
+            setIsDialogOpen={setIsDialogOpen}
+            setRefreshListings={setRefreshListings}
+          />
         </DialogContent>
       </Dialog>
     </div>

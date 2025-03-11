@@ -1,23 +1,13 @@
-import {
-  Bath,
-  Bed,
-  Building2,
-  ChevronDown,
-  Home,
-  Lock,
-  Wallet,
-} from 'lucide-react';
+import { Bath, Bed, Building2, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-import AmenitiesDisplay from '@/components/AddListings/AmenitiesDisplay';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { PropertyReviewProps } from '@/interfaces/PropsInterface';
-import { FaPhoneAlt } from 'react-icons/fa';
 import { Listing, PropertyFeature } from '@/interfaces/Interface';
-import { Button } from '@/components/ui/button';
+import { PropertyReviewProps } from '@/interfaces/PropsInterface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -352,7 +342,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
     // </Card>
     <Card
       key={data.id}
-      className={`shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden`}
+      className='shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'
     >
       <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
         <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
@@ -424,13 +414,6 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                 Unpost
               </Button>
             </div>
-            <Button
-              variant='link'
-              className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
-            >
-              Views and Leads
-              <ChevronDown />
-            </Button>
           </div>
         </div>
       </CardContent>

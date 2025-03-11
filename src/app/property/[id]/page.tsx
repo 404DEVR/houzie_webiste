@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import ItemGrid from '@/components/cards/IconGrid';
@@ -20,7 +21,6 @@ import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -77,7 +77,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           throw new Error('Failed to fetch property data');
         }
         const data = await response.json();
-        setPropertyData(data);
+        setPropertyData(data.data);
       } catch (error) {
         setIsLoading(false);
       } finally {

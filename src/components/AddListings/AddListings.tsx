@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import FileUploader from '@/components/AddListings/FileUploader';
 import PropertyDetailsForm from '@/components/AddListings/PropertyDetailsForm';
@@ -15,6 +15,7 @@ const AddListings = ({
   page,
   setActiveTab,
   setIsDialogOpen,
+  setRefreshListings,
 }: AddListingsProps) => {
   const ProgressBarCheckpoints =
     page === 'edit'
@@ -189,6 +190,7 @@ const AddListings = ({
             handleNext={handleNext}
             handleBack={handleBack}
             page={page}
+            setRefreshListings={setRefreshListings}
             setIsDialogOpen={setIsDialogOpen}
           />
         )}

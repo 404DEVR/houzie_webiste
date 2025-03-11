@@ -274,7 +274,7 @@ const CurrentOccupantsProfile = ({
             />
           </div>
 
-          <div>
+          {/* <div>
             <Label className='text-md text-black font-normal'>
               Preferred Gender<span className='text-red-500'>*</span>
             </Label>
@@ -288,12 +288,13 @@ const CurrentOccupantsProfile = ({
                     value={type.value}
                     checked={occupantData[currentTab]?.gender === type.value}
                     onChange={handleGenderChange}
+                    
                   />
                   <span className='ml-2'>{type.label}</span>
                 </label>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div>
             <Label htmlFor={`about-${currentTab}`}>About</Label>

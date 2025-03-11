@@ -15,10 +15,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'; // Import useEffect
 import { useForm } from 'react-hook-form';
-import { FaFacebook } from 'react-icons/fa6';
 import { FcGoogle } from 'react-icons/fc';
 import * as z from 'zod';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
@@ -35,11 +35,9 @@ import { Input } from '@/components/ui/input';
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -482,7 +480,7 @@ const SignUpForm = () => {
                     <p className='text-center text-xs flex gap-1'>
                       Already Have An Account?
                       <a
-                        href='/login?signUpRedirect=brokerSignUp'
+                        href='/login?signUpRedirect=brokerSignUp&redirect='
                         className='text-[#3b82f6]'
                       >
                         Sign In Here

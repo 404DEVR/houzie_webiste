@@ -8,7 +8,6 @@ import { AuthProviders } from '@/lib/context/AuthProvider';
 
 import Providers from '@/components/Providers';
 import { ThemeProvider } from '@/components/theme/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
 
 import { siteConfig } from '@/constant/config';
 import { ToastProvider } from '@/hooks/use-custom-toast';
