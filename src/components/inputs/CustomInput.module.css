@@ -1,0 +1,8 @@
+.noSpinners[type='number']::-webkit-inner-spin-button,
+.noSpinners[type='number']::-webkit-outer-spin-button {
+  display: none;
+}
+
+.noSpinners[type='number'] {
+  -moz-appearance: textfield;
+}

@@ -1,3 +1,5 @@
+import styles from './CustomInput.module.css';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -20,6 +22,12 @@ const CustomInput = ({
   variant,
   ...props
 }: CustomInputInterface) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div className='relative'>
       {label && (
@@ -34,9 +42,12 @@ const CustomInput = ({
 
       <Input
         {...props}
-        className={`placeholder:text-[#646464] text-[#646464]  block w-full ${
+        onKeyDown={handleKeyDown}
+        className={`placeholder:text-[#646464] text-[#646464] block w-full ${
           variant === 'small' ? 'mt-0' : 'mt-1'
-        } px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow`}
+        } px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow ${
+          styles.noSpinners
+        }`}
       />
 
       {unit && (
