@@ -28,10 +28,10 @@ const BrokerContent = () => {
   return (
     <Provider store={store}>
       <div className='sticky top-0 z-10 lg:mx-24 mx-4'>
-        <div className='flex items-center justify-start gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
+        <div className='flex items-center justify-center gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'profile' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
             variant={activeTab === 'profile' ? 'default' : 'outline'}
             onClick={() => handleTabChange('profile')}
@@ -41,8 +41,8 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'favorites' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'favorites' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
             variant={activeTab === 'favorites' ? 'default' : 'outline'}
             onClick={() => handleTabChange('favorites')}
@@ -52,8 +52,8 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'savedsearch' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'savedsearch' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
             variant={activeTab === 'savedsearch' ? 'default' : 'outline'}
             onClick={() => handleTabChange('savedsearch')}
@@ -63,8 +63,8 @@ const BrokerContent = () => {
           </Button>
 
           <Button
-            className={`hover:text-white hover:bg-[#42A4AE]  ${
-              activeTab === 'settings' ? 'text-white bg-[#42A4AE]' : ''
+            className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
+              activeTab === 'settings' ? 'text-gray-800 bg-[#93bbfd]' : ''
             }`}
             variant={activeTab === 'settings' ? 'default' : 'outline'}
             onClick={() => handleTabChange('settings')}

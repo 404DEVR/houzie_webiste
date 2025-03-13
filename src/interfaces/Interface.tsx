@@ -257,7 +257,18 @@ export interface FinancialDetail {
 }
 
 export interface SavedSearch {
+  userId?: string;
   id: string;
+  filters: {
+    amenities: string[];
+    availableFor: string[];
+    bhkType: string[];
+    furnishing: string[];
+    parking: string[];
+    propertyType: string[];
+    radius: string;
+    rent: number[];
+  };
   searchData: {
     location: string;
     propertyType: string[];

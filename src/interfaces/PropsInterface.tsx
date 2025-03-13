@@ -127,6 +127,10 @@ export interface ImageGalleryprops {
   propertyData: PropertyPost;
 }
 
+export interface PropertyInfoProps {
+  propertyData: PropertyPost;
+}
+
 export interface Location {
   lat: number;
   lng: number;
@@ -144,6 +148,10 @@ export interface MapLocationSelectorProps {
 
 export interface ProfileFormInterface {
   page?: string;
+}
+
+export interface PropertySearchHeaderProps {
+  onViewChange: (view: string) => void;
 }
 
 export interface PropertyFiltersProps {

@@ -9,13 +9,14 @@ import { useFilters } from '@/lib/context/FilterContext';
 
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import LocalitiesGrid from '@/components/imagegrids/LocalitiesGrid';
-import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHeader';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 
 import Property from '@/interfaces/Interface';
 import store from '@/redux/store';
+import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
+import { SmallPropertyCard } from '@/components/cards/SmallPropertyCard';
 
 export default function DetailsPage() {
   const { filters, resetFilters } = useFilters();
@@ -75,7 +76,6 @@ export default function DetailsPage() {
       }
 
       const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
-      console.log(url);
 
       const response = await axios.get(url);
 
@@ -158,19 +158,19 @@ export default function DetailsPage() {
   return (
     <Provider store={store}>
       <main className='px-4 my-2 sm:my-3 bg-[#FFFFFF]'>
-        <PropertySearchHeader />
+        <PropertySearchHeader onViewChange={(view) => setActiveView(view)} />
 
         <div className='flex flex-col md:flex-row gap-4'>
           {/* Filter Component (visible on larger screens) */}
-          <aside className='w-full md:w-[25%]'>
+          {/* <aside className='w-full md:w-[25%]'>
             <PropertyFilters onViewChange={(view) => setActiveView(view)} />
-          </aside>
+          </aside> */}
 
           {/* Property Listings */}
-          <div className='w-full md:w-[75%]'>
+          <div className='max-w-7xl mx-auto'>
             <Tabs value={activeView} className='w-full'>
               <TabsContent value='list' className='mt-0'>
-                <div className='flex flex-col gap-4 p-4'>
+                <div className='flex flex-col gap-4 p-4 w-full'>
                   {properties && properties.length > 0 ? (
                     properties.map((property, index) => (
                       <PropertyCard
@@ -185,10 +185,11 @@ export default function DetailsPage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value='map' className='mt-0'>
-                <div className='flex flex-col gap-4 p-4 '>
-                  <div className='w-full  rounded-lg '>
-                    <div className='h-[400px] w-[60%] mx-auto rounded-lg relative overflow-hidden'>
+              <TabsContent value='map' className='mt-0 w-full '>
+                <div className='flex flex-col gap-4 p-4 w-full'>
+                  {/* For smaller screens (xl:hidden) */}
+                  <div className='w-full xl:hidden rounded-lg'>
+                    <div className='h-[400px] w-full mx-auto rounded-lg relative overflow-hidden'>
                       <Image
                         src={
                           properties[0]?.mainImage
@@ -205,39 +206,42 @@ export default function DetailsPage() {
                     </div>
                   </div>
 
-                  <div className='w-full pr-4'>
-                    <div className='flex flex-col gap-4 mb-4'>
-                      {properties && properties.length > 0 ? (
-                        properties.map((property, index) => (
-                          <PropertyCard
-                            key={index}
-                            property={property}
-                            loadImage={loadImage}
-                          />
-                        ))
-                      ) : (
-                        <NoPropertiesFound />
-                      )}
+                  {/* For larger screens (xl:block) */}
+                  <div className='flex w-full'>
+                    <div className=' pr-4 w-[60%]'>
+                      <div className='flex flex-col gap-4 mb-4'>
+                        {properties && properties.length > 0 ? (
+                          properties.map((property, index) => (
+                            <SmallPropertyCard
+                              key={index}
+                              property={property}
+                              loadImage={loadImage}
+                            />
+                          ))
+                        ) : (
+                          <NoPropertiesFound />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className='w-[40%] rounded-lg sticky top-0'>
+                      <div className='h-[400px] w-full rounded-lg relative overflow-hidden'>
+                        <Image
+                          src={
+                            properties[0]?.mainImage
+                              ? imageCache[properties[0].mainImage] ||
+                                '/images/Map.png'
+                              : '/images/Map.png'
+                          }
+                          alt='Map View'
+                          layout='fill'
+                          objectFit='cover'
+                          fill
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
                     </div>
                   </div>
-
-                  {/* <div className='hidden xl:block w-full lg:w-1/3 rounded-lg sticky top-0'>
-                    <div className='h-[400px] w-full rounded-lg relative overflow-hidden'>
-                      <Image
-                        src={
-                          properties[0]?.mainImage
-                            ? imageCache[properties[0].mainImage] ||
-                              '/images/Map.png'
-                            : '/images/Map.png'
-                        }
-                        alt='Map View'
-                        layout='fill'
-                        objectFit='cover'
-                        fill
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </div>
-                  </div> */}
                 </div>
               </TabsContent>
             </Tabs>

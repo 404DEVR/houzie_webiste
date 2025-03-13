@@ -1,5 +1,9 @@
+import axios from 'axios';
 import { Copy, Heart, Share } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+
+import { useCustomToast } from '@/hooks/use-custom-toast';
+import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -16,10 +20,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 import { HeaderContainerprops } from '@/interfaces/PropsInterface';
-import axios from 'axios';
-import { headers } from 'next/headers';
-import useAuth from '@/hooks/useAuth';
-import { useCustomToast } from '@/hooks/use-custom-toast';
 
 export default function HeaderContainer({
   propertyData,
@@ -73,6 +73,7 @@ export default function HeaderContainer({
         });
       }
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error)) {
         const errorMessage =
           error.response?.data?.message || 'Something went wrong';

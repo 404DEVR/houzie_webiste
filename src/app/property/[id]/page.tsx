@@ -12,6 +12,7 @@ import MapCard from '@/components/cards/MapCard';
 import PlacesNearby from '@/components/cards/PlacesNearby';
 import ProfileCard from '@/components/cards/profilecard';
 import PropertyHighlight from '@/components/cards/PropertyHighlights';
+import PropertyInfo from '@/components/cards/PropertyInfo';
 import PropertySuggestions from '@/components/cards/PropertySuggestions';
 import AboutProperty from '@/components/detailspage/AboutProperty';
 import HeaderContainer from '@/components/detailspage/HeaderContainer';
@@ -115,7 +116,14 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
     <>
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 my-2 sm:my-3 bg-[#F4F4F4]'>
         <HeaderContainer propertyData={propertyData} />
-        <ImageGallery propertyData={propertyData} />
+        <div className='w-full flex gap-4'>
+          <div className='w-1/2'>
+            <ImageGallery propertyData={propertyData} />
+          </div>
+          <div className='w-1/2'>
+            <PropertyInfo propertyData={propertyData} />
+          </div>
+        </div>
 
         <div className='mt-4 sm:mt-7 flex flex-col lg:flex-row gap-4'>
           {/* Left column */}

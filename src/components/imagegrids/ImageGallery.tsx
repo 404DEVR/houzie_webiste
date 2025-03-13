@@ -57,15 +57,18 @@ const FullGallery = ({ images, title, mainImage }) => (
   </div>
 );
 
+const blurWidth = 100;
+
 const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   return (
     <>
-      <div className='flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-4 sm:mt-7'>
-        <Card className='flex-1 overflow-hidden sm:rounded-xl border-0'>
+      <div className='flex flex-col gap-4'>
+        {/* Main Image */}
+        <Card className='overflow-hidden rounded-lg border-0'>
           <CardContent className='p-0'>
-            <div className='relative w-full h-48 sm:h-[34.8rem]'>
+            <div className='relative w-full h-48 sm:h-[28rem]'>
               <Image
                 src={propertyData.mainImage || '/svg/no-results.svg'}
                 alt={propertyData.title}
@@ -78,37 +81,36 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
             </div>
           </CardContent>
         </Card>
-        <div className='grid grid-cols-2 gap-2 md:gap-2.5 flex-1'>
-          {propertyData.photos.slice(0, 4).map((image, index) => (
-            <Card key={index} className='relative overflow-hidden border-0'>
-              <CardContent className='p-0'>
-                <div className='relative w-full h-24 sm:h-[27vh] md:h-[17rem]'>
-                  <Image
-                    src={image || '/svg/no-results.svg'}
-                    alt={`${propertyData.title} - Image ${index + 1}`}
-                    layout='fill'
-                    objectFit='cover'
-                    quality={100}
-                    className={galleryImages[index + 1].className}
-                  />
-                </div>
-                {index === 3 && (
-                  <div className='absolute bottom-2 right-2 sm:bottom-4 sm:right-4'>
-                    <Button
-                      variant='secondary'
-                      size='sm'
-                      className='flex items-center gap-1 sm:gap-2 bg-white/90 hover:bg-white text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2'
-                      onClick={() => setIsGalleryOpen(true)}
-                    >
-                      <ImageIcon className='w-3 h-3 sm:w-4 sm:h-4' />
-                      <span className='font-semibold'>Show all photos</span>
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+
+        {/* Other Images in Scrollable Container */}
+        <div className='flex overflow-x-scroll gap-4 relative z-0'>
+          <div
+            className='absolute right-0 top-0 h-full bg-gradient-to-l from-white to-transparent z-10'
+            style={{ width: `${blurWidth}px`, pointerEvents: 'none' }}
+          />
+          {propertyData.photos.map((image, index) => (
+            <div key={index} className='relative w-36 h-36 aspect-square'>
+              <Image
+                src={image || '/svg/no-results.svg'}
+                alt={`${propertyData.title} - Image ${index + 1}`}
+                layout='fill'
+                objectFit='cover'
+                className='rounded-lg'
+              />
+            </div>
           ))}
         </div>
+
+        {/* Show All Photos Button */}
+        <Button
+          variant='secondary'
+          size='sm'
+          className='flex items-center gap-1 sm:gap-2 bg-white/90 hover:bg-white text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2'
+          onClick={() => setIsGalleryOpen(true)}
+        >
+          <ImageIcon className='w-3 h-3 sm:w-4 sm:h-4' />
+          <span className='font-semibold'>Show all photos</span>
+        </Button>
       </div>
 
       <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>

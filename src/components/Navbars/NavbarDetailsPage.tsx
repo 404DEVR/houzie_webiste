@@ -2,11 +2,12 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { Bell, LogOut, Menu, User } from 'lucide-react';
+import { Bell, CircleFadingArrowUp, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,7 @@ import {
 } from '@/components/ui/popover';
 
 import { UserData } from '@/interfaces/Interface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
+import { ImProfile } from 'react-icons/im';
 
 const NavbarDetailsPage = () => {
   const toast = useCustomToast();
@@ -85,11 +86,11 @@ const NavbarDetailsPage = () => {
     <nav
       ref={navRef}
       style={{ backgroundColor: `rgba(114, 158, 255, ${opacity})` }}
-      className={`w-full text-black transition-colors duration-300 border-none ${
+      className={`w-full h-16 text-black transition-colors duration-300 border-none ${
         isHomePage ? 'sticky top-0 z-50' : ''
       }`}
     >
-      <div className='container max-w-full py-2 sm:py-3 md:py-4 flex items-center justify-between px-4 sm:px-20 rounded-full'>
+      <div className='max-w-full md:w-[80%] h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
         <div className='flex items-center'>
           {auth ? (
             <>
@@ -123,14 +124,22 @@ const NavbarDetailsPage = () => {
                       <Bell size={16} />
                       <span>Notifications</span>
                     </Button>
-                    {/* <Button
+                    <Button
                       variant='outline'
                       onClick={() => router.push('/subscriptions')}
                       className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
                     >
                       <CircleFadingArrowUp size={16} />
                       <span>Upgrade Plan</span>
-                    </Button> */}
+                    </Button>
+                    <Button
+                      variant='outline'
+                      onClick={() => router.push('/profile')}
+                      className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
+                    >
+                      <ImProfile size={16} />
+                      <span>Profile</span>
+                    </Button>
                     <Button
                       variant='outline'
                       onClick={handleLogout}
