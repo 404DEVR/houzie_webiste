@@ -4,7 +4,7 @@ import { ArrowRight, ChevronRight } from 'lucide-react';
 
 const PropertyFooter = () => {
   return (
-    <div className='flex flex-col md:flex-row items-center justify-start gap-16  max-w-7xl mx-auto'>
+    <div className='flex flex-col md:flex-row items-center justify-start gap-4 md:gap-16  max-w-7xl mx-auto'>
       {/* Left Section: Image */}
       <div className='flex-shrink-0 mb-4 md:mb-0 md:mr-6'>
         <Image
@@ -18,8 +18,8 @@ const PropertyFooter = () => {
       </div>
 
       {/* Right Section: Text and Button */}
-      <div className='flex flex-col items-start text-center md:text-start'>
-        <h2 className='text-xl md:text-2xl lg:text-5xl font-bold text-gray-800 mb-2'>
+      <div className='flex flex-col items-start text-start'>
+        <h2 className='text-2xl lg:text-5xl font-bold text-gray-800 mb-2'>
           Can't find what you are <br></br>looking for?
         </h2>
         <p className='text-gray-600 mb-4 text-sm md:text-base lg:text-3xl font-semibold'>

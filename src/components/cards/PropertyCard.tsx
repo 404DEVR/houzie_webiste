@@ -9,7 +9,7 @@ import useAuth from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 
 import {
   FinancialDetails,
@@ -332,6 +332,16 @@ export function PropertyCard({
               className='object-cover rounded-2xl'
               sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
+            <Button
+              className='absolute top-0 right-3 p-2 xl:hidden'
+              onClick={() => handleFavoriteClick(property.id)}
+            >
+              {isListingInFavorites(property.id) ? (
+                <FaHeart className='w-5 h-5 text-red-600' />
+              ) : (
+                <Heart className='w-5 h-5 text-red-600' />
+              )}
+            </Button>
           </div>
         </div>
 
@@ -402,7 +412,7 @@ export function PropertyCard({
             )}
           </div>
         </div>
-        <div className='relative'>
+        <div className='relative hidden xl:block'>
           <Button
             className='absolute top-0 right-3 p-2'
             onClick={() => handleFavoriteClick(property.id)}

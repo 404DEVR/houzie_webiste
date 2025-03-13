@@ -78,7 +78,7 @@ const Footer = () => {
           />
         </div>
         <motion.div
-          className='absolute bottom-0 right-[18%] sm:right-[19.5%] w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24'
+          className='absolute bottom-0 right-[18%] sm:right-[19.5%] w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24'
           animate={{ y: [0, -40, 0] }}
           transition={{
             repeat: Infinity,

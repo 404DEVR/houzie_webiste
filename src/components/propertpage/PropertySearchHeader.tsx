@@ -134,9 +134,9 @@ export function PropertySearchHeader({
   };
 
   return (
-    <div className='flex flex-col items-center gap-4 px-4 py-4 bg-white shadow-md rounded-lg max-w-4xl mx-auto'>
-      <div className='w-full flex justify-between items-center'>
-        <div className='flex gap-2 w-[60%]'>
+    <div className='flex flex-col items-center gap-2 md:gap-4 px-4 py-4 bg-white shadow-md rounded-lg max-w-4xl mx-auto'>
+      <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between items-center'>
+        <div className='flex flex-col md:flex-row gap-2 w-full md:w-[60%]'>
           <div className='flex items-center border-none rounded-full px-0 bg-[#eff5ff] flex-[2]'>
             <Input
               placeholder='Noida'
@@ -157,7 +157,7 @@ export function PropertySearchHeader({
             >
               <SelectTrigger className='w-full text-md border-none rounded-lg focus:ring-0 bg-[#eff5ff] focus:outline-none focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
                 <SelectValue placeholder='Radius' className=''>
-                  Radius: {filters.radius} <ChevronDown />
+                  Radius: {filters.radius}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -170,7 +170,7 @@ export function PropertySearchHeader({
             </Select>
           </div>
         </div>
-        <div className='w-[40%] flex justify-end items-center'>
+        <div className='hidden md:flex w-full md:w-[40%]  justify-start md:justify-end items-center'>
           <Button
             onClick={handleSaveSearch}
             size='custom'
@@ -187,8 +187,8 @@ export function PropertySearchHeader({
         </div>
       </div>
 
-      <div className='w-full flex justify-between items-center gap-8'>
-        <div className='w-[60%] flex justify-between items-center gap-10'>
+      <div className='w-full flex flex-col md:flex-row justify-between items-center gap-8'>
+        <div className='w-full md:w-[60%] flex flex-col md:flex-row justify-between items-center gap-2 md:gap-10'>
           <div className='flex-[1] w-full'>
             <Popover>
               <PopoverTrigger asChild>
@@ -261,7 +261,7 @@ export function PropertySearchHeader({
             </Popover>
           </div>
 
-          <div className='flex-[2] w-full'>
+          <div className='flex-[2] w-full '>
             <Popover>
               <PopoverTrigger asChild>
                 <Button className='px-4 w-full border-none py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
@@ -293,8 +293,8 @@ export function PropertySearchHeader({
           </div>
         </div>
 
-        <div className='w-[40%] flex justify-center items-center'>
-          <div>
+        <div className='w-full md:w-[40%]  flex justify-between md:justify-center items-center'>
+          <div className='w-full'>
             <Popover>
               <PopoverTrigger asChild>
                 <Button className='px-4 py-2 border-none justify-between rounded-lg bg-[#eff5ff] text-[#2d495f] flex items-center gap-2'>
@@ -307,11 +307,26 @@ export function PropertySearchHeader({
               </PopoverContent>
             </Popover>
           </div>
+          <div className='md:hidden w-full md:w-[40%] flex justify-start md:justify-end items-center'>
+            <Button
+              onClick={handleSaveSearch}
+              size='custom'
+              disabled={isSearchSaved}
+              className={`py-2 h-10 px-8 rounded-lg ${
+                isSearchSaved
+                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  : 'bg-[#eff5ff] text-[#2d495f] '
+              }`}
+            >
+              {isSearchSaved ? 'Search Saved' : 'Save Search'}
+              <IoMdBookmark className='text-[#3b8ff6]' />
+            </Button>
+          </div>
 
           {/* View Toggle */}
           <Tabs
             defaultValue='list'
-            className='ml-auto'
+            className='ml-auto md:block hidden'
             onValueChange={onViewChange}
           >
             <TabsList className='flex gap-2 bg-blue-500 rounded-full p-0.5'>
@@ -330,6 +345,26 @@ export function PropertySearchHeader({
             </TabsList>
           </Tabs>
         </div>
+        <Tabs
+          defaultValue='list'
+          className='mx-auto md:hidden block'
+          onValueChange={onViewChange}
+        >
+          <TabsList className='flex gap-2 bg-blue-500 rounded-full p-0.5'>
+            <TabsTrigger
+              value='list'
+              className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
+            >
+              List
+            </TabsTrigger>
+            <TabsTrigger
+              value='map'
+              className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
+            >
+              Map
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
     </div>
   );

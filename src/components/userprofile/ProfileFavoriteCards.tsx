@@ -214,128 +214,6 @@ const MyListings = () => {
               const mainImageSrc = property.mainImage || '/svg/no-results.svg';
 
               return (
-                // <Card
-                //   key={property.id}
-                //   className={`w-full mx-auto overflow-hidden shadow-2xl ${
-                //     iscreate ? 'max-w-full' : 'max-w-[80%]'
-                //   }`}
-                // >
-                //   <div className='flex flex-col md:flex-row'>
-                //     <div
-                //       className={`mx-auto md:mx-0 ${
-                //         iscreate ? 'w-[300px] h-[250px]' : 'w-[400px] h-[300px]'
-                //       } flex items-center justify-center p-4`}
-                //     >
-                //       <div className='relative w-full h-full'>
-                //         {mainImageSrc ? (
-                //           <Image
-                //             src={mainImageSrc}
-                //             alt={property.title}
-                //             fill
-                //             className='object-cover rounded-md'
-                //             sizes='(max-width: 640px) 100vw, 300px'
-                //           />
-                //         ) : (
-                //           <div className='flex items-center justify-center w-full h-full bg-gray-200 rounded-md'>
-                //             <p>Loading...</p>
-                //           </div>
-                //         )}
-                //         <button
-                //           className='absolute top-3 right-3 p-2'
-                //           onClick={toggleFavorite}
-                //         >
-                //           <Heart
-                //             className='w-5 h-5 text-[#42A4AE]'
-                //             fill={favorites ? '#42A4AE' : 'transparent'}
-                //           />
-                //         </button>
-                //       </div>
-                //     </div>
-                //     <div className='flex-1 p-4'>
-                //       <div className='space-y-4 h-full flex flex-col'>
-                //         <div>
-                //           <h3 className='text-center md:text-start text-xl font-semibold leading-tight'>
-                //             {property.title}
-                //           </h3>
-                //           <div className='relative mt-2'>
-                //             <p
-                //               className={`text-sm text-gray-700 ${
-                //                 isExpanded ? '' : 'line-clamp-1'
-                //               }`}
-                //             >
-                //               {property.description ||
-                //                 'No description available.'}
-                //             </p>
-                //             <button
-                //               onClick={toggleExpanded}
-                //               className='text-blue-500 text-sm font-medium hover:underline mt-1'
-                //             >
-                //               {isExpanded ? 'Show Less' : 'Read More'}
-                //             </button>
-                //           </div>
-                //         </div>
-
-                //         <div className='flex flex-wrap items-start justify-center md:justify-start gap-2'>
-                //           {propertyFeatures.map((feature, index) => (
-                //             <Badge
-                //               key={index}
-                //               variant='outline'
-                //               className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
-                //             >
-                //               <feature.icon className='w-[17.59px] h-[17.59px]' />
-                //               <span className='font-medium text-sm ml-[2.93px]'>
-                //                 {feature.label}
-                //               </span>
-                //             </Badge>
-                //           ))}
-                //         </div>
-
-                //         <div className='flex flex-wrap items-start mx-auto md:mx-0 gap-2 max-w-2xl'>
-                //           {financialDetails.map((detail, index) => (
-                //             <Card
-                //               key={index}
-                //               className='border-[#eaebef] flex-1'
-                //             >
-                //               <CardContent className='flex items-center gap-[1.47px] p-1.5'>
-                //                 <detail.icon className='w-[17.59px] h-[17.59px]' />
-                //                 <div className='flex flex-col gap-px flex-1'>
-                //                   <div className='text-[#4a4a4a] text-sm text-center font-medium'>
-                //                     {detail.label}
-                //                   </div>
-                //                   <div className='text-black text-[15px] text-center font-semibold'>
-                //                     {detail.amount}
-                //                   </div>
-                //                 </div>
-                //               </CardContent>
-                //             </Card>
-                //           ))}
-                //         </div>
-
-                //         {!iscreate && (
-                //           <div className='flex justify-end mt-auto pt-4'>
-                //             <Button
-                //               onClick={() =>
-                //                 router.push(`/property/${property.id}`)
-                //               }
-                //               className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-                //             >
-                //               View Details
-                //             </Button>
-                //             <Button
-                //               onClick={() => removefavorites(property.id)}
-                //               className='w-full md:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-                //               disabled={isLoading} // Disable the button while loading
-                //             >
-                //               {isLoading
-                //                 ? 'Removing...'
-                //                 : 'Remove From Favorites'}
-                //             </Button>
-                //           </div>
-                //         )}
-                //       </div>
-                //     </div>
-                //   </div>
-                // </Card>
                 <Card
                   key={property.id}
                   className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'
@@ -350,6 +228,16 @@ const MyListings = () => {
                           className='object-cover rounded-2xl'
                           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                         />
+                        <Button
+                          className='absolute top-0 right-3 p-2 md:hidden'
+                          onClick={() => handleFavoriteClick(property.id)}
+                        >
+                          {isListingInFavorites(property.id) ? (
+                            <FaHeart className='w-5 h-5 text-red-600' />
+                          ) : (
+                            <Heart className='w-5 h-5 text-red-600' />
+                          )}
+                        </Button>
                       </div>
                     </div>
 
@@ -422,7 +310,7 @@ const MyListings = () => {
                         )}
                       </div>
                     </div>
-                    <div className='relative'>
+                    <div className='relative hidden md:block'>
                       <Button
                         className='absolute top-0 right-3 p-2'
                         onClick={() => handleFavoriteClick(property.id)}

@@ -172,6 +172,9 @@ export default function DetailsPage() {
             <Tabs value={activeView} className='w-full'>
               <TabsContent value='list' className='mt-0'>
                 <div className='flex flex-col gap-4 p-4 w-full'>
+                  <h1 className='text-2xl font-semibold'>
+                    Suggested Properties
+                  </h1>
                   {properties && properties.length > 0 ? (
                     properties.map((property, index) => (
                       <PropertyCard
@@ -209,8 +212,11 @@ export default function DetailsPage() {
 
                   {/* For larger screens (xl:block) */}
                   <div className='flex w-full'>
-                    <div className=' pr-4 w-[60%]'>
+                    <div className=' xl:pr-4 w-full xl:w-[55%]'>
                       <div className='flex flex-col gap-4 mb-4'>
+                        <h1 className='text-2xl font-semibold'>
+                          Suggested Properties
+                        </h1>
                         {properties && properties.length > 0 ? (
                           properties.map((property, index) => (
                             <SmallPropertyCard
@@ -225,7 +231,7 @@ export default function DetailsPage() {
                       </div>
                     </div>
 
-                    <div className='w-[40%] rounded-lg sticky top-0'>
+                    <div className='hidden xl:block w-[45%] rounded-lg sticky top-0'>
                       <div className='h-[400px] w-full rounded-lg relative overflow-hidden'>
                         <Image
                           src={

@@ -316,8 +316,7 @@ const DashboardNavbar = () => {
 
       <nav
         ref={navRef}
-        style={{ backgroundColor: `rgba(114, 158, 255, ${opacity})` }}
-        className={`w-full bg-black text-black transition-colors duration-300 h-16 border-none z-50 ${
+        className={`w-full bg-[#3b8ff6] text-black transition-colors duration-300 h-16 border-none z-50 ${
           isHomePage ? 'sticky top-0' : ''
         }`}
       >

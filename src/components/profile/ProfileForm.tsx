@@ -140,10 +140,10 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
         <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
           {/* Profile Section */}
           <div className='flex flex-col md:flex-row w-full gap-8'>
-            <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-[400px] md:w-1/2 shadow-2xl border'>
+            <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-auto md:h-[400px] md:w-1/2 shadow-2xl border'>
               <form
                 onSubmit={handleSubmit}
-                className=' flex justify-center pt-10 h-full'
+                className=' flex flex-col md:flex-row justify-center pt-10 h-full'
               >
                 {/* User Details */}
                 <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8'>
@@ -291,13 +291,17 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
           <div className='flex flex-col md:flex-row items-start md:items-center md:justify-between mt-4 bg-[#eff5ff] rounded-lg shadow-xl border gap-4 p-6 w-full'>
             <div>
-              <div className='text-sm text-[#3b82f6]'>Plan Purchased</div>
+              <div className='text-lg md:text-sm text-[#3b82f6]'>
+                Plan Purchased
+              </div>
               <div className='font-semibold'>
                 Standard <span className='text-xs font-normal'>/month</span>
               </div>
             </div>
             <div>
-              <div className='text-sm text-[#3b82f6]'>Expires In</div>
+              <div className='text-lg md:text-sm text-[#3b82f6]'>
+                Expires In
+              </div>
               <div className='font-semibold'>24th March 2025</div>
             </div>
             <Button

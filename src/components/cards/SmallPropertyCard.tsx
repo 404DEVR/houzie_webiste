@@ -331,6 +331,16 @@ export function SmallPropertyCard({
               className='object-cover rounded-2xl'
               sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
+            <Button
+              className='absolute top-0 right-3 p-2 xl:hidden'
+              onClick={() => handleFavoriteClick(property.id)}
+            >
+              {isListingInFavorites(property.id) ? (
+                <FaHeart className='w-5 h-5 text-red-600' />
+              ) : (
+                <Heart className='w-5 h-5 text-red-600' />
+              )}
+            </Button>
           </div>
           <div className='flex-1 p-3'>
             <div className='flex flex-col justify-between items-center'>
@@ -354,7 +364,7 @@ export function SmallPropertyCard({
         </div>
 
         <div className='w-full flex flex-col md:flex-row'>
-          <div className='md:w-full pt-4 pl-8 '>
+          <div className='md:w-full pt-4 md:pt-8 pl-8'>
             <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
               <div className='mb-1'>
                 <p className='text-gray-500 text-xs'>Rent</p>
@@ -401,7 +411,7 @@ export function SmallPropertyCard({
             </div>
           </div>
         </div>
-        <div className='relative'>
+        <div className='relative hidden xl:block'>
           <Button
             className='absolute top-0 right-3 p-2'
             onClick={() => handleFavoriteClick(property.id)}

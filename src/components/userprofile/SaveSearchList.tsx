@@ -9,10 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 import { SavedSearch } from '@/interfaces/Interface';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const SaveSearchList = () => {
   const { auth } = useAuth();
+  const router = useRouter();
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [expandedCardId, setExpandedCardId] = useState(null);
 
@@ -73,7 +75,7 @@ const SaveSearchList = () => {
   };
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='container mx-auto p-2 md:p-4'>
       <h2 className='text-xl font-semibold mb-4'>Saved Searches</h2>
       <div className='space-y-6'>
         {savedSearches.map((search) => (
@@ -82,7 +84,7 @@ const SaveSearchList = () => {
             layout
             className='bg-[#eff6ff] shadow-md rounded-lg overflow-hidden'
           >
-            <Card className='flex flex-col sm:flex-row rounded-b-none justify-between bg-[#eff6ff] border-none items-start sm:items-center py-4 px-12'>
+            <Card className='flex flex-col sm:flex-row rounded-b-none justify-between bg-[#eff6ff] border-none items-start sm:items-center py-4 px-4 md:px-12'>
               {/* Left Section */}
               <div className='sm:w-1/3'>
                 <h1 className='text-2xl font-semibold'>
@@ -131,7 +133,7 @@ const SaveSearchList = () => {
                 <Button
                   variant='link'
                   onClick={() => toggleExpandCard(search.id)}
-                  className='text-blue-500 hover:underline text-sm'
+                  className='text-blue-500 hover:underline text-sm hidden md:block'
                 >
                   {expandedCardId === search.id
                     ? 'View Less...'
@@ -140,37 +142,45 @@ const SaveSearchList = () => {
               </div>
 
               {/* Right Section */}
-              <div className='sm:w-1/3 flex h-full flex-col my-0 justify-center items-center space-y-8 space-x-2'>
+              <div className='sm:w-1/3 flex h-full flex-col my-2 md:my-0 justify-center items-center space-y-2 md:space-y-8 space-x-2'>
                 <div className='flex gap-2 w-full justify-center items-center'>
                   <Button
                     variant='outline'
                     onClick={() =>
                       console.log(`Editing search with ID: ${search.id}`)
                     }
-                    className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] w-[30%] px-4 font-normal py-4 rounded-lg border-none'
+                    className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border-none'
                   >
                     Edit
                   </Button>
                   <Button
                     onClick={() => handleDeleteSearch(search.id)}
                     variant='outline'
-                    className='bg-[#f5f5fa] shadow-xl text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] w-[30%] px-4 font-normal py-4 rounded-lg border-none'
+                    className='bg-[#f5f5fa] shadow-xl text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border-none'
                   >
                     Delete
                   </Button>
                 </div>
                 <Button
                   variant='default'
-                  onClick={() =>
-                    console.log(
-                      `Viewing new listings for search ID: ${search.id}`
-                    )
-                  }
-                  className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] w-[60%] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border'
+                  onClick={() => router.push('/property')}
+                  className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] w-full md:w-[60%] hover:text-[#f5f5fa] px-4 font-normal py-1 md:py-4 rounded-lg border'
                 >
                   View New Listings <ArrowRight className='text-[#60a5fa]' />
                 </Button>
               </div>
+              <Button
+                variant='link'
+                onClick={() => toggleExpandCard(search.id)}
+                className='text-blue-500 hover:underline text-sm md:hidden'
+              >
+                View More
+                <ChevronDown
+                  className={`w-[17px] h-[17px] transition-transform ${
+                    expandedCardId === search.id ? 'rotate-180' : ''
+                  }`}
+                />
+              </Button>
             </Card>
 
             {/* Expanded Content */}
@@ -182,14 +192,14 @@ const SaveSearchList = () => {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className='px-12 py-4 bg-[#eff6ff]  border-gray-300 grid grid-cols-2 w-full'
+                  className='px-6 md:px-12 py-4 bg-[#eff6ff]  border-gray-300 grid grid-cols-2 w-full'
                 >
-                  <div className='flex gap-2 col-span-1 items-start justify-start'>
-                    <h2 className='text-lg font-semibold mb-4'>
+                  <div className='flex flex-col md:flex-row gap-2 col-span-1 items-start justify-start'>
+                    <h2 className='text-sm md:text-lg font-semibold mb-4 text-nowrap'>
                       Filters Applied:
                     </h2>
                     <div className='gap-x-8 gap-y-2 text-sm text-gray-600 flex flex-col'>
-                      <div className='flex items-center justify-start'>
+                      <div className='flex flex-col md:flex-row items-start md:items-center justify-start text-nowrap'>
                         <span className='font-medium mr-2'>Price Range:</span>{' '}
                         {formatRentRange(
                           search.searchData?.minRent,
@@ -197,7 +207,7 @@ const SaveSearchList = () => {
                         )}
                       </div>
                       {search.searchData?.propertyType && (
-                        <div className='flex items-center justify-start'>
+                        <div className='flex flex-col md:flex-row items-start md:items-center justify-start text-nowrap'>
                           <span className='font-medium mr-2'>
                             Property Type:
                           </span>{' '}
@@ -209,7 +219,7 @@ const SaveSearchList = () => {
                         </div>
                       )}
                       {search.filters?.bhkType.length > 0 && (
-                        <div className='flex items-center justify-start'>
+                        <div className='flex flex-col md:flex-row items-start md:items-center justify-start'>
                           <span className='font-medium mr-2'>
                             Configuration:
                           </span>{' '}
@@ -242,7 +252,7 @@ const SaveSearchList = () => {
                   </div>
                   <div className='col-span-1 '>
                     {search.filters?.furnishing.length > 0 && (
-                      <p className='flex gap-2 items-start justify-center'>
+                      <p className='flex flex-col md:flex-row gap-2 items-start justify-center'>
                         <h2 className='text-lg font-semibold mb-4'>
                           Furnishing Selected:
                         </h2>
@@ -254,7 +264,7 @@ const SaveSearchList = () => {
                       </p>
                     )}
                     {search.filters?.amenities.length > 0 && (
-                      <p className='flex gap-2 items-start justify-center'>
+                      <p className='flex flex-col md:flex-row gap-2 items-start justify-center'>
                         <h2 className='text-lg font-semibold mb-4'>
                           Amenities Selected:
                         </h2>
