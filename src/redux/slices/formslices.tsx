@@ -42,6 +42,12 @@ export interface PropertyDetails {
   brokerageCharges: string;
   brokerage: string;
   isNegotiable: boolean;
+  maidChargesPerPerson?: number | null;
+  cookChargesPerPerson?: number | null;
+  wifiChargesPerPerson?: number | null;
+  otherMaintenanceCharges?: number | null;
+  roomFurnishingItems?: string[];
+  houseFurnishingItems?: string[];
 }
 
 export interface Occupant {
@@ -105,6 +111,12 @@ export interface restructured {
   isPreoccupied: boolean | null;
   occupants?: Occupant[] | null;
   totalOccupants?: number | null;
+  maidChargesPerPerson?: number | null;
+  cookChargesPerPerson?: number | null;
+  wifiChargesPerPerson?: number | null;
+  otherMaintenanceCharges?: number | null;
+  roomFurnishingItems?: string[];
+  houseFurnishingItems?: string[];
 }
 
 // Define separate state interfaces
@@ -148,6 +160,12 @@ const initialAddFormState: AddFormState = {
     totalFloors: '',
     preoccupiedPropertyType: '',
     furnishingExtras: [],
+    roomFurnishingItems: [],
+    houseFurnishingItems: [],
+    maidChargesPerPerson: null,
+    cookChargesPerPerson: null,
+    wifiChargesPerPerson: null,
+    otherMaintenanceCharges: null,
     balconies: '',
     mainImage: '',
     bathrooms: '',
@@ -191,6 +209,10 @@ const initialAddFormState: AddFormState = {
     },
     price: null,
     security: null,
+    maidChargesPerPerson: null,
+    cookChargesPerPerson: null,
+    wifiChargesPerPerson: null,
+    otherMaintenanceCharges: null,
     brokerage: null,
     isNegotiable: false,
     lockInPeriod: null,
@@ -210,6 +232,8 @@ const initialAddFormState: AddFormState = {
     roomSize: null,
     furnishing: null,
     furnishingExtras: [],
+    roomFurnishingItems: [],
+    houseFurnishingItems: [],
     amenities: [],
     features: [],
     preferredTenant: null,
@@ -232,7 +256,13 @@ const initialEditFormState: EditFormState = {
     roomType: '',
     sharingType: '',
     configuration: '',
+    maidChargesPerPerson: null,
+    cookChargesPerPerson: null,
+    wifiChargesPerPerson: null,
+    otherMaintenanceCharges: null,
     occupantData: [],
+    roomFurnishingItems: [],
+    houseFurnishingItems: [],
     roomSize: '',
     roomSizeDetails: '',
     bedrooms: '',
@@ -284,8 +314,14 @@ const initialEditFormState: EditFormState = {
     price: null,
     security: null,
     preferredGender: null,
+    roomFurnishingItems: [],
+    houseFurnishingItems: [],
     brokerage: null,
     isNegotiable: false,
+    maidChargesPerPerson: null,
+    cookChargesPerPerson: null,
+    wifiChargesPerPerson: null,
+    otherMaintenanceCharges: null,
     lockInPeriod: null,
     availableFrom: null,
     configuration: null,
@@ -432,6 +468,32 @@ const addFormSlice = createSlice({
         isPreoccupied: propertyDetails.isPreoccupied || false,
       };
 
+      if (
+        propertyDetails.roomFurnishingItems ||
+        propertyDetails.houseFurnishingItems
+      ) {
+        (state.restructuredData.roomFurnishingItems =
+          propertyDetails.roomFurnishingItems),
+          (state.restructuredData.houseFurnishingItems =
+            propertyDetails.houseFurnishingItems);
+      }
+
+      if (
+        propertyDetails.maidChargesPerPerson !== 0 ||
+        propertyDetails.cookChargesPerPerson !== 0 ||
+        propertyDetails.wifiChargesPerPerson !== 0 ||
+        propertyDetails.otherMaintenanceCharges !== 0
+      ) {
+        (state.restructuredData.maidChargesPerPerson =
+          propertyDetails.maidChargesPerPerson),
+          ((state.restructuredData.cookChargesPerPerson =
+            propertyDetails.cookChargesPerPerson),
+          (state.restructuredData.wifiChargesPerPerson =
+            propertyDetails.wifiChargesPerPerson),
+          (state.restructuredData.otherMaintenanceCharges =
+            propertyDetails.otherMaintenanceCharges));
+      }
+
       if (propertyDetails.isPreoccupied) {
         state.restructuredData.occupants = propertyDetails.occupantData;
         // state.restructuredData.totalOccupants =
@@ -560,6 +622,32 @@ const editFormSlice = createSlice({
 
         isPreoccupied: propertyDetails.isPreoccupied || false,
       };
+
+      if (
+        propertyDetails.roomFurnishingItems ||
+        propertyDetails.houseFurnishingItems
+      ) {
+        (state.restructuredData.roomFurnishingItems =
+          propertyDetails.roomFurnishingItems),
+          (state.restructuredData.houseFurnishingItems =
+            propertyDetails.houseFurnishingItems);
+      }
+
+      if (
+        propertyDetails.maidChargesPerPerson !== 0 ||
+        propertyDetails.cookChargesPerPerson !== 0 ||
+        propertyDetails.wifiChargesPerPerson !== 0 ||
+        propertyDetails.otherMaintenanceCharges !== 0
+      ) {
+        (state.restructuredData.maidChargesPerPerson =
+          propertyDetails.maidChargesPerPerson),
+          ((state.restructuredData.cookChargesPerPerson =
+            propertyDetails.cookChargesPerPerson),
+          (state.restructuredData.wifiChargesPerPerson =
+            propertyDetails.wifiChargesPerPerson),
+          (state.restructuredData.otherMaintenanceCharges =
+            propertyDetails.otherMaintenanceCharges));
+      }
 
       if (propertyDetails.isPreoccupied) {
         state.restructuredData.occupants = propertyDetails.occupantData;

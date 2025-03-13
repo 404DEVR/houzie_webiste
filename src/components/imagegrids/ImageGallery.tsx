@@ -83,26 +83,29 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
         </Card>
 
         {/* Other Images in Scrollable Container */}
-        <div className='flex overflow-x-scroll gap-4 relative z-0'>
+        <div className=' relative z-0'>
+          <div className='relative flex overflow-x-scroll gap-4'>
+            {propertyData.photos.map((image, index) => (
+              <div key={index} className='relative w-36 h-36 aspect-square'>
+                <Image
+                  src={image || '/svg/no-results.svg'}
+                  alt={`${propertyData.title} - Image ${index + 1}`}
+                  layout='fill'
+                  objectFit='cover'
+                  className='rounded-lg'
+                />
+              </div>
+            ))}
+          </div>
+
           <div
             className='absolute right-0 top-0 h-full bg-gradient-to-l from-white to-transparent z-10'
             style={{ width: `${blurWidth}px`, pointerEvents: 'none' }}
           />
-          {propertyData.photos.map((image, index) => (
-            <div key={index} className='relative w-36 h-36 aspect-square'>
-              <Image
-                src={image || '/svg/no-results.svg'}
-                alt={`${propertyData.title} - Image ${index + 1}`}
-                layout='fill'
-                objectFit='cover'
-                className='rounded-lg'
-              />
-            </div>
-          ))}
         </div>
 
         {/* Show All Photos Button */}
-        <Button
+        {/* <Button
           variant='secondary'
           size='sm'
           className='flex items-center gap-1 sm:gap-2 bg-white/90 hover:bg-white text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2'
@@ -110,10 +113,10 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
         >
           <ImageIcon className='w-3 h-3 sm:w-4 sm:h-4' />
           <span className='font-semibold'>Show all photos</span>
-        </Button>
+        </Button> */}
       </div>
 
-      <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
+      {/* <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
         <DialogContent className='max-w-7xl w-11/12 h-[90vh] overflow-y-auto'>
           <DialogTitle className='text-2xl font-bold mb-4'>
             All Photos
@@ -124,7 +127,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
             mainImage={propertyData.mainImage}
           />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };

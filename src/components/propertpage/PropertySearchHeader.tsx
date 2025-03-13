@@ -65,9 +65,9 @@ export function PropertySearchHeader({
     if (isSearchSaved) return;
 
     const newSearch = {
-      userId: auth?.userid, // Assuming auth?.userId is available
+      userId: auth?.userid,
       searchData: searchData,
-      filters: filters, // Use filters from FilterContext
+      filters: filters,
       id: Date.now(),
       createdAt: new Date().toISOString(),
     };
@@ -314,9 +314,19 @@ export function PropertySearchHeader({
             className='ml-auto'
             onValueChange={onViewChange}
           >
-            <TabsList className='flex gap-[10px] bg-gray rounded-md p-[2px]'>
-              <TabsTrigger value='list'>List</TabsTrigger>
-              <TabsTrigger value='map'>Map</TabsTrigger>
+            <TabsList className='flex gap-2 bg-blue-500 rounded-full p-0.5'>
+              <TabsTrigger
+                value='list'
+                className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
+              >
+                List
+              </TabsTrigger>
+              <TabsTrigger
+                value='map'
+                className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
+              >
+                Map
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

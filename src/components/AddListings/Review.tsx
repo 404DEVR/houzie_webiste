@@ -27,7 +27,7 @@ const Review = ({ handleBack, setActiveTab }: ReviewProps) => {
     (state: RootState) => state.addForm.restructuredData
   );
 
-  console.log(restructuredData);
+  console.log(JSON.stringify(restructuredData));
 
   const handlePost = async () => {
     try {

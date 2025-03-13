@@ -111,6 +111,12 @@ const MyListings = () => {
           brokerage: listingData.brokerage?.toString() || '',
           isNegotiable: listingData.isNegotiable,
           preferredGender: listingData.preferredGender,
+          maidChargesPerPerson: listingData.maidChargesPerPerson,
+          cookChargesPerPerson: listingData.cookChargesPerPerson,
+          wifiChargesPerPerson: listingData.wifiChargesPerPerson,
+          otherMaintenanceCharges: listingData.otherMaintenanceCharges,
+          houseFurnishingItems: listingData.houseFurnishingItems,
+          roomFurnishingItems: listingData.roomFurnishingItems,
         } as PropertyDetails,
         propertyLocation: {
           city: (listingData.location && listingData.location.city) || '',

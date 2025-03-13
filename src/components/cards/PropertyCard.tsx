@@ -11,8 +11,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { FinancialDetails, PropertyFeature } from '@/interfaces/Interface';
+import {
+  FinancialDetails,
+  Listing,
+  PropertyFeature,
+} from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
+import { FaHeart } from 'react-icons/fa6';
 
 export function PropertyCard({
   property,
@@ -37,6 +42,34 @@ export function PropertyCard({
   const toggleFavorite = () => setFavorites((prev) => !prev);
   const [showReadMore, setShowReadMore] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
+
+  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const url = `https://api.houzie.in/profile/favorites`;
+  const fetchListings = async () => {
+    setIsLoading(true);
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const listingsData = response.data.map((item: any) => item.listing);
+      setFavoriteListings(listingsData);
+    } catch (error) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchListings();
+  }, [auth?.accessToken, url]);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -151,129 +184,143 @@ export function PropertyCard({
     }
   };
 
+  const removefavorites = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const deleteUrl = `https://api.houzie.in/profile/favorites/${id}`;
+      const response = await axios.delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success({
+          title: 'Success',
+          description: 'Property removed from favorites.',
+        });
+
+        setFavoriteListings((prevListings) =>
+          prevListings.filter((listing) => listing.id !== id)
+        );
+        await fetchListings();
+      } else {
+        toast.error({
+          title: 'Failed to Remove',
+          description:
+            'Failed to remove property from favorites. Please Check Your Network Connection',
+        });
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isListingInFavorites = (listingId: string) => {
+    return favoriteListings.some((listing) => listing.id === listingId);
+  };
+
+  const addfavorites = async (id: string) => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const response = await axios.post(
+        `https://api.houzie.in/profile/favorites/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      setFavoriteListings((prevListings) => {
+        if (!prevListings.some((listing) => listing.id === id)) {
+          const newListing: Listing = {
+            id: property.id,
+            title: property.title,
+            description: property.description,
+            location: {
+              id: '',
+              city: property.location.city,
+              state: property.location.state,
+              country: '',
+              latitude: 0,
+              longitude: 0,
+            },
+            brokerId: '',
+            isActive: false,
+            photos: property.photos,
+            mainImage: property.mainImage,
+            bathrooms: property.bathrooms,
+            bedrooms: property.bedrooms,
+            balconies: 0,
+            propertyType: property.propertyType,
+            views: 0,
+            price: property.price,
+            security: property.security,
+            brokerage: property.brokerage,
+            isNegotiable: false,
+            lockInPeriod: '',
+            availableFrom: property.availableFrom,
+            configuration: '',
+            floorNumber: '',
+            totalFloors: 0,
+            maintenanceCharges: property.maintenanceCharges,
+            isMaintenanceIncluded: property.isMaintenanceIncluded,
+            roomType: '',
+            sharingType: '',
+            unitsAvailable: '',
+            roomSize: '',
+            amenities: [],
+            features: [],
+            furnishing: '',
+            furnishingExtras: [],
+            preferredTenant: '',
+          };
+
+          return [...prevListings, newListing];
+        }
+        return prevListings;
+      });
+
+      toast.success({
+        title: 'Success',
+        description: 'Property Added to favorites.',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFavoriteClick = async (listingId: string) => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      if (isListingInFavorites(listingId)) {
+        await removefavorites(listingId);
+      } else {
+        await addfavorites(listingId);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    // <Card
-    //   className={`w-full mx-auto overflow-hidden shadow-2xl ${
-    //     iscreate ? 'max-w-full' : 'max-w-full'
-    //   }`}
-    // >
-    //   <div className='flex flex-col lg:flex-row'>
-    //     <div
-    //       className={`mx-auto lg:mx-0 ${
-    //         iscreate ? 'w-[300px] h-[250px]' : 'w-[400px] h-[300px]'
-    //       } flex items-center justify-center p-4`}
-    //     >
-    //       <div className='relative w-full h-full'>
-    //         {mainImageSrc ? (
-    //           <Image
-    //             src={mainImageSrc}
-    //             alt={property.title}
-    //             fill
-    //             className='object-cover rounded-md'
-    //             sizes='(max-width: 640px) 100vw, 300px'
-    //           />
-    //         ) : (
-    //           <div className='flex items-center justify-center w-full h-full bg-gray-200 rounded-md'>
-    //             <p>Loading...</p>
-    //           </div>
-    //         )}
-    //         <button
-    //           className='absolute top-3 right-3 p-2'
-    //           onClick={toggleFavorite}
-    //         >
-    //           <Heart
-    //             className='w-5 h-5 text-[#42A4AE]'
-    //             fill={favorites ? '#42A4AE' : 'transparent'}
-    //           />
-    //         </button>
-    //       </div>
-    //     </div>
-
-    //     <div className='flex-1 p-4'>
-    //       <div className='space-y-4 h-full flex flex-col'>
-    //         {property.title && (
-    //           <h3 className='text-center lg:text-start text-xl font-semibold leading-tight'>
-    //             {property.title}
-    //           </h3>
-    //         )}
-
-    //         {property.description && (
-    //           <div className='mt-2'>
-    //             <div className='relative'>
-    //               <p
-    //                 ref={textRef}
-    //                 className={`text-sm text-center lg:text-start text-gray-700 ${
-    //                   isExpanded ? '' : 'line-clamp-2'
-    //                 }`}
-    //                 style={{ wordBreak: 'break-word' }}
-    //               >
-    //                 {property.description}
-    //               </p>
-    //             </div>
-    //             {showReadMore && (
-    //               <div className='text-right mt-1'>
-    //                 <button
-    //                   onClick={toggleExpanded}
-    //                   className='text-blue-500 text-sm font-medium hover:underline'
-    //                 >
-    //                   {isExpanded ? 'Show Less' : 'Read More'}
-    //                 </button>
-    //               </div>
-    //             )}
-    //           </div>
-    //         )}
-
-    //         {propertyFeatures.length > 0 && (
-    //           <div className='flex flex-wrap items-start justify-center lg:justify-start gap-2'>
-    //             {propertyFeatures.map((feature, index) => (
-    //               <Badge
-    //                 key={index}
-    //                 variant='outline'
-    //                 className='bg-[#191919] text-white border-neutral-800 px-[10.26px] py-[5.86px] rounded-[20.53px]'
-    //               >
-    //                 <feature.icon className='w-[17.59px] h-[17.59px]' />
-    //                 <span className='font-medium text-sm ml-[2.93px]'>
-    //                   {feature.label}
-    //                 </span>
-    //               </Badge>
-    //             ))}
-    //           </div>
-    //         )}
-
-    //         {financialDetails.length > 0 && (
-    //           <div className='flex flex-wrap items-start mx-auto lg:mx-0 gap-2 max-w-2xl'>
-    //             {financialDetails.map((detail, index) => (
-    //               <Card key={index} className='border-[#eaebef] flex-1'>
-    //                 <CardContent className='flex items-center gap-[1.47px] p-1.5'>
-    //                   <detail.icon className='w-[17.59px] h-[17.59px]' />
-    //                   <div className='flex flex-col gap-px flex-1'>
-    //                     <div className='text-[#4a4a4a] text-sm text-center font-medium'>
-    //                       {detail.label}
-    //                     </div>
-    //                     <div className='text-black text-[15px] text-center font-semibold'>
-    //                       {detail.amount}
-    //                     </div>
-    //                   </div>
-    //                 </CardContent>
-    //               </Card>
-    //             ))}
-    //           </div>
-    //         )}
-
-    // {!iscreate && (
-    //   <div className='flex justify-end mt-auto pt-4'>
-    //     <Button
-    //       onClick={() => handleViewDetails(property.id)}
-    //       className='w-full lg:w-auto border bg-[#42A4AE] rounded-lg px-6 text-white hover:bg-white hover:text-[#42A4AE] transition-colors'
-    //     >
-    //       View Details
-    //     </Button>
-    //   </div>
-    // )}
-    //       </div>
-    //     </div>
-    //   </div>
-    // </Card>
     <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'>
       <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
         <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
@@ -358,12 +405,13 @@ export function PropertyCard({
         <div className='relative'>
           <Button
             className='absolute top-0 right-3 p-2'
-            onClick={toggleFavorite}
+            onClick={() => handleFavoriteClick(property.id)}
           >
-            <Heart
-              className='w-5 h-5 text-red-600'
-              fill={favorites ? '#42A4AE' : 'transparent'}
-            />
+            {isListingInFavorites(property.id) ? (
+              <FaHeart className='w-5 h-5 text-red-600' />
+            ) : (
+              <Heart className='w-5 h-5 text-red-600' />
+            )}
           </Button>
         </div>
       </CardContent>

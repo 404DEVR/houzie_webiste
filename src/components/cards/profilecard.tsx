@@ -118,7 +118,7 @@ const ProfileCard = ({
           Authorization: `Bearer ${auth?.accessToken}`,
         },
       });
-      setIsConnected(true); // Update connection status after lead submission
+      setIsConnected(true);
     } catch (error) {
       toast.error({ title: 'Error', description: 'Error submitting lead' });
     }
@@ -151,7 +151,7 @@ const ProfileCard = ({
 
   const rating = 3;
   return (
-    <Card className='w-full md:ml-auto mb-6'>
+    <Card className='w-full bg-[#eff5ff] md:ml-auto mb-6'>
       <div className='flex flex-col items-center'>
         <div className='w-24 h-24 rounded-full bg-gray-200 mt-6 mb-4'>
           {avatarUrl && (
@@ -168,7 +168,6 @@ const ProfileCard = ({
         <div className='w-full px-6 pb-4'>
           <div className='flex justify-between items-start'>
             <div>
-              <p className='text-sm leading-none '>Posted By</p>
               <h3 className='font-semibold'>
                 {brokerData && brokerData.name
                   ? brokerData.name
@@ -185,7 +184,7 @@ const ProfileCard = ({
                   <AiFillStar
                     key={i}
                     className={`w-5 h-5 ${
-                      i < (rating || 0) ? 'text-[#42A4AE]' : 'text-[#B3F8FF]'
+                      i < (rating || 0) ? 'text-[#3b8ff6]' : 'text-[#bfdbfe]'
                     }`}
                   />
                 ))}
@@ -193,7 +192,7 @@ const ProfileCard = ({
             </div>
             <div className='text-right'>
               <p className='text-sm leading-none'>Posted on</p>
-              <p className='text-sm font-semibold text-teal-600'>
+              <p className='text-sm font-semibold text-[#3b8ff6]'>
                 {postedDate ? formatDate(postedDate) : 'N/A'}
               </p>
             </div>
@@ -207,7 +206,7 @@ const ProfileCard = ({
                     <BsTelephone className='w-5 h-5' />
                   </div>
                   <div className='flex flex-col min-w-0'>
-                    <span className='text-[#42A4AE] text-sm'>Call us</span>
+                    <span className='text-[#3b8ff6] text-sm'>Call us</span>
                     <p className='text-xs truncate'>
                       {brokerData?.phoneNumber}
                     </p>
@@ -220,7 +219,7 @@ const ProfileCard = ({
                     <CiMail className='w-5 h-5' />
                   </div>
                   <div className='flex flex-col min-w-0 flex-1'>
-                    <span className='text-[#42A4AE] text-sm'>Email</span>
+                    <span className='text-[#3b8ff6] text-sm'>Email</span>
                     <a
                       href={`mailto:${brokerData ? brokerData.email : ''}`}
                       className='text-xs truncate text-gray-800 hover:text-blue-500'
@@ -236,19 +235,19 @@ const ProfileCard = ({
           <div className='mt-3 space-y-2'>
             <div className='flex justify-between'>
               <span className='text-sm '>No. of Listing</span>
-              <span className='text-sm text-teal-600'>
+              <span className='text-sm text-[#3b8ff6]'>
                 {stats ? stats.activeListings + stats.inActiveListings : 0}
               </span>
             </div>
             <div className='flex justify-between'>
               <span className='text-sm '>Total Deals</span>
-              <span className='text-sm text-teal-600'>
+              <span className='text-sm text-[#3b8ff6]'>
                 {stats ? stats.activeLeads + stats.inActiveLeads : 0}
               </span>
             </div>
             <div className='flex justify-between'>
               <span className='text-sm '>Member Since</span>
-              <span className='text-sm text-teal-600'>
+              <span className='text-sm text-[#3b8ff6]'>
                 {brokerData?.createdAt
                   ? formatDate(brokerData?.createdAt)
                   : 'N/A'}
@@ -256,19 +255,19 @@ const ProfileCard = ({
             </div>
           </div>
 
-          <div className='mt-3'>
+          {/* <div className='mt-3'>
             <label className='flex items-center space-x-2'>
-              <Checkbox className='h-5 w-5 rounded border-2 border-[#42A4AE] text-[#42A4AE] focus:ring-[#42A4AE] focus:ring-offset-0' />
+              <Checkbox className='h-5 w-5 rounded border-2 border-[#3b8ff6] text-[#3b8ff6] focus:ring-[#3b8ff6] focus:ring-offset-0' />
               <span className='text-sm text-gray-600'>
                 Allow broker to contact me
               </span>
             </label>
-          </div>
+          </div> */}
 
           <div className='mt-3 space-y-2'>
             {isConnected ? (
               <Button
-                className='w-full bg-[#42A4AE] hover:bg-[#3a949d] text-white'
+                className='w-full bg-[#3b8ff6] hover:bg-[#bfdbfe] text-white'
                 onClick={handleEnquire}
               >
                 Enquire
@@ -276,7 +275,7 @@ const ProfileCard = ({
             ) : (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className='w-full mt-3 bg-[#42A4AE] hover:bg-[#3a949d] text-white'>
+                  <Button className='w-full mt-3 bg-[#3b8ff6] hover:bg-[#bfdbfe] text-white'>
                     Connect
                   </Button>
                 </DialogTrigger>

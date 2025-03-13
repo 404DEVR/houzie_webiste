@@ -47,12 +47,6 @@ const PropertyDetailsForm = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [isNextClicked, setIsNextClicked] = useState(false);
   const [floorError, setFloorError] = useState('');
-  const [additionalCharges, setAdditionalCharges] = useState({
-    maidCharges: 0,
-    cookCharges: 0,
-    wifiCharges: 0,
-    otherCharges: 0,
-  });
   const { auth } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const addPropertyDetails = useSelector(
@@ -106,62 +100,6 @@ const PropertyDetailsForm = ({
     }
   }, [page]);
 
-  useEffect(() => {
-    const totalMaintenanceCharges =
-      additionalCharges.maidCharges +
-      additionalCharges.cookCharges +
-      additionalCharges.wifiCharges +
-      additionalCharges.otherCharges;
-
-    if (page === 'edit') {
-      dispatch(
-        updateEditPropertyDetails({
-          maintenanceCharges: String(totalMaintenanceCharges),
-        })
-      );
-    } else {
-      dispatch(
-        updateAddPropertyDetails({
-          maintenanceCharges: String(totalMaintenanceCharges),
-        })
-      );
-    }
-  }, [additionalCharges]);
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value, type, checked } = e.target;
-  //   let formattedValue = value;
-
-  //   if (type === 'number') {
-  //     formattedValue = Number(value) < 0 ? '0' : value;
-  //   }
-
-  //   formattedValue =
-  //     name === 'availableFrom'
-  //       ? formatDateForAPI(formattedValue)
-  //       : formattedValue;
-
-  //   if (page === 'edit') {
-  //     dispatch(
-  //       updateEditPropertyDetails({
-  //         [name]: type === 'checkbox' ? checked : formattedValue,
-  //       })
-  //     );
-  //   } else {
-  //     dispatch(
-  //       updateAddPropertyDetails({
-  //         [name]: type === 'checkbox' ? checked : formattedValue,
-  //       })
-  //     );
-  //   }
-
-  //   setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
-
-  //   if (name === 'floorNumbers' || name === 'totalFloor') {
-  //     validateForm();
-  //   }
-  // };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     let formattedValue = value;
@@ -174,40 +112,7 @@ const PropertyDetailsForm = ({
       name === 'availableFrom'
         ? formatDateForAPI(formattedValue)
         : formattedValue;
-
-    if (
-      ['maidCharges', 'cookCharges', 'wifiCharges', 'otherCharges'].includes(
-        name
-      ) &&
-      propertyDetails.isPreoccupied
-    ) {
-      setAdditionalCharges((prevCharges) => ({
-        ...prevCharges,
-        [name]: Number(formattedValue),
-      }));
-
-      const totalMaintenanceCharges =
-        (additionalCharges.maidCharges || 0) +
-        (additionalCharges.cookCharges || 0) +
-        (additionalCharges.wifiCharges || 0) +
-        (additionalCharges.otherCharges || 0) +
-        Number(formattedValue) -
-        (additionalCharges[name] || 0);
-
-      if (page === 'edit') {
-        dispatch(
-          updateEditPropertyDetails({
-            maintenanceCharges: String(totalMaintenanceCharges),
-          })
-        );
-      } else {
-        dispatch(
-          updateAddPropertyDetails({
-            maintenanceCharges: String(totalMaintenanceCharges),
-          })
-        );
-      }
-    } else {
+    {
       if (page === 'edit') {
         dispatch(
           updateEditPropertyDetails({
@@ -389,6 +294,64 @@ const PropertyDetailsForm = ({
       ...prevErrors,
       furnishingExtras: false,
     }));
+  };
+  const handleRoomFurnishingClick = (value: string) => {
+    if (propertyDetails.roomFurnishingItems) {
+      const isSelected = propertyDetails.roomFurnishingItems.includes(value);
+      let updatedFurnishings;
+
+      if (isSelected) {
+        updatedFurnishings = propertyDetails.roomFurnishingItems.filter(
+          (item) => item !== value
+        );
+      } else {
+        updatedFurnishings = [...propertyDetails.roomFurnishingItems, value];
+      }
+
+      if (page === 'edit') {
+        dispatch(
+          updateEditPropertyDetails({ roomFurnishingItems: updatedFurnishings })
+        );
+      } else {
+        dispatch(
+          updateAddPropertyDetails({ roomFurnishingItems: updatedFurnishings })
+        );
+      }
+      setFieldErrors((prevErrors) => ({
+        ...prevErrors,
+        furnishingExtras: false,
+      }));
+    }
+  };
+  const handleHouseFurnishingClick = (value: string) => {
+    if (propertyDetails.houseFurnishingItems) {
+      const isSelected = propertyDetails.houseFurnishingItems.includes(value);
+      let updatedFurnishings;
+
+      if (isSelected) {
+        updatedFurnishings = propertyDetails.houseFurnishingItems.filter(
+          (item) => item !== value
+        );
+      } else {
+        updatedFurnishings = [...propertyDetails.houseFurnishingItems, value];
+      }
+
+      if (page === 'edit') {
+        dispatch(
+          updateEditPropertyDetails({
+            houseFurnishingItems: updatedFurnishings,
+          })
+        );
+      } else {
+        dispatch(
+          updateAddPropertyDetails({ houseFurnishingItems: updatedFurnishings })
+        );
+      }
+      setFieldErrors((prevErrors) => ({
+        ...prevErrors,
+        furnishingExtras: false,
+      }));
+    }
   };
 
   const handleTenantClick = (value: string) => {
@@ -673,12 +636,12 @@ const PropertyDetailsForm = ({
     },
     {
       label: 'Cupboard',
-      value: 'CUPBOARD',
+      value: 'WARDROBE',
       url: '/svg/mdi_wardrobe.svg',
     },
     {
       label: 'Study Table',
-      value: 'TABLE',
+      value: 'STUDY_TABLE',
       url: '/svg/material-symbols_table-bar-rounded.svg',
     },
     {
@@ -1561,20 +1524,22 @@ const PropertyDetailsForm = ({
                 <div className='ml-2 col-span-1 grid grid-cols-2 gap-4 border rounded-md border-[#dddada] p-2'>
                   <CustomInput
                     type='number'
-                    name='maidCharges'
-                    id='maidCharges'
+                    name='maidChargesPerPerson'
+                    id='maidChargesPerPerson'
                     label='Maid (Cleaning + Utensils)'
                     onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
-                    value={additionalCharges.maidCharges || ''}
+                    value={propertyDetails.maidChargesPerPerson || ''}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['maidCharges'] ? 'This field is required' : ''
+                      fieldErrors['maidChargesPerPerson']
+                        ? 'This field is required'
+                        : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['maidCharges'],
+                          fieldErrors['maidChargesPerPerson'],
                       }
                     )}
                     placeholder='Maid Charges (per month)'
@@ -1582,20 +1547,22 @@ const PropertyDetailsForm = ({
 
                   <CustomInput
                     type='number'
-                    name='cookCharges'
-                    id='cookCharges'
+                    name='cookChargesPerPerson'
+                    id='cookChargesPerPerson'
                     label='Cook'
                     onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
-                    value={additionalCharges.cookCharges || ''}
+                    value={propertyDetails.cookChargesPerPerson || ''}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['cookCharges'] ? 'This field is required' : ''
+                      fieldErrors['cookChargesPerPerson']
+                        ? 'This field is required'
+                        : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['cookCharges'],
+                          fieldErrors['cookChargesPerPerson'],
                       }
                     )}
                     placeholder='Cook Charges (per month)'
@@ -1603,20 +1570,22 @@ const PropertyDetailsForm = ({
 
                   <CustomInput
                     type='number'
-                    name='wifiCharges'
-                    id='wifiCharges'
+                    name='wifiChargesPerPerson'
+                    id='wifiChargesPerPerson'
                     label='Wifi'
                     onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
-                    value={additionalCharges.wifiCharges || ''}
+                    value={propertyDetails.wifiChargesPerPerson || ''}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['wifiCharges'] ? 'This field is required' : ''
+                      fieldErrors['wifiChargesPerPerson']
+                        ? 'This field is required'
+                        : ''
                     }
                     className={cn(
                       'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['wifiCharges'],
+                          fieldErrors['wifiChargesPerPerson'],
                       }
                     )}
                     placeholder='Wifi Charges (per month)'
@@ -1624,14 +1593,14 @@ const PropertyDetailsForm = ({
 
                   <CustomInput
                     type='number'
-                    name='otherCharges'
-                    id='otherCharges'
+                    name='otherMaintenanceCharges'
+                    id='otherMaintenanceCharges'
                     label='Any Other'
                     onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
-                    value={additionalCharges.otherCharges || ''}
+                    value={propertyDetails.otherMaintenanceCharges || ''}
                     onChange={handleInputChange}
                     error={
-                      fieldErrors['otherCharges']
+                      fieldErrors['otherMaintenanceCharges']
                         ? 'This field is required'
                         : ''
                     }
@@ -1639,39 +1608,10 @@ const PropertyDetailsForm = ({
                       'placeholder:text-[#646464] col-span-1 text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
                       {
                         'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['otherCharges'],
+                          fieldErrors['otherMaintenanceCharges'],
                       }
                     )}
                     placeholder='Other Charges (per month)'
-                  />
-                </div>
-
-                <div className='mt-4 ml-2 col-span-1'>
-                  <CustomInput
-                    type='number'
-                    name='maintenanceCharges'
-                    id='maintenanceCharges'
-                    label='Total Maintenance Charge'
-                    onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
-                    value={propertyDetails.maintenanceCharges || 0}
-                    onChange={(e) => {
-                      handleInputChange(e);
-                    }}
-                    error={
-                      fieldErrors['maintenanceCharges']
-                        ? 'This field is required'
-                        : ''
-                    }
-                    className={cn(
-                      'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
-                      {
-                        'ring-2 ring-red-500 ring-offset-1':
-                          fieldErrors['maintenanceCharges'],
-                      }
-                    )}
-                    placeholder='Total Maintenance Charges (per month)*'
-                    required
-                    disabled
                   />
                 </div>
               </div>
@@ -2357,14 +2297,15 @@ const PropertyDetailsForm = ({
                           key={furnishing.value}
                           className={cn(
                             'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                            propertyDetails.furnishingExtras.includes(
-                              furnishing.value
-                            )
+                            propertyDetails.roomFurnishingItems &&
+                              propertyDetails.roomFurnishingItems.includes(
+                                furnishing.value
+                              )
                               ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                               : 'bg-white text-[#646464] border-gray-300 '
                           )}
                           onClick={() =>
-                            handleFurnishingClick(furnishing.value)
+                            handleRoomFurnishingClick(furnishing.value)
                           }
                         >
                           <Image
@@ -2391,14 +2332,15 @@ const PropertyDetailsForm = ({
                           key={furnishing.value}
                           className={cn(
                             'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors',
-                            propertyDetails.furnishingExtras.includes(
-                              furnishing.value
-                            )
+                            propertyDetails.houseFurnishingItems &&
+                              propertyDetails.houseFurnishingItems.includes(
+                                furnishing.value
+                              )
                               ? 'bg-[#bfd7fe] text-[#646464] border-gray-300'
                               : 'bg-white text-[#646464] border-gray-300 '
                           )}
                           onClick={() =>
-                            handleFurnishingClick(furnishing.value)
+                            handleHouseFurnishingClick(furnishing.value)
                           }
                         >
                           <Image

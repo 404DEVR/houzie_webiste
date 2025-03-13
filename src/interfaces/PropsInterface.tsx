@@ -85,6 +85,9 @@ export interface ProfileCardProps {
   avatarUrl?: string;
   createdAt?: string;
 }
+export interface OccupantDataProps {
+  propertyData?: PropertyPost;
+}
 
 export interface PropertyCardProps {
   property: Property;

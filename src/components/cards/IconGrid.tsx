@@ -89,6 +89,26 @@ const furnishingList: Item[] = [
     value: 'TABLE',
     url: '/svg/material-symbols_table-bar-rounded.svg',
   },
+  {
+    label: 'Cupboard',
+    value: 'WARDROBE',
+    url: '/svg/mdi_wardrobe.svg',
+  },
+  {
+    label: 'Study Table',
+    value: 'STUDY_TABLE',
+    url: '/svg/material-symbols_table-bar-rounded.svg',
+  },
+  {
+    label: 'Exhaust',
+    value: 'EXHAUST',
+    url: '/svg/exhaust.svg',
+  },
+  {
+    label: 'Mattress',
+    value: 'MATTRESS',
+    url: '/svg/mattress.svg',
+  },
 ];
 
 const amenitiesList: Item[] = [

@@ -17,6 +17,7 @@ import Property from '@/interfaces/Interface';
 import store from '@/redux/store';
 import { PropertyFilters } from '@/components/propertpage/PropertyFilters';
 import { SmallPropertyCard } from '@/components/cards/SmallPropertyCard';
+import PropertyFooter from '@/components/cards/PropertyFooter';
 
 export default function DetailsPage() {
   const { filters, resetFilters } = useFilters();
@@ -248,7 +249,9 @@ export default function DetailsPage() {
           </div>
         </div>
 
-        <LocalitiesGrid normal={true} />
+        <PropertyFooter />
+
+        {/* <LocalitiesGrid normal={true} /> */}
       </main>
     </Provider>
   );

@@ -1,3 +1,4 @@
+import { Occupant } from '@/redux/slices/formslices';
 import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -79,6 +80,14 @@ export interface PropertyPost {
   status?: string;
   createdAt?: string;
   updatedAt?: string;
+  preferredGender?: string;
+  maidChargesPerPerson?: number;
+  cookChargesPerPerson?: number;
+  wifiChargesPerPerson?: number;
+  otherMaintenanceCharges?: number;
+  roomFurnishingItems?: string[];
+  houseFurnishingItems?: string[];
+  occupants?: Occupant[];
   location: {
     id: string;
     city: string;

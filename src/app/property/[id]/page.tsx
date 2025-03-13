@@ -22,6 +22,7 @@ import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
+import OccupantData from '@/components/cards/OccupantData';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -78,6 +79,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           throw new Error('Failed to fetch property data');
         }
         const data = await response.json();
+        console.log(data.data);
         setPropertyData(data.data);
       } catch (error) {
         setIsLoading(false);
@@ -115,7 +117,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   return (
     <>
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 my-2 sm:my-3 bg-[#F4F4F4]'>
-        <HeaderContainer propertyData={propertyData} />
+        {/* <HeaderContainer propertyData={propertyData} /> */}
         <div className='w-full flex gap-4'>
           <div className='w-1/2'>
             <ImageGallery propertyData={propertyData} />
@@ -128,10 +130,10 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
         <div className='mt-4 sm:mt-7 flex flex-col lg:flex-row gap-4'>
           {/* Left column */}
           <div className='w-full flex flex-col lg:w-[65%] xl:w-[70%] order-2 lg:order-1'>
-            <PropertyHighlights propertyData={propertyData} />
+            {/* <PropertyHighlights propertyData={propertyData} />
             <PropertyDetails propertyData={propertyData} />
-            <AboutProperty propertyData={propertyData} />
-            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+            <AboutProperty propertyData={propertyData} /> */}
+            <div className='space-y-4 sm:space-y-6 mt-0'>
               {propertyData && <MapCard propertyData={propertyData} />}
             </div>
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
@@ -141,11 +143,37 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                 type='amenities'
               />
             </div>
+            {propertyData.furnishingExtras.length < 0 && (
+              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                <ItemGrid
+                  title='Furnishing'
+                  data={propertyData.furnishingExtras}
+                  type='furnishing'
+                />
+              </div>
+            )}
+
+            {propertyData.houseFurnishingItems && (
+              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                <ItemGrid
+                  title='House Furnishing'
+                  data={propertyData.houseFurnishingItems}
+                  type='furnishing'
+                />
+              </div>
+            )}
+            {propertyData.roomFurnishingItems && (
+              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                <ItemGrid
+                  title='Room Furnishing'
+                  data={propertyData.roomFurnishingItems}
+                  type='furnishing'
+                />
+              </div>
+            )}
+
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-              <PlacesNearby />
-            </div>
-            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-              <PropertyHighlight propertyData={propertyData} />
+              <OccupantData propertyData={propertyData} />
             </div>
           </div>
           <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
