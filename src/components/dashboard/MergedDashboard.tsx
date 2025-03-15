@@ -89,7 +89,7 @@ const MergedDashboard: React.FC = () => {
 
         setCardData(newCardData);
       } catch (error) {
-        toast.error({ title: 'Error', description: 'Error fetching data:' });
+        console.log(error);
       }
     };
 

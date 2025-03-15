@@ -20,6 +20,7 @@ import {
 import { RootState } from '@/redux/store';
 import { RiHomeOfficeFill } from 'react-icons/ri';
 import { useFilters } from '@/lib/context/FilterContext';
+import { ChevronDown } from 'lucide-react';
 
 const PropertyComponentSearchbar = () => {
   const dispatch = useDispatch();
@@ -226,9 +227,10 @@ const PropertyComponentSearchbar = () => {
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <div className='w-full rounded-md text-md text-gray-700 text-sm bg-[#e0e0e0] cursor-pointer flex items-center justify-between '>
-            <div className='flex justify-center items-center gap-3 py-4 px-4 '>
+            <div className='flex justify-center items-center text-nowrap gap-3 py-4 px-4 '>
               <RiHomeOfficeFill className='w-5 h-5' />
               {getDisplayText()}
+              <ChevronDown />
             </div>
           </div>
         </PopoverTrigger>

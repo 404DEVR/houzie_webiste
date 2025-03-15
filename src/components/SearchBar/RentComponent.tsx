@@ -14,6 +14,7 @@ import {
 import { setRentRange } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
 import { useFilters } from '@/lib/context/FilterContext';
+import { ChevronDown } from 'lucide-react';
 
 const MAX_RENT = 500000;
 
@@ -72,6 +73,7 @@ const RentComponent = () => {
             {filters.rent
               ? `Rent: ₹${formatPrice(minRent)} - ₹${formatPrice(maxRent)}`
               : `Select Range of Rent`}
+            <ChevronDown />
           </div>
         </PopoverTrigger>
         <PopoverContent className='w-80'>

@@ -40,7 +40,7 @@ const SearchBar = () => {
             <input
               type='text'
               placeholder='Enter your office or nearby address'
-              className='bg-[#e0e0e0] px-2 w-full border-none text-sm sm:text-md focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'
+              className='bg-[#e0e0e0] bg-transparent px-2 w-full border-none text-sm sm:text-md focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'
               value={searchData.location}
               onChange={handleLocationChange}
             />

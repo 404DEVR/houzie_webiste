@@ -155,10 +155,6 @@ export function PropertyCard({
     const accessToken = auth?.accessToken;
 
     if (!accessToken) {
-      toast.error({
-        title: 'Unauthorized',
-        description: 'You are not authorized.',
-      });
       router.push(`/login?redirect=property/${id}`);
       return;
     }

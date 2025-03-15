@@ -49,6 +49,7 @@ const DashboardNavbar = () => {
 
   const handleLogout = async () => {
     try {
+      setIsPopoverOpen(false);
       setAuth(null);
       deleteCookie('auth');
       toast.success({

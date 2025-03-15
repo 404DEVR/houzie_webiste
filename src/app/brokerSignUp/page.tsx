@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import {
   Apple,
+  ArrowLeft,
   Building2,
   ChevronLeft,
   ChevronRight,
@@ -315,7 +316,19 @@ const SignUpForm: React.FC = () => {
               </div>
             </div>
             {/* Right Side (Sign Up Form) */}
-            <div className='w-full md:w-1/2 p-8 h-full rounded-3xl bg-white flex flex-col justify-center items-center'>
+            <div className='w-full md:w-1/2 p-8 h-full rounded-3xl bg-white flex flex-col justify-start items-start'>
+              {step === 1 && (
+                <Button
+                  variant='outline'
+                  size='custom'
+                  className=' border text-slate-600 border-none p-1 mb-2'
+                  onClick={() => setShowOTPForm(false)}
+                >
+                  <div className='flex gap-1 justify-center items-center  '>
+                    <ArrowLeft className='' />
+                  </div>
+                </Button>
+              )}
               {!showOTPForm ? (
                 <div className='h-auto w-full'>
                   <CardHeader className='space-y-1 flex flex-col items-center p-2'>
@@ -479,18 +492,6 @@ const SignUpForm: React.FC = () => {
                   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
                     <div className='grid gap-4'>
                       <CardDescription className=' mb-2 w-full'>
-                        {step === 1 && (
-                          <Button
-                            variant='outline'
-                            size='custom'
-                            className=' border text-slate-600 border-none p-1 mb-2'
-                            onClick={() => setShowOTPForm(false)}
-                          >
-                            <div className='flex gap-1 justify-center items-center  '>
-                              <ChevronLeft className='' />
-                            </div>
-                          </Button>
-                        )}
                         <div className='grid gap-2 mb-3'>
                           <Label htmlFor='phoneNumber'>Phone Number</Label>
                           <div className='relative'>

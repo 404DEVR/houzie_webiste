@@ -39,12 +39,14 @@ const NavbarDetailsPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [opacity, setOpacity] = useState(1);
   const navRef = useRef(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const isHomePage = pathname === '/';
 
   const handleLogout = async () => {
     try {
       setAuth(null);
+      setIsPopoverOpen(false);
       deleteCookie('auth');
       toast.success({
         title: 'Logged Out',

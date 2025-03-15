@@ -123,82 +123,331 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
     return date.toLocaleDateString(undefined, options);
   };
 
-  const propertyDetails = [
-    [
-      { label: 'Bedroom', value: propertyData.bedrooms },
-      { label: 'Balcony', value: propertyData.balconies },
-      {
-        label: 'Available From',
-        value: formatDate(propertyData.availableFrom),
-        hasIcon: false,
-      },
-    ],
-    [
-      { label: 'Bathroom', value: propertyData.bathrooms, hasIcon: false },
-      {
-        label: 'Floor Number',
-        value: propertyData.floorNumber,
-        hasIcon: false,
-      },
-    ],
-  ];
-
-  if (
-    propertyData.preferredGender &&
-    propertyData.preferredGender?.length > 0
-  ) {
-    propertyDetails.push([
-      {
-        label: 'Furnishing',
-        value: transformString(propertyData.furnishing),
-        hasIcon: true,
-      },
-      {
-        label: 'Preferred Gender',
-        value: propertyData.preferredGender,
-        hasIcon: false,
-      },
-      {
-        label: 'Available for',
-        value: transformString(propertyData.preferredTenant),
-        hasIcon: false,
-      },
-    ]);
-  } else {
-    propertyDetails.push([
-      {
-        label: 'Furnishing',
-        value: transformString(propertyData.furnishing),
-        hasIcon: true,
-      },
-      {
-        label: 'Floor',
-        value: `${propertyData.floorNumber} Out of ${propertyData.totalFloors}`,
-        hasIcon: false,
-      },
-      {
-        label: 'Available for',
-        value: transformString(propertyData.preferredTenant),
-        hasIcon: false,
-      },
-    ]);
+  function bhkToNumeric(bhkType: string): string {
+    switch (bhkType) {
+      case 'ONE_RK':
+        return '1 RK';
+      case 'ONE_BHK':
+        return '1 BHK';
+      case 'TWO_BHK':
+        return '2 BHK';
+      case 'THREE_BHK':
+        return '3 BHK';
+      case 'FOUR_BHK':
+        return '4 BHK';
+      case 'FOUR_PLUS_BHK':
+        return '4+ BHK';
+      case 'ONE_ROOM':
+        return '1 Room';
+      default:
+        return 'Unknown';
+    }
   }
 
-  useEffect(() => {
-    if (
-      propertyData?.maidChargesPerPerson &&
-      propertyData?.otherMaintenanceCharges &&
-      propertyData?.wifiChargesPerPerson &&
-      propertyData?.cookChargesPerPerson
-    ) {
-      const totalmaintainance =
-        propertyData?.maidChargesPerPerson +
-        propertyData?.otherMaintenanceCharges +
-        propertyData?.wifiChargesPerPerson +
-        propertyData?.cookChargesPerPerson;
-      setMaintainanceCharge(totalmaintainance);
+  const getPropertyDetails = (propertyType: string) => {
+    switch (propertyType) {
+      case 'BUILDER_FLOOR':
+        return [
+          [
+            { label: 'Bedroom', value: propertyData.bedrooms },
+            { label: 'Balcony', value: propertyData.balconies },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Bathroom',
+              value: propertyData.bathrooms,
+              hasIcon: false,
+            },
+            {
+              label: 'Floor Number',
+              value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: '4 Wheeler Parking',
+              value: transformString(
+                propertyData.amenities.includes('FOUR_WHEELER_PARKING')
+                  ? 'Included'
+                  : 'Included'
+              ),
+              hasIcon: false,
+            },
+            {
+              label: 'Available for',
+              value: transformString(propertyData.preferredTenant),
+              hasIcon: false,
+            },
+          ],
+        ];
+      case 'FLAT_APARTMENT':
+        return [
+          [
+            { label: 'Bedroom', value: propertyData.bedrooms },
+            { label: 'Balcony', value: propertyData.balconies },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Bathroom',
+              value: propertyData.bathrooms,
+              hasIcon: false,
+            },
+            {
+              label: 'Floor Number',
+              value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: '4 Wheeler Parking',
+              value: transformString(
+                propertyData.amenities.includes('FOUR_WHEELER_PARKING')
+                  ? 'Included'
+                  : 'Included'
+              ),
+              hasIcon: false,
+            },
+            {
+              label: 'Available for',
+              value: transformString(propertyData.preferredTenant),
+              hasIcon: false,
+            },
+          ],
+        ];
+      case 'VILLA':
+        return [
+          [
+            { label: 'Bedroom', value: propertyData.bedrooms },
+            { label: 'Balcony', value: propertyData.balconies },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Bathroom',
+              value: propertyData.bathrooms,
+              hasIcon: false,
+            },
+            {
+              label: 'Floor Number',
+              value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: 'Meals',
+              value: propertyData.amenities.includes('MEALS')
+                ? 'Included'
+                : 'Not Included',
+              hasIcon: false,
+            },
+
+            {
+              label: '2 Wheeler Parking',
+              value: propertyData.amenities.includes('TWO_WHEELER_PARKING')
+                ? 'Included'
+                : 'Included',
+              hasIcon: false,
+            },
+          ],
+        ];
+      case 'CO_LIVING':
+        return [
+          [
+            {
+              label: 'AC',
+              value: propertyData.furnishingExtras.includes('AC')
+                ? 'Included'
+                : 'Not Included',
+            },
+            {
+              label: '2 Wheeler Parking',
+              value: propertyData.features.includes('TWO_WHEELER_PARKING')
+                ? 'Included'
+                : 'Not Included',
+            },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Room Type',
+              value: bhkToNumeric(propertyData.roomType),
+              hasIcon: false,
+            },
+            {
+              label: '4 Wheeler Parking',
+              value: propertyData.amenities.includes('FOUR_WHEELER_PARKING')
+                ? 'Included'
+                : 'Included',
+
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: propertyData.furnishing.includes('NONE')
+                ? 'Unfurnished'
+                : transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: 'Preferred Gender',
+              value: transformString(
+                propertyData.preferredGender && propertyData.preferredGender[0]
+              ),
+              hasIcon: false,
+            },
+            {
+              label: 'Meals',
+              value: propertyData.amenities.includes('MEALS')
+                ? 'Included'
+                : 'Not Included',
+              hasIcon: false,
+            },
+          ],
+        ];
+      case 'PG':
+        return [
+          [
+            {
+              label: 'AC',
+              value: propertyData.furnishingExtras.includes('AC')
+                ? 'Included'
+                : 'Not Included',
+            },
+            {
+              label: '2 Wheeler Parking',
+              value: propertyData.features.includes('TWO_WHEELER_PARKING')
+                ? 'Included'
+                : 'Not Included',
+            },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Room Type',
+              value: transformString(propertyData.roomType),
+              hasIcon: false,
+            },
+            {
+              label: '4 Wheeler Parking',
+              value: propertyData.amenities.includes('FOUR_WHEELER_PARKING')
+                ? 'Included'
+                : 'Included',
+
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: propertyData.furnishing.includes('NONE')
+                ? 'Unfurnished'
+                : transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: 'Preferred Gender',
+              value: transformString(
+                propertyData.preferredGender && propertyData.preferredGender[0]
+              ),
+              hasIcon: false,
+            },
+            {
+              label: 'Meals',
+              value: propertyData.amenities.includes('MEALS')
+                ? 'Included'
+                : 'Not Included',
+              hasIcon: false,
+            },
+          ],
+        ];
+      default:
+        return [
+          [
+            { label: 'Bedroom', value: propertyData.bedrooms },
+            { label: 'Balcony', value: propertyData.balconies },
+            {
+              label: 'Available From',
+              value: formatDate(propertyData.availableFrom),
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Bathroom',
+              value: propertyData.bathrooms,
+              hasIcon: false,
+            },
+            {
+              label: 'Floor Number',
+              value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+              hasIcon: false,
+            },
+          ],
+          [
+            {
+              label: 'Furnishing',
+              value: transformString(propertyData.furnishing),
+              hasIcon: true,
+            },
+            {
+              label: 'Preferred Gender',
+              value: transformString(
+                propertyData.preferredGender && propertyData.preferredGender[0]
+              ),
+              hasIcon: false,
+            },
+            {
+              label: 'Available for',
+              value: transformString(propertyData.preferredTenant),
+              hasIcon: false,
+            },
+          ],
+        ];
     }
-  }, []);
+  };
+
   const removefavorites = async (id: string) => {
     try {
       setIsLoading(true);
@@ -515,43 +764,48 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
           </h2>
 
           <div className='flex items-start justify-between flex-1 w-full mt-6'>
-            {propertyDetails.map((column, columnIndex) => (
-              <div
-                key={columnIndex}
-                className='inline-flex flex-col items-start gap-[30px]'
-              >
-                {column.map((detail, detailIndex) => (
-                  <div key={detailIndex} className='flex flex-col items-start'>
-                    <div className='text-[#6f6f6f] text-sm leading-[21px]'>
-                      {detail.label}
+            {getPropertyDetails(propertyData.propertyType).map(
+              (column, columnIndex) => (
+                <div
+                  key={columnIndex}
+                  className='inline-flex flex-col items-start gap-[30px]'
+                >
+                  {column.map((detail, detailIndex) => (
+                    <div
+                      key={detailIndex}
+                      className='flex flex-col items-start'
+                    >
+                      <div className='text-[#6f6f6f] text-sm leading-[21px]'>
+                        {detail.label}
+                      </div>
+                      <div className='flex items-center gap-1.5 font-medium text-black text-base leading-6'>
+                        {detail.value}
+                        {propertyData.furnishingExtras &&
+                          propertyData.furnishingExtras.length > 0 &&
+                          detail.hasIcon && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <InfoIcon className='w-6 h-6 cursor-pointer' />
+                                </TooltipTrigger>
+                                <TooltipContent side='right'>
+                                  <div className='space-y-4 sm:space-y-6'>
+                                    <ItemGrid
+                                      title='Furnishings'
+                                      data={propertyData.furnishingExtras}
+                                      type='furnishing'
+                                    />
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                      </div>
                     </div>
-                    <div className='flex items-center gap-1.5 font-medium text-black text-base leading-6'>
-                      {detail.value}
-                      {propertyData.furnishingExtras &&
-                        propertyData.furnishingExtras.length > 0 &&
-                        detail.hasIcon && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <InfoIcon className='w-6 h-6 cursor-pointer' />
-                              </TooltipTrigger>
-                              <TooltipContent side='right'>
-                                <div className='space-y-4 sm:space-y-6'>
-                                  <ItemGrid
-                                    title='Furnishings'
-                                    data={propertyData.furnishingExtras}
-                                    type='furnishing'
-                                  />
-                                </div>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
+                  ))}
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>
