@@ -16,7 +16,7 @@ export default function MapCard({
     : { lat: 28.6139, lng: 77.209 }; // Default to Delhi
 
   return (
-    <div className='p-4 sm:p-6 bg-white rounded-lg shadow-sm w-full mx-auto'>
+    <div className='p-4 sm:p-6 bg-white rounded-lg shadow-sm w-full mx-auto z-0'>
       <h2 className='text-2xl font-semibold'>Location</h2>
       <div className='flex items-center gap-2 text-sm mt-1'>
         <TiLocation size={20} />

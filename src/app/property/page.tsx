@@ -77,6 +77,7 @@ export default function DetailsPage() {
       }
 
       const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
+      console.log(url);
 
       const response = await axios.get(url);
 

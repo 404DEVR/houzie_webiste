@@ -111,7 +111,9 @@ const BrokerContent = () => {
             <AddListings setActiveTab={setActiveTab} />
           )}
           {activeTab === 'profile' && <ProfileForm />}
-          {activeTab === 'settings' && <SettingsPage />}
+          {activeTab === 'settings' && (
+            <SettingsPage handleTabChange={handleTabChange} />
+          )}
         </div>
       </div>
     </Provider>

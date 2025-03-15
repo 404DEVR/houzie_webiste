@@ -78,7 +78,9 @@ const BrokerContent = () => {
           {activeTab === 'profile' && <ProfileForm page='user' />}
           {activeTab === 'favorites' && <ProfileFavoriteCards />}
           {activeTab === 'savedsearch' && <SaveSearchList />}
-          {activeTab === 'settings' && <SettingsPage />}
+          {activeTab === 'settings' && (
+            <SettingsPage handleTabChange={handleTabChange} />
+          )}
         </div>
       </div>
     </Provider>

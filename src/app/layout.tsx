@@ -8,7 +8,7 @@ import { AuthProviders } from '@/lib/context/AuthProvider';
 
 import Providers from '@/components/Providers';
 import { ThemeProvider } from '@/components/theme/theme-provider';
-
+import { FilterProvider } from '@/lib/context/FilterContext';
 import { siteConfig } from '@/constant/config';
 import { ToastProvider } from '@/hooks/use-custom-toast';
 
@@ -60,17 +60,19 @@ export default function RootLayout({
     <html lang='en' className={poppins.variable}>
       <body>
         <ToastProvider>
-          <AuthProviders>
-            <Providers>
-              <ThemeProvider
-                attribute='class'
-                defaultTheme='light'
-                enableSystem
-              >
-                {children}
-              </ThemeProvider>
-            </Providers>
-          </AuthProviders>
+          <FilterProvider>
+            <AuthProviders>
+              <Providers>
+                <ThemeProvider
+                  attribute='class'
+                  defaultTheme='light'
+                  enableSystem
+                >
+                  {children}
+                </ThemeProvider>
+              </Providers>
+            </AuthProviders>
+          </FilterProvider>
         </ToastProvider>
       </body>
     </html>

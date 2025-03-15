@@ -180,25 +180,25 @@ const ItemGrid: React.FC<ItemGridProps> = ({
       </h3>
 
       <div
-        className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 ${
+        className={`flex flex-wrap gap-2 md:gap-6 ${
           showAll ? 'overflow-y-auto max-h-[60vh] sm:max-h-[500px]' : ''
         }`}
       >
         {visibleItems.map((item, index) => (
-          <div key={index} className='mt-2'>
+          <div key={index} className=''>
             <Button
               className={cn(
-                'rounded-md border-2 w-32 h-32 flex flex-col items-center justify-center text-sm font-medium transition-colors'
+                'rounded-xl border-2 w-28 h-28 flex flex-col items-center justify-center text-sm font-medium transition-colors'
               )}
             >
               <Image
                 src={item.url}
                 alt={item.label}
-                width={55}
-                height={55}
+                width={40}
+                height={40}
                 className='object-contain'
               />
-              <div className='mt-2 text-center text-wrap'>{item.label}</div>
+              <div className='mt-0.5 text-center text-wrap'>{item.label}</div>
             </Button>
           </div>
         ))}

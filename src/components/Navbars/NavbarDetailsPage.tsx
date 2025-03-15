@@ -2,12 +2,18 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { BadgeInfo, Bell, ChevronDown, Contact, LogOut } from 'lucide-react';
+import {
+  BadgeInfo,
+  Bell,
+  ChevronDown,
+  Contact,
+  Heart,
+  LogOut,
+} from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { FcAbout } from 'react-icons/fc';
-import { MdAdd } from 'react-icons/md';
 import { RiProfileFill } from 'react-icons/ri';
 
 import { useCustomToast } from '@/hooks/use-custom-toast';
@@ -133,7 +139,7 @@ const NavbarDetailsPage = () => {
                   }
                 >
                   <PopoverTrigger asChild>
-                    <div className='flex items-center gap-2 px-3 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
+                    <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
                       <div className='w-10 h-10  rounded-full overflow-hidden flex items-center justify-center'>
                         <img
                           src='/images/Dummy profile.png'
@@ -141,9 +147,9 @@ const NavbarDetailsPage = () => {
                           className='w-full h-full object-cover'
                         />
                       </div>
-                      <span className='text-white text-base flex justify-between items-center'>
+                      <span className='text-white text-base gap-2 flex justify-between items-center'>
                         {userData?.name || 'John Doe'}
-                        <ChevronDown />
+                        <ChevronDown className='w-5 h-5' />
                       </span>
                     </div>
                   </PopoverTrigger>
@@ -342,19 +348,16 @@ const NavbarDetailsPage = () => {
                       <FcAbout size={16} />
                       <span>About Us</span>
                     </Button>
+                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                      <Heart size={16} />
+                      <span>Interested Listing</span>
+                    </Button>
                     <Button
                       onClick={() => router.push('/profile')}
                       className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'
                     >
                       <RiProfileFill size={16} />
                       <span>Profile</span>
-                    </Button>
-                    <Button
-                      onClick={() => router.push('/broker')}
-                      className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'
-                    >
-                      <MdAdd size={16} />
-                      <span>Post Property</span>
                     </Button>
                     <Button
                       onClick={handleLogout}

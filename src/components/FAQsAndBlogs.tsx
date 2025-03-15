@@ -73,7 +73,7 @@ export default function FAQsAndBlogs() {
       <div className='flex gap-4 justify-center'>
         <button
           onClick={() => setActiveSection('faqs')}
-          className={`transition-all duration-500 ease-in-out flex items-center gap-2 bg-[#5CC1B1] text-white px-6 py-2 rounded-md hover:bg-[#4BA99B] ${
+          className={`transition-all duration-500 ease-in-out flex items-center gap-2 bg-[#3B8FF6] text-white px-6 py-2 rounded-md hover:bg-[#c6d9fa] ${
             activeSection === 'faqs' ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -81,7 +81,7 @@ export default function FAQsAndBlogs() {
         </button>
         <button
           onClick={() => setActiveSection('blogs')}
-          className={`transition-all duration-500 ease-in-out flex items-center gap-2 bg-[#5CC1B1] text-white px-6 py-2 rounded-md hover:bg-[#4BA99B] ${
+          className={`transition-all duration-500 ease-in-out flex items-center gap-2 bg-[#3B8FF6] text-white px-6 py-2 rounded-md hover:bg-[#c6d9fa] ${
             activeSection === 'blogs' ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -109,7 +109,7 @@ export default function FAQsAndBlogs() {
           </div>
           <button
             onClick={() => setActiveSection(null)}
-            className='bg-[#5CC1B1] text-white px-6 py-2 rounded-md flex items-center gap-2'
+            className='bg-[#3B8FF6] text-white px-6 py-2 rounded-md flex items-center gap-2'
           >
             FAQ's <ChevronUp />
           </button>
@@ -120,7 +120,7 @@ export default function FAQsAndBlogs() {
             <div
               key={index}
               className={`rounded-lg transition-colors duration-300 ${
-                openFAQ === index ? 'bg-[#E6F7F5]' : 'bg-gray-50'
+                openFAQ === index ? 'bg-[#DBE8FE]' : 'bg-gray-50'
               }`}
             >
               <button
@@ -129,7 +129,7 @@ export default function FAQsAndBlogs() {
               >
                 <span className='font-medium'>{faq.question}</span>
                 {openFAQ === index ? (
-                  <X className='w-5 h-5 text-[#5CC1B1]' />
+                  <X className='w-5 h-5 text-[#3B8FF6]' />
                 ) : (
                   <Plus className='w-5 h-5' />
                 )}
@@ -166,7 +166,7 @@ export default function FAQsAndBlogs() {
           </div>
           <button
             onClick={() => setActiveSection(null)}
-            className='bg-[#5CC1B1] text-white px-6 py-2 rounded-md flex items-center gap-2'
+            className='bg-[#3B8FF6] text-white px-6 py-2 rounded-md flex items-center gap-2'
           >
             Blogs <ChevronUp />
           </button>

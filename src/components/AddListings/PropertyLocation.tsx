@@ -217,12 +217,13 @@ const PropertyLocation = ({
             handleLocationUploadStatusChange={handleLocationUploadStatusChange}
           />
         </div>
-        {propertyDetails.preoccupiedPropertyType !== 'CO_LIVING' && (
-          <CurrentOccupantsProfile
-            onOccupantDataChange={handleOccupantDataChange}
-            page={page}
-          />
-        )}
+        {propertyDetails.isPreoccupied &&
+          propertyDetails.preoccupiedPropertyType !== 'CO_LIVING' && (
+            <CurrentOccupantsProfile
+              onOccupantDataChange={handleOccupantDataChange}
+              page={page}
+            />
+          )}
 
         <FileUploader
           handleNext={handleNext}

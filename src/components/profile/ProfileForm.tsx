@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/tooltip';
 
 import { ProfileFormInterface } from '@/interfaces/PropsInterface';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface originalData {
   name: string;
@@ -129,7 +130,44 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
   };
 
   if (isLoading) {
-    return <div>Loading profile...</div>;
+    return (
+      <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
+        <div className='flex flex-col md:flex-row w-full gap-8'>
+          <div className=' rounded-lg p-6 w-full h-auto md:h-[350px] border border-slate-200 md:w-1/2'>
+            <div className='flex flex-col md:flex-row justify-center pt-10 h-full'>
+              <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8'>
+                <div className='flex flex-col space-y-3'>
+                  <Skeleton className='h-8 w-full rounded-md bg-slate-200' />
+                  <Skeleton className='h-8 w-full rounded-md bg-slate-200' />
+                  <Skeleton className='h-8 w-full rounded-md bg-slate-200' />
+                  <Skeleton className='h-8 w-full rounded-md bg-slate-200' />
+                </div>
+              </div>
+              <div className='flex flex-col flex-[1] justify-start gap-16 items-center h-full'>
+                <Skeleton className='h-40 w-40 rounded-full bg-slate-200' />
+                <Skeleton className='h-10 w-24 rounded-md bg-slate-200' />
+              </div>
+            </div>
+          </div>
+          <div className='border border-slate-200 rounded-lg  p-6 w-full md:w-1/2'>
+            <Skeleton className='h-8 w-3/4 my-6 bg-slate-200' />
+            <div className='mb-8'>
+              <Skeleton className='h-4 w-full mb-2 bg-slate-200' />
+              <Skeleton className='h-2 w-full rounded-full bg-slate-200' />
+            </div>
+            <div className='mb-4'>
+              <Skeleton className='h-4 w-full mb-2 bg-slate-200' />
+              <Skeleton className='h-2 w-full rounded-full bg-slate-200' />
+            </div>
+          </div>
+        </div>
+        <div className='flex flex-col md:flex-row items-start md:items-center md:justify-between mt-4 border border-slate-200 rounded-lg  gap-4 p-6 w-full'>
+          <Skeleton className='h-8 w-1/4 bg-slate-200' />
+          <Skeleton className='h-8 w-1/4 bg-slate-200' />
+          <Skeleton className='h-10 w-32 rounded-md bg-slate-200' />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -140,34 +178,34 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
         <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
           {/* Profile Section */}
           <div className='flex flex-col md:flex-row w-full gap-8'>
-            <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-auto md:h-[400px] md:w-1/2 shadow-2xl border'>
+            <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-auto md:h-[350px] md:w-1/2 shadow-2xl border'>
               <form
                 onSubmit={handleSubmit}
-                className=' flex flex-col md:flex-row justify-center pt-10 h-full'
+                className=' flex flex-col md:flex-row justify-center pt-6 md:px-6 h-full'
               >
                 {/* User Details */}
-                <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8'>
+                <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8 '>
                   <div className='flex flex-col gap-'>
-                    <Label className='text-md'>Name</Label>
+                    <Label className='text-sm'>Name</Label>
                     <input
                       type='text'
                       id='fullName'
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                       aria-label='Full Name'
                     />
                   </div>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className='flex flex-col gap-0'>
-                        <Label className='text-md'>Email Address</Label>
+                        <Label className='text-sm'>Email Address</Label>
                         <input
                           type='email'
                           id='emailAddress'
                           value={emailAddress}
                           readOnly
-                          className='border-none bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Email Address'
                         />
                       </div>
@@ -179,13 +217,13 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className='flex flex-col gap-0'>
-                        <Label className='text-md'>Phone Number</Label>
+                        <Label className='text-sm'>Phone Number</Label>
                         <input
                           type='tel'
                           id='phoneNumber'
                           value={phoneNumber}
                           readOnly
-                          className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Phone Number'
                           placeholder='No Phone Number'
                         />
@@ -197,13 +235,13 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                   </Tooltip>
 
                   <div className='flex flex-col gap-0'>
-                    <Label className='text-md'>Company Name</Label>
+                    <Label className='text-sm'>Company Name</Label>
                     <input
                       type='text'
                       id='companyName'
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                       aria-label='Company Name'
                       placeholder='Please Update Company Name'
                     />
@@ -253,7 +291,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
             {/* Subscription Summary */}
             <div className='bg-[#eff5ff] rounded-lg shadow-2xl p-6 w-full md:w-1/2 border'>
-              <h2 className='text-3xl font-semibold mt-14 mb-12'>
+              <h2 className='text-3xl font-semibold mt-10 mb-12'>
                 Subscription Summary
               </h2>
 

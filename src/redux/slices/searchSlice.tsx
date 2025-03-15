@@ -15,7 +15,7 @@ const initialState: SearchState = {
   configuration: [],
   livingType: [],
   minRent: 0,
-  maxRent: 10000,
+  maxRent: 500000,
 };
 
 const searchSlice = createSlice({

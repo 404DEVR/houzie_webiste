@@ -1,12 +1,27 @@
+import axios from 'axios';
+import { Bath, Bed, Copy, Home, InfoIcon } from 'lucide-react';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { FaBed, FaBath } from 'react-icons/fa';
-import { IoIosShareAlt } from 'react-icons/io';
-import { AiOutlineHeart, AiOutlineInfoCircle } from 'react-icons/ai';
-import { PropertyInfoProps } from '@/interfaces/PropsInterface';
-import { PropertyFeature } from '@/interfaces/Interface';
-import { Bath, Bed, Home, InfoIcon } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
+
+import { useCustomToast } from '@/hooks/use-custom-toast';
+import useAuth from '@/hooks/useAuth';
+
 import ItemGrid from '@/components/cards/IconGrid';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Tooltip,
   TooltipContent,
@@ -14,8 +29,30 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+import { Listing, PropertyFeature } from '@/interfaces/Interface';
+import { PropertyInfoProps } from '@/interfaces/PropsInterface';
+interface propertyDetailsObject {
+  label: string;
+  value: string;
+  hasIcon?: boolean;
+}
+
+interface propertyDetails {
+  propertyDetailsObject;
+}
+
 const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
+  const [favorites, setFavorites] = useState(false);
+  const { auth } = useAuth();
+  const toggleFavorite = () => setFavorites((prev) => !prev);
+  const [showReadMore, setShowReadMore] = useState(false);
+  const url = `https://api.houzie.in/profile/favorites`;
+  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [maintainanceCharge, setMaintainanceCharge] = useState<number>();
+  const toast = useCustomToast();
+  const [currentUrl, setCurrentUrl] = useState('');
+
   const transformString = (str: string | null | undefined) => {
     if (!str) return '';
     return str
@@ -25,6 +62,32 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
+
+  const fetchListings = async () => {
+    setIsLoading(true);
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const listingsData = response.data.map((item: any) => item.listing);
+      setFavoriteListings(listingsData);
+    } catch (error) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchListings();
+  }, [auth?.accessToken, url]);
+
   const propertyFeatures: PropertyFeature[] = [
     ...(propertyData.bedrooms !== 0
       ? [{ icon: Bed, label: `${propertyData.bedrooms} Beds` }]
@@ -67,31 +130,59 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
       {
         label: 'Available From',
         value: formatDate(propertyData.availableFrom),
+        hasIcon: false,
       },
     ],
     [
-      { label: 'Bathroom', value: propertyData.bathrooms },
+      { label: 'Bathroom', value: propertyData.bathrooms, hasIcon: false },
       {
         label: 'Floor Number',
         value: propertyData.floorNumber,
+        hasIcon: false,
       },
     ],
-    [
+  ];
+
+  if (
+    propertyData.preferredGender &&
+    propertyData.preferredGender?.length > 0
+  ) {
+    propertyDetails.push([
       {
         label: 'Furnishing',
         value: transformString(propertyData.furnishing),
         hasIcon: true,
       },
       {
-        label: 'Proffered Gender',
-        value: propertyData.preferredTenant,
+        label: 'Preferred Gender',
+        value: propertyData.preferredGender,
+        hasIcon: false,
       },
       {
         label: 'Available for',
         value: transformString(propertyData.preferredTenant),
+        hasIcon: false,
       },
-    ],
-  ];
+    ]);
+  } else {
+    propertyDetails.push([
+      {
+        label: 'Furnishing',
+        value: transformString(propertyData.furnishing),
+        hasIcon: true,
+      },
+      {
+        label: 'Floor',
+        value: `${propertyData.floorNumber} Out of ${propertyData.totalFloors}`,
+        hasIcon: false,
+      },
+      {
+        label: 'Available for',
+        value: transformString(propertyData.preferredTenant),
+        hasIcon: false,
+      },
+    ]);
+  }
 
   useEffect(() => {
     if (
@@ -107,7 +198,164 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
         propertyData?.cookChargesPerPerson;
       setMaintainanceCharge(totalmaintainance);
     }
-  });
+  }, []);
+  const removefavorites = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const deleteUrl = `https://api.houzie.in/profile/favorites/${id}`;
+      const response = await axios.delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success({
+          title: 'Success',
+          description: 'Property removed from favorites.',
+        });
+
+        setFavoriteListings((prevListings) =>
+          prevListings.filter((listing) => listing.id !== id)
+        );
+        await fetchListings();
+      } else {
+        toast.error({
+          title: 'Failed to Remove',
+          description:
+            'Failed to remove property from favorites. Please Check Your Network Connection',
+        });
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isListingInFavorites = (listingId: string) => {
+    return favoriteListings.some((listing) => listing.id === listingId);
+  };
+
+  const addfavorites = async (id: string) => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      const response = await axios.post(
+        `https://api.houzie.in/profile/favorites/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      setFavoriteListings((prevListings) => {
+        if (!prevListings.some((listing) => listing.id === id)) {
+          const newListing: Listing = {
+            id: propertyData.id,
+            title: propertyData.title,
+            description: propertyData.description,
+            location: {
+              id: '',
+              city: propertyData.location.city,
+              state: propertyData.location.state,
+              country: '',
+              latitude: 0,
+              longitude: 0,
+            },
+            brokerId: '',
+            isActive: false,
+            photos: propertyData.photos,
+            mainImage: propertyData.mainImage,
+            bathrooms: propertyData.bathrooms,
+            bedrooms: propertyData.bedrooms,
+            balconies: 0,
+            propertyType: propertyData.propertyType,
+            views: 0,
+            price: propertyData.price,
+            security: propertyData.security,
+            brokerage: propertyData.brokerage,
+            isNegotiable: false,
+            lockInPeriod: '',
+            availableFrom: propertyData.availableFrom,
+            configuration: '',
+            floorNumber: '',
+            totalFloors: 0,
+            maintenanceCharges: propertyData.maintenanceCharges,
+            isMaintenanceIncluded: propertyData.isMaintenanceIncluded,
+            roomType: '',
+            sharingType: '',
+            unitsAvailable: '',
+            roomSize: '',
+            amenities: [],
+            features: [],
+            furnishing: '',
+            furnishingExtras: [],
+            preferredTenant: '',
+          };
+
+          return [...prevListings, newListing];
+        }
+        return prevListings;
+      });
+
+      toast.success({
+        title: 'Success',
+        description: 'Property Added to favorites.',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFavoriteClick = async (listingId: string) => {
+    try {
+      const accessToken = auth?.accessToken;
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      if (isListingInFavorites(listingId)) {
+        await removefavorites(listingId);
+      } else {
+        await addfavorites(listingId);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (propertyData?.id) {
+      setCurrentUrl(`${window.location.origin}/property/${propertyData.id}`);
+    }
+  }, [propertyData?.id]);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      toast.info({
+        title: 'Copied!',
+        description: 'Link copied to clipboard.',
+      });
+    } catch (err) {
+      toast.error({
+        title: 'Copy failed',
+        description: 'Failed to copy link. Please try again.',
+      });
+    }
+  };
+
   return (
     <div className='max-w-4xl mx-auto '>
       {/* Property Header */}
@@ -115,8 +363,68 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
         <div className='flex justify-between items-center mb-4 p-2'>
           <h1 className='text-4xl font-bold'>{propertyData.title}</h1>
           <div className='flex items-center gap-4'>
-            <IoIosShareAlt className='text-blue-500 w-6 h-6 cursor-pointer' />
-            <AiOutlineHeart className='text-red-500 w-6 h-6 cursor-pointer' />
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className='flex-1 sm:flex-initial items-center gap-2 min-w-[100px] text-[#3b8ff6] sm:min-w-fit py-2 px-4'>
+                  <Image
+                    src='/svg/Share.svg'
+                    alt='public/svg/Share.svg'
+                    width={30}
+                    height={30}
+                  />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-md'>
+                <DialogHeader>
+                  <DialogTitle>Share link</DialogTitle>
+                  <DialogDescription>
+                    Anyone who has this link will be able to view this.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className='flex items-center space-x-2'>
+                  <div className='grid flex-1 gap-2'>
+                    <Label htmlFor='link' className='sr-only'>
+                      Link
+                    </Label>
+                    <Input id='link' value={currentUrl} readOnly />
+                  </div>
+                  <Button
+                    type='button'
+                    size='sm'
+                    className='px-3'
+                    onClick={copyToClipboard}
+                  >
+                    <span className='sr-only'>Copy</span>
+                    <Copy />
+                  </Button>
+                </div>
+                <DialogFooter className='sm:justify-start'>
+                  <DialogClose asChild>
+                    <Button type='button'>Close</Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Button
+              className='p-2'
+              onClick={() => handleFavoriteClick(propertyData.id)}
+            >
+              {isListingInFavorites(propertyData.id) ? (
+                <Image
+                  src='/svg/heart.svg'
+                  alt='/svg/heart.svg'
+                  width={30}
+                  height={30}
+                />
+              ) : (
+                <Image
+                  src='/svg/heart fill.svg'
+                  alt='public/svg/heart fill.svg'
+                  width={30}
+                  height={30}
+                />
+              )}
+            </Button>
           </div>
         </div>
         <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-8'>
@@ -227,8 +535,8 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
                               <TooltipTrigger asChild>
                                 <InfoIcon className='w-6 h-6 cursor-pointer' />
                               </TooltipTrigger>
-                              <TooltipContent>
-                                <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                              <TooltipContent side='right'>
+                                <div className='space-y-4 sm:space-y-6'>
                                   <ItemGrid
                                     title='Furnishings'
                                     data={propertyData.furnishingExtras}

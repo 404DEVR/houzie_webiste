@@ -13,7 +13,6 @@ import useAuth from '@/hooks/useAuth';
 import LeadForm from '@/components/detailspage/LeadFrom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -279,7 +278,7 @@ const ProfileCard = ({
                     Connect
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className='h-[90%] overflow-y-auto'>
                   <DialogHeader>
                     <DialogTitle>Submit Lead</DialogTitle>
                   </DialogHeader>

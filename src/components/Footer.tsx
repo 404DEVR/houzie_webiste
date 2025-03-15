@@ -20,9 +20,6 @@ const Footer = () => {
             Concept
           </Link>
           <Link href='#' className='hover:underline'>
-            Rent
-          </Link>
-          <Link href='#' className='hover:underline'>
             Mission
           </Link>
           <Link href='#' className='hover:underline'>
@@ -33,7 +30,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className='mt-4 sm:mt-6 gap-2 sm:gap-4 md:gap-20 text-[#464545] text-center flex flex-wrap justify-center items-center'>
+        <div className='mt-4 sm:mt-6 gap-2 sm:gap-4 md:gap-16 text-[#464545] text-center flex flex-wrap justify-center items-center'>
           <p className='text-xs sm:text-sm'>
             © 2021 Houzie, All rights reserved.
           </p>

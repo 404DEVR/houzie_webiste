@@ -3,7 +3,6 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { Listing, PropertyFeature } from '@/interfaces/Interface';
@@ -358,7 +357,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
         </div>
 
         <div className='w-full flex flex-col md:flex-row'>
-          <div className='md:w-[70%] pt-4 md:pt-10'>
+          <div className='md:w-[70%] pt-4 md:pt-6'>
             <div className='flex flex-col justify-between items-center md:items-start mb-6'>
               <h2 className='text-base sm:text-xl font-semibold mb-2'>
                 {data.title}
@@ -384,7 +383,7 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
             )}
           </div>
 
-          <div className='flex flex-col items-center p-2 md:items-start '>
+          <div className='flex flex-col justify-center items-center p-2 md:items-start '>
             <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
               <div className='mb-1'>
                 <p className='text-gray-500 text-xs'>Rent</p>
@@ -398,21 +397,6 @@ export const PropertyReview: React.FC<PropertyReviewProps> = ({ data }) => {
                   Gurgaon
                 </span>
               </div>
-            </div>
-
-            <div className='flex gap-4 md:gap-6 mt-0 w-full md:w-auto'>
-              <Button
-                className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                size='sm'
-              >
-                Edit
-              </Button>
-              <Button
-                className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                size='sm'
-              >
-                Unpost
-              </Button>
             </div>
           </div>
         </div>

@@ -53,6 +53,14 @@ export interface ReviewProps {
   setActiveTab?: React.Dispatch<React.SetStateAction<string>>;
 }
 
+export interface SettingsPageProps {
+  handleTabChange?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface PropertyComponentProps {
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface VerificationFormprops {
   handleNext: () => void;
   handleBack: () => void;

@@ -483,7 +483,7 @@ const SignUpForm: React.FC = () => {
                           <Button
                             variant='outline'
                             size='custom'
-                            className=' border text-slate-600 border-slate-600 p-1 rounded-full mb-2'
+                            className=' border text-slate-600 border-none p-1 mb-2'
                             onClick={() => setShowOTPForm(false)}
                           >
                             <div className='flex gap-1 justify-center items-center  '>

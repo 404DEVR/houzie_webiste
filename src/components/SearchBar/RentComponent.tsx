@@ -13,49 +13,65 @@ import {
 
 import { setRentRange } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
+import { useFilters } from '@/lib/context/FilterContext';
+
+const MAX_RENT = 500000;
 
 const RentComponent = () => {
   const dispatch = useDispatch();
+  const { updateFilters, filters } = useFilters();
   const minRent = useSelector((state: RootState) => state.search.minRent);
   const maxRent = useSelector((state: RootState) => state.search.maxRent);
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSliderChange = (e: React.MouseEvent<HTMLDivElement>) => {
-    const sliderRect = e.currentTarget.getBoundingClientRect();
-    const position = ((e.clientX - sliderRect.left) / sliderRect.width) * 10000;
-    const value = Math.min(Math.max(0, Math.round(position)), 10000);
+    if (!isDragging) return;
 
-    if (isDragging === 'min') {
-      if (value <= maxRent) {
-        dispatch(setRentRange({ minRent: value, maxRent }));
-      }
-    } else if (isDragging === 'max') {
-      if (value >= minRent) {
-        dispatch(setRentRange({ minRent, maxRent: value }));
-      }
+    const sliderRect = e.currentTarget.getBoundingClientRect();
+    const position =
+      ((e.clientX - sliderRect.left) / sliderRect.width) * MAX_RENT;
+    const value = Math.min(Math.max(0, Math.round(position)), MAX_RENT);
+
+    if (isDragging === 'min' && value <= maxRent) {
+      dispatch(setRentRange({ minRent: value, maxRent }));
+    } else if (isDragging === 'max' && value >= minRent) {
+      dispatch(setRentRange({ minRent, maxRent: value }));
     }
   };
 
   const getLeftPosition = (value: number) => {
-    return `${(value / 10000) * 100}%`;
+    return `${(value / MAX_RENT) * 100}%`;
   };
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleApply = () => {
     dispatch(setRentRange({ minRent, maxRent }));
+    updateFilters('rent', [minRent, maxRent]);
     setIsOpen(false);
+  };
+
+  const formatPrice = (price) => {
+    if (price >= 1_00_00_000) {
+      return `${(price / 1_00_00_000).toFixed(1)} Cr`;
+    } else if (price >= 1_00_000) {
+      return `${(price / 1_00_000).toFixed(1)} L`;
+    } else if (price >= 1000) {
+      return `${(price / 1000).toFixed(1)}K`;
+    }
+    return price.toString();
   };
 
   return (
     <div className='w-full'>
-      <label className='text-2xl font-medium block text-gray-800 leading-none'>
+      <label className='text-xl font-medium block text-gray-800 leading-normal'>
         Rent
       </label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div className='w-full text-md rounded-md text-gray-700 text-sm bg-white focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between py-1'>
-            Choose From The List
+          <div className='w-full text-md rounded-md text-gray-700 px-4 py-4 text-sm bg-[#e0e0e0] focus:ring focus:ring-teal-300 cursor-pointer flex items-center justify-between'>
+            {filters.rent
+              ? `Rent: ₹${formatPrice(minRent)} - ₹${formatPrice(maxRent)}`
+              : `Select Range of Rent`}
           </div>
         </PopoverTrigger>
         <PopoverContent className='w-80'>
@@ -64,7 +80,7 @@ const RentComponent = () => {
             <div className='relative w-[90%] mx-auto h-12'>
               <div
                 className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
-                onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                onMouseMove={handleSliderChange}
                 onMouseUp={() => setIsDragging(null)}
                 onMouseLeave={() => setIsDragging(null)}
               >
@@ -72,7 +88,7 @@ const RentComponent = () => {
                   className='absolute h-2 bg-[#3675ff] rounded-full'
                   style={{
                     left: getLeftPosition(minRent),
-                    right: `${100 - (maxRent / 10000) * 100}%`,
+                    right: `${100 - (maxRent / MAX_RENT) * 100}%`,
                   }}
                 />
                 <button
@@ -91,9 +107,11 @@ const RentComponent = () => {
               <Input
                 type='number'
                 value={minRent}
+                min={0}
+                max={MAX_RENT}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value <= maxRent) {
+                  if (value >= 0 && value <= maxRent) {
                     dispatch(setRentRange({ minRent: value, maxRent }));
                   }
                 }}
@@ -103,9 +121,11 @@ const RentComponent = () => {
               <Input
                 type='number'
                 value={maxRent}
+                min={0}
+                max={MAX_RENT}
                 onChange={(e) => {
                   const value = Number(e.target.value);
-                  if (value >= minRent) {
+                  if (value >= minRent && value <= MAX_RENT) {
                     dispatch(setRentRange({ minRent, maxRent: value }));
                   }
                 }}

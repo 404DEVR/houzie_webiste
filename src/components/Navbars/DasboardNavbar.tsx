@@ -2,7 +2,14 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import { BadgeInfo, Bell, Contact, LogOut, Menu } from 'lucide-react';
+import {
+  BadgeInfo,
+  Bell,
+  ChevronDown,
+  Contact,
+  LogOut,
+  Menu,
+} from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -133,16 +140,19 @@ const DashboardNavbar = () => {
               }
             >
               <PopoverTrigger asChild>
-                <Card className='bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
-                  <CardContent className='bg-transparent flex items-center justify-center p-0'>
-                    <Image
-                      src='/svg/account.svg'
-                      alt='public/svg/account.svg'
-                      width={40}
-                      height={40}
+                <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
+                  <div className='w-10 h-10  rounded-full overflow-hidden flex items-center justify-center'>
+                    <img
+                      src='/images/Dummy profile.png'
+                      alt='Profile'
+                      className='w-full h-full object-cover'
                     />
-                  </CardContent>
-                </Card>
+                  </div>
+                  <span className='text-white text-base gap-2 flex justify-between items-center'>
+                    {userData?.name || 'John Doe'}
+                    <ChevronDown className='w-5 h-5' />
+                  </span>
+                </div>
               </PopoverTrigger>
               <PopoverContent
                 className='w-auto shadow-[0_0_25px_rgba(255,255,255,0.8)] border-2 rounded-2xl border-white/20 z-50'

@@ -1,6 +1,8 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import useAuth from '@/hooks/useAuth';
@@ -9,8 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 import { SavedSearch } from '@/interfaces/Interface';
-import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 const SaveSearchList = () => {
   const { auth } = useAuth();
@@ -129,16 +129,17 @@ const SaveSearchList = () => {
                       </div>
                     </div>
                   )}
+                  <Button
+                    size='custom'
+                    variant='link'
+                    onClick={() => toggleExpandCard(search.id)}
+                    className=' hover:underline py-2 text-black text-sm hidden md:block'
+                  >
+                    {expandedCardId === search.id
+                      ? 'View Less...'
+                      : 'View More...'}
+                  </Button>
                 </div>
-                <Button
-                  variant='link'
-                  onClick={() => toggleExpandCard(search.id)}
-                  className='text-blue-500 hover:underline text-sm hidden md:block'
-                >
-                  {expandedCardId === search.id
-                    ? 'View Less...'
-                    : 'View More...'}
-                </Button>
               </div>
 
               {/* Right Section */}
@@ -149,14 +150,14 @@ const SaveSearchList = () => {
                     onClick={() =>
                       console.log(`Editing search with ID: ${search.id}`)
                     }
-                    className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border-none'
+                    className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border shadow-md'
                   >
                     Edit
                   </Button>
                   <Button
                     onClick={() => handleDeleteSearch(search.id)}
                     variant='outline'
-                    className='bg-[#f5f5fa] shadow-xl text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border-none'
+                    className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] w-full md:w-[30%] px-4 font-normal py-4 rounded-lg border shadow-md'
                   >
                     Delete
                   </Button>
@@ -164,7 +165,7 @@ const SaveSearchList = () => {
                 <Button
                   variant='default'
                   onClick={() => router.push('/property')}
-                  className='bg-[#f5f5fa] shadow-xl text-[#60a5fa] hover:bg-[#60a5fa] w-full md:w-[60%] hover:text-[#f5f5fa] px-4 font-normal py-1 md:py-4 rounded-lg border'
+                  className='bg-[#f5f5fa] text-[#60a5fa] hover:bg-[#60a5fa] w-full md:w-[60%] hover:text-[#f5f5fa] px-4 font-normal py-1 md:py-4 rounded-lg border shadow-md'
                 >
                   View New Listings <ArrowRight className='text-[#60a5fa]' />
                 </Button>

@@ -17,6 +17,7 @@ import StatsSection from '@/components/Hero/StatsSection';
 import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 
 import store from '@/redux/store';
+import FAQsAndBlogs from '@/components/FAQsAndBlogs';
 
 /**
  * SVGR Support
@@ -40,6 +41,7 @@ export default function HomePage() {
         <ComparisonTable />
         <StatsSection />
         <ExploreHeroSection />
+        <FAQsAndBlogs />
         <Footer />
       </main>
     </Provider>

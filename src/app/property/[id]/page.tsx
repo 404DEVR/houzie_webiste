@@ -9,20 +9,14 @@ import useAuth from '@/hooks/useAuth';
 
 import ItemGrid from '@/components/cards/IconGrid';
 import MapCard from '@/components/cards/MapCard';
-import PlacesNearby from '@/components/cards/PlacesNearby';
+import OccupantData from '@/components/cards/OccupantData';
 import ProfileCard from '@/components/cards/profilecard';
-import PropertyHighlight from '@/components/cards/PropertyHighlights';
 import PropertyInfo from '@/components/cards/PropertyInfo';
 import PropertySuggestions from '@/components/cards/PropertySuggestions';
-import AboutProperty from '@/components/detailspage/AboutProperty';
-import HeaderContainer from '@/components/detailspage/HeaderContainer';
-import PropertyDetails from '@/components/detailspage/PropertyDetails';
-import PropertyHighlights from '@/components/detailspage/PropertyHighlights';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
-import OccupantData from '@/components/cards/OccupantData';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -116,7 +110,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   }
   return (
     <>
-      <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 my-2 sm:my-3 bg-[#F4F4F4]'>
+      <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 mb-2 pt-10 sm:mb-3 bg-[#F4F4F4]'>
         {/* <HeaderContainer propertyData={propertyData} /> */}
         <div className='w-full flex gap-4'>
           <div className='w-1/2'>
@@ -133,7 +127,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
             {/* <PropertyHighlights propertyData={propertyData} />
             <PropertyDetails propertyData={propertyData} />
             <AboutProperty propertyData={propertyData} /> */}
-            <div className='space-y-4 sm:space-y-6 mt-0'>
+            <div className='space-y-4 sm:space-y-6 mt-0 z-0'>
               {propertyData && <MapCard propertyData={propertyData} />}
             </div>
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
@@ -143,7 +137,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                 type='amenities'
               />
             </div>
-            {propertyData.furnishingExtras.length < 0 && (
+            {propertyData.furnishingExtras.length > 0 && (
               <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
                 <ItemGrid
                   title='Furnishing'
@@ -153,24 +147,26 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
               </div>
             )}
 
-            {propertyData.houseFurnishingItems && (
-              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-                <ItemGrid
-                  title='House Furnishing'
-                  data={propertyData.houseFurnishingItems}
-                  type='furnishing'
-                />
-              </div>
-            )}
-            {propertyData.roomFurnishingItems && (
-              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-                <ItemGrid
-                  title='Room Furnishing'
-                  data={propertyData.roomFurnishingItems}
-                  type='furnishing'
-                />
-              </div>
-            )}
+            {propertyData.houseFurnishingItems &&
+              propertyData.houseFurnishingItems.length > 0 && (
+                <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                  <ItemGrid
+                    title='House Furnishing'
+                    data={propertyData.houseFurnishingItems}
+                    type='furnishing'
+                  />
+                </div>
+              )}
+            {propertyData.roomFurnishingItems &&
+              propertyData.roomFurnishingItems?.length > 0 && (
+                <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                  <ItemGrid
+                    title='Room Furnishing'
+                    data={propertyData.roomFurnishingItems}
+                    type='furnishing'
+                  />
+                </div>
+              )}
 
             <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
               <OccupantData propertyData={propertyData} />

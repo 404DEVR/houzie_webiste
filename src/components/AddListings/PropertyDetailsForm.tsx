@@ -359,7 +359,6 @@ const PropertyDetailsForm = ({
     let updatedTenants;
 
     if (value === 'ANY') {
-      // If 'Any' is selected, remove all other selections
       if (isSelected) {
         updatedTenants = propertyDetails.preferredTenant.filter(
           (item) => item !== value
@@ -368,7 +367,6 @@ const PropertyDetailsForm = ({
         updatedTenants = ['ANY'];
       }
     } else {
-      // If 'Any' is already selected, remove it before adding other types
       if (propertyDetails.preferredTenant.includes('ANY')) {
         updatedTenants = [value];
       } else {
@@ -1689,9 +1687,7 @@ const PropertyDetailsForm = ({
             </div>
 
             {/* Number of Units Available */}
-            {(propertyDetails.propertyType === 'CO_LIVING' ||
-              propertyDetails.propertyType === 'PG' ||
-              propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+            {/* {propertyDetails.preoccupiedPropertyType === 'CO_LIVING' && (
               <div className=''>
                 <div className=''>
                   <CustomInput
@@ -1718,7 +1714,7 @@ const PropertyDetailsForm = ({
                   />
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Available From */}
 

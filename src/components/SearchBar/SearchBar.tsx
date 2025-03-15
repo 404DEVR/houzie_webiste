@@ -8,14 +8,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropertyComponentSearchbar from '@/components/SearchBar/PropertyComponentSearchbar';
 import RentComponent from '@/components/SearchBar/RentComponent';
 import { Button } from '@/components/ui/button';
-
+import { MdLocationOn } from 'react-icons/md';
 import { setLocation } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
+import { useFilters } from '@/lib/context/FilterContext';
 
 const SearchBar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchData = useSelector((state: RootState) => state.search);
+  const { updateFilters } = useFilters();
 
   const handleSearchClick = () => {
     router.push('/property');
@@ -23,47 +25,43 @@ const SearchBar = () => {
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setLocation(e.target.value));
+    updateFilters('location', e.target.value);
   };
 
   return (
-    <div className='relative rounded-2xl xl:rounded-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-      <div className='flex flex-col w-full flex-grow xl:flex-row gap-4 items-stretch py-4 px-4 sm:px-6 lg:px-8 justify-between bg-white shadow-lg rounded-3xl xl:rounded-full border border-gray-200'>
-        <div className='w-full xl:w-2/4 border-b lg:border-b-0 lg:border-r border-gray-300 pt-4 lg:pt-6 pl-3 lg:pl-10'>
-          <label className='text-xl sm:text-2xl font-medium block text-gray-800 leading-none'>
-            Office Or Nearby Address
+    <div className='relative rounded-2xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='flex flex-col w-full flex-grow xl:flex-row gap-2 items-stretch py-4 px-4 justify-between bg-white shadow-lg rounded-2xl  border border-gray-200'>
+        <div className='w-full xl:w-[45%]'>
+          <label className='text-xl font-medium block text-gray-800 leading-normal'>
+            Location
           </label>
-          <input
-            type='text'
-            placeholder='Enter your office or nearby address'
-            className='px-0 py-1 w-full border-none text-sm sm:text-md focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'
-            value={searchData.location}
-            onChange={handleLocationChange}
-          />
-        </div>
-
-        <div className='w-full xl:w-2/5 border-b lg:border-b-0 lg:border-r pt-4 lg:pt-6 pl-3 lg:pl-10'>
-          <PropertyComponentSearchbar />
-        </div>
-
-        <div className='w-full xl:w-1/4 border-b lg:border-b-0 pt-4 lg:pt-6 pl-3 lg:pl-10'>
-          <RentComponent />
-        </div>
-
-        <div className='w-full xl:w-auto my-4 lg:my-auto'>
-          <Button
-            onClick={handleSearchClick}
-            size='lg'
-            className='w-full text-[#6666ff] flex items-center justify-center relative h-12 sm:h-16'
-          >
-            <Image
-              src='/svg/search button.svg'
-              alt='Search button'
-              width={80}
-              height={80}
-              className='object-contain absolute'
-              quality={100}
+          <div className='relative flex justify-center items-center bg-[#e0e0e0] px-4 py-2 rounded-md w-full border-none'>
+            <MdLocationOn className='h-6 w-6' />
+            <input
+              type='text'
+              placeholder='Enter your office or nearby address'
+              className='bg-[#e0e0e0] px-2 w-full border-none text-sm sm:text-md focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 placeholder:text-gray-800'
+              value={searchData.location}
+              onChange={handleLocationChange}
             />
-          </Button>
+          </div>
+        </div>
+        <div className='w-full xl:w-[55%] flex flex-col xl:flex-row justify-between items-center gap-2'>
+          <div className='w-full xl:w-[40%] '>
+            <PropertyComponentSearchbar />
+          </div>
+          <div className='w-full xl:w-[40%]'>
+            <RentComponent />
+          </div>
+          <div className='w-full xl:w-[20%] relative h-full'>
+            <Button
+              onClick={handleSearchClick}
+              size='custom'
+              className='w-full p-4 bg-[#3b8ff6] xl:absolute xl:bottom-0 text-white flex items-end justify-center '
+            >
+              Search
+            </Button>
+          </div>
         </div>
       </div>
     </div>

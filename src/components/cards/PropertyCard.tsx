@@ -3,13 +3,14 @@ import { ArrowRight, Bath, Bed, Heart, Home, Lock, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { FaHeart } from 'react-icons/fa6';
 
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 import {
   FinancialDetails,
@@ -17,7 +18,6 @@ import {
   PropertyFeature,
 } from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
-import { FaHeart } from 'react-icons/fa6';
 
 export function PropertyCard({
   property,
@@ -176,11 +176,7 @@ export function PropertyCard({
 
       router.push(`/property/${id}`);
     } catch (error: any) {
-      toast.error({
-        title: 'Error',
-        description:
-          error.response?.data?.message || 'Failed to record visit. Try again.',
-      });
+      console.log('error');
     }
   };
 

@@ -18,9 +18,12 @@ import {
   setPropertyType,
 } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
+import { RiHomeOfficeFill } from 'react-icons/ri';
+import { useFilters } from '@/lib/context/FilterContext';
 
 const PropertyComponentSearchbar = () => {
   const dispatch = useDispatch();
+  const { updateFilters } = useFilters();
   const propertyType = useSelector(
     (state: RootState) => state.search.propertyType
   );
@@ -31,36 +34,36 @@ const PropertyComponentSearchbar = () => {
 
   const propertyTypes: PropertyType[] = [
     {
-      id: 'builderFloor',
+      id: 'BUILDER_FLOOR',
       label: 'Builder Floor',
       description:
         'Independent floors in a low-rise building, offering privacy and exclusivity.',
     },
     {
-      id: 'villa',
+      id: 'VILLA',
       label: 'Villa',
       description:
         'Luxurious, detached homes with private gardens and premium amenities.',
     },
     {
-      id: 'coliving',
+      id: 'CO_LIVING',
       label: 'Coliving',
       description:
         'Shared living spaces designed for community and convenience, ideal for students and young professionals.',
     },
     {
-      id: 'pg',
+      id: 'PG',
       label: 'PG',
       description:
         'Affordable shared accommodation, typically including meals and basic amenities.',
     },
     {
-      id: 'flatApartment',
+      id: 'FLAT_APARTMENT',
       label: 'Flat Apartment',
       description: 'Standard residential units within a multi-story building.',
     },
     {
-      id: 'preoccupiedApartment',
+      id: 'INDEPENDENT_HOUSE',
       label: 'Preoccupied Apartment',
       description:
         'Apartments currently occupied by tenants, often available for investment.',
@@ -68,12 +71,12 @@ const PropertyComponentSearchbar = () => {
   ];
 
   const configurations: ConfigType[] = [
-    { id: '1bhk', label: '1 BHK' },
-    { id: '2bhk', label: '2 BHK' },
-    { id: '3bhk', label: '3 BHK' },
-    { id: '4bhk', label: '4 BHK' },
-    { id: '4+bhk', label: '4+ BHK' },
-    { id: 'studio', label: 'Studio/1 RK' },
+    { label: '1 RK', id: 'ONE_RK' },
+    { label: '1 BHK', id: 'ONE_BHK' },
+    { label: '2 BHK', id: 'TWO_BHK' },
+    { label: '3 BHK', id: 'THREE_BHK' },
+    { label: '4 BHK', id: 'FOUR_BHK' },
+    { label: '4+ BHK', id: 'FOUR_PLUS_BHK' },
   ];
 
   const SharingTypes: SharingType[] = [
@@ -91,6 +94,7 @@ const PropertyComponentSearchbar = () => {
           ? propertyType.filter((item) => item !== id)
           : [...propertyType, id];
         dispatch(setPropertyType(newPropertyType));
+        updateFilters('propertyType', [...newPropertyType]);
         break;
       }
       case 'configuration': {
@@ -98,6 +102,7 @@ const PropertyComponentSearchbar = () => {
           ? configuration.filter((item) => item !== id)
           : [...configuration, id];
         dispatch(setConfiguration(newConfiguration));
+        updateFilters('bhkType', [...newConfiguration]);
         break;
       }
       case 'livingType': {
@@ -135,11 +140,11 @@ const PropertyComponentSearchbar = () => {
       <label className='text-sm font-semibold mb-3 block text-gray-800'>
         {title}
       </label>
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1'>
         {options.map((option) => (
           <label
             key={option.id}
-            className='flex items-center space-x-2 cursor-pointer p-3 rounded-lg border border-transparent hover:border-teal-500 hover:bg-teal-50 focus-within:ring-2 focus-within:ring-teal-500 transition-all duration-200 ease-in-out'
+            className='flex items-center space-x-2 cursor-pointer p-3 rounded-lg border border-transparent hover:border-[#3b8ff6] hover:bg-blue-50  focus-within:ring-2 focus-within:ring-none transition-all duration-200 ease-in-out'
           >
             <input
               type='checkbox'
@@ -149,7 +154,7 @@ const PropertyComponentSearchbar = () => {
                   : livingType.includes(option.id)
               }
               onChange={() => handleCheckboxChange(category, option.id)}
-              className='w-5 h-5 rounded-md text-teal-500 focus:ring-teal-500 border-gray-300 transition-colors duration-200 ease-in-out'
+              className='w-5 h-5 rounded-md text-teal-500focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors duration-200 ease-in-out'
             />
             <span className='text-sm text-gray-700 font-medium'>
               {option.label}
@@ -172,18 +177,18 @@ const PropertyComponentSearchbar = () => {
       <div className='flex flex-col items-center justify-between w-full'>
         {options.map((option) => (
           <div key={option.id} className='border-b-gray-300 border-b-2 w-full'>
-            <label className='flex flex-col items-start space-x-2 cursor-pointer p-3 hover:bg-[#c1d2f5] rounded-2xl m-2'>
+            <label className='flex flex-col items-start space-x-2 cursor-pointer px-3 py-1 hover:bg-[#c1d2f5] rounded-2xl m-2'>
               <span className='flex flex-row items-center text-black text-base sm:text-lg font-poppins font-medium leading-5 tracking-tighter w-full'>
                 <input
                   type='checkbox'
                   checked={propertyType.includes(option.id)}
                   onChange={() => handleCheckboxChange(category, option.id)}
-                  className='w-5 h-5 sm:w-6 sm:h-6 rounded-full border-gray-300 text-black focus:ring-black'
+                  className='w-5 h-5 rounded-full focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 border-gray-300 text-black '
                 />
                 <div className='ml-2 text-xl'>{option.label}</div>
               </span>
-              <div className='flex flex-col justify-around py-2 px-4 space-y-2 rounded-md w-full'>
-                <p className='text-gray-500 font-poppins text-xs font-normal leading-4 tracking-tighter'>
+              <div className='flex flex-col justify-around px-4 space-y-2 rounded-md w-full'>
+                <p className='text-gray-500 font-poppins text-[10px] font-normal leading-4 tracking-tighter'>
                   {option.description}
                 </p>
               </div>
@@ -215,18 +220,21 @@ const PropertyComponentSearchbar = () => {
 
   return (
     <div className='w-full '>
-      <label className='text-2xl font-medium block text-gray-800 leading-none'>
+      <label className='text-xl font-medium block text-gray-800 leading-normal'>
         Property Type
       </label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <div className='w-full rounded-md text-md text-gray-700 text-sm bg-white focus:ring focus:ring-[#3675ff] cursor-pointer flex items-center justify-between py-1'>
-            <span>{getDisplayText()}</span>
+          <div className='w-full rounded-md text-md text-gray-700 text-sm bg-[#e0e0e0] cursor-pointer flex items-center justify-between '>
+            <div className='flex justify-center items-center gap-3 py-4 px-4 '>
+              <RiHomeOfficeFill className='w-5 h-5' />
+              {getDisplayText()}
+            </div>
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-[90%] lg:w-[80vh] max-h-[80vh] overflow-y-auto'>
-          <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-gray-800'>
+        <PopoverContent className='w-[90%] lg:w-[80vh] max-h-[70vh] overflow-y-auto'>
+          <div className='space-y-2'>
+            <h3 className='text-xl font-semibold text-gray-800'>
               Property Details
             </h3>
 

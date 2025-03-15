@@ -1,27 +1,27 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 
-const SettingsPage = () => {
+import { SettingsPageProps } from '@/interfaces/PropsInterface';
+
+const SettingsPage = ({ handleTabChange }: SettingsPageProps) => {
   const [settings, setSettings] = useState({
-    emailNotifications: true,
-    twoFactorAuth: false,
-    publicProfileVisibility: true,
     shareLocation: true,
     showContactDetails: false,
     saveSearchHistory: true,
-    inAppNotifications: true,
+    emailNotification: true,
     smsAlerts: false,
     dailyPropertySuggestions: true,
     enableLoginAlerts: true,
-    saveLoginDevices: false,
+    twoFactor: false,
     logoutFromOtherDevices: true,
+    getPropertySuggestions: true,
   });
 
   const handleToggle = (key) => {
@@ -36,6 +36,12 @@ const SettingsPage = () => {
   const togglePasswordDropdown = () => {
     setIsPasswordDropdownOpen((prev) => !prev);
   };
+
+  const handleProfile = () => {
+    if (handleTabChange) {
+      handleTabChange('profile');
+    }
+  };
   return (
     <div className=' mx-auto pb-8 pt-0'>
       <Card className='max-w-2xl mx-auto border-none'>
@@ -43,53 +49,33 @@ const SettingsPage = () => {
           {/* Account Settings */}
           <div className='space-y-4 border-b-2 pb-4'>
             <h3 className='text-2xl font-semibold mb-4'>Account Settings</h3>
-            <div className='flex items-center justify-between'>
+            <div
+              onClick={handleProfile}
+              className='flex items-center justify-between cursor-pointer'
+            >
               <label
                 htmlFor='emailNotifications'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Email Notifications
+                View Profile
                 <p className='text-xs text-muted-foreground'>
-                  Receive updates and property suggestions via email.
+                  Preview what your profile looks like
                 </p>
               </label>
-              <Switch
-                id='emailNotifications'
-                checked={settings.emailNotifications}
-                onCheckedChange={() => handleToggle('emailNotifications')}
-              />
+              <ChevronRight />
             </div>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='twoFactorAuth'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Two-Factor Authentication
+                Manage Subscription
                 <p className='text-xs text-muted-foreground'>
-                  Enhance account security with 2FA.
+                  View your subscription plan details and upgrade or cancel your
+                  plan.
                 </p>
               </label>
-              <Switch
-                id='twoFactorAuth'
-                checked={settings.twoFactorAuth}
-                onCheckedChange={() => handleToggle('twoFactorAuth')}
-              />
-            </div>
-            <div className='flex items-center justify-between'>
-              <label
-                htmlFor='publicProfileVisibility'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
-              >
-                Public Profile Visibility
-                <p className='text-xs text-muted-foreground'>
-                  Allow others to view your profile details.
-                </p>
-              </label>
-              <Switch
-                id='publicProfileVisibility'
-                checked={settings.publicProfileVisibility}
-                onCheckedChange={() => handleToggle('publicProfileVisibility')}
-              />
+              <ChevronRight />
             </div>
           </div>
 
@@ -99,12 +85,11 @@ const SettingsPage = () => {
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='shareLocation'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Share Location with Buyers/Sellers
+                Location Visibility
                 <p className='text-xs text-muted-foreground'>
-                  Allow others to see your approximate location for better
-                  communication.
+                  Allow others to see your address for better communication
                 </p>
               </label>
               <Switch
@@ -116,11 +101,11 @@ const SettingsPage = () => {
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='showContactDetails'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Show Contact Details
+                Profile Visibility
                 <p className='text-xs text-muted-foreground'>
-                  Display your phone number and email on property listings.
+                  Allow others to view your profile on property listings.
                 </p>
               </label>
               <Switch
@@ -132,17 +117,33 @@ const SettingsPage = () => {
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='saveSearchHistory'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Save Search History
+                Save Search
                 <p className='text-xs text-muted-foreground'>
-                  Keep a record of your recent searches.
+                  History Keep a record of your recent searches.
                 </p>
               </label>
               <Switch
                 id='saveSearchHistory'
                 checked={settings.saveSearchHistory}
                 onCheckedChange={() => handleToggle('saveSearchHistory')}
+              />
+            </div>
+            <div className='flex items-center justify-between'>
+              <label
+                htmlFor='getPropertySuggestions'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
+              >
+                Allow Listing
+                <p className='text-xs text-muted-foreground'>
+                  Suggestions Get property suggestions based on search history
+                </p>
+              </label>
+              <Switch
+                id='getPropertySuggestions'
+                checked={settings.getPropertySuggestions}
+                onCheckedChange={() => handleToggle('getPropertySuggestions')}
               />
             </div>
           </div>
@@ -154,24 +155,24 @@ const SettingsPage = () => {
             </h3>
             <div className='flex items-center justify-between'>
               <label
-                htmlFor='inAppNotifications'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                htmlFor='emailNotification'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                In-App Notifications
+                Email Notifications
                 <p className='text-xs text-muted-foreground'>
-                  Receive notifications for messages, offers, and updates.
+                  Receive updates and property suggestions via email.
                 </p>
               </label>
               <Switch
-                id='inAppNotifications'
-                checked={settings.inAppNotifications}
-                onCheckedChange={() => handleToggle('inAppNotifications')}
+                id='emailNotification'
+                checked={settings.emailNotification}
+                onCheckedChange={() => handleToggle('emailNotification')}
               />
             </div>
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='smsAlerts'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
                 SMS Alerts
                 <p className='text-xs text-muted-foreground'>
@@ -187,12 +188,11 @@ const SettingsPage = () => {
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='dailyPropertySuggestions'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Daily Property Suggestions
+                Property Suggestions
                 <p className='text-xs text-muted-foreground'>
-                  Get daily recommendations for properties based on your
-                  preferences.
+                  Get recommendations for properties based on your preferences.
                 </p>
               </label>
               <Switch
@@ -209,7 +209,7 @@ const SettingsPage = () => {
             <div className='flex items-center justify-between'>
               <label
                 htmlFor='enableLoginAlerts'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
                 Enable Login Alerts
                 <p className='text-xs text-muted-foreground'>
@@ -224,34 +224,19 @@ const SettingsPage = () => {
             </div>
             <div className='flex items-center justify-between'>
               <label
-                htmlFor='saveLoginDevices'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
+                htmlFor='twoFactor'
+                className='text-sm font-medium leading-tight peer-disabled:cursor-not-allowed'
               >
-                Save Login Devices
+                Two-Factor
                 <p className='text-xs text-muted-foreground'>
-                  Remember devices for quick login.
+                  Authentication Add an extra layer Of security by verifying
+                  your identity during login.
                 </p>
               </label>
               <Switch
-                id='saveLoginDevices'
-                checked={settings.saveLoginDevices}
-                onCheckedChange={() => handleToggle('saveLoginDevices')}
-              />
-            </div>
-            <div className='flex items-center justify-between'>
-              <label
-                htmlFor='logoutFromOtherDevices'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed'
-              >
-                Logout from Other Devices
-                <p className='text-xs text-muted-foreground'>
-                  Automatically log out from devices after inactivity.
-                </p>
-              </label>
-              <Switch
-                id='logoutFromOtherDevices'
-                checked={settings.logoutFromOtherDevices}
-                onCheckedChange={() => handleToggle('logoutFromOtherDevices')}
+                id='twoFactor'
+                checked={settings.twoFactor}
+                onCheckedChange={() => handleToggle('twoFactor')}
               />
             </div>
 

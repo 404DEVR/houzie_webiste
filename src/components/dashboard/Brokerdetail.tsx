@@ -61,7 +61,7 @@ const Brokerdetail = () => {
                     className='rounded-full object-cover'
                   />
                   <div>
-                    <p className='text-sm md:text-md text-[#42A4AE]'>
+                    <p className='text-sm md:text-md text-[#3b82f6]'>
                       {new Date(lead.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -76,7 +76,7 @@ const Brokerdetail = () => {
 
                 {/* Interested In */}
                 <div className='w-full sm:w-auto mt-2 sm:mt-0'>
-                  <p className='text-sm md:text-md text-[#42A4AE]'>
+                  <p className='text-sm md:text-md text-[#3b82f6]'>
                     Interested In
                   </p>
                   <p className='text-sm md:text-md font-semibold'>
@@ -87,7 +87,7 @@ const Brokerdetail = () => {
 
                 {/* Contact Details */}
                 <div className='flex flex-col items-start justify-center w-full sm:w-auto mt-2 sm:mt-0'>
-                  <div className='text-sm md:text-md text-[#42A4AE]'>
+                  <div className='text-sm md:text-md text-[#3b82f6]'>
                     Contact Details
                   </div>
                   <div className='flex items-center justify-end space-x-2'>

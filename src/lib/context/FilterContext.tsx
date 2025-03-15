@@ -40,6 +40,7 @@ type Amenity =
 type Parking = 'TWO_WHEELER_PARKING' | 'FOUR_WHEELER_PARKING' | string;
 
 export interface Filters {
+  location: string;
   rent: [number, number];
   propertyType: PropertyType[];
   bhkType: BHKType[];
@@ -60,7 +61,8 @@ interface FilterContextType {
 }
 
 const initialFilters: Filters = {
-  rent: [0, 50000],
+  location: '',
+  rent: [0, 500000],
   propertyType: [],
   bhkType: [],
   availableFor: [],

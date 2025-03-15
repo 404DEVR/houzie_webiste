@@ -39,6 +39,10 @@ export function PropertySearchHeader({
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
   const [isSearchSaved, setIsSearchSaved] = useState(false);
   const router = useRouter();
+  const [tempPropertyTypes, setTempPropertyTypes] = useState<string[]>([
+    ...filters.propertyType,
+  ]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const storedSearches = localStorage.getItem('savedSearches');
@@ -91,17 +95,28 @@ export function PropertySearchHeader({
     'FLAT_APARTMENT',
   ];
 
-  const handlePropertyTypeChange = (value: string, checked: boolean) => {
-    const updatedTypes = checked
-      ? [...filters.propertyType, value]
-      : filters.propertyType.filter((type) => type !== value);
-    updateFilters('propertyType', updatedTypes);
+  const handlePropertyTypeChange = (type: string, checked: boolean) => {
+    if (checked) {
+      setTempPropertyTypes([...tempPropertyTypes, type]);
+    } else {
+      setTempPropertyTypes(tempPropertyTypes.filter((t) => t !== type));
+    }
+  };
+
+  const handleApplyPropertyTypes = () => {
+    updateFilters('propertyType', tempPropertyTypes);
+  };
+
+  const handleClearPropertyTypes = () => {
+    setTempPropertyTypes([]);
+    updateFilters('propertyType', []);
   };
 
   const handleSliderChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const sliderRect = e.currentTarget.getBoundingClientRect();
-    const position = ((e.clientX - sliderRect.left) / sliderRect.width) * 50000;
-    const value = Math.min(Math.max(0, Math.round(position)), 50000);
+    const position =
+      ((e.clientX - sliderRect.left) / sliderRect.width) * 500000;
+    const value = Math.min(Math.max(0, Math.round(position)), 500000);
 
     if (isDragging === 'min') {
       setTempRent([value, tempRent[1]]);
@@ -111,7 +126,7 @@ export function PropertySearchHeader({
   };
 
   const getLeftPosition = (value: number) => {
-    return `${(value / 50000) * 100}%`;
+    return `${(value / 500000) * 100}%`;
   };
 
   const handleApplyRent = () => {
@@ -119,8 +134,12 @@ export function PropertySearchHeader({
   };
 
   const formatPrice = (price) => {
-    if (price >= 1000) {
-      return `${Math.floor(price / 1000)}K`;
+    if (price >= 1_00_00_000) {
+      return `${(price / 1_00_00_000).toFixed(1)} Cr`;
+    } else if (price >= 1_00_000) {
+      return `${(price / 1_00_000).toFixed(1)} L`;
+    } else if (price >= 1000) {
+      return `${(price / 1000).toFixed(1)}K`;
     }
     return price.toString();
   };
@@ -140,6 +159,7 @@ export function PropertySearchHeader({
           <div className='flex items-center border-none rounded-full px-0 bg-[#eff5ff] flex-[2]'>
             <Input
               placeholder='Noida'
+              defaultValue={filters.location || ''}
               className='border-none pl-6 placeholder:text-[#2d495f]  h-8 bg-transparent focus:ring-0 focus:outline-none w-full focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
             />
             <Button
@@ -149,7 +169,6 @@ export function PropertySearchHeader({
               <Search className='' />
             </Button>
           </div>
-          {/* Radius Filter */}
           <div className='flex-[1] w-full'>
             <Select
               onValueChange={handleRadiusChange}
@@ -177,12 +196,14 @@ export function PropertySearchHeader({
             disabled={isSearchSaved}
             className={`py-2 h-10 px-8 rounded-lg ${
               isSearchSaved
-                ? 'bg-gray-400 text-white cursor-not-allowed'
-                : 'bg-[#eff5ff] text-[#2d495f] '
+                ? 'bg-gray-400 text-[#3b8ff6] cursor-not-allowed'
+                : 'bg-[#3b8ff6] text-white '
             }`}
           >
             {isSearchSaved ? 'Search Saved' : 'Save Search'}
-            <IoMdBookmark className='text-[#3b8ff6]' />
+            <IoMdBookmark
+              className={`${isSearchSaved ? 'text-[#3b8ff6]' : 'text-white'}`}
+            />
           </Button>
         </div>
       </div>
@@ -211,7 +232,7 @@ export function PropertySearchHeader({
                         className='absolute h-2 bg-[#3b8ff6] rounded-full'
                         style={{
                           left: getLeftPosition(tempRent[0]),
-                          right: `${100 - (tempRent[1] / 50000) * 100}%`,
+                          right: `${100 - (tempRent[1] / 500000) * 100}%`,
                         }}
                       />
                       <button
@@ -226,7 +247,7 @@ export function PropertySearchHeader({
                       />
                     </div>
                   </div>
-                  <div className='flex justify-between gap-4'>
+                  <div className='flex justify-between gap-2'>
                     <Input
                       type='number'
                       value={tempRent[0]}
@@ -265,8 +286,8 @@ export function PropertySearchHeader({
             <Popover>
               <PopoverTrigger asChild>
                 <Button className='px-4 w-full border-none py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
-                  {filters.propertyType.length > 0
-                    ? filters.propertyType.map(toTitleCase).join(', ')
+                  {tempPropertyTypes.length > 0
+                    ? tempPropertyTypes.map(toTitleCase).join(', ')
                     : 'Property Type'}
                   <ChevronDown />
                 </Button>
@@ -279,7 +300,7 @@ export function PropertySearchHeader({
                       className='flex items-center space-x-2 px-3 py-2 hover:bg-gray-100'
                     >
                       <Checkbox
-                        checked={filters.propertyType.includes(type)}
+                        checked={tempPropertyTypes.includes(type)}
                         onCheckedChange={(checked) =>
                           handlePropertyTypeChange(type, checked as boolean)
                         }
@@ -287,6 +308,24 @@ export function PropertySearchHeader({
                       <span>{toTitleCase(type)}</span>
                     </div>
                   ))}
+                  <div className='flex justify-between gap-2 mt-4'>
+                    <Button
+                      type='button'
+                      variant='outline'
+                      className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+                      onClick={handleApplyPropertyTypes}
+                    >
+                      Apply
+                    </Button>
+                    <Button
+                      type='button'
+                      variant='outline'
+                      className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+                      onClick={handleClearPropertyTypes}
+                    >
+                      Clear All
+                    </Button>
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
@@ -295,7 +334,7 @@ export function PropertySearchHeader({
 
         <div className='w-full md:w-[40%]  flex justify-between md:justify-center items-center'>
           <div className='w-full'>
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button className='px-4 py-2 border-none justify-between rounded-lg bg-[#eff5ff] text-[#2d495f] flex items-center gap-2'>
                   Add Filters
@@ -303,7 +342,7 @@ export function PropertySearchHeader({
                 </Button>
               </PopoverTrigger>
               <PopoverContent className='w-80 p-4'>
-                <PropertyComponent />
+                <PropertyComponent setOpen={setOpen} />
               </PopoverContent>
             </Popover>
           </div>
@@ -314,12 +353,14 @@ export function PropertySearchHeader({
               disabled={isSearchSaved}
               className={`py-2 h-10 px-8 rounded-lg ${
                 isSearchSaved
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-[#eff5ff] text-[#2d495f] '
+                  ? 'bg-gray-400 text-[#3b8ff6] cursor-not-allowed'
+                  : 'bg-[#3b8ff6] text-white '
               }`}
             >
               {isSearchSaved ? 'Search Saved' : 'Save Search'}
-              <IoMdBookmark className='text-[#3b8ff6]' />
+              <IoMdBookmark
+                className={`${isSearchSaved ? 'text-[#3b8ff6]' : 'text-white'}`}
+              />
             </Button>
           </div>
 
