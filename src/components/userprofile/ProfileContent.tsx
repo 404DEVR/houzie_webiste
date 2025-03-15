@@ -28,7 +28,7 @@ const BrokerContent = () => {
   return (
     <Provider store={store}>
       <div className='sticky top-0 z-10 lg:mx-24 mx-4'>
-        <div className='flex items-center justify-center gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
+        <div className='flex items-center md:justify-center gap-4 border-b px-4 py-2 shadow-sm overflow-x-auto'>
           <Button
             className={` rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
               activeTab === 'profile' ? 'text-gray-800 bg-[#93bbfd]' : ''
@@ -76,6 +76,7 @@ const BrokerContent = () => {
 
         <div className='p-4'>
           {activeTab === 'profile' && <ProfileForm page='user' />}
+
           {activeTab === 'favorites' && <ProfileFavoriteCards />}
           {activeTab === 'savedsearch' && <SaveSearchList />}
           {activeTab === 'settings' && (

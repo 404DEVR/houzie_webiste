@@ -127,7 +127,7 @@ const NavbarDetailsPage = () => {
         }`}
       >
         <div className='max-w-full md:w-[80%] h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
-          <div className='flex items-center'>
+          <div className='md:flex items-center justify-start w-1/3 hidden'>
             {auth ? (
               <>
                 <Popover
@@ -232,47 +232,6 @@ const NavbarDetailsPage = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <div className='flex flex-col space-y-1 sm:space-y-2'>
-                      <Button
-                      onClick={() => router.push('/')}
-                      variant='outline'
-                      className='flex border-none justify-start items-center text-start space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
-                    >
-                      <User size={16} />
-                      <span>Profile</span>
-                    </Button>
-                      <Button
-                        variant='outline'
-                        className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
-                      >
-                        <Bell size={16} />
-                        <span>Notifications</span>
-                      </Button>
-                      <Button
-                        variant='outline'
-                        onClick={() => router.push('/subscriptions')}
-                        className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
-                      >
-                        <CircleFadingArrowUp size={16} />
-                        <span>Upgrade Plan</span>
-                      </Button>
-                      <Button
-                        variant='outline'
-                        onClick={() => router.push('/profile')}
-                        className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-sm sm:text-base'
-                      >
-                        <ImProfile size={16} />
-                        <span>Profile</span>
-                      </Button>
-                      <Button
-                        variant='outline'
-                        onClick={handleLogout}
-                        className='flex border-none justify-start items-center  space-x-1 sm:space-x-2 hover:bg-gray-100 p-1 sm:p-2 rounded text-red-500 hover:text-red-500 text-sm sm:text-base'
-                      >
-                        <LogOut size={16} />
-                        <span>Logout</span>
-                      </Button>
-                    </div> */}
                   </PopoverContent>
                 </Popover>
               </>
@@ -298,8 +257,11 @@ const NavbarDetailsPage = () => {
             )}
           </div>
 
-          <div onClick={() => router.push('/')} className='cursor-pointer '>
-            <h1 className='text-3xl sm:text-4xl md:text-5xl pt-2 font-bold text-white'>
+          <div
+            onClick={() => router.push('/')}
+            className='cursor-pointer w-1/3 flex justify-center items-end'
+          >
+            <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>
               Houzie
             </h1>
           </div>
@@ -316,7 +278,7 @@ const NavbarDetailsPage = () => {
               }
             >
               <PopoverTrigger asChild>
-                <Card className='bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
+                <Card className='w-1/3 flex justify-end items-end bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
                   <CardContent className='bg-transparent flex items-center justify-center p-0'>
                     <Image
                       src='/svg/list.svg'

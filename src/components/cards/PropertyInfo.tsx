@@ -610,16 +610,21 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
       {/* Property Header */}
       <div className='bg-[#eff5ff] border rounded-lg p-6 shadow-sm'>
         <div className='flex justify-between items-center mb-4 p-2'>
-          <h1 className='text-4xl font-bold'>{propertyData.title}</h1>
+          <h1 className='text-3xl sm:text-4xl font-semibold'>
+            {propertyData.title}
+          </h1>
           <div className='flex items-center gap-4'>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className='flex-1 sm:flex-initial items-center gap-2 min-w-[100px] text-[#3b8ff6] sm:min-w-fit py-2 px-4'>
+                <Button
+                  size='custom'
+                  className='flex-1 sm:flex-initial items-center gap-2  text-[#3b8ff6] sm:min-w-fit py-2 md:px-4'
+                >
                   <Image
                     src='/svg/Share.svg'
                     alt='public/svg/Share.svg'
-                    width={30}
-                    height={30}
+                    width={20}
+                    height={20}
                   />
                 </Button>
               </DialogTrigger>
@@ -662,21 +667,21 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
                 <Image
                   src='/svg/heart.svg'
                   alt='/svg/heart.svg'
-                  width={30}
-                  height={30}
+                  width={25}
+                  height={25}
                 />
               ) : (
                 <Image
                   src='/svg/heart fill.svg'
                   alt='public/svg/heart fill.svg'
-                  width={30}
-                  height={30}
+                  width={25}
+                  height={25}
                 />
               )}
             </Button>
           </div>
         </div>
-        <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-8'>
+        <div className='flex flex-wrap items-center md:items-start justify-start mt-2 mb-8'>
           {propertyFeatures.map((feature, index) => (
             <Badge
               key={index}
@@ -688,7 +693,7 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
             </Badge>
           ))}
         </div>
-        <div className='flex gap-6 gap-y-4 text-lg font-medium text-gray-700 mt-4'>
+        <div className='flex flex-wrap gap-6 gap-y-4 text-lg font-medium text-gray-700 mt-4'>
           <div className='flex gap-2 justify-start items-center'>
             <h1 className='text-sm font-normal'>Rent:</h1>
             <span className='font-bold text-black'>
@@ -759,11 +764,11 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
       {/* Property Overview */}
       <div className=' bg-[#eff5ff] border rounded-xl mt-7 p-6'>
         <div className='flex flex-col gap-5 p-2'>
-          <h2 className='font-semibold text-4xl leading-9'>
+          <h2 className='font-semibold text-3xl sm:text-4xl leading-9'>
             Property Overview
           </h2>
 
-          <div className='flex items-start justify-between flex-1 w-full mt-6'>
+          <div className='grid grid-cols-2 sm:flex sm:items-start gap-4 sm:justify-between sm:flex-1 w-full sm:mt-6'>
             {getPropertyDetails(propertyData.propertyType).map(
               (column, columnIndex) => (
                 <div
@@ -775,10 +780,10 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
                       key={detailIndex}
                       className='flex flex-col items-start'
                     >
-                      <div className='text-[#6f6f6f] text-sm leading-[21px]'>
+                      <div className='text-[#6f6f6f] text-nowrap text-sm leading-[21px]'>
                         {detail.label}
                       </div>
-                      <div className='flex items-center gap-1.5 font-medium text-black text-base leading-6'>
+                      <div className='flex text-nowrap items-center gap-1.5 font-medium text-black text-base leading-6'>
                         {detail.value}
                         {propertyData.furnishingExtras &&
                           propertyData.furnishingExtras.length > 0 &&

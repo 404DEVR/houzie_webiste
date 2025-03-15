@@ -311,7 +311,7 @@ export default function PropertySuggestions() {
   }
 
   return (
-    <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto p-4 bg-white rounded-lg shadow-sm'>
+    <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto md:p-4 bg-white rounded-lg shadow-sm'>
       <h2 className='text-2xl font-semibold mb-4'>Other suggestions</h2>
       <div className='flex gap-6 overflow-x-auto scrollbar-hide p-6 h-auto'>
         {properties.map((property) => (
@@ -365,7 +365,7 @@ export default function PropertySuggestions() {
 
             <CardFooter className='px-2 flex'>
               {property.price !== undefined && (
-                <div className='flex items-center justify-between flex-[1]'>
+                <div className='flex text-nowrap items-center justify-between flex-[1]'>
                   <div>
                     <p className='text-xs text-gray-500'>Rent</p>
                     <p className='text-lg font-semibold'>₹ {property.price}</p>

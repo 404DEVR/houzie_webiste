@@ -112,11 +112,11 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
     <>
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 mb-2 pt-10 sm:mb-3 bg-[#F4F4F4]'>
         {/* <HeaderContainer propertyData={propertyData} /> */}
-        <div className='w-full flex gap-4'>
-          <div className='w-1/2'>
+        <div className='w-full flex flex-col lg:flex-row gap-4'>
+          <div className='w-full lg:w-1/2'>
             <ImageGallery propertyData={propertyData} />
           </div>
-          <div className='w-1/2'>
+          <div className='w-full lg:w-1/2'>
             <PropertyInfo propertyData={propertyData} />
           </div>
         </div>

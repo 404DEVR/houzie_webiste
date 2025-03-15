@@ -128,8 +128,8 @@ const DashboardNavbar = () => {
           isHomePage ? 'sticky top-0' : ''
         }`}
       >
-        <div className=' max-w-full md:w-[80%] h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
-          <div className='flex items-center'>
+        <div className=' max-w-full md:w-[85%] h-full flex items-center justify-between px-4 md:mx-auto'>
+          <div className='md:flex items-center w-1/3 justify-start hidden'>
             <Popover
               open={
                 isPopoverOpen &&
@@ -234,8 +234,11 @@ const DashboardNavbar = () => {
             </Popover>
           </div>
 
-          <div onClick={() => router.push('/')} className='cursor-pointer'>
-            <h1 className='text-3xl sm:text-4xl md:text-5xl pt-2 font-semibold text-white font-poppins'>
+          <div
+            onClick={() => router.push('/')}
+            className='cursor-pointer w-1/3 flex justify-center items-end'
+          >
+            <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-semibold text-white font-poppins'>
               Houzie
             </h1>
           </div>
@@ -251,7 +254,7 @@ const DashboardNavbar = () => {
             }
           >
             <PopoverTrigger asChild>
-              <Card className='bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
+              <Card className='w-1/3 items-center justify-end flex bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
                 <CardContent className='bg-transparent flex items-center justify-center p-0'>
                   <Image
                     src='/svg/list.svg'
@@ -292,16 +295,6 @@ const DashboardNavbar = () => {
               </div>
             </PopoverContent>
           </Popover>
-
-          <div className='sm:hidden'>
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Menu className='h-5 w-5' />
-            </Button>
-          </div>
         </div>
       </nav>
     </>

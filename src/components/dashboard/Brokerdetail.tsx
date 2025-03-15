@@ -52,7 +52,7 @@ const Brokerdetail = () => {
                 className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'
               >
                 {/* Lead Info */}
-                <div className='flex items-center space-x-4 w-full sm:w-auto'>
+                <div className='flex items-center space-x-4 w-full sm:w-1/3'>
                   <Image
                     src='/images/Dummy profile.png'
                     alt={lead.name}
@@ -75,26 +75,30 @@ const Brokerdetail = () => {
                 </div>
 
                 {/* Interested In */}
-                <div className='w-full sm:w-auto mt-2 sm:mt-0'>
-                  <p className='text-sm md:text-md text-[#3b82f6]'>
-                    Interested In
-                  </p>
-                  <p className='text-sm md:text-md font-semibold'>
-                    {/* {lead.propertyName ? lead.propertyName : 'Property Name'} */}
-                    Property Name
-                  </p>
+                <div className='w-full sm:w-1/3 mt-2 sm:mt-0 flex flex-col justify-center items-start sm:items-center'>
+                  <div className='flex flex-col justify-center items-start'>
+                    <p className='text-sm md:text-md text-[#3b82f6]'>
+                      Interested In
+                    </p>
+                    <p className='text-sm md:text-md font-semibold'>
+                      {/* {lead.propertyName ? lead.propertyName : 'Property Name'} */}
+                      Property Name
+                    </p>
+                  </div>
                 </div>
 
                 {/* Contact Details */}
-                <div className='flex flex-col items-start justify-center w-full sm:w-auto mt-2 sm:mt-0'>
-                  <div className='text-sm md:text-md text-[#3b82f6]'>
-                    Contact Details
-                  </div>
-                  <div className='flex items-center justify-end space-x-2'>
-                    <FaPhoneAlt className='text-sm md:text-md font-semibold' />
-                    <p className='text-sm md:text-md font-semibold'>
-                      +91 {lead.phoneNumber}
-                    </p>
+                <div className='flex flex-col items-start sm:items-end justify-center w-full sm:w-1/3 mt-2 sm:mt-0'>
+                  <div className='flex flex-col sm:items-start justify-center'>
+                    <div className='text-sm md:text-md text-[#3b82f6]'>
+                      Contact Details
+                    </div>
+                    <div className='flex items-center justify-end space-x-2'>
+                      <FaPhoneAlt className='text-sm md:text-md font-semibold' />
+                      <p className='text-sm md:text-md font-semibold'>
+                        +91 {lead.phoneNumber}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
