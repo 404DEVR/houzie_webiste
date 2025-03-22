@@ -7,7 +7,6 @@ import React, { useRef } from 'react';
 
 import MotionDiv from '@/components/MotionDiv'; // Import the MotionDiv component
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -198,12 +197,6 @@ const HeroSection = () => {
           </MotionDiv>
         </MotionDiv>
         <div className='text-center mt-16 sm:mt-20 md:mt-28'>
-          <Button
-            variant='link'
-            className='bg-[#4169E1] text-white py-1 rounded-full mb-4'
-          >
-            Services
-          </Button>
           <h1 className='text-4xl md:text-5xl lg:text-6xl font-normal'>
             Houzie Services
           </h1>

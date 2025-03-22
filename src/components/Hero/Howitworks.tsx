@@ -43,12 +43,9 @@ const ProcessComponent = () => {
   };
 
   return (
-    <div className='max-w-7xl mx-auto py-12 px-4 md:px-6 lg:px-8 flex flex-col lg:flex-row text-center lg:items-start justify-between'>
-      <div className='lg:w-1/2'>
-        <div className='bg-[#3675ff] text-white py-2 px-5 rounded-full text-md inline-block mb-8'>
-          How it works
-        </div>
-        <h2 className='text-4xl md:text-5xl lg:text-6xl font-normal mb-6 leading-none'>
+    <div className='max-w-7xl mx-auto py-12 px-4 md:px-6 lg:px-8 flex flex-col lg:flex-row text-center h-full justify-between'>
+      <div className='lg:w-1/2 flex items-center justify-center h-full mt-10'>
+        <h2 className='text-4xl md:text-5xl lg:text-6xl font-normal leading-none '>
           Our process of<br></br> helping you find your <br></br>home away from
           <br></br>
           home
@@ -57,7 +54,7 @@ const ProcessComponent = () => {
 
       <div
         ref={ref}
-        className='lg:w-1/2 pl-20 flex flex-col justify-center mt-10 lg:mt-0 gap-24'
+        className='lg:w-1/2 pl-20 flex flex-col justify-center mt-10 lg:mt-0 gap-24 h-full'
       >
         {['Search', 'Find', 'Move'].map((text, index) => (
           <MotionDiv

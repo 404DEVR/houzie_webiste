@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 
 import MotionDiv from '@/components/MotionDiv';
-import { Button } from '@/components/ui/button';
 
 interface AccordionItem {
   title: string;
@@ -157,12 +156,6 @@ const SmartSearch: React.FC = () => {
         </MotionDiv>
       </MotionDiv>
       <div className='text-center max-w-[90%] mx-auto mt-28 mb-16'>
-        <Button
-          variant='default'
-          className='bg-[#4169E1] text-white py-0 rounded-full mb-4'
-        >
-          Properties
-        </Button>
         <h1 className='text-4xl md:text-5xl lg:text-6xl font-normal mb-4'>
           Why Houzie?
         </h1>

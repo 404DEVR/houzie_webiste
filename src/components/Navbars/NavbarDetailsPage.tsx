@@ -122,12 +122,12 @@ const NavbarDetailsPage = () => {
       )}
       <nav
         ref={navRef}
-        className={`w-full h-16 bg-[#3b8ff6] text-black transition-colors duration-300 border-none z-50 ${
+        className={`w-full h-20 bg-[#3B82F6] text-black transition-colors duration-300 border-none z-50 ${
           isHomePage ? 'sticky top-0' : ''
         }`}
       >
-        <div className='max-w-full md:w-[80%] h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
-          <div className='md:flex items-center justify-start w-1/3 hidden'>
+        <div className='max-w-full h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
+          <div className='md:flex items-center justify-start w-1/3 hidden h-full px-4'>
             {auth ? (
               <>
                 <Popover
@@ -142,10 +142,11 @@ const NavbarDetailsPage = () => {
                 >
                   <PopoverTrigger asChild>
                     <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
-                      <div className='w-10 h-10  rounded-full overflow-hidden flex items-center justify-center'>
-                        <img
+                      <div className='w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center'>
+                        <Image
                           src='/images/Dummy profile.png'
                           alt='Profile'
+                          fill
                           className='w-full h-full object-cover'
                         />
                       </div>
@@ -241,7 +242,7 @@ const NavbarDetailsPage = () => {
                   onClick={() => {
                     router.push('/');
                   }}
-                  className='cursor-pointer text-white py-1 px-2 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  className='cursor-pointer text-white py-1 px-2 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
                 >
                   About
                 </div>
@@ -249,113 +250,121 @@ const NavbarDetailsPage = () => {
                   onClick={() => {
                     router.push('/');
                   }}
-                  className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
                 >
                   Concept
                 </div>
               </div>
             )}
           </div>
-
           <div
             onClick={() => router.push('/')}
-            className='cursor-pointer w-1/3 flex justify-center items-end'
+            className='cursor-pointer w-1/3 flex justify-center relative'
           >
-            <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>
+            <Image
+              src='/svg/houzie light.svg'
+              alt='Houzie Logo'
+              width={140}
+              height={140}
+              className='relative -bottom-1'
+            />
+            {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>
               Houzie
-            </h1>
+            </h1> */}
           </div>
 
-          {auth?.accessToken ? (
-            <Popover
-              open={
-                isPopoverOpen &&
-                popoverContent === 'menu' &&
-                popoverPosition === 'right'
-              }
-              onOpenChange={(open) =>
-                handlePopoverOpenChange(open, 'menu', 'right')
-              }
-            >
-              <PopoverTrigger asChild>
-                <Card className='w-1/3 flex justify-end items-end bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
-                  <CardContent className='bg-transparent flex items-center justify-center p-0'>
-                    <Image
-                      src='/svg/list.svg'
-                      alt='public/svg/list.svg'
-                      width={40}
-                      height={40}
-                    />
-                  </CardContent>
-                </Card>
-              </PopoverTrigger>
-              <PopoverContent
-                className='w-80 shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-white/20 z-50'
-                align='end'
-                sideOffset={20}
+          <div className='w-1/3 flex justify-end items-end px-4'>
+            {auth?.accessToken ? (
+              <Popover
+                open={
+                  isPopoverOpen &&
+                  popoverContent === 'menu' &&
+                  popoverPosition === 'right'
+                }
+                onOpenChange={(open) =>
+                  handlePopoverOpenChange(open, 'menu', 'right')
+                }
               >
-                <div className='p-0 bg-white rounded-lg'>
-                  <div className='flex flex-col space-y-1'>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                      <Bell size={16} />
-                      <span>Notifications</span>
-                    </Button>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                      <BadgeInfo size={16} />
-                      <span>Support</span>
-                    </Button>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                      <Contact size={16} />
-                      <span>Contact Us</span>
-                    </Button>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                      <FcAbout size={16} />
-                      <span>About Us</span>
-                    </Button>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                      <Heart size={16} />
-                      <span>Interested Listing</span>
-                    </Button>
-                    <Button
-                      onClick={() => router.push('/profile')}
-                      className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'
-                    >
-                      <RiProfileFill size={16} />
-                      <span>Profile</span>
-                    </Button>
-                    <Button
-                      onClick={handleLogout}
-                      className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 rounded p-0 text-red-500 hover:text-red-500'
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </Button>
+                <PopoverTrigger asChild>
+                  <Card className=' bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
+                    <CardContent className='bg-transparent flex items-center justify-center p-0'>
+                      <Image
+                        src='/svg/list.svg'
+                        alt='public/svg/list.svg'
+                        width={40}
+                        height={40}
+                      />
+                    </CardContent>
+                  </Card>
+                </PopoverTrigger>
+                <PopoverContent
+                  className='w-80 shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-white/20 z-50'
+                  align='end'
+                  sideOffset={20}
+                >
+                  <div className='p-0 bg-white rounded-lg'>
+                    <div className='flex flex-col space-y-1'>
+                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                        <Bell size={16} />
+                        <span>Notifications</span>
+                      </Button>
+                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                        <BadgeInfo size={16} />
+                        <span>Support</span>
+                      </Button>
+                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                        <Contact size={16} />
+                        <span>Contact Us</span>
+                      </Button>
+                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                        <FcAbout size={16} />
+                        <span>About Us</span>
+                      </Button>
+                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                        <Heart size={16} />
+                        <span>Interested Listing</span>
+                      </Button>
+                      <Button
+                        onClick={() => router.push('/profile')}
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'
+                      >
+                        <RiProfileFill size={16} />
+                        <span>Profile</span>
+                      </Button>
+                      <Button
+                        onClick={handleLogout}
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 rounded p-0 text-red-500 hover:text-red-500'
+                      >
+                        <LogOut size={16} />
+                        <span>Logout</span>
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <>
+                <div className='flex items-center space-x-1 sm:space-x-2'>
+                  <div
+                    onClick={() => {
+                      router.push('/brokerSignUp');
+                    }}
+                    className='cursor-pointer text-white py-1 px-2 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  >
+                    Post Property
+                  </div>
+                  <div
+                    onClick={() => {
+                      router.push('/');
+                    }}
+                    className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  >
+                    Contact
                   </div>
                 </div>
-              </PopoverContent>
-            </Popover>
-          ) : (
-            <>
-              <div className='flex items-center space-x-1 sm:space-x-2'>
-                <div
-                  onClick={() => {
-                    router.push('/brokerSignUp');
-                  }}
-                  className='cursor-pointer text-white py-1 px-2 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
-                >
-                  Post Property
-                </div>
-                <div
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                  className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-base rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
-                >
-                  Contact
-                </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
       </nav>
     </>

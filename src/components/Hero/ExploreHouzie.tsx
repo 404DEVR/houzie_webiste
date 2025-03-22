@@ -8,7 +8,6 @@ import { useInView } from 'react-intersection-observer';
 
 import MotionDiv from '@/components/MotionDiv';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -98,7 +97,7 @@ const HeroText = () => {
                 className='absolute inset-0 object-cover'
               />
               <div className='relative flex flex-col h-full justify-between px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16'>
-                <CardTitle className='text-2xl sm:text-3xl md:text-4xl font-medium text-white mb-4'>
+                <CardTitle className='text-2xl sm:text-3xl md:text-4xl font-normal text-white mb-4'>
                   Renting Made Easy.
                 </CardTitle>
                 <MotionDiv
@@ -118,10 +117,10 @@ const HeroText = () => {
         <MotionDiv variants={cardVariants} initial='hidden' animate={controls}>
           <Card className='bg-[#4169E1] rounded-3xl overflow-hidden shadow-lg  h-[350px] lg:h-full'>
             <CardHeader className='p-4 sm:p-6 md:p-8'>
-              <CardTitle className='text-2xl font-semibold text-white mb-2'>
+              <CardTitle className='text-2xl font-normal text-white mb-2'>
                 Features
               </CardTitle>
-              <CardDescription className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-4 sm:mb-6'>
+              <CardDescription className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal text-white mb-4 sm:mb-6'>
                 Forget random location based searches. Just enter your office
                 location, set a search radius, and find the perfect home-fast
                 and easy.
@@ -151,12 +150,6 @@ const HeroText = () => {
         </MotionDiv>
       </div>
       <div className='text-center mt-16 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4'>
-        <Button
-          variant='link'
-          className='bg-[#4169E1] text-white py-1 rounded-full mb-4'
-        >
-          Properties
-        </Button>
         <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal'>
           Rent Smarter With Houzie
         </h1>

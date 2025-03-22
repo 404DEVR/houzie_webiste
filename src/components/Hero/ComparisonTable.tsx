@@ -1,8 +1,6 @@
 import { Check, X } from 'lucide-react';
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
-
 const ComparisonTable: React.FC = () => {
   const features = [
     'Proximity First Search',
@@ -113,12 +111,6 @@ const ComparisonTable: React.FC = () => {
       </div>
 
       <div className='text-center mt-16 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4 sm:px-6 lg:px-8'>
-        <Button
-          variant='default'
-          className='bg-[#4169E1] text-white py-2 px-4 rounded-full mb-4'
-        >
-          About Us
-        </Button>
         <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-4'>
           Your Next Rental Made Easy
         </h1>

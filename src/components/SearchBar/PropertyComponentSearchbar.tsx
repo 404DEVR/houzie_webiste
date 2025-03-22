@@ -1,7 +1,11 @@
 'use client';
 
+import { ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
+import { RiHomeOfficeFill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { useFilters } from '@/lib/context/FilterContext';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,9 +22,6 @@ import {
   setPropertyType,
 } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
-import { RiHomeOfficeFill } from 'react-icons/ri';
-import { useFilters } from '@/lib/context/FilterContext';
-import { ChevronDown } from 'lucide-react';
 
 const PropertyComponentSearchbar = () => {
   const dispatch = useDispatch();
@@ -177,22 +178,22 @@ const PropertyComponentSearchbar = () => {
     <div className='w-full'>
       <div className='flex flex-col items-center justify-between w-full'>
         {options.map((option) => (
-          <div key={option.id} className='border-b-gray-300 border-b-2 w-full'>
-            <label className='flex flex-col items-start space-x-2 cursor-pointer px-3 py-1 hover:bg-[#c1d2f5] rounded-2xl m-2'>
-              <span className='flex flex-row items-center text-black text-base sm:text-lg font-poppins font-medium leading-5 tracking-tighter w-full'>
+          <div key={option.id} className='w-full'>
+            <label className='flex flex-col items-start space-x-2 cursor-pointer pr-1 py-1 hover:bg-[#c1d2f5] rounded-2xl'>
+              <span className='flex flex-row px-4 items-center text-black text-base sm:text-lg font-poppins font-medium leading-5 tracking-tighter w-full'>
                 <input
                   type='checkbox'
                   checked={propertyType.includes(option.id)}
                   onChange={() => handleCheckboxChange(category, option.id)}
-                  className='w-5 h-5 rounded-full focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 border-gray-300 text-black '
+                  className='w-5 h-5 rounded-full focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 border-gray-300 text-black '
                 />
                 <div className='ml-2 text-xl'>{option.label}</div>
               </span>
-              <div className='flex flex-col justify-around px-4 space-y-2 rounded-md w-full'>
+              {/* <div className='flex flex-col justify-around px-4 space-y-2 rounded-md w-full'>
                 <p className='text-gray-500 font-poppins text-[10px] font-normal leading-4 tracking-tighter'>
                   {option.description}
                 </p>
-              </div>
+              </div> */}
             </label>
           </div>
         ))}
@@ -234,11 +235,11 @@ const PropertyComponentSearchbar = () => {
             </div>
           </div>
         </PopoverTrigger>
-        <PopoverContent className='w-[90%] lg:w-[80vh] max-h-[70vh] overflow-y-auto'>
+        <PopoverContent className='w-[90%] md:w-auto max-h-[70vh] overflow-y-auto'>
           <div className='space-y-2'>
-            <h3 className='text-xl font-semibold text-gray-800'>
+            {/* <h3 className='text-xl font-semibold text-gray-800'>
               Property Details
-            </h3>
+            </h3> */}
 
             <CheckBoxPropertyType
               title='Property Type'
@@ -262,14 +263,16 @@ const PropertyComponentSearchbar = () => {
               />
             )}
 
-            <div className='flex flex-col sm:flex-row justify-end gap-2'>
+            <div className='flex flex-col sm:flex-row justify-between gap-2'>
               <Button
+                size='custom'
                 className='w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
                 onClick={handleClearAll}
               >
                 Clear All
               </Button>
               <Button
+                size='custom'
                 className='w-full sm:w-auto bg-[#3675ff] hover:bg-[#729eff] text-white px-4 py-2 rounded-md'
                 onClick={handleApply}
               >
