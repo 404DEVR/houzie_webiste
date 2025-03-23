@@ -106,10 +106,10 @@ export function SmallPropertyCard({
   }, [property.mainImage, loadImage]);
 
   const propertyFeatures: PropertyFeature[] = [
-    ...(property.bedrooms !== 0
+    ...(property.bedrooms !== 0 && property.bedrooms !== null
       ? [{ icon: Bed, label: `${property.bedrooms} Beds` }]
       : []),
-    ...(property.bathrooms !== 0
+    ...(property.bathrooms !== 0 && property.bathrooms !== null
       ? [{ icon: Bath, label: `${property.bathrooms} Baths` }]
       : []),
     ...(property.propertyType
@@ -311,11 +311,22 @@ export function SmallPropertyCard({
     }
   };
 
+  const formatPrice = (price) => {
+    if (price >= 1_00_00_000) {
+      return `${(price / 1_00_00_000).toFixed(1)} Cr`;
+    } else if (price >= 1_00_000) {
+      return `${(price / 1_00_000).toFixed(1)} L`;
+    } else if (price >= 1000) {
+      return `${(price / 1000).toFixed(1)}K`;
+    }
+    return price.toString();
+  };
+
   return (
     <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'>
-      <CardContent className='p-2 flex flex-col md:flex-row gap-4 max-h-[280px]'>
-        <div className='w-full md:w-[550px] h-[280px] flex flex-col'>
-          <div className='relative w-full h-[190px]'>
+      <CardContent className='p-2 flex flex-col md:flex-row gap-4 h-[260px] max-h-[260px]'>
+        <div className='w-full md:w-[550px] h-[260px] flex flex-col'>
+          <div className='relative w-[300px] h-[190px] border rounded-2xl'>
             <Image
               src={property.mainImage || '/svg/no-results.svg'}
               alt={property.title}
@@ -334,20 +345,22 @@ export function SmallPropertyCard({
               )}
             </Button>
           </div>
-          <div className='flex-1 p-3'>
-            <div className='flex flex-col justify-between items-center'>
-              <h2 className='text-base sm:text-xl font-semibold mb-2'>
+          <div className='flex-1 p-1'>
+            <div className='flex flex-col justify-between items-center md:items-start'>
+              <h2 className='text-base sm:text-xl text-start font-semibold mb-1 line-clamp-1'>
                 {property.title}
               </h2>
-              <div className='flex flex-wrap items-center  justify-center'>
+              <div className='flex gap-4 items-center justify-start'>
                 {propertyFeatures.map((feature, index) => (
                   <Badge
                     key={index}
                     variant='outline'
-                    className='border-none flex gap-1 justify-center items-center'
+                    className='border-none flex gap-1 p-0 justify-center items-center'
                   >
                     <feature.icon className='w-[14px] h-[14px]' />
-                    <span className='font-medium text-xs'>{feature.label}</span>
+                    <span className='font-medium text-xs text-nowrap'>
+                      {feature.label}
+                    </span>
                   </Badge>
                 ))}
               </div>
@@ -355,45 +368,47 @@ export function SmallPropertyCard({
           </div>
         </div>
 
-        <div className='w-full flex flex-col md:flex-row'>
-          <div className='md:w-full pt-4 md:pt-8 pl-8'>
-            <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
-              <div className='mb-1'>
-                <p className='text-gray-500 text-xs'>Rent</p>
-                <span className='text-black text-2xl font-semibold flex gap-2'>
-                  <span>₹</span> {property.price}
-                </span>
+        <div className='w-full flex flex-col md:flex-row h-full'>
+          <div className=' flex flex-col h-full justify-between items-center md:items-start py-2'>
+            <div className='md:w-full pl-8 h-full '>
+              <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
+                <div className='mb-1'>
+                  <p className='text-gray-500 text-xs'>Rent</p>
+                  <span className='text-black text-2xl font-semibold flex gap-2'>
+                    <span>₹</span> {formatPrice(property.price)}
+                  </span>
+                </div>
+                <div className='mb-1'>
+                  <p className='text-gray-500 text-xs'>Location:</p>
+                  <span className='text-black text-2xl font-semibold'>
+                    Gurgaon
+                  </span>
+                </div>
               </div>
-              <div className='mb-1'>
-                <p className='text-gray-500 text-xs'>Location:</p>
-                <span className='text-black text-2xl font-semibold'>
-                  Gurgaon
-                </span>
+              <div className='flex gap-6 mb-0 flex-wrap md:flex-nowrap '>
+                <div className='mb-1'>
+                  <p className='text-gray-500 text-xs'>Brokerage</p>
+                  <span className='text-black text-2xl font-semibold flex gap-2'>
+                    <span>₹</span> {formatPrice(property.brokerage)}
+                  </span>
+                </div>
+                <div className='mb-1'>
+                  <p className='text-gray-500 text-xs'>Security</p>
+                  <span className='text-black text-2xl font-semibold'>
+                    <span>₹</span> {formatPrice(property.security)}
+                  </span>
+                </div>
               </div>
+              <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start mt-4'>
+                {property.description}
+              </h3>
             </div>
-            <div className='flex gap-6 mb-0 flex-wrap md:flex-nowrap '>
-              <div className='mb-1'>
-                <p className='text-gray-500 text-xs'>Brokerage</p>
-                <span className='text-black text-2xl font-semibold flex gap-2'>
-                  <span>₹</span> {property.brokerage}
-                </span>
-              </div>
-              <div className='mb-1'>
-                <p className='text-gray-500 text-xs'>Security</p>
-                <span className='text-black text-2xl font-semibold'>
-                  <span>₹</span> {property.security}
-                </span>
-              </div>
-            </div>
-            <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start mt-4'>
-              {property.description}
-            </h3>
-            <div className='flex flex-col items-center mt-4 md:items-start'>
+            <div className='flex flex-col items-center mt-4 md:items-start pl-8'>
               {!iscreate && (
-                <div className='flex justify-end mt-auto pt-0'>
+                <div className=' flex justify-end pt-0'>
                   <Button
                     onClick={() => handleViewDetails(property.id)}
-                    className='w-full lg:w-auto border bg-[#f5f5fa] rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
+                    className='w-full lg:w-auto border-2 font-semibold bg-[#f5f5fa] shadow-md rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
                   >
                     View Details
                     <ArrowRight />

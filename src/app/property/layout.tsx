@@ -16,7 +16,6 @@ export default function LoginsLayout({
 }) {
   return (
     <div className='flex flex-col min-h-screen'>
-      <NavbarDetailsPage />
       <main className='flex-grow'>{children}</main>
       <Footer />
     </div>

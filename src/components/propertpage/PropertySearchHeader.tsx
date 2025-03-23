@@ -1,4 +1,4 @@
-import { ChevronDown, Filter, Search } from 'lucide-react';
+import { ChevronDown, Search, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { IoMdBookmark } from 'react-icons/io';
@@ -23,10 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { RootState } from '@/redux/store';
 import { PropertySearchHeaderProps } from '@/interfaces/PropsInterface';
+import { RootState } from '@/redux/store';
 
 export function PropertySearchHeader({
   onViewChange,
@@ -153,218 +152,194 @@ export function PropertySearchHeader({
   };
 
   return (
-    <div className='flex flex-col items-center gap-2 md:gap-4 px-4 py-4 bg-white shadow-md rounded-lg max-w-4xl mx-auto'>
-      <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between items-center'>
-        <div className='flex flex-col md:flex-row gap-2 w-full md:w-[60%]'>
-          <div className='flex items-center border-none rounded-full px-0 bg-[#eff5ff] flex-[2]'>
-            <Input
-              placeholder='Noida'
-              defaultValue={filters.location || ''}
-              className='border-none pl-6 placeholder:text-[#2d495f]  h-8 bg-transparent focus:ring-0 focus:outline-none w-full focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-            />
-            <Button
-              variant='ghost'
-              className='p-3 bg-[#3b8ff6] text-white rounded-full'
-            >
-              <Search className='' />
+    <div className='flex flex-col md:flex-row items-center gap-2 md:gap-4 px-4 py-4 bg-white border-b-2 w-[95%] mx-auto'>
+      <div className='flex items-center border-none rounded-full px-0 bg-[#eff5ff] flex-[2] w-full md:w-auto md:max-w-[400px]'>
+        <Input
+          placeholder='Noida'
+          defaultValue={filters.location || ''}
+          className='border-none pl-6 placeholder:text-[#2d495f]  h-8 bg-transparent focus:ring-0 focus:outline-none w-full focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+        />
+        <Button
+          variant='ghost'
+          className='p-3 bg-[#3b8ff6] text-white rounded-full'
+        >
+          <Search className='' />
+        </Button>
+      </div>
+      <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
+        <Select onValueChange={handleRadiusChange} value={filters.radius || ''}>
+          <SelectTrigger className='w-full text-md border-none rounded-lg focus:ring-0 bg-[#eff5ff] focus:outline-none focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
+            <SelectValue placeholder='Radius' className=''>
+              Radius: {filters.radius}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='5'>5 km</SelectItem>
+            <SelectItem value='10'>10 km</SelectItem>
+            <SelectItem value='15'>15 km</SelectItem>
+            <SelectItem value='20'>20 km</SelectItem>
+            <SelectItem value='25'>25+ km</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className='px-4 w-full border-none py-2 lex justify-between items-center rounded-lg bg-[#eff5ff] text-[#2d495f]'>
+              Rent: {formatPrice(tempRent[0])}-{formatPrice(tempRent[1])}
+              <ChevronDown />
             </Button>
-          </div>
-          <div className='flex-[1] w-full'>
-            <Select
-              onValueChange={handleRadiusChange}
-              value={filters.radius || ''}
-            >
-              <SelectTrigger className='w-full text-md border-none rounded-lg focus:ring-0 bg-[#eff5ff] focus:outline-none focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
-                <SelectValue placeholder='Radius' className=''>
-                  Radius: {filters.radius}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='5'>5 km</SelectItem>
-                <SelectItem value='10'>10 km</SelectItem>
-                <SelectItem value='15'>15 km</SelectItem>
-                <SelectItem value='20'>20 km</SelectItem>
-                <SelectItem value='25'>25+ km</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className='hidden md:flex w-full md:w-[40%]  justify-start md:justify-end items-center'>
-          <Button
-            onClick={handleSaveSearch}
-            size='custom'
-            disabled={isSearchSaved}
-            className={`py-2 h-10 px-8 rounded-lg ${
-              isSearchSaved
-                ? 'bg-gray-400 text-[#3b8ff6] cursor-not-allowed'
-                : 'bg-[#3b8ff6] text-white '
-            }`}
-          >
-            {isSearchSaved ? 'Search Saved' : 'Save Search'}
-            <IoMdBookmark
-              className={`${isSearchSaved ? 'text-[#3b8ff6]' : 'text-white'}`}
-            />
-          </Button>
-        </div>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 p-4'>
+            <div className='space-y-2'>
+              <h4 className='font-medium'>Rent</h4>
+              <div className='relative w-[90%] mx-auto h-12'>
+                <div
+                  className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                  onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                  onMouseUp={() => setIsDragging(null)}
+                  onMouseLeave={() => setIsDragging(null)}
+                >
+                  <div
+                    className='absolute h-2 bg-[#3b8ff6] rounded-full'
+                    style={{
+                      left: getLeftPosition(tempRent[0]),
+                      right: `${100 - (tempRent[1] / 500000) * 100}%`,
+                    }}
+                  />
+                  <button
+                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                    style={{ left: getLeftPosition(tempRent[0]) }}
+                    onMouseDown={() => setIsDragging('min')}
+                  />
+                  <button
+                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                    style={{ left: getLeftPosition(tempRent[1]) }}
+                    onMouseDown={() => setIsDragging('max')}
+                  />
+                </div>
+              </div>
+              <div className='flex justify-between gap-2'>
+                <Input
+                  type='number'
+                  value={tempRent[0]}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setTempRent([value, tempRent[1]]);
+                  }}
+                  className='w-1/2'
+                  placeholder='Min Rent'
+                />
+                <Input
+                  type='number'
+                  value={tempRent[1]}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setTempRent([tempRent[0], value]);
+                  }}
+                  className='w-1/2'
+                  placeholder='Max Rent'
+                />
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='flex justify-center items-center text-white bg-[#3b8ff6]'
+                  onClick={handleApplyRent}
+                >
+                  Apply
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
-      <div className='w-full flex flex-col md:flex-row justify-between items-center gap-8'>
-        <div className='w-full md:w-[60%] flex flex-col md:flex-row justify-between items-center gap-2 md:gap-10'>
-          <div className='flex-[1] w-full'>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button className='px-4 w-full border-none py-2 lex justify-between items-center rounded-lg bg-[#eff5ff] text-[#2d495f]'>
-                  Rent: {formatPrice(tempRent[0])}-{formatPrice(tempRent[1])}
-                  <ChevronDown />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className='w-80 p-4'>
-                <div className='space-y-2'>
-                  <h4 className='font-medium'>Rent</h4>
-                  <div className='relative w-[90%] mx-auto h-12'>
-                    <div
-                      className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
-                      onMouseMove={(e) => isDragging && handleSliderChange(e)}
-                      onMouseUp={() => setIsDragging(null)}
-                      onMouseLeave={() => setIsDragging(null)}
-                    >
-                      <div
-                        className='absolute h-2 bg-[#3b8ff6] rounded-full'
-                        style={{
-                          left: getLeftPosition(tempRent[0]),
-                          right: `${100 - (tempRent[1] / 500000) * 100}%`,
-                        }}
-                      />
-                      <button
-                        className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                        style={{ left: getLeftPosition(tempRent[0]) }}
-                        onMouseDown={() => setIsDragging('min')}
-                      />
-                      <button
-                        className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                        style={{ left: getLeftPosition(tempRent[1]) }}
-                        onMouseDown={() => setIsDragging('max')}
-                      />
-                    </div>
-                  </div>
-                  <div className='flex justify-between gap-2'>
-                    <Input
-                      type='number'
-                      value={tempRent[0]}
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-                        setTempRent([value, tempRent[1]]);
-                      }}
-                      className='w-1/2'
-                      placeholder='Min Rent'
-                    />
-                    <Input
-                      type='number'
-                      value={tempRent[1]}
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-                        setTempRent([tempRent[0], value]);
-                      }}
-                      className='w-1/2'
-                      placeholder='Max Rent'
-                    />
-                    <Button
-                      type='button'
-                      variant='outline'
-                      className='flex justify-center items-center text-white bg-[#3b8ff6]'
-                      onClick={handleApplyRent}
-                    >
-                      Apply
-                    </Button>
-                  </div>
+      <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className='px-4 w-full border-none py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
+              {tempPropertyTypes.length > 0
+                ? tempPropertyTypes.map(toTitleCase).join(', ')
+                : 'Property Type'}
+              <ChevronDown />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 p-4'>
+            <div className='w-full mt-1 z-10'>
+              {propertyTypes.map((type) => (
+                <div
+                  key={type}
+                  className='flex items-center space-x-2 px-3 py-2 hover:bg-gray-100'
+                >
+                  <Checkbox
+                    checked={tempPropertyTypes.includes(type)}
+                    onCheckedChange={(checked) =>
+                      handlePropertyTypeChange(type, checked as boolean)
+                    }
+                  />
+                  <span>{toTitleCase(type)}</span>
                 </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+              ))}
+              <div className='flex justify-between gap-2 mt-4'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+                  onClick={handleApplyPropertyTypes}
+                >
+                  Apply
+                </Button>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+                  onClick={handleClearPropertyTypes}
+                >
+                  Clear All
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className='w-full md:w-auto flex-[1] md:max-w-[200px]'>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button className='px-4 w-full py-2 border-none justify-between rounded-lg bg-[#eff5ff] text-[#2d495f] flex items-center gap-2'>
+              Add Filters
+              <SlidersHorizontal className='text-[#3b8ff6]' />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 p-4'>
+            <PropertyComponent setOpen={setOpen} />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className=' flex justify-start md:justify-end items-center w-full md:w-auto md:max-w-[200px]'>
+        <Button
+          onClick={handleSaveSearch}
+          size='custom'
+          disabled={isSearchSaved}
+          className={`py-2 h-10 px-8 rounded-lg ${
+            isSearchSaved
+              ? ' cursor-not-allowed bg-[#3b8ff6] text-white '
+              : 'border border-[#3b8ff6] bg-white text-[#3b8ff6]'
+          }`}
+        >
+          {isSearchSaved ? 'Search Saved' : 'Save Search'}
+          <IoMdBookmark
+            className={`${isSearchSaved ? 'text-white' : 'text-[#3b8ff6]'}`}
+          />
+        </Button>
+      </div>
+      {/* <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between items-center'>
+        <div className='flex flex-col md:flex-row gap-2 w-full md:w-[60%]'></div>
+      </div> */}
 
-          <div className='flex-[2] w-full '>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button className='px-4 w-full border-none py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
-                  {tempPropertyTypes.length > 0
-                    ? tempPropertyTypes.map(toTitleCase).join(', ')
-                    : 'Property Type'}
-                  <ChevronDown />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className='w-80 p-4'>
-                <div className='w-full mt-1 z-10'>
-                  {propertyTypes.map((type) => (
-                    <div
-                      key={type}
-                      className='flex items-center space-x-2 px-3 py-2 hover:bg-gray-100'
-                    >
-                      <Checkbox
-                        checked={tempPropertyTypes.includes(type)}
-                        onCheckedChange={(checked) =>
-                          handlePropertyTypeChange(type, checked as boolean)
-                        }
-                      />
-                      <span>{toTitleCase(type)}</span>
-                    </div>
-                  ))}
-                  <div className='flex justify-between gap-2 mt-4'>
-                    <Button
-                      type='button'
-                      variant='outline'
-                      className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
-                      onClick={handleApplyPropertyTypes}
-                    >
-                      Apply
-                    </Button>
-                    <Button
-                      type='button'
-                      variant='outline'
-                      className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
-                      onClick={handleClearPropertyTypes}
-                    >
-                      Clear All
-                    </Button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
-        </div>
+      {/* <div className='w-full flex flex-col md:flex-row justify-between items-center gap-8'>
+        <div className='w-full md:w-[60%] flex flex-col md:flex-row justify-between items-center gap-2 md:gap-10'></div>
 
         <div className='w-full md:w-[40%]  flex justify-between md:justify-center items-center'>
-          <div className='w-full'>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button className='px-4 py-2 border-none justify-between rounded-lg bg-[#eff5ff] text-[#2d495f] flex items-center gap-2'>
-                  Add Filters
-                  <Filter />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className='w-80 p-4'>
-                <PropertyComponent setOpen={setOpen} />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className='md:hidden w-full md:w-[40%] flex justify-start md:justify-end items-center'>
-            <Button
-              onClick={handleSaveSearch}
-              size='custom'
-              disabled={isSearchSaved}
-              className={`py-2 h-10 px-8 rounded-lg ${
-                isSearchSaved
-                  ? 'bg-gray-400 text-[#3b8ff6] cursor-not-allowed'
-                  : 'bg-[#3b8ff6] text-white '
-              }`}
-            >
-              {isSearchSaved ? 'Search Saved' : 'Save Search'}
-              <IoMdBookmark
-                className={`${isSearchSaved ? 'text-[#3b8ff6]' : 'text-white'}`}
-              />
-            </Button>
-          </div>
-
-          {/* View Toggle */}
           <Tabs
             defaultValue='list'
             className='ml-auto md:block hidden'
@@ -406,7 +381,7 @@ export function PropertySearchHeader({
             </TabsTrigger>
           </TabsList>
         </Tabs>
-      </div>
+      </div> */}
     </div>
   );
 }

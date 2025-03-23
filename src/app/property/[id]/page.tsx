@@ -17,6 +17,7 @@ import ImageGallery from '@/components/imagegrids/ImageGallery';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
+import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -110,6 +111,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   }
   return (
     <>
+      <NavbarDetailsPage stickyPage='property' />
       <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 mb-2 pt-10 sm:mb-3 bg-[#F4F4F4]'>
         {/* <HeaderContainer propertyData={propertyData} /> */}
         <div className='w-full flex flex-col lg:flex-row gap-4'>

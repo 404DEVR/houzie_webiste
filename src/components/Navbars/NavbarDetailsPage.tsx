@@ -29,8 +29,9 @@ import {
 } from '@/components/ui/popover';
 
 import { UserData } from '@/interfaces/Interface';
+import { NavbarDetailsPageProps } from '@/interfaces/PropsInterface';
 
-const NavbarDetailsPage = () => {
+const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
   const toast = useCustomToast();
   const { auth, setAuth } = useAuth();
   const router = useRouter();
@@ -40,8 +41,6 @@ const NavbarDetailsPage = () => {
   const [opacity, setOpacity] = useState(1);
   const navRef = useRef(null);
   const [openDialog, setOpenDialog] = useState(false);
-
-  const isHomePage = pathname === '/';
 
   const handleLogout = async () => {
     try {
@@ -123,7 +122,7 @@ const NavbarDetailsPage = () => {
       <nav
         ref={navRef}
         className={`w-full h-20 bg-[#3B82F6] text-black transition-colors duration-300 border-none z-50 ${
-          isHomePage ? 'sticky top-0' : ''
+          stickyPage === 'home' ? 'sticky top-0' : ''
         }`}
       >
         <div className='max-w-full h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>

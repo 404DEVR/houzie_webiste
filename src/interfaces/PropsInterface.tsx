@@ -61,6 +61,10 @@ export interface PropertyComponentProps {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface NavbarDetailsPageProps {
+  stickyPage?: string;
+}
+
 export interface VerificationFormprops {
   handleNext: () => void;
   handleBack: () => void;

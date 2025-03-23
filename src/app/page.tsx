@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import '@/lib/env';
 
+import FAQsAndBlogs from '@/components/FAQsAndBlogs';
 import Footer from '@/components/Footer';
 import ComparisonTable from '@/components/Hero/ComparisonTable';
 import ExploreHeroSection from '@/components/Hero/ExploreHeroSection';
@@ -17,7 +18,6 @@ import StatsSection from '@/components/Hero/StatsSection';
 import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 
 import store from '@/redux/store';
-import FAQsAndBlogs from '@/components/FAQsAndBlogs';
 
 /**
  * SVGR Support
@@ -31,7 +31,7 @@ export default function HomePage() {
   return (
     <Provider store={store}>
       <main>
-        <NavbarDetailsPage />
+        <NavbarDetailsPage stickyPage='home' />
         <PropertyHero />
         <ExploreHouzie />
         <InfiniteCardScroll />
