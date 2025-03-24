@@ -18,7 +18,6 @@ import {
   PropertyFeature,
 } from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
-import { error } from 'console';
 
 export function SmallPropertyCard({
   property,
@@ -282,6 +281,10 @@ export function SmallPropertyCard({
   };
 
   const handleFavoriteClick = async (listingId: string) => {
+    if (auth?.accessToken) {
+      router.push(`/login?redirect=property`);
+      return;
+    }
     try {
       const accessToken = auth?.accessToken;
       if (!accessToken) {

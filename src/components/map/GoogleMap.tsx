@@ -190,7 +190,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
 
   const handleFavoriteClick = async (property) => {
     if (!auth?.accessToken) {
-      router.push(`/login?redirect=property/${property.id}`);
+      router.push(`/login?redirect=property`);
       return;
     }
     try {
@@ -317,7 +317,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
             {/* Close and Like Icons */}
             <div className='absolute top-2 right-2 flex gap-2'>
               <Button
-                className='bg-white py-2 px-2.5 rounded-full shadow-md'
+                className='bg-white py-2 px-3 rounded-full shadow-md'
                 onClick={() => handleFavoriteClick(selectedProperty)}
               >
                 {isListingInFavorites(selectedProperty.id) ? (
@@ -327,7 +327,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
                 )}
               </Button>
               <button
-                className='bg-white p-2 rounded-full shadow-md'
+                className='bg-white py-2 px-2.5 rounded-full shadow-md'
                 onClick={() => setSelectedProperty(null)}
               >
                 <X className='w-5 h-5 text-gray-600' />
