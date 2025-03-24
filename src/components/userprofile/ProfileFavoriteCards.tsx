@@ -157,21 +157,11 @@ const MyListings = () => {
       });
 
       if (response.status === 200) {
-        toast.success({
-          title: 'Success',
-          description: 'Property removed from favorites.',
-        });
-
         // Optimistically update the UI by removing the item from the state
         setFavoriteListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
         await fetchListings();
-      } else {
-        toast.error({
-          title: 'Failed to Remove',
-          description: 'Failed to remove property from favorites.',
-        });
       }
     } catch (error: any) {
       setIsLoading(false);
@@ -184,10 +174,6 @@ const MyListings = () => {
     const accessToken = auth?.accessToken;
 
     if (!accessToken) {
-      toast.error({
-        title: 'Unauthorized',
-        description: 'You are not authorized.',
-      });
       router.push(`/login?redirect=property/${id}`);
       return;
     }

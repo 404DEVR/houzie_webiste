@@ -18,6 +18,7 @@ import {
   PropertyFeature,
 } from '@/interfaces/Interface';
 import { PropertyCardProps } from '@/interfaces/PropsInterface';
+import { error } from 'console';
 
 export function SmallPropertyCard({
   property,
@@ -30,6 +31,13 @@ export function SmallPropertyCard({
   const [favorites, setFavorites] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [mainImageSrc, setMainImageSrc] = useState<string | null>(null);
+  const toggleFavorite = () => setFavorites((prev) => !prev);
+  const [showReadMore, setShowReadMore] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const url = `https://api.houzie.in/profile/favorites`;
+
   const transformString = (str: string | null | undefined) => {
     if (!str) return '';
     return str
@@ -39,12 +47,7 @@ export function SmallPropertyCard({
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
-  const toggleFavorite = () => setFavorites((prev) => !prev);
-  const [showReadMore, setShowReadMore] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const url = `https://api.houzie.in/profile/favorites`;
+
   const fetchListings = async () => {
     setIsLoading(true);
     try {
@@ -191,21 +194,10 @@ export function SmallPropertyCard({
       });
 
       if (response.status === 200) {
-        toast.success({
-          title: 'Success',
-          description: 'Property removed from favorites.',
-        });
-
         setFavoriteListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
         await fetchListings();
-      } else {
-        toast.error({
-          title: 'Failed to Remove',
-          description:
-            'Failed to remove property from favorites. Please Check Your Network Connection',
-        });
       }
     } catch (error: any) {
       setIsLoading(false);
@@ -283,11 +275,6 @@ export function SmallPropertyCard({
           return [...prevListings, newListing];
         }
         return prevListings;
-      });
-
-      toast.success({
-        title: 'Success',
-        description: 'Property Added to favorites.',
       });
     } catch (error) {
       console.log(error);

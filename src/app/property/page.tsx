@@ -10,6 +10,7 @@ import { useFilters } from '@/lib/context/FilterContext';
 
 import PropertyFooter from '@/components/cards/PropertyFooter';
 import { SmallPropertyCard } from '@/components/cards/SmallPropertyCard';
+import MapComponent from '@/components/map/GoogleMap';
 import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 import { PropertySearchHeader } from '@/components/propertpage/PropertySearchHeader';
 import { Button } from '@/components/ui/button';
@@ -21,17 +22,17 @@ import {
   PaginationLink,
 } from '@/components/ui/pagination';
 
-import Property from '@/interfaces/Interface';
+import { PropertyPost } from '@/interfaces/Interface';
 import store from '@/redux/store';
 
 export default function DetailsPage() {
   const { filters, resetFilters } = useFilters();
   const [activeView, setActiveView] = useState('list');
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<PropertyPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mapHeight, setMapHeight] = useState(500); // Default height
-  const [navHeight, setNavHeight] = useState(120); // Default height
-  const [page, setPage] = useState(1); // Default height
+  const [mapHeight, setMapHeight] = useState(500);
+  const [navHeight, setNavHeight] = useState(120);
+  const [page, setPage] = useState(1);
 
   const [imageCache, setImageCache] = useState<Record<string, string>>({});
 
@@ -226,17 +227,7 @@ export default function DetailsPage() {
                 }}
               >
                 <div className='h-full rounded-lg relative overflow-hidden'>
-                  <Image
-                    src={
-                      properties[0]?.mainImage
-                        ? imageCache[properties[0].mainImage] ||
-                          '/images/Map.png'
-                        : '/images/Map.png'
-                    }
-                    alt='Map View'
-                    layout='fill'
-                    objectFit='cover'
-                  />
+                  <MapComponent properties={properties} />
                 </div>
               </div>
             </div>

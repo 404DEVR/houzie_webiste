@@ -60,7 +60,7 @@ export default function PropertyHero() {
         </video>
       </div>
 
-      <div className='container mx-auto px-4 mt-32 md:mt-48 mb-10'>
+      <div className='container mx-auto px-4 mt-16 mb-10'>
         <MotionDiv
           className='text-center mb-8'
           initial='hidden'
