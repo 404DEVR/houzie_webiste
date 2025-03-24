@@ -38,6 +38,9 @@ type Amenity =
   | 'GATED_COMMUNITY'
   | string;
 type Parking = 'TWO_WHEELER_PARKING' | 'FOUR_WHEELER_PARKING' | string;
+type Gender = 'MALE' | 'FEMALE' | 'OTHER' | string;
+type SharingType = 'SINGLE' | 'SHARED' | string;
+type Features = 'COUPLE_FRIENDLY' | 'PET_FRIENDLY' | 'OWNER_FREE' | string;
 
 export interface Filters {
   location: string;
@@ -48,6 +51,9 @@ export interface Filters {
   furnishing: Furnishing[];
   amenities: Amenity[];
   parking: Parking[];
+  features: Features[];
+  sharingType: SharingType[];
+  gender: Gender[];
   radius: string;
 }
 
@@ -69,6 +75,9 @@ const initialFilters: Filters = {
   furnishing: [],
   amenities: [],
   parking: [],
+  features: [],
+  sharingType: [],
+  gender: [],
   radius: '',
 };
 

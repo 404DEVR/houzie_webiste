@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import { useFilters } from '@/lib/context/FilterContext';
 
-import PropertyComponent from '@/components/propertpage/PropertyComponent';
+import PropertyComponent from '@/components/propertpage/FilterComponent';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,

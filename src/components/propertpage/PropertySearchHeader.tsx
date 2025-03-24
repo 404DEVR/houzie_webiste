@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useFilters } from '@/lib/context/FilterContext';
 import useAuth from '@/hooks/useAuth';
 
-import PropertyComponent from '@/components/propertpage/PropertyComponent';
+import FilterComponent from '@/components/propertpage/FilterComponent';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -311,7 +311,7 @@ export function PropertySearchHeader({
             </Button>
           </PopoverTrigger>
           <PopoverContent className='w-80 p-4'>
-            <PropertyComponent setOpen={setOpen} />
+            <FilterComponent setOpen={setOpen} />
           </PopoverContent>
         </Popover>
       </div>

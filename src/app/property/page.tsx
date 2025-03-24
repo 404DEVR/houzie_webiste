@@ -193,7 +193,7 @@ export default function DetailsPage() {
           <NavbarDetailsPage stickyPage='property' />
           <PropertySearchHeader onViewChange={(view) => setActiveView(view)} />
         </div>
-        <main className='mt-40'>
+        <main className='mt-96 md:mt-40'>
           <div className='relative w-[95%] mx-auto'>
             <div className='flex flex-col md:flex-row'>
               {/* Left Side - Property List */}
@@ -253,7 +253,7 @@ export default function DetailsPage() {
                       p === page
                         ? 'bg-blue-500 text-white'
                         : 'border border-blue-500 text-blue-500'
-                    } rounded-full w-10 h-10 flex items-center justify-center`}
+                    } rounded-full w-10 h-10 flex items-center justify-center cursor-pointer`}
                   >
                     {p}
                   </PaginationLink>
@@ -279,7 +279,7 @@ export default function DetailsPage() {
               <PaginationItem>
                 <PaginationLink
                   onClick={() => handlePageChange(page + 1)}
-                  className='border border-blue-500 text-blue-500 rounded-full w-10 h-10 flex items-center justify-center'
+                  className='border border-blue-500 text-blue-500 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
                 >
                   <ChevronRight />
                 </PaginationLink>

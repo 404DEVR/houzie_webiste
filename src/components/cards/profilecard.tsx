@@ -10,7 +10,6 @@ import { CiMail } from 'react-icons/ci';
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
-import LeadForm from '@/components/detailspage/LeadFrom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -18,10 +17,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { Stats } from '@/interfaces/Interface';
+import { Stats, UserData } from '@/interfaces/Interface';
 import { ProfileCardProps } from '@/interfaces/PropsInterface';
 
 const ProfileCard = ({
@@ -36,6 +34,8 @@ const ProfileCard = ({
   const [isLoading, setIsLoading] = useState(true);
   const brokerid = propertyData ? propertyData.broker.id : '';
   const [isConnected, setIsConnected] = useState(false);
+  const [successDialog, setSuccessDialog] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +78,20 @@ const ProfileCard = ({
   }, [brokerid, auth?.accessToken]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      if (auth?.userid) {
+        const response = await axios.get(`https://api.houzie.in/profile`, {
+          headers: {
+            Authorization: `Bearer ${auth.accessToken}`,
+          },
+        });
+        setUserData(response.data);
+      }
+    };
+    fetchUserData();
+  }, [auth]);
+
+  useEffect(() => {
     const checkConnectionStatus = async () => {
       if (!brokerid) return;
 
@@ -110,16 +124,32 @@ const ProfileCard = ({
     return date.toLocaleDateString(undefined, options);
   };
 
-  const handleLeadSubmit = async (formData) => {
+  const handleLeadSubmit = async () => {
+    const formdata = {
+      name: userData?.name || '',
+      phoneNumber: userData?.phoneNumber || '',
+      email: userData?.email || '',
+      budgetMin: 0,
+      budgetMax: 0,
+      preferredLocations: [],
+      propertyTypes: propertyData ? [propertyData.propertyType] : [],
+      note: '',
+    };
     try {
-      await axios.post('https://api.houzie.in/leads', formData, {
-        headers: {
-          Authorization: `Bearer ${auth?.accessToken}`,
-        },
-      });
+      await axios.post(
+        'https://api.houzie.in/leads',
+        formdata,
+
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.accessToken}`,
+          },
+        }
+      );
       setIsConnected(true);
+      setSuccessDialog(true);
     } catch (error) {
-      toast.error({ title: 'Error', description: 'Error submitting lead' });
+      console.log(error);
     }
   };
 
@@ -272,26 +302,51 @@ const ProfileCard = ({
                 Enquire
               </Button>
             ) : (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className='w-full mt-3 bg-[#3b8ff6] hover:bg-[#bfdbfe] text-white'>
-                    Connect
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className='h-[90%] overflow-y-auto'>
-                  <DialogHeader>
-                    <DialogTitle>Submit Lead</DialogTitle>
-                  </DialogHeader>
-                  <LeadForm
-                    onSubmit={handleLeadSubmit}
-                    propertyData={propertyData}
-                  />
-                </DialogContent>
-              </Dialog>
+              <Button
+                onClick={() => {
+                  handleLeadSubmit();
+                }}
+                className='w-full mt-3 bg-[#3b8ff6] hover:bg-[#bfdbfe] text-white'
+              >
+                Connect
+              </Button>
             )}
           </div>
         </div>
       </div>
+      <Dialog onOpenChange={setSuccessDialog} open={successDialog}>
+        <DialogContent className='h-auto overflow-y-auto'>
+          <DialogHeader>
+            <DialogTitle></DialogTitle>
+          </DialogHeader>
+          <div className='flex flex-col justify-center items-center space-y-3'>
+            <Image
+              src='/svg/success.svg'
+              alt='/svg/success.svg'
+              width={100}
+              height={100}
+            />
+            <div className='flex flex-col gap-8 justify-center  items-center'>
+              <h1 className='text-2xl font-semibold'>
+                Request Raised Successfully
+              </h1>
+              <p className='text-sm text-gray-700'>
+                Thank you for sharing your preferences! Our team will review
+                your requirements, and we'll notify you if a matching property
+                becomes available.<br></br> Stay tuned for updates!
+              </p>
+            </div>
+
+            <Button
+              size='custom'
+              className='flex justify-center items-center w-auto p-4  text-white bg-[#3b8ff6]'
+              onClick={() => setSuccessDialog(false)}
+            >
+              Continue Browsing
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

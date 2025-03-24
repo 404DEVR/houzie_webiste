@@ -51,13 +51,15 @@ const SignUpForm = () => {
   const searchParams = useSearchParams();
   const signUpRedirect = searchParams.get('signUpRedirect');
   const redirectPath = searchParams.get('redirect') || '/';
-  const [showOTPForm, setShowOTPForm] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState<string>('email');
   const [email, setEmail] = useState<string>('');
+  const [resetEmail, setResetEmail] = useState<string>('');
   const [otp, setOtp] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [phoneNumber, setPhoneNumber] = useState<string>('+91');
   const [phoneNumberError, setPhoneNumberError] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState<number>(0);
@@ -275,6 +277,55 @@ const SignUpForm = () => {
     }
   };
 
+  const getRequiredFields = () => {
+    const commonFields = [
+      'location',
+      'propertyType',
+      'configuration',
+      'furnishing',
+      'availableFrom',
+      'preferredTenant',
+      'features',
+    ];
+    return commonFields;
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setResetEmail(value);
+
+    setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = getRequiredFields();
+
+    requiredFields.forEach((field) => {
+      const value = resetEmail;
+      if (Array.isArray(value)) {
+        errors[field] = value.length === 0;
+      } else {
+        errors[field] = !value;
+      }
+    });
+    return errors;
+  };
+
+  const handleForgotLink = () => {
+    const errors = validateForm();
+    setFieldErrors(errors);
+
+    const errorFields = Object.keys(errors).filter((key) => errors[key]);
+
+    if (errorFields.length > 0) {
+      return;
+    }
+  };
+
   return (
     <>
       <div className='flex justify-center items-center h-full min-h-screen bg-[#5b86e5] p-4'>
@@ -297,9 +348,9 @@ const SignUpForm = () => {
               </div>
             </div>
             {/* Right Side (Sign Up Form) */}
-            <div className='w-full md:w-1/2 p-8 h-full rounded-3xl bg-white flex flex-col justify-center items-center'>
-              {!showOTPForm ? (
-                <div className='h-auto w-full pt-20'>
+            <div className='w-full md:w-1/2 p-8 h-full rounded-3xl flex flex-col bg-white justify-center items-center'>
+              {showForm === 'email' ? (
+                <div className='h-auto w-full pt-20 '>
                   <CardHeader className='space-y-1 flex flex-col items-center p-2'>
                     <CardTitle className='text-3xl md:text-4xl text-center mb-8'>
                       Log In
@@ -318,7 +369,7 @@ const SignUpForm = () => {
                             id='email'
                             placeholder='hello@example.com'
                             type='email'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('email')}
                           />
                         </div>
@@ -336,7 +387,7 @@ const SignUpForm = () => {
                             id='password'
                             placeholder='Password'
                             type={showPassword ? 'text' : 'password'}
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             {...register('password')}
                           />
                           <Button
@@ -357,13 +408,83 @@ const SignUpForm = () => {
                         )}
                       </div>
                     </form>
+                    <div className='flex justify-end items-center mt-2'>
+                      <Button
+                        onClick={() => setShowForm('forgotPassword')}
+                        size='custom'
+                        className='text-[#3b8ff6]'
+                      >
+                        Forgot Password
+                      </Button>
+                    </div>
+                    <div className='flex flex-col gap-2 mt-4 justify-center items-center'>
+                      <Button
+                        size='custom'
+                        className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-2'
+                        onClick={handleSubmit(onSubmit)}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          'Signing Up...'
+                        ) : (
+                          <div className='flex gap-1 justify-center items-center'>
+                            <p>Log In</p> <ChevronRight className='' />
+                          </div>
+                        )}
+                      </Button>
+                      <div className='text-center text-xs flex gap-1'>
+                        <Button
+                          size='custom'
+                          onClick={() => setShowForm('phone')}
+                          className='text-[#3b82f6]'
+                        >
+                          Login via Phone Number
+                        </Button>
+                      </div>
+                      <p className='text-center text-xs flex gap-1 mt-2'>
+                        Don't Have An Account?
+                        <a
+                          href={
+                            signUpRedirect === 'signUpRedirect'
+                              ? '/brokerSignUp'
+                              : '/signUp'
+                          }
+                          className='text-[#3b82f6]'
+                        >
+                          Sign Up Here
+                        </a>
+                      </p>
+                    </div>
+                    <div className='pb-10'>
+                      <div className='flex items-center justify-center w-[60%] mx-auto mt-4'>
+                        <div className='border-t border-gray-400 flex-grow '></div>
+                        <span className='mx-4 text-black'>Or</span>
+                        <div className='border-t border-gray-400 flex-grow '></div>
+                      </div>
+                      <div className='flex  justify-center gap-4 w-full pt-4 flex-row'>
+                        <Button
+                          variant='outline'
+                          className='rounded-md w-1/2 md:w-full flex items-center justify-center'
+                        >
+                          <FcGoogle className='h-5 w-5 mr-2' /> Google
+                        </Button>
+                        <Button
+                          variant='outline'
+                          className=' rounded-md  w-1/2 md:w-full flex items-center justify-center'
+                        >
+                          <Apple className='h-5 w-5 mr-2' /> Apple
+                        </Button>
+                      </div>
+                    </div>
                   </CardContent>
                 </div>
-              ) : (
-                <div className='h-full w-full py-28'>
+              ) : showForm === 'phone' ? (
+                <div
+                  className={`h-full w-full  ${step === 1 ? 'py-20' : 'pt-20'}`}
+                >
                   <CardHeader className='space-y-1 flex flex-col items-center p-2'>
-                    <CardTitle className='text-5xl md:text-6xl text-center mb-4'>
-                      Login
+                    <CardTitle className='text-3xl md:text-4xl text-center mb-8'>
+                      Log In
                     </CardTitle>
                   </CardHeader>
                   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
@@ -375,6 +496,28 @@ const SignUpForm = () => {
                           </Label>
                           <div className='relative'>
                             <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                            {step === 1 && (
+                              <div
+                                className='cursor-pointer absolute top-2.5 right-2.5 text-[#3b8ff6]'
+                                onClick={handleInitiateLogin}
+                              >
+                                {loading ? 'Sending OTP...' : 'Send OTP'}
+                              </div>
+                            )}
+                            {step === 2 && (
+                              <Button
+                                variant='ghost'
+                                size='custom'
+                                className=' p-0 cursor-pointer absolute top-2.5 right-2.5 text-[#3b8ff6] '
+                                onClick={handleResendOTP}
+                                disabled={!canResend}
+                              >
+                                {canResend
+                                  ? 'Resend OTP'
+                                  : `Resend OTP in ${resendCooldown}s`}
+                              </Button>
+                            )}
+
                             <Input
                               id='phoneNumber'
                               placeholder='Phone Number'
@@ -394,11 +537,6 @@ const SignUpForm = () => {
                           )}
                         </div>
                       </CardDescription>
-                      {step === 1 && (
-                        <Button onClick={handleInitiateLogin}>
-                          {loading ? 'Sending OTP...' : 'Send OTP'}
-                        </Button>
-                      )}
                       {step === 2 && (
                         <>
                           <div className='flex gap-2 flex-col justify-center items-start text-center'>
@@ -425,275 +563,137 @@ const SignUpForm = () => {
                                 <InputOTPSlot index={5} />
                               </InputOTPGroup>
                             </InputOTP>
-                            <div className='flex justify-end items-end w-full'>
-                              <Button
-                                variant='ghost'
-                                size='custom'
-                                className='text-[#3b8ff6] p-0 '
-                                onClick={handleResendOTP}
-                                disabled={!canResend}
-                              >
-                                {canResend
-                                  ? 'Resend OTP'
-                                  : `Resend OTP in ${resendCooldown}s`}
-                              </Button>
-                            </div>
                           </div>
-                          <Button
-                            size='custom'
-                            className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-2'
-                            onClick={handleVerifyOTP}
-                            disabled={loading}
-                          >
-                            {loading ? (
-                              'Logging In...'
-                            ) : (
-                              <div className='flex gap-1 justify-center items-center'>
-                                <p>Log In</p> <ChevronRight className='' />
-                              </div>
-                            )}
-                          </Button>
                         </>
                       )}
+                      <Button
+                        size='custom'
+                        className='bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-2'
+                        onClick={handleVerifyOTP}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          'Logging In...'
+                        ) : (
+                          <div className='flex gap-1 justify-center items-center'>
+                            <p>Log In</p> <ChevronRight className='' />
+                          </div>
+                        )}
+                      </Button>
+
+                      <div className='flex flex-col gap-2 justify-center items-center'>
+                        <div className='text-center text-xs flex gap-1'>
+                          <Button
+                            size='custom'
+                            onClick={() => setShowForm('email')}
+                            className='text-[#3b82f6]'
+                          >
+                            Login via Email
+                          </Button>
+                        </div>
+                        <p className='text-center text-xs flex gap-1'>
+                          Don't Have An Account?
+                          <a
+                            href={
+                              signUpRedirect === 'signUpRedirect'
+                                ? '/brokerSignUp'
+                                : '/signUp'
+                            }
+                            className='text-[#3b82f6]'
+                          >
+                            Sign Up Here
+                          </a>
+                        </p>
+                      </div>
+
+                      <div className=''>
+                        <div className='flex items-center justify-center w-[60%] mx-auto mt-0'>
+                          <div className='border-t border-gray-400 flex-grow '></div>
+                          <span className='mx-4 text-black'>Or</span>
+                          <div className='border-t border-gray-400 flex-grow '></div>
+                        </div>
+                        <div className='flex  justify-center gap-4 w-full pt-4 flex-row'>
+                          <Button
+                            variant='outline'
+                            className='rounded-md w-1/2 md:w-full flex items-center justify-center'
+                          >
+                            <FcGoogle className='h-5 w-5 mr-2' /> Google
+                          </Button>
+                          <Button
+                            variant='outline'
+                            className=' rounded-md  w-1/2 md:w-full flex items-center justify-center'
+                          >
+                            <Apple className='h-5 w-5 mr-2' /> Apple
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </div>
+              ) : (
+                <div className='h-auto w-full py-40'>
+                  <CardHeader className='space-y-1 flex flex-col items-center p-2'>
+                    <CardTitle className='text-3xl md:text-4xl text-center mb-8'>
+                      Forgot Password
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
+                    <form className='grid gap-4'>
+                      <div className='grid gap-2'>
+                        <Label htmlFor='email'>Email Address</Label>
+                        <div className='relative'>
+                          <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                          <Input
+                            id='email'
+                            placeholder='hello@example.com'
+                            type='email'
+                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                            onChange={(e) => setResetEmail(e.target.value)}
+                          />
+                        </div>
+                        {fieldErrors['email'] && (
+                          <p className='text-red-500 text-sm'>
+                            Please Enter An Email
+                          </p>
+                        )}
+                      </div>
+                    </form>
+
+                    <div className='flex flex-col gap-2 justify-center items-center mt-6'>
+                      <Button
+                        onClick={handleForgotLink}
+                        size='custom'
+                        className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-4'
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          'Sending...'
+                        ) : (
+                          <div className='flex gap-1 justify-center items-center'>
+                            <p>Send Password Reset Link</p>{' '}
+                            <ChevronRight className='' />
+                          </div>
+                        )}
+                      </Button>
+                      <div className='flex flex-col gap-2 justify-center items-center'>
+                        <div className='text-center text-xs flex gap-1'>
+                          <Button
+                            size='custom'
+                            onClick={() => setShowForm('email')}
+                            className='text-[#3b82f6]'
+                          >
+                            Back to Login
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </div>
               )}
-              <CardFooter className='flex flex-col w-[90%] mx-auto items-center py-4 '>
-                {!showOTPForm && (
-                  <>
-                    <Button
-                      size='custom'
-                      className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-4'
-                      onClick={handleSubmit(onSubmit)}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        'Signing Up...'
-                      ) : (
-                        <div className='flex gap-1 justify-center items-center'>
-                          <p>Log In</p> <ChevronRight className='' />
-                        </div>
-                      )}
-                    </Button>
-                    <div className='text-center text-xs flex gap-1'>
-                      <Button
-                        size='custom'
-                        onClick={() => setShowOTPForm(true)}
-                        className='text-[#3b82f6]'
-                      >
-                        Login via Phone Number
-                      </Button>
-                    </div>
-                  </>
-                )}
-                {!showOTPForm && (
-                  <div className='pb-20'>
-                    <div className='flex items-center justify-center w-[60%] mx-auto mt-4'>
-                      <div className='border-t border-gray-400 flex-grow '></div>
-                      <span className='mx-4 text-black'>Or</span>
-                      <div className='border-t border-gray-400 flex-grow '></div>
-                    </div>
-                    <div className='flex  justify-center gap-4 w-full pt-4 flex-row'>
-                      <Button
-                        variant='outline'
-                        className='rounded-md w-1/2 md:w-full flex items-center justify-center'
-                      >
-                        <FcGoogle className='h-5 w-5 mr-2' /> Google
-                      </Button>
-                      <Button
-                        variant='outline'
-                        className=' rounded-md  w-1/2 md:w-full flex items-center justify-center'
-                      >
-                        <Apple className='h-5 w-5 mr-2' /> Apple
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardFooter>
             </div>
           </div>
         </Card>
       </div>
-      {/* <div className='flex justify-center items-center h-screen bg-gray-100'>
-        <Card className='w-full max-w-md shadow-md bg-[#ffffff]'>
-          <CardHeader className='space-y-1 flex flex-col items-center'>
-            <Image
-              src='/svg/houzie-logo.svg'
-              alt='Houzie Logo'
-              width={120}
-              height={120}
-              className='mb-2'
-            />
-            <CardTitle className='text-3xl text-center'>Sign In</CardTitle>
-            <CardDescription className='text-center'>
-              Need to create an account?{' '}
-              <a href={`/${signUpRedirect}`} className='text-[#42A4AE]'>
-                Sign up here
-              </a>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='grid gap-4 w-[90%] mx-auto'>
-            {!showOTPForm ? (
-              <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
-                <div className='grid gap-2'>
-                  <Label htmlFor='email'>Email Address</Label>
-                  <div className='relative'>
-                    <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='email'
-                      placeholder='hello@example.com'
-                      type='email'
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('email')}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.email?.message}
-                    </p>
-                  )}
-                </div>
-                <div className='grid gap-2'>
-                  <Label htmlFor='password'>Password</Label>
-                  <div className='relative'>
-                    <Lock className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                    <Input
-                      id='password'
-                      placeholder='Password'
-                      type={showPassword ? 'text' : 'password'}
-                      className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                      {...register('password')}
-                    />
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      type='button'
-                      className='absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8'
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      <Eye className='h-4 w-4' />
-                      <span className='sr-only'>Show password</span>
-                    </Button>
-                  </div>
-                  {errors.password && (
-                    <p className='text-red-500 text-sm'>
-                      {errors.password?.message}
-                    </p>
-                  )}
-                </div>
-              </form>
-            ) : (
-              <>
-                <div className='grid gap-4'>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='email'>Email Address</Label>
-                    <div className='relative'>
-                      <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                      <Input
-                        id='email'
-                        placeholder='hello@example.com'
-                        type='email'
-                        className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#42a4ae] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    {errors.email && (
-                      <p className='text-red-500 text-sm'>
-                        {errors.email?.message}
-                      </p>
-                    )}
-                  </div>
-                  {step === 1 && (
-                    <Button onClick={handleInitiateLogin} disabled={loading}>
-                      {loading ? 'Sending OTP...' : 'Send OTP'}
-                    </Button>
-                  )}
-                  {step === 2 && (
-                    <>
-                      <div className='flex gap-2 flex-col justify-center items-center text-center'>
-                        <Label htmlFor='otp' className='text-2xl mb-2'>
-                          Enter OTP
-                        </Label>
-                        <InputOTP maxLength={6}>
-                          <InputOTPGroup>
-                            {[0, 1, 2].map((index) => (
-                              <InputOTPSlot key={index} index={index} />
-                            ))}
-                          </InputOTPGroup>
-                          <InputOTPSeparator />
-                          <InputOTPGroup>
-                            {[3, 4, 5].map((index) => (
-                              <InputOTPSlot key={index} index={index} />
-                            ))}
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
-                      <Button onClick={handleVerifyOTP} disabled={loading}>
-                        {loading ? 'Verifying...' : 'Verify OTP'}
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
-          </CardContent>
-          <CardFooter className='flex flex-col w-[90%] mx-auto items-center'>
-            {!showOTPForm && (
-              <>
-                <Button
-                  className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
-                  onClick={handleSubmit(onSubmit)}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Signing In...' : 'Sign In'}
-                </Button>
-
-                <div className='flex items-center justify-center w-full my-4'>
-                  <div className='border-t border-gray-400 flex-grow'></div>
-                  <span className='mx-4 text-black'>Or</span>
-                  <div className='border-t border-gray-400 flex-grow'></div>
-                </div>
-
-                <Button
-                  onClick={() => setShowOTPForm(true)}
-                  className='w-full bg-[#42A4AE] text-white hover:bg-teal-700 py-4 rounded-xl'
-                >
-                  Login Using OTP
-                </Button>
-
-                <div className='flex items-center justify-center w-full mt-4'>
-                  <div className='border-t border-gray-400 flex-grow'></div>
-                  <span className='mx-4 text-black'>Or</span>
-                  <div className='border-t border-gray-400 flex-grow'></div>
-                </div>
-
-                <div className='flex flex-wrap justify-center gap-4 w-full my-4'>
-                  <Button
-                    onClick={handleGoogleSignUp}
-                    variant='outline'
-                    className='rounded-md p-2 flex items-center'
-                  >
-                    <FcGoogle className='h-5 w-5 mr-2' /> Google
-                  </Button>
-                  <Button
-                    variant='outline'
-                    className='rounded-md p-2 flex items-center'
-                  >
-                    <Apple className='h-5 w-5 mr-2' /> Apple
-                  </Button>
-                  <Button
-                    variant='outline'
-                    className='rounded-md p-2 flex items-center'
-                  >
-                    <FaFacebook className='h-5 w-5 mr-2' /> Facebook
-                  </Button>
-                </div>
-              </>
-            )}
-          </CardFooter>
-        </Card>
-      </div> */}
     </>
   );
 };

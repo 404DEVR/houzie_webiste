@@ -324,9 +324,9 @@ export function SmallPropertyCard({
 
   return (
     <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'>
-      <CardContent className='p-2 flex flex-col md:flex-row gap-4 h-[260px] max-h-[260px]'>
-        <div className='w-full md:w-[550px] h-[260px] flex flex-col'>
-          <div className='relative w-[300px] h-[190px] border rounded-2xl'>
+      <CardContent className='p-2 flex flex-col md:flex-row gap-4 md:h-[260px] md:max-h-[260px]'>
+        <div className='w-full md:w-[550px] md:h-[260px] flex flex-col'>
+          <div className='relative w-[300px] h-[190px] border rounded-2xl mx-auto md:mx-0'>
             <Image
               src={property.mainImage || '/svg/no-results.svg'}
               alt={property.title}
@@ -369,7 +369,7 @@ export function SmallPropertyCard({
         </div>
 
         <div className='w-full flex flex-col md:flex-row h-full'>
-          <div className=' flex flex-col h-full justify-between items-center md:items-start py-2'>
+          <div className=' flex flex-col h-full justify-between items-start md:py-2'>
             <div className='md:w-full pl-8 h-full '>
               <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
                 <div className='mb-1'>
@@ -399,7 +399,7 @@ export function SmallPropertyCard({
                   </span>
                 </div>
               </div>
-              <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start mt-4'>
+              <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-start mt-4'>
                 {property.description}
               </h3>
             </div>

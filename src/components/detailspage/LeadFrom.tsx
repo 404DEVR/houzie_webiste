@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import useAuth from '@/hooks/useAuth';
+
 import CustomInput from '@/components/inputs/CustomInput';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -44,6 +46,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
+  const { auth } = useAuth();
   const {
     control,
     handleSubmit,
@@ -52,9 +55,9 @@ const LeadForm = ({ onSubmit, propertyData }: LeadformProps) => {
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      name: '',
-      phoneNumber: '',
-      email: '',
+      name: auth?.name || '',
+      phoneNumber: auth?.phoneNumber || '',
+      email: auth?.email || '',
       budgetMin: undefined,
       budgetMax: undefined,
       preferredLocations: [],

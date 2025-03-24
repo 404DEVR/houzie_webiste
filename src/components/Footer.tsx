@@ -32,7 +32,7 @@ const Footer = () => {
 
         <div className='mt-4 sm:mt-6 gap-2 sm:gap-4 md:gap-16 text-[#464545] text-center flex flex-wrap justify-center items-center'>
           <p className='text-xs sm:text-sm'>
-            © 2021 Houzie, All rights reserved.
+            © 2025 Houzie Proptech OPC PVT LTD
           </p>
           <Link href='#' className='text-xs sm:text-sm hover:underline'>
             Legal Notices

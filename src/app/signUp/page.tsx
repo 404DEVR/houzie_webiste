@@ -294,7 +294,7 @@ const SignUpForm = () => {
               </div>
             </div>
             {/* Right Side (Sign Up Form) */}
-            <div className='w-full md:w-1/2 p-8 h-full rounded-3xl bg-white flex flex-col justify-center items-center'>
+            <div className='w-full md:w-1/2 py-20 px-8 h-full rounded-3xl bg-white flex flex-col justify-center items-center'>
               {!showOTPForm ? (
                 <div className='h-auto w-full'>
                   <CardHeader className='space-y-1 flex flex-col items-center p-2'>

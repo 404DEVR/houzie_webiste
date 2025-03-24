@@ -10,6 +10,7 @@ import ExplorePlans from '@/components/Subscription/ExplorePlans';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +19,6 @@ import {
 } from '@/components/ui/tooltip';
 
 import { ProfileFormInterface } from '@/interfaces/PropsInterface';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface originalData {
   name: string;
@@ -131,7 +131,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
 
   if (isLoading) {
     return (
-      <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
+      <div className='flex flex-col gap-4 p-4 max-w-full lg:max-w-7xl mx-auto h-full'>
         <div className='flex flex-col md:flex-row w-full gap-8'>
           <div className=' rounded-lg p-6 w-full h-auto md:h-[350px] border border-slate-200 md:w-1/2'>
             <div className='flex flex-col md:flex-row justify-center pt-10 h-full'>
@@ -175,7 +175,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
       {showExplorePlans ? (
         <ExplorePlans />
       ) : (
-        <div className='flex flex-col gap-4 p-4 max-w-7xl mx-auto h-full'>
+        <div className='flex flex-col gap-4 p-4 max-w-full mx-auto h-full'>
           {/* Profile Section */}
           <div className='flex flex-col md:flex-row w-full gap-8'>
             <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-auto md:h-[350px] md:w-1/2 shadow-2xl border'>

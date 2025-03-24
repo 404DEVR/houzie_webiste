@@ -2,19 +2,10 @@
 
 import axios from 'axios';
 import { deleteCookie } from 'cookies-next';
-import {
-  BadgeInfo,
-  Bell,
-  ChevronDown,
-  Contact,
-  Heart,
-  LogOut,
-} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
-import { FcAbout } from 'react-icons/fc';
-import { RiProfileFill } from 'react-icons/ri';
 
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
@@ -297,44 +288,61 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   </Card>
                 </PopoverTrigger>
                 <PopoverContent
-                  className='w-80 shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-white/20 z-50'
+                  className='w-auto shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-white/20 z-50'
                   align='end'
                   sideOffset={20}
                 >
                   <div className='p-0 bg-white rounded-lg'>
-                    <div className='flex flex-col space-y-1'>
-                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                        <Bell size={16} />
-                        <span>Notifications</span>
-                      </Button>
-                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                        <BadgeInfo size={16} />
-                        <span>Support</span>
-                      </Button>
-                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                        <Contact size={16} />
-                        <span>Contact Us</span>
-                      </Button>
-                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                        <FcAbout size={16} />
-                        <span>About Us</span>
-                      </Button>
-                      <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
-                        <Heart size={16} />
-                        <span>Interested Listing</span>
-                      </Button>
+                    <div className='flex flex-col space-y-2 px-4'>
                       <Button
-                        onClick={() => router.push('/profile')}
-                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'
+                        size='custom'
+                        onClick={() => router.push('/profile?section=profile')}
+                        className='focus-visible:border-0 border-b rounded-none py-1 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 '
                       >
-                        <RiProfileFill size={16} />
                         <span>Profile</span>
                       </Button>
                       <Button
-                        onClick={handleLogout}
-                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 rounded p-0 text-red-500 hover:text-red-500'
+                        size='custom'
+                        onClick={() =>
+                          router.push('/profile?section=savedsearch')
+                        }
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
                       >
-                        <LogOut size={16} />
+                        <span>Saved Search</span>
+                      </Button>
+                      <Button
+                        size='custom'
+                        onClick={() =>
+                          router.push('/profile?section=favorites')
+                        }
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2  border-b rounded-none py-1'
+                      >
+                        <span>Favorites</span>
+                      </Button>
+                      <Button
+                        size='custom'
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                      >
+                        <span>Contacted</span>
+                      </Button>
+                      <Button
+                        size='custom'
+                        onClick={() => router.push('/profile?section=settings')}
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                      >
+                        <span>Settings</span>
+                      </Button>
+                      <Button
+                        size='custom'
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                      >
+                        <span>Notifications</span>
+                      </Button>
+                      <Button
+                        size='custom'
+                        onClick={handleLogout}
+                        className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2  border-b rounded-none py-1 text-red-500 hover:text-red-500'
+                      >
                         <span>Logout</span>
                       </Button>
                     </div>

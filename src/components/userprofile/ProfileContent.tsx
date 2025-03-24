@@ -6,7 +6,8 @@ import {
   PlusIcon,
   SettingsIcon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
 import ProfileForm from '@/components/profile/ProfileForm';
@@ -20,6 +21,12 @@ import ProfileFavoriteCards from '../userprofile/ProfileFavoriteCards';
 
 const BrokerContent = () => {
   const [activeTab, setActiveTab] = useState('profile');
+  const searchParams = useSearchParams();
+  const section = searchParams.get('section');
+
+  useEffect(() => {
+    setActiveTab(section || '');
+  }, [section]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
