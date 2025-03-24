@@ -48,6 +48,7 @@
     "clsx": "^2.1.1",
     "cookies-next": "^4.0.0",
     "date-fns": "^3.0.0",
+    "embla-carousel-react": "^8.5.2",
     "framer-motion": "^12.4.7",
     "i": "^0.3.7",
     "input-otp": "^1.4.2",

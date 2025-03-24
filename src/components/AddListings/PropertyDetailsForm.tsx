@@ -2231,12 +2231,10 @@ const PropertyDetailsForm = ({
             {propertyDetails.furnishing !== 'UNFURNISHED' &&
               (propertyDetails.furnishing.includes('FULLY_FURNISHED') ||
                 propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
-              (propertyDetails.propertyType === 'CO_LIVING' ||
-                propertyDetails.propertyType === 'BUILDER_FLOOR' ||
+              (propertyDetails.propertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.propertyType === 'FLAT_APARTMENT' ||
-                propertyDetails.propertyType === 'VILLA' ||
-                propertyDetails.propertyType === 'PG' ||
-                propertyDetails.preoccupiedPropertyType === 'CO_LIVING') && (
+                propertyDetails.propertyType === 'VILLA') &&
+              !propertyDetails.isPreoccupied && (
                 <div>
                   <Label className='text-md text-black font-normal'>
                     Furnishings
@@ -2281,7 +2279,12 @@ const PropertyDetailsForm = ({
               propertyDetails.furnishing.includes('SEMI_FURNISHED')) &&
               (propertyDetails.preoccupiedPropertyType === 'BUILDER_FLOOR' ||
                 propertyDetails.preoccupiedPropertyType === 'FLAT_APARTMENT' ||
-                propertyDetails.preoccupiedPropertyType === 'VILLA') && (
+                propertyDetails.preoccupiedPropertyType === 'VILLA' ||
+                propertyDetails.preoccupiedPropertyType === 'PG' ||
+                propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
+                propertyDetails.propertyType === 'PG' ||
+                propertyDetails.propertyType === 'CO_LIVING') &&
+              propertyDetails.isPreoccupied && (
                 <>
                   <div>
                     <Label className='text-md text-black font-normal'>

@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
@@ -324,6 +331,7 @@ export function SmallPropertyCard({
               className='object-cover rounded-2xl'
               sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
+
             <Button
               className='absolute top-0 right-3 p-2 xl:hidden'
               onClick={() => handleFavoriteClick(property.id)}

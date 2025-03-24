@@ -5,7 +5,8 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 
-import { Location, MapLocationDisplayProps } from '@/interfaces/PropsInterface';
+import { MapLocationDisplayProps } from '@/interfaces/PropsInterface';
+import { Location } from '@/interfaces/Interface';
 
 export default function MapLocationDisplay({
   location,

@@ -1,6 +1,7 @@
-import { Occupant } from '@/redux/slices/formslices';
 import { LucideIcon } from 'lucide-react';
 import { ReactNode } from 'react';
+
+import { Occupant } from '@/redux/slices/formslices';
 
 export default interface Property {
   id: string;
@@ -24,8 +25,11 @@ export default interface Property {
 }
 
 export interface Location {
-  lat: number | null;
-  lng: number | null;
+  city?: string;
+  state?: string;
+  country?: string;
+  lat: number;
+  lng: number;
 }
 
 export interface PropertyLocationState {

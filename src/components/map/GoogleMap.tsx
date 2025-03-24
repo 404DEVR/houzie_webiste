@@ -9,7 +9,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
 import useAuth from '@/hooks/useAuth';
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -33,7 +39,9 @@ interface MapComponentProps {
 
 export default function MapComponent({ properties }: MapComponentProps) {
   const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || '',
+    libraries: ['places'],
   });
   const { auth } = useAuth();
 
@@ -286,7 +294,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={13}
+          zoom={12}
           onLoad={onLoad}
           onClick={onMapClick}
         >
@@ -310,12 +318,12 @@ export default function MapComponent({ properties }: MapComponentProps) {
           style={{
             top: `${markerPosition.top}px`,
             left: `${markerPosition.left}px`,
-            transform: 'translateY(-20%)',
+            transform: 'translateY(-30%)',
           }}
         >
           <Card className='relative w-[350px] shadow-xl rounded-xl overflow-hidden bg-white'>
             {/* Close and Like Icons */}
-            <div className='absolute top-2 right-2 flex gap-2'>
+            <div className='absolute top-2 right-2 flex gap-2 z-10'>
               <Button
                 className='bg-white py-2 px-3 rounded-full shadow-md'
                 onClick={() => handleFavoriteClick(selectedProperty)}
@@ -335,14 +343,37 @@ export default function MapComponent({ properties }: MapComponentProps) {
             </div>
 
             {/* Property Image */}
-            <CardHeader className='p-0'>
-              <Image
-                src={selectedProperty.mainImage}
-                alt={selectedProperty.title}
-                width={350}
-                height={200}
-                className='rounded-t-xl w-full h-[200px] object-cover'
-              />
+            <CardHeader className='p-0 relative'>
+              <Carousel className='relative'>
+                <CarouselContent>
+                  <CarouselItem>
+                    <Image
+                      src={selectedProperty.mainImage}
+                      alt='Main Image'
+                      width={350}
+                      height={200}
+                      className='rounded-t-xl w-full h-[200px] object-cover'
+                    />
+                  </CarouselItem>
+
+                  {selectedProperty.photos
+                    .filter((photo) => photo !== selectedProperty.mainImage)
+                    .map((photo, id) => (
+                      <CarouselItem key={id}>
+                        <Image
+                          src={photo}
+                          alt={`Image ${id}`}
+                          width={350}
+                          height={200}
+                          className='rounded-t-xl w-full h-[200px] object-cover'
+                        />
+                      </CarouselItem>
+                    ))}
+                </CarouselContent>
+
+                <CarouselPrevious className='absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 text-white p-2 rounded-full' />
+                <CarouselNext className='absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black/50 text-white p-2 rounded-full' />
+              </Carousel>
             </CardHeader>
 
             {/* Property Details */}

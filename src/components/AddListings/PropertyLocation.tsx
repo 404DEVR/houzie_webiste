@@ -8,7 +8,7 @@ import useAuth from '@/hooks/useAuth';
 
 import CurrentOccupantsProfile from '@/components/AddListings/CurrentOccupantsProfile';
 import FileUploader from '@/components/AddListings/FileUploader';
-import MapLocationSelecter from '@/components/map/MapLocationSelecter';
+import MapSelector from '@/components/map/MapSelecter';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -136,6 +136,9 @@ const PropertyLocation = ({
       ? dispatch(
           updateEditPropertyLocation({
             ...propertyLocation,
+            city: location.city,
+            state: location.state,
+            country: location.country,
             latitude: location.lat,
             longitude: location.lng,
           })
@@ -143,6 +146,9 @@ const PropertyLocation = ({
       : dispatch(
           updateAddPropertyLocation({
             ...propertyLocation,
+            city: location.city,
+            state: location.state,
+            country: location.country,
             latitude: location.lat,
             longitude: location.lng,
           })
@@ -165,10 +171,16 @@ const PropertyLocation = ({
 
   const getInitialLocation = () => {
     if (propertyLocation) {
-      const { latitude, longitude } = propertyLocation;
+      const { state, city, country, latitude, longitude } = propertyLocation;
 
       if (typeof latitude === 'number' && typeof longitude === 'number') {
-        return { lat: latitude, lng: longitude };
+        return {
+          state: state,
+          country: country,
+          city: city,
+          lat: latitude,
+          lng: longitude,
+        };
       }
     }
     return null;
@@ -211,7 +223,7 @@ const PropertyLocation = ({
       </CardHeader>
       <CardContent className='grid'>
         <div className='border rounded-xl p-8 mb-3'>
-          <MapLocationSelecter
+          <MapSelector
             onLocationSave={handleLocationSave}
             initialLocation={getInitialLocation()}
             handleLocationUploadStatusChange={handleLocationUploadStatusChange}

@@ -65,20 +65,33 @@ export function PropertySearchHeader({
       return;
     }
 
-    if (isSearchSaved) return;
+    if (isSearchSaved) {
+      // Remove the saved search
+      const updatedSearches = savedSearches.filter(
+        (search) =>
+          !(
+            search.userId === auth?.userid &&
+            JSON.stringify(search.searchData) === JSON.stringify(searchData)
+          )
+      );
+      setSavedSearches(updatedSearches);
+      localStorage.setItem('savedSearches', JSON.stringify(updatedSearches));
+      setIsSearchSaved(false);
+    } else {
+      // Save the search
+      const newSearch = {
+        userId: auth?.userid,
+        searchData: searchData,
+        filters: filters,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
 
-    const newSearch = {
-      userId: auth?.userid,
-      searchData: searchData,
-      filters: filters,
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
-    };
-
-    const updatedSearches = [...savedSearches, newSearch];
-    setSavedSearches(updatedSearches);
-    localStorage.setItem('savedSearches', JSON.stringify(updatedSearches));
-    setIsSearchSaved(true);
+      const updatedSearches = [...savedSearches, newSearch];
+      setSavedSearches(updatedSearches);
+      localStorage.setItem('savedSearches', JSON.stringify(updatedSearches));
+      setIsSearchSaved(true);
+    }
   };
 
   const handleRadiusChange = (value: string) => {
@@ -319,69 +332,18 @@ export function PropertySearchHeader({
         <Button
           onClick={handleSaveSearch}
           size='custom'
-          disabled={isSearchSaved}
           className={`py-2 h-10 px-8 rounded-lg ${
             isSearchSaved
-              ? ' cursor-not-allowed bg-[#3b8ff6] text-white '
+              ? '  bg-[#3b8ff6] text-white '
               : 'border border-[#3b8ff6] bg-white text-[#3b8ff6]'
           }`}
         >
-          {isSearchSaved ? 'Search Saved' : 'Save Search'}
+          {isSearchSaved ? 'Remove Search' : 'Save Search'}
           <IoMdBookmark
             className={`${isSearchSaved ? 'text-white' : 'text-[#3b8ff6]'}`}
           />
         </Button>
       </div>
-      {/* <div className='w-full flex flex-col md:flex-row gap-2 md:gap-0 justify-between items-center'>
-        <div className='flex flex-col md:flex-row gap-2 w-full md:w-[60%]'></div>
-      </div> */}
-
-      {/* <div className='w-full flex flex-col md:flex-row justify-between items-center gap-8'>
-        <div className='w-full md:w-[60%] flex flex-col md:flex-row justify-between items-center gap-2 md:gap-10'></div>
-
-        <div className='w-full md:w-[40%]  flex justify-between md:justify-center items-center'>
-          <Tabs
-            defaultValue='list'
-            className='ml-auto md:block hidden'
-            onValueChange={onViewChange}
-          >
-            <TabsList className='flex gap-2 bg-blue-500 rounded-full p-0.5'>
-              <TabsTrigger
-                value='list'
-                className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
-              >
-                List
-              </TabsTrigger>
-              <TabsTrigger
-                value='map'
-                className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
-              >
-                Map
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        <Tabs
-          defaultValue='list'
-          className='mx-auto md:hidden block'
-          onValueChange={onViewChange}
-        >
-          <TabsList className='flex gap-2 bg-blue-500 rounded-full p-0.5'>
-            <TabsTrigger
-              value='list'
-              className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
-            >
-              List
-            </TabsTrigger>
-            <TabsTrigger
-              value='map'
-              className='flex-1 rounded-full py-2 text-center font-medium text-white transition-all data-[state=active]:bg-white data-[state=active]:text-blue-500'
-            >
-              Map
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div> */}
     </div>
   );
 }

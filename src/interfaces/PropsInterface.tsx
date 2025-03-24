@@ -1,4 +1,4 @@
-import Property, { PropertyPost } from '@/interfaces/Interface';
+import Property, { PropertyPost, Location } from '@/interfaces/Interface';
 
 export interface AddListingsProps {
   page?: string;
@@ -144,11 +144,6 @@ export interface ImageGalleryprops {
 
 export interface PropertyInfoProps {
   propertyData: PropertyPost;
-}
-
-export interface Location {
-  lat: number;
-  lng: number;
 }
 
 export interface MapLocationDisplayProps {
