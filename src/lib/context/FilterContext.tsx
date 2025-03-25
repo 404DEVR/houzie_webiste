@@ -54,7 +54,7 @@ export interface Filters {
   features: Features[];
   sharingType: SharingType[];
   gender: Gender[];
-  radius: string;
+  radius: [number, number];
 }
 
 interface FilterContextType {
@@ -78,7 +78,7 @@ const initialFilters: Filters = {
   features: [],
   sharingType: [],
   gender: [],
-  radius: '',
+  radius: [0, 100],
 };
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);

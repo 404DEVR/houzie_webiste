@@ -367,14 +367,16 @@ export default function FilterComponent({ setOpen }: PropertyComponentProps) {
         <div className='flex justify-between gap-2 mt-4'>
           <Button
             variant='outline'
-            className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+            size='custom'
+            className='bg-[#eeeefa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-2 rounded-md border-none'
             onClick={handleClearAll}
           >
             Clear All
           </Button>
           <Button
             variant='outline'
-            className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+            size='custom'
+            className='bg-[#eeeefa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-2 rounded-md border-none'
             onClick={handleApplyRent}
           >
             Apply

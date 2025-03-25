@@ -24,6 +24,7 @@ import {
   restructured,
   startEditing,
 } from '@/redux/slices/formslices';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -270,182 +271,243 @@ const MyListings = () => {
     }
   };
 
-  return (
+  const LoadingComponent = () => {
+    return (
+      <div className='w-full rounded-2xl shadow-xl animate-pulse my-6 pb-4 bg-gray-200'>
+        <div className='px-4 py-4 '>
+          <Skeleton className='h-12 w-60 rounded bg-[#eff5ff]' />
+        </div>
+        <div className='px-4'>
+          <div className='space-y-4'>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'
+              >
+                <div className='flex items-start space-x-4 w-full sm:w-1/3'>
+                  <Skeleton className='h-40 w-96 rounded-md bg-gray-200' />
+                  <div className='flex flex-col gap-2'>
+                    <Skeleton className='h-4 w-24 rounded bg-gray-200 ' />
+                    <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                  </div>
+                </div>
+
+                <div className='w-full sm:w-1/3 mt-2 sm:mt-0 flex flex-col justify-center items-start sm:items-center'>
+                  <div className='flex flex-col justify-center items-start gap-2'>
+                    <Skeleton className='h-4 w-24 rounded bg-gray-200' />
+                    <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                    <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                    <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                  </div>
+                </div>
+
+                <div className='flex flex-col items-start sm:items-end justify-center w-full sm:w-1/3 mt-2 sm:mt-0'>
+                  <div className='flex flex-col sm:items-start justify-center gap-2'>
+                    <Skeleton className='h-4 w-24 rounded' />
+                    <div className='flex items-center justify-end space-x-2'>
+                      <Skeleton className='h-5 w-5 rounded-full bg-gray-200' />
+                      <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                    </div>
+                    <div className='flex items-center justify-end space-x-2'>
+                      <Skeleton className='h-5 w-5 rounded-full bg-gray-200' />
+                      <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                    </div>
+                    <div className='flex items-center justify-end space-x-2'>
+                      <Skeleton className='h-5 w-5 rounded-full bg-gray-200' />
+                      <Skeleton className='h-5 w-32 rounded bg-gray-200' />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const NoLeadsComponent = () => {
+    return (
+      <div className='w-full rounded-2xl shadow-xl my-6 pb-4 bg-gray-200'>
+        <div className='px-4'>
+          <div className='space-y-4'>
+            <div className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'>
+              <div>No Listing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return isLoading ? (
+    <LoadingComponent />
+  ) : Array.isArray(listings) && listings.length === 0 ? (
+    <NoLeadsComponent />
+  ) : (
     <div className='mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
       <h1 className='text-xl sm:text-2xl font-bold mb-4'>My Listings</h1>
+      <div className='space-y-4'>
+        {listings.map((listing) => (
+          <Card
+            key={listing.id}
+            className={`shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 ${
+              expandedCardId === listing.id ? 'max-h-[500px]' : 'max-h-[200px]'
+            } overflow-hidden`}
+          >
+            <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
+              <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
+                <div className='relative w-full h-full'>
+                  <Image
+                    src={listing.mainImage || '/svg/no-results.svg'}
+                    alt={listing.title}
+                    fill
+                    className='object-cover rounded-2xl'
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                  />
+                </div>
+              </div>
 
-      {isLoading ? (
-        <p>Loading listings...</p>
-      ) : Array.isArray(listings) && listings.length === 0 ? (
-        <p>No listings found.</p>
-      ) : (
-        <div className='space-y-4'>
-          {listings.map((listing) => (
-            <Card
-              key={listing.id}
-              className={`shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 ${
-                expandedCardId === listing.id
-                  ? 'max-h-[500px]'
-                  : 'max-h-[200px]'
-              } overflow-hidden`}
-            >
-              <CardContent className='p-2 flex flex-col md:flex-row gap-4'>
-                <div className='w-full md:w-[350px] h-[180px] flex items-center justify-center'>
-                  <div className='relative w-full h-full'>
-                    <Image
-                      src={listing.mainImage || '/svg/no-results.svg'}
-                      alt={listing.title}
-                      fill
-                      className='object-cover rounded-2xl'
-                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                    />
+              <div className='w-full flex flex-col md:flex-row'>
+                <div className='md:w-[70%] pt-4 md:pt-10'>
+                  <div className='flex flex-col justify-between items-center md:items-start mb-6'>
+                    <h2 className='text-base sm:text-xl font-semibold mb-2'>
+                      {listing.title}
+                    </h2>
+                    <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start'>
+                      {listing.description}
+                    </h3>
                   </div>
+
+                  {getPropertyFeatures(listing).length > 0 && (
+                    <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
+                      {getPropertyFeatures(listing).map((feature, index) => (
+                        <Badge
+                          key={index}
+                          variant='outline'
+                          className=' border-none flex gap-1 justify-center items-center'
+                        >
+                          <feature.icon className='w-[14px] h-[14px]' />
+                          <span className='font-medium text-xs'>
+                            {feature.label}
+                          </span>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className='w-full flex flex-col md:flex-row'>
-                  <div className='md:w-[70%] pt-4 md:pt-10'>
-                    <div className='flex flex-col justify-between items-center md:items-start mb-6'>
-                      <h2 className='text-base sm:text-xl font-semibold mb-2'>
-                        {listing.title}
-                      </h2>
-                      <h3 className='text-xs font-normal line-clamp-2 w-[90%] text-center md:text-start'>
-                        {listing.description}
-                      </h3>
+                <div className='flex flex-col items-center p-2 md:items-start '>
+                  <div className='flex gap-6 mb-4 flex-wrap md:flex-nowrap '>
+                    <div className='mb-1'>
+                      <p className='text-gray-500 text-xs'>Rent</p>
+                      <span className='text-black text-2xl font-semibold flex gap-2'>
+                        <span>₹</span> {listing.price}
+                      </span>
                     </div>
-
-                    {getPropertyFeatures(listing).length > 0 && (
-                      <div className='flex flex-wrap items-center md:items-start justify-center md:justify-start mt-2 mb-4 md:mb-0'>
-                        {getPropertyFeatures(listing).map((feature, index) => (
-                          <Badge
-                            key={index}
-                            variant='outline'
-                            className=' border-none flex gap-1 justify-center items-center'
-                          >
-                            <feature.icon className='w-[14px] h-[14px]' />
-                            <span className='font-medium text-xs'>
-                              {feature.label}
-                            </span>
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                    <div className='mb-1'>
+                      <p className='text-gray-500 text-xs'>Location:</p>
+                      <span className='text-black text-2xl font-semibold'>
+                        Gurgaon
+                      </span>
+                    </div>
                   </div>
 
-                  <div className='flex flex-col items-center p-2 md:items-start '>
-                    <div className='flex gap-6 mb-4 flex-wrap md:flex-nowrap '>
-                      <div className='mb-1'>
-                        <p className='text-gray-500 text-xs'>Rent</p>
-                        <span className='text-black text-2xl font-semibold flex gap-2'>
-                          <span>₹</span> {listing.price}
-                        </span>
-                      </div>
-                      <div className='mb-1'>
-                        <p className='text-gray-500 text-xs'>Location:</p>
-                        <span className='text-black text-2xl font-semibold'>
-                          Gurgaon
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
-                      <Button
-                        className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                        size='sm'
-                        onClick={() => handleEdit(listing.id)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
-                        size='sm'
-                        onClick={() => handleDelete(listing.id)}
-                      >
-                        Unpost
-                      </Button>
-                    </div>
+                  <div className='flex gap-4 md:gap-6 mt-2 w-full md:w-auto'>
                     <Button
-                      variant='link'
-                      onClick={() => toggleCardExpansion(listing.id)}
-                      className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
+                      className='text-blue-500 bg-blue-50 hover:bg-blue-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
+                      size='sm'
+                      onClick={() => handleEdit(listing.id)}
                     >
-                      Views and Leads
-                      <ChevronDown
-                        className={`w-[17px] h-[17px] transition-transform ${
-                          expandedCardId === listing.id ? 'rotate-180' : ''
-                        }`}
-                      />
+                      Edit
+                    </Button>
+                    <Button
+                      className='text-red-500 bg-blue-50 hover:bg-red-100 border text-lg rounded-md shadow-sm w-full md:w-auto'
+                      size='sm'
+                      onClick={() => handleDelete(listing.id)}
+                    >
+                      Unpost
                     </Button>
                   </div>
+                  <Button
+                    variant='link'
+                    onClick={() => toggleCardExpansion(listing.id)}
+                    className='flex items-center gap-2 text-gray-500 text-md font-semibold mt-2 md:mt-6'
+                  >
+                    Views and Leads
+                    <ChevronDown
+                      className={`w-[17px] h-[17px] transition-transform ${
+                        expandedCardId === listing.id ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </Button>
                 </div>
-              </CardContent>
-              {expandedCardId === listing.id &&
-                (Array.isArray(leadsData) && leadsData.length > 0 ? (
-                  <div className='space-y-4 mx-2 mb-2'>
-                    {leadsData?.map((lead) => (
-                      <div
-                        key={lead.id}
-                        className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'
-                      >
-                        {/* Lead Info */}
-                        <div className='flex items-center space-x-4 w-full sm:w-auto'>
-                          <Image
-                            src='/images/Dummy profile.png'
-                            alt={lead.name}
-                            width={50}
-                            height={50}
-                            className='rounded-full object-cover'
-                          />
-                          <div>
-                            <p className='text-sm md:text-md text-[#42A4AE]'>
-                              {new Date(lead.createdAt).toLocaleDateString(
-                                'en-US',
-                                {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                }
-                              )}
-                            </p>
-                            <p className='text-sm md:text-md font-semibold'>
-                              {lead.name}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Interested In */}
-                        <div className='w-full sm:w-auto mt-2 sm:mt-0'>
+              </div>
+            </CardContent>
+            {expandedCardId === listing.id &&
+              (Array.isArray(leadsData) && leadsData.length > 0 ? (
+                <div className='space-y-4 mx-2 mb-2'>
+                  {leadsData?.map((lead) => (
+                    <div
+                      key={lead.id}
+                      className='flex flex-col sm:flex-row justify-between gap-4 bg-[#eff5ff] rounded-xl py-4 px-4 sm:px-6 md:px-8 lg:px-20 items-start sm:items-center border'
+                    >
+                      <div className='flex items-center space-x-4 w-full sm:w-auto'>
+                        <Image
+                          src='/images/Dummy profile.png'
+                          alt={lead.name}
+                          width={50}
+                          height={50}
+                          className='rounded-full object-cover'
+                        />
+                        <div>
                           <p className='text-sm md:text-md text-[#42A4AE]'>
-                            Interested In
+                            {new Date(lead.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }
+                            )}
                           </p>
                           <p className='text-sm md:text-md font-semibold'>
-                            Property Name
+                            {lead.name}
                           </p>
                         </div>
+                      </div>
 
-                        {/* Contact Details */}
-                        <div className='flex flex-col items-start justify-center w-full sm:w-auto mt-2 sm:mt-0'>
-                          <div className='text-sm md:text-md text-[#42A4AE]'>
-                            Contact Details
-                          </div>
-                          <div className='flex items-center justify-end space-x-2'>
-                            <FaPhoneAlt className='text-sm md:text-md font-semibold' />
-                            <p className='text-sm md:text-md font-semibold'>
-                              +91 {lead.phoneNumber}
-                            </p>
-                          </div>
+                      <div className='w-full sm:w-auto mt-2 sm:mt-0'>
+                        <p className='text-sm md:text-md text-[#42A4AE]'>
+                          Interested In
+                        </p>
+                        <p className='text-sm md:text-md font-semibold'>
+                          Property Name
+                        </p>
+                      </div>
+
+                      <div className='flex flex-col items-start justify-center w-full sm:w-auto mt-2 sm:mt-0'>
+                        <div className='text-sm md:text-md text-[#42A4AE]'>
+                          Contact Details
+                        </div>
+                        <div className='flex items-center justify-end space-x-2'>
+                          <FaPhoneAlt className='text-sm md:text-md font-semibold' />
+                          <p className='text-sm md:text-md font-semibold'>
+                            +91 {lead.phoneNumber}
+                          </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className='text-center py-4 mx-2 mb-2 rounded-xl bg-[#eff5ff] border'>
-                    No leads data available
-                  </div>
-                ))}
-            </Card>
-          ))}
-        </div>
-      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className='text-center py-4 mx-2 mb-2 rounded-xl bg-[#eff5ff] border'>
+                  No leads data available
+                </div>
+              ))}
+          </Card>
+        ))}
+      </div>
       <Dialog
         open={isDialogOpen}
         onOpenChange={(open) => {

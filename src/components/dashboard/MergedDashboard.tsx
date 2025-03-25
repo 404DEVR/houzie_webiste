@@ -27,10 +27,10 @@ import {
 } from '@/components/ui/select';
 
 import { ApiData, CardData } from '@/interfaces/Interface';
-import { useCustomToast } from '@/hooks/use-custom-toast';
+import { MergedDashboardProps } from '@/interfaces/PropsInterface';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const MergedDashboard: React.FC = () => {
-  const toast = useCustomToast();
+const MergedDashboard = ({ isLoading, setIsLoading }: MergedDashboardProps) => {
   const [cardData, setCardData] = useState<CardData[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('October');
   const { auth } = useAuth();
@@ -38,6 +38,7 @@ const MergedDashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get<ApiData>(
           'https://api.houzie.in/broker/stats',
           {
@@ -90,6 +91,8 @@ const MergedDashboard: React.FC = () => {
         setCardData(newCardData);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -128,7 +131,74 @@ const MergedDashboard: React.FC = () => {
     { name: '60k', value: 65 },
   ];
 
-  return (
+  const LoaderComponent = () => {
+    return (
+      <div className='mx-auto pt-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-5 gap-6'>
+          <div className='lg:col-span-4'>
+            <div className='rounded-xl bg-gray-200 animate-pulse h-96 w-full'>
+              <div className='flex flex-row items-center justify-between space-y-0 pb-2 p-4'>
+                <Skeleton className='h-6 w-32 rounded' />
+                <Skeleton className='h-5 w-24 rounded' />
+              </div>
+              <div className='w-[95%] mx-auto'>
+                <Skeleton className='h-72 w-full rounded' />
+              </div>
+            </div>
+          </div>
+          <div className='lg:col-span-2 xl:col-span-1 flex flex-col gap-4 items-center justify-center'>
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className='rounded-xl bg-gray-200 animate-pulse w-full h-40'
+              >
+                <div className='flex flex-col items-start space-y-2 pb-2 p-4'>
+                  <Skeleton className='h-4 w-24 rounded' />
+                  <Skeleton className='h-8 w-16 rounded' />
+                </div>
+                <div className='pt-6 p-4'>
+                  <Skeleton className='h-4 w-12 rounded' />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className='grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-5 gap-6 mt-6'>
+          <div className='lg:col-span-2 xl:col-span-1 flex flex-col gap-4 items-center justify-center'>
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className='rounded-xl bg-gray-200 animate-pulse w-full h-40'
+              >
+                <div className='flex flex-col items-start space-y-2 pb-2 p-4'>
+                  <Skeleton className='h-4 w-24 rounded' />
+                  <Skeleton className='h-8 w-16 rounded' />
+                </div>
+                <div className='pt-6 p-4'>
+                  <Skeleton className='h-4 w-12 rounded' />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='lg:col-span-4'>
+            <div className='rounded-xl bg-gray-200 animate-pulse h-96 w-full'>
+              <div className='flex flex-row items-center justify-between space-y-0 pb-2 p-4'>
+                <Skeleton className='h-6 w-32 rounded' />
+                <Skeleton className='h-5 w-24 rounded' />
+              </div>
+              <div className='w-[95%] mx-auto'>
+                <Skeleton className='h-72 w-full rounded' />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return isLoading ? (
+    <LoaderComponent />
+  ) : (
     <div className='mx-auto pt-6 '>
       <div className='grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-5 gap-6'>
         <div className='lg:col-span-4'>
@@ -139,8 +209,6 @@ const MergedDashboard: React.FC = () => {
               </CardTitle>
               <Select value={selectedMonth} onValueChange={handleMonthChange}>
                 <SelectTrigger className='w-[120px] md:w-[180px]'>
-                  {' '}
-                  {/* Adjusted width for responsiveness */}
                   <SelectValue placeholder='Select month' />
                 </SelectTrigger>
                 <SelectContent>
@@ -278,8 +346,6 @@ const MergedDashboard: React.FC = () => {
               </CardTitle>
               <Select value={selectedMonth} onValueChange={handleMonthChange}>
                 <SelectTrigger className='w-[120px] md:w-[180px]'>
-                  {' '}
-                  {/* Adjusted width for responsiveness */}
                   <SelectValue placeholder='Select month' />
                 </SelectTrigger>
                 <SelectContent>

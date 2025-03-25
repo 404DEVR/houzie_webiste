@@ -21,6 +21,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from '@/components/ui/pagination';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import { PropertyPost } from '@/interfaces/Interface';
 import store from '@/redux/store';
@@ -84,6 +85,12 @@ export default function DetailsPage() {
       if (filters.parking && filters.parking.length > 0) {
         queryParams.append('parking', filters.parking.join(','));
       }
+      if (filters.radius && filters.radius.length > 0) {
+        queryParams.append(
+          'distanceInKm',
+          (filters.radius[1] - filters.radius[0]).toString()
+        );
+      }
 
       const url = `https://api.houzie.in/listings?${queryParams.toString()}`;
       console.log(url);
@@ -134,25 +141,57 @@ export default function DetailsPage() {
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
-  if (loading) {
+  const LoaderComponent = () => {
     return (
-      <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
-        <Image
-          src='/svg/loading.gif'
-          alt='Loading'
-          width={200}
-          height={200}
-          className='mb-8'
-        />
-        <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
-          Loading Properties
-        </h2>
-        <p className='text-gray-600'>
-          Please wait while we fetch the latest listings for you.
-        </p>
-      </div>
+      <main className='mt-96 md:mt-36'>
+        <div className='relative w-[95%] mx-auto'>
+          <div className='flex flex-col md:flex-row'>
+            <div className='xl:pr-4 w-full xl:w-1/2'>
+              <div className='flex flex-col gap-4 mb-4'>
+                <div className='flex flex-col gap-4 pr-4'>
+                  {[...Array(5)].map((_, index) => (
+                    <div
+                      key={index}
+                      className='flex gap-4 items-start border p-4 rounded-lg'
+                    >
+                      <Skeleton className='w-96 h-48 rounded-md bg-gray-300' />
+                      <div className='flex flex-col gap-2 w-full'>
+                        <Skeleton className='h-4 w-3/5 bg-gray-300' />
+                        <Skeleton className='h-4 w-2/5 bg-gray-300' />
+                        <Skeleton className='h-3 w-full bg-gray-300' />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div
+              className='hidden xl:block w-1/2'
+              style={{
+                position: 'sticky',
+                top: `140px`,
+                height: `${mapHeight}px`,
+              }}
+            >
+              <div className='h-full rounded-lg relative overflow-hidden'>
+                <Skeleton className='w-full h-full bg-gray-300 rounded-lg' />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='flex justify-center mt-4 space-x-2'>
+          {[...Array(5)].map((_, index) => (
+            <Skeleton
+              key={index}
+              className={`w-10 h-10 rounded-full ${
+                index === 0 ? 'bg-blue-500' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+      </main>
     );
-  }
+  };
 
   const NoPropertiesFound = () => (
     <div className='flex flex-col items-center justify-center py-20 bg-gray-100'>
@@ -194,70 +233,75 @@ export default function DetailsPage() {
           <NavbarDetailsPage stickyPage='property' />
           <PropertySearchHeader onViewChange={(view) => setActiveView(view)} />
         </div>
-        <main className='mt-96 md:mt-36'>
-          <div className='relative w-[95%] mx-auto'>
-            <div className='flex flex-col md:flex-row'>
-              {/* Left Side - Property List */}
-              <div className='xl:pr-4 w-full xl:w-1/2 mt-4'>
-                <div className='flex flex-col gap-4 mb-4'>
-                  <h1 className='text-2xl font-semibold'>Top Results</h1>
-                  <div className='flex flex-col gap-4 pr-4'>
-                    {properties && properties.length > 0 ? (
-                      properties.map((property, index) => (
-                        <SmallPropertyCard
-                          key={index}
-                          property={property}
-                          loadImage={loadImage}
-                        />
-                      ))
-                    ) : (
-                      <NoPropertiesFound />
-                    )}
+        {loading ? (
+          <>
+            <LoaderComponent />
+          </>
+        ) : (
+          <main className='mt-96 md:mt-36'>
+            <div className='relative w-[95%] mx-auto'>
+              <div className='flex flex-col md:flex-row'>
+                {/* Left Side - Property List */}
+                <div className='xl:pr-4 w-full xl:w-1/2'>
+                  <div className='flex flex-col gap-4 mb-4'>
+                    <h1 className='text-2xl font-semibold'>Top Results</h1>
+                    <div className='flex flex-col gap-4 pr-4'>
+                      {properties && properties.length > 0 ? (
+                        properties.map((property, index) => (
+                          <SmallPropertyCard
+                            key={index}
+                            property={property}
+                            loadImage={loadImage}
+                          />
+                        ))
+                      ) : (
+                        <NoPropertiesFound />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side - Sticky Map */}
+                <div
+                  className='hidden xl:block w-1/2'
+                  style={{
+                    position: 'sticky',
+                    top: `140px`,
+                    height: `${mapHeight}px`,
+                  }}
+                >
+                  <div className='h-full rounded-lg relative overflow-hidden'>
+                    <MapComponent properties={properties} />
                   </div>
                 </div>
               </div>
-
-              {/* Right Side - Sticky Map */}
-              <div
-                className='hidden xl:block w-1/2'
-                style={{
-                  position: 'sticky',
-                  top: `140px`,
-                  height: `${mapHeight}px`,
-                }}
-              >
-                <div className='h-full rounded-lg relative overflow-hidden'>
-                  <MapComponent properties={properties} />
-                </div>
-              </div>
             </div>
-          </div>
-          {/* Pagination */}
-          <Pagination className='mt-4'>
-            <PaginationContent>
-              {[1, 2, 3, 4].map((p) => (
-                <PaginationItem key={p}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(p)}
-                    isActive={p === page}
-                    className={`${
-                      p === page
-                        ? 'bg-blue-500 text-white'
-                        : 'border border-blue-500 text-blue-500'
-                    } rounded-full w-10 h-10 flex items-center justify-center cursor-pointer`}
-                  >
-                    {p}
-                  </PaginationLink>
+            {/* Pagination */}
+            <Pagination className='mt-4'>
+              <PaginationContent>
+                {[1, 2, 3, 4].map((p) => (
+                  <PaginationItem key={p}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(p)}
+                      isActive={p === page}
+                      className={`${
+                        p === page
+                          ? 'bg-blue-500 text-white'
+                          : 'border border-blue-500 text-blue-500'
+                      } rounded-full w-10 h-10 flex items-center justify-center cursor-pointer`}
+                    >
+                      {p}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
+                {/* Ellipsis */}
+                <PaginationItem>
+                  <PaginationEllipsis />
                 </PaginationItem>
-              ))}
 
-              {/* Ellipsis */}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-
-              {/* Last Page */}
-              {/* <PaginationItem>
+                {/* Last Page */}
+                {/* <PaginationItem>
                 <PaginationLink
                   onClick={() => handlePageChange(totalPages)}
                   className='border border-blue-500 text-blue-500 rounded-full w-10 h-10 flex items-center justify-center'
@@ -266,19 +310,20 @@ export default function DetailsPage() {
                 </PaginationLink>
               </PaginationItem> */}
 
-              {/* Next Button */}
-              <PaginationItem>
-                <PaginationLink
-                  onClick={() => handlePageChange(page + 1)}
-                  className='border border-blue-500 text-blue-500 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
-                >
-                  <ChevronRight />
-                </PaginationLink>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-          <PropertyFooter />
-        </main>
+                {/* Next Button */}
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page + 1)}
+                    className='border border-blue-500 text-blue-500 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer'
+                  >
+                    <ChevronRight />
+                  </PaginationLink>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+            <PropertyFooter />
+          </main>
+        )}
       </Provider>
     </>
   );

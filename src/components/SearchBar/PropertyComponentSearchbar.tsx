@@ -266,14 +266,14 @@ const PropertyComponentSearchbar = () => {
             <div className='flex flex-col sm:flex-row justify-between gap-2'>
               <Button
                 size='custom'
-                className='w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md'
+                className='bg-[#eeeefa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-2 rounded-lg border-none'
                 onClick={handleClearAll}
               >
                 Clear All
               </Button>
               <Button
                 size='custom'
-                className='w-full sm:w-auto bg-[#3675ff] hover:bg-[#729eff] text-white px-4 py-2 rounded-md'
+                className='bg-[#eeeefa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-2 rounded-lg border-none'
                 onClick={handleApply}
               >
                 Apply

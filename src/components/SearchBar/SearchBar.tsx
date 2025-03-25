@@ -15,8 +15,6 @@ import { Button } from '@/components/ui/button';
 import { setLocation } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
 
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API ?? 'YOUR_API_KEY';
-
 const SearchBar = () => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -66,7 +64,7 @@ const SearchBar = () => {
               onLoad={(ref) => (inputRef.current = ref)}
               onPlacesChanged={handleOnPlacesChanged}
             >
-              <div className='relative flex justify-center items-center bg-[#e0e0e0] px-4 py-2 rounded-md w-full border-none'>
+              <div className='relative flex justify-center items-center bg-[#e0e0e0] px-4 py-2.5 rounded-md w-full border-none'>
                 <MdLocationOn className='h-6 w-6' />
                 <input
                   type='text'

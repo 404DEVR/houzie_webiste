@@ -7,6 +7,15 @@ export interface AddListingsProps {
   setRefreshListings?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface MergedDashboardProps {
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export interface BrokerdetailProps {
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface AmenitiesDisplayinterface {
   data: string[];
   type: string;

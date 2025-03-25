@@ -466,13 +466,6 @@ const PropertyFooter = () => {
                             <button
                               className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
                               style={{
-                                left: getRadiusLeftPosition(tempRadius[0]),
-                              }}
-                              onMouseDown={() => setIsRadiusDragging('min')}
-                            />
-                            <button
-                              className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                              style={{
                                 left: getRadiusLeftPosition(tempRadius[1]),
                               }}
                               onMouseDown={() => setIsRadiusDragging('max')}
@@ -537,15 +530,6 @@ const PropertyFooter = () => {
                           required
                         />
                       </div>
-                      {/* <Button
-                      type='button'
-                      size='custom'
-                      variant='outline'
-                      className='flex justify-center items-center w-full py-1 text-white bg-[#3b8ff6]'
-                      onClick={handleApplyRadius}
-                    >
-                      Apply
-                    </Button> */}
                     </div>
                     <div className='space-y-2 border rounded-lg p-3'>
                       <h4 className='font-medium'>Rent</h4>
@@ -630,15 +614,6 @@ const PropertyFooter = () => {
                           required
                         />
                       </div>
-                      {/* <Button
-                      type='button'
-                      size='custom'
-                      variant='outline'
-                      className='flex justify-center items-center w-full py-1 text-white bg-[#3b8ff6]'
-                      onClick={handleApplyRent}
-                    >
-                      Apply
-                    </Button> */}
                     </div>
                   </div>
                   <div className='w-full flex flex-col'>

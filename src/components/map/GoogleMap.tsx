@@ -238,7 +238,6 @@ export default function MapComponent({ properties }: MapComponentProps) {
   const handleMarkerClick = (property: PropertyPost) => {
     setSelectedProperty(property);
 
-    // Center the map on the clicked marker
     if (mapRef.current) {
       mapRef.current.panTo({
         lat: property.location.latitude,
@@ -246,7 +245,6 @@ export default function MapComponent({ properties }: MapComponentProps) {
       });
     }
 
-    // Ensure the map is fully loaded before accessing projection
     setTimeout(() => {
       if (mapRef.current) {
         const projection = mapRef.current.getProjection();

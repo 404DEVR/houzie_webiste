@@ -6,24 +6,18 @@ import { IoMdBookmark } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 
 import { useFilters } from '@/lib/context/FilterContext';
+import { cn } from '@/lib/utils';
 import useAuth from '@/hooks/useAuth';
 
+import CustomInput from '@/components/inputs/CustomInput';
 import FilterComponent from '@/components/propertpage/FilterComponent';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 import { PropertySearchHeaderProps } from '@/interfaces/PropsInterface';
 import { RootState } from '@/redux/store';
@@ -49,6 +43,30 @@ export function PropertySearchHeader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || '',
     libraries: ['places'],
   });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [tempRadius, setTempRadius] = useState<[number, number]>([
+    ...filters.radius,
+  ]);
+  const [isRadiusDragging, setIsRadiusDragging] = useState<
+    'min' | 'max' | null
+  >(null);
+
+  const getRadiusLeftPosition = (value: number) => {
+    return `${(value / 100) * 100}%`;
+  };
+
+  const handleRadiusSliderChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    const sliderRect = e.currentTarget.getBoundingClientRect();
+    const position = ((e.clientX - sliderRect.left) / sliderRect.width) * 100;
+    const value = Math.min(Math.max(0, Math.round(position)), 100);
+
+    if (isRadiusDragging === 'min') {
+      setTempRadius([value, tempRadius[1]]);
+    } else if (isRadiusDragging === 'max') {
+      setTempRadius([tempRadius[0], value]);
+    }
+    // setLeadsData((prevData) => ({ ...prevData, radiusRange: tempRadius }));
+  };
 
   useEffect(() => {
     const storedSearches = localStorage.getItem('savedSearches');
@@ -101,8 +119,8 @@ export function PropertySearchHeader({
     }
   };
 
-  const handleRadiusChange = (value: string) => {
-    updateFilters('radius', value);
+  const handleRadiusChange = () => {
+    updateFilters('radius', [tempRadius[0], tempRadius[1]]);
   };
 
   const propertyTypes = [
@@ -207,22 +225,99 @@ export function PropertySearchHeader({
           </StandaloneSearchBox>
         )}
       </div>
-
       <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
-        <Select onValueChange={handleRadiusChange} value={filters.radius || ''}>
-          <SelectTrigger className='w-full text-md border-none rounded-lg focus:ring-0 bg-[#eff5ff] focus:outline-none focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
-            <SelectValue placeholder='Radius' className=''>
-              Radius: {filters.radius}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='5'>5 km</SelectItem>
-            <SelectItem value='10'>10 km</SelectItem>
-            <SelectItem value='15'>15 km</SelectItem>
-            <SelectItem value='20'>20 km</SelectItem>
-            <SelectItem value='25'>25+ km</SelectItem>
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className='px-4 w-full border-none py-2 lex justify-between items-center rounded-lg bg-[#eff5ff] text-[#2d495f]'>
+              Radius
+              <ChevronDown />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className='w-80 p-4'>
+            <div className='space-y-2 '>
+              <h4 className='font-medium'>Radius</h4>
+              <div className='flex flex-col gap-0 '>
+                <div className='relative w-[90%] mx-auto h-8'>
+                  <div
+                    className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                    onMouseMove={(e) =>
+                      isRadiusDragging && handleRadiusSliderChange(e)
+                    }
+                    onMouseUp={() => setIsRadiusDragging(null)}
+                    onMouseLeave={() => setIsRadiusDragging(null)}
+                  >
+                    <div
+                      className='absolute h-2 bg-[#3b8ff6] rounded-full'
+                      style={{
+                        left: getRadiusLeftPosition(tempRadius[0]),
+                        right: `${100 - (tempRadius[1] / 100) * 100}%`,
+                      }}
+                    />
+                    <button
+                      className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                      style={{
+                        left: getRadiusLeftPosition(tempRadius[1]),
+                      }}
+                      onMouseDown={() => setIsRadiusDragging('max')}
+                    />
+                  </div>
+                </div>
+                <p className='text-gray-500 text-xs pl-2'>Radius Range</p>
+              </div>
+              <div className='flex justify-between gap-2'>
+                <CustomInput
+                  name='radius0'
+                  type='number'
+                  value={tempRadius[0]}
+                  unit='KM'
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setTempRadius([value, tempRadius[1]]);
+                  }}
+                  error={fieldErrors['radius0'] ? 'This field is required' : ''}
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['radius0'],
+                    }
+                  )}
+                  required
+                />
+                <CustomInput
+                  name='radius1'
+                  type='number'
+                  unit='KM'
+                  value={tempRadius[1]}
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setTempRadius([tempRadius[0], value]);
+                  }}
+                  error={fieldErrors['radius1'] ? 'This field is required' : ''}
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1':
+                        fieldErrors['radius1'],
+                    }
+                  )}
+                  required
+                />
+              </div>
+              <Button
+                type='button'
+                size='custom'
+                variant='outline'
+                className='flex justify-center items-center w-full py-2 text-white bg-[#3b8ff6]'
+                onClick={handleRadiusChange}
+              >
+                Apply
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
         <Popover>
@@ -235,62 +330,87 @@ export function PropertySearchHeader({
           <PopoverContent className='w-80 p-4'>
             <div className='space-y-2'>
               <h4 className='font-medium'>Rent</h4>
-              <div className='relative w-[90%] mx-auto h-12'>
-                <div
-                  className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
-                  onMouseMove={(e) => isDragging && handleSliderChange(e)}
-                  onMouseUp={() => setIsDragging(null)}
-                  onMouseLeave={() => setIsDragging(null)}
-                >
+              <div
+                className='flex flex-col
+              gap-0 '
+              >
+                <div className='relative w-[90%] mx-auto h-8'>
                   <div
-                    className='absolute h-2 bg-[#3b8ff6] rounded-full'
-                    style={{
-                      left: getLeftPosition(tempRent[0]),
-                      right: `${100 - (tempRent[1] / 500000) * 100}%`,
-                    }}
-                  />
-                  <button
-                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                    style={{ left: getLeftPosition(tempRent[0]) }}
-                    onMouseDown={() => setIsDragging('min')}
-                  />
-                  <button
-                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                    style={{ left: getLeftPosition(tempRent[1]) }}
-                    onMouseDown={() => setIsDragging('max')}
-                  />
+                    className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                    onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                    onMouseUp={() => setIsDragging(null)}
+                    onMouseLeave={() => setIsDragging(null)}
+                  >
+                    <div
+                      className='absolute h-2 bg-[#3b8ff6] rounded-full'
+                      style={{
+                        left: getLeftPosition(tempRent[0]),
+                        right: `${100 - (tempRent[1] / 500000) * 100}%`,
+                      }}
+                    />
+                    <button
+                      className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                      style={{ left: getLeftPosition(tempRent[0]) }}
+                      onMouseDown={() => setIsDragging('min')}
+                    />
+                    <button
+                      className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                      style={{ left: getLeftPosition(tempRent[1]) }}
+                      onMouseDown={() => setIsDragging('max')}
+                    />
+                  </div>
                 </div>
+                <p className='text-gray-500 text-xs pl-2'>Rent Range</p>
               </div>
               <div className='flex justify-between gap-2'>
-                <Input
+                <CustomInput
+                  name='rent0'
                   type='number'
+                  firstUnit='₹'
                   value={tempRent[0]}
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     setTempRent([value, tempRent[1]]);
                   }}
-                  className='w-1/2'
-                  placeholder='Min Rent'
+                  error={fieldErrors['rent0'] ? 'This field is required' : ''}
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1': fieldErrors['rent0'],
+                    }
+                  )}
+                  required
                 />
-                <Input
+                <CustomInput
+                  name='rent1'
                   type='number'
+                  firstUnit='₹'
                   value={tempRent[1]}
+                  onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     setTempRent([tempRent[0], value]);
                   }}
-                  className='w-1/2'
-                  placeholder='Max Rent'
+                  error={fieldErrors['rent1'] ? 'This field is required' : ''}
+                  className={cn(
+                    'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow',
+                    {
+                      'ring-2 ring-red-500 ring-offset-1': fieldErrors['rent1'],
+                    }
+                  )}
+                  required
                 />
-                <Button
-                  type='button'
-                  variant='outline'
-                  className='flex justify-center items-center text-white bg-[#3b8ff6]'
-                  onClick={handleApplyRent}
-                >
-                  Apply
-                </Button>
               </div>
+              <Button
+                type='button'
+                size='custom'
+                variant='outline'
+                className='flex justify-center items-center w-full py-2 text-white bg-[#3b8ff6]'
+                onClick={handleApplyRent}
+              >
+                Apply
+              </Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -299,8 +419,8 @@ export function PropertySearchHeader({
       <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className='w-full px-4 py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
-              <span className='flex-1 truncate mr-2'>
+            <Button className='w-full  py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
+              <span className=' truncate mr-2'>
                 {tempPropertyTypes.length > 0
                   ? tempPropertyTypes.map(toTitleCase).join(', ')
                   : 'Property Type'}
@@ -324,11 +444,12 @@ export function PropertySearchHeader({
                   <span>{toTitleCase(type)}</span>
                 </div>
               ))}
-              <div className='flex justify-between gap-2 mt-4'>
+              <div className='flex justify-between gap-2 mt-2'>
                 <Button
                   type='button'
+                  size='custom'
                   variant='outline'
-                  className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
+                  className='bg-[#eeeefa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-6 font-normal py-2 rounded-md border-none'
                   onClick={handleClearPropertyTypes}
                 >
                   Clear All
@@ -336,7 +457,8 @@ export function PropertySearchHeader({
                 <Button
                   type='button'
                   variant='outline'
-                  className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+                  size='custom'
+                  className='bg-[#eeeefa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-6 font-normal py-2 rounded-md border-none'
                   onClick={handleApplyPropertyTypes}
                 >
                   Apply

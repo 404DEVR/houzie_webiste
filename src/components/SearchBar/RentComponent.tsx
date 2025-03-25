@@ -15,6 +15,8 @@ import { setRentRange } from '@/redux/slices/searchSlice';
 import { RootState } from '@/redux/store';
 import { useFilters } from '@/lib/context/FilterContext';
 import { ChevronDown } from 'lucide-react';
+import CustomInput from '@/components/inputs/CustomInput';
+import { cn } from '@/lib/utils';
 
 const MAX_RENT = 500000;
 
@@ -77,38 +79,44 @@ const RentComponent = () => {
           </div>
         </PopoverTrigger>
         <PopoverContent className='w-80'>
-          <div className='flex flex-col gap-4'>
-            <h3 className='text-lg font-semibold mb-2'>Rent Range</h3>
-            <div className='relative w-[90%] mx-auto h-12'>
-              <div
-                className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
-                onMouseMove={handleSliderChange}
-                onMouseUp={() => setIsDragging(null)}
-                onMouseLeave={() => setIsDragging(null)}
-              >
+          <div className='space-y-2'>
+            <h4 className='font-medium'>Rent</h4>
+            <div className='flex flex-col gap-0 '>
+              <div className='relative w-[90%] mx-auto h-8'>
                 <div
-                  className='absolute h-2 bg-[#3675ff] rounded-full'
-                  style={{
-                    left: getLeftPosition(minRent),
-                    right: `${100 - (maxRent / MAX_RENT) * 100}%`,
-                  }}
-                />
-                <button
-                  className='absolute w-6 h-6 bg-white border-2 border-[#3675ff] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                  style={{ left: getLeftPosition(minRent) }}
-                  onMouseDown={() => setIsDragging('min')}
-                />
-                <button
-                  className='absolute w-6 h-6 bg-white border-2 border-[#3675ff] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
-                  style={{ left: getLeftPosition(maxRent) }}
-                  onMouseDown={() => setIsDragging('max')}
-                />
+                  className='absolute w-full h-2 bg-gray-200 rounded-full top-1/2 -translate-y-1/2'
+                  onMouseMove={(e) => isDragging && handleSliderChange(e)}
+                  onMouseUp={() => setIsDragging(null)}
+                  onMouseLeave={() => setIsDragging(null)}
+                >
+                  <div
+                    className='absolute h-2 bg-[#3b8ff6] rounded-full'
+                    style={{
+                      left: getLeftPosition(minRent),
+                      right: `${100 - (maxRent / 500000) * 100}%`,
+                    }}
+                  />
+                  <button
+                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                    style={{ left: getLeftPosition(minRent) }}
+                    onMouseDown={() => setIsDragging('min')}
+                  />
+                  <button
+                    className='absolute w-4 h-4 border-white border-2 bg-[#3b8ff6] rounded-full -translate-x-1/2 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform'
+                    style={{ left: getLeftPosition(maxRent) }}
+                    onMouseDown={() => setIsDragging('max')}
+                  />
+                </div>
               </div>
+              <p className='text-gray-500 text-xs pl-2'>Rent Range</p>
             </div>
-            <div className='flex justify-between gap-4'>
-              <Input
+            <div className='flex justify-between gap-2'>
+              <CustomInput
+                name='rent0'
                 type='number'
+                firstUnit='₹'
                 value={minRent}
+                onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                 min={0}
                 max={MAX_RENT}
                 onChange={(e) => {
@@ -117,12 +125,17 @@ const RentComponent = () => {
                     dispatch(setRentRange({ minRent: value, maxRent }));
                   }
                 }}
-                className='w-1/2'
-                placeholder='Min Rent'
+                className={cn(
+                  'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+                )}
+                required
               />
-              <Input
+              <CustomInput
+                name='rent1'
                 type='number'
+                firstUnit='₹'
                 value={maxRent}
+                onWheel={(e) => (e.currentTarget as HTMLElement).blur()}
                 min={0}
                 max={MAX_RENT}
                 onChange={(e) => {
@@ -131,13 +144,18 @@ const RentComponent = () => {
                     dispatch(setRentRange({ minRent, maxRent: value }));
                   }
                 }}
-                className='w-1/2'
-                placeholder='Max Rent'
+                className={cn(
+                  'placeholder:text-[#646464] text-[#646464] block w-full mt-2 px-4 sm:text-md rounded-md focus-visible:border-[#bfd7fe] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow'
+                )}
+                required
               />
             </div>
             <Button
+              type='button'
+              size='custom'
+              variant='outline'
+              className='flex justify-center items-center w-full py-2 text-white bg-[#3b8ff6]'
               onClick={handleApply}
-              className='w-full sm:w-auto bg-[#3675ff] hover:bg-[#729eff] text-white px-4 py-2 rounded-md'
             >
               Apply
             </Button>

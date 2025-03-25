@@ -31,12 +31,13 @@ export default function Dashboard() {
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <div>
       <h1 className='text-3xl font-semibold '>
         Welcome {capitalizeName(userData?.name)}
       </h1>
-      <MergedDashboard />
+      <MergedDashboard isLoading={isLoading} setIsLoading={setIsLoading} />
       <Brokerdetail />
     </div>
   );
