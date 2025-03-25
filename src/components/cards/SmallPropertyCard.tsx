@@ -314,7 +314,7 @@ export function SmallPropertyCard({
 
   return (
     <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'>
-      <CardContent className='p-2 flex flex-col md:flex-row gap-4 md:h-[260px] md:max-h-[260px]'>
+      <CardContent className='p-2 flex flex-col md:flex-row gap-1 md:h-[260px] md:max-h-[260px]'>
         <div className='w-full md:w-[550px] md:h-[260px] flex flex-col'>
           <div className='relative w-[300px] h-[190px] border rounded-2xl mx-auto md:mx-0'>
             <Image
@@ -361,7 +361,7 @@ export function SmallPropertyCard({
 
         <div className='w-full flex flex-col md:flex-row h-full'>
           <div className=' flex flex-col h-full justify-between items-start md:py-2'>
-            <div className='md:w-full pl-8 h-full '>
+            <div className='md:w-full pl-6 h-full '>
               <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
                 <div className='mb-1'>
                   <p className='text-gray-500 text-xs'>Rent</p>
@@ -394,12 +394,12 @@ export function SmallPropertyCard({
                 {property.description}
               </h3>
             </div>
-            <div className='flex flex-col items-center mt-4 md:items-start pl-8'>
+            <div className='flex flex-col items-center mt-4 md:items-start pl-6'>
               {!iscreate && (
                 <div className=' flex justify-end pt-0'>
                   <Button
                     onClick={() => handleViewDetails(property.id)}
-                    className='w-full lg:w-auto border-2 font-semibold bg-[#f5f5fa] shadow-md rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
+                    className='w-full lg:w-auto border-none font-semibold bg-[#60a5fa] shadow-md rounded-lg px-6 text-[#f5f5fa] hover:bg-[#82b7f8] hover:text-[#e8e8f5] transition-colors'
                   >
                     View Details
                     <ArrowRight />

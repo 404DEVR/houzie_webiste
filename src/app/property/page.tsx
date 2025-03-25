@@ -129,9 +129,8 @@ export default function DetailsPage() {
   useEffect(() => {
     const updateHeight = () => {
       const navbarHeight = document.querySelector('.navbar')?.clientHeight || 0;
-      const filterHeaderHeight =
-        document.querySelector('.filter-header')?.clientHeight || 0;
-      const totalOffset = navbarHeight + filterHeaderHeight + 20;
+      const totalOffset = navbarHeight;
+      setNavHeight(navbarHeight);
       setMapHeight(window.innerHeight - totalOffset);
     };
 
@@ -226,10 +225,18 @@ export default function DetailsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const propertyTypes = [
+    { label: 'Builder Floor', value: 'BUILDER_FLOOR', url: '/svg/builder.svg' },
+    { label: 'Villa', value: 'VILLA', url: '/svg/villa.svg' },
+    { label: 'Co-living', value: 'CO_LIVING', url: '/svg/Coliving.svg' },
+    { label: 'PG', value: 'PG', url: '/svg/PG.svg' },
+    { label: 'Flat/Apartment', value: 'FLAT_APARTMENT', url: '/svg/flat.svg' },
+  ];
+
   return (
     <>
       <Provider store={store}>
-        <div className='fixed top-0 w-full bg-white z-10 navbar'>
+        <div className='navbar fixed top-0 w-full bg-white z-10 navbar'>
           <NavbarDetailsPage stickyPage='property' />
           <PropertySearchHeader onViewChange={(view) => setActiveView(view)} />
         </div>
@@ -238,39 +245,55 @@ export default function DetailsPage() {
             <LoaderComponent />
           </>
         ) : (
-          <main className='mt-96 md:mt-36'>
+          <main>
             <div className='relative w-[95%] mx-auto'>
               <div className='flex flex-col md:flex-row'>
                 {/* Left Side - Property List */}
-                <div className='xl:pr-4 w-full xl:w-1/2'>
-                  <div className='flex flex-col gap-4 mb-4'>
-                    <h1 className='text-2xl font-semibold'>Top Results</h1>
-                    <div className='flex flex-col gap-4 pr-4'>
-                      {properties && properties.length > 0 ? (
-                        properties.map((property, index) => (
-                          <SmallPropertyCard
-                            key={index}
-                            property={property}
-                            loadImage={loadImage}
-                          />
-                        ))
-                      ) : (
-                        <NoPropertiesFound />
-                      )}
-                    </div>
+                <div
+                  style={{ marginTop: `${navHeight + 20}px` }}
+                  className='xl:pr-4 w-full xl:w-[45%]'
+                >
+                  <div className='flex flex-col gap-2'>
+                    {propertyTypes.map((propertyType) => {
+                      const filteredProperties = properties.filter(
+                        (property) =>
+                          property.propertyType === propertyType.value
+                      );
+
+                      return filteredProperties.length > 0 ? (
+                        <div
+                          key={propertyType.value}
+                          className='flex flex-col gap-4 mb-4'
+                        >
+                          <h1 className='text-2xl font-semibold'>
+                            {propertyType.label}
+                          </h1>
+                          <div className='flex flex-col gap-4 pr-4'>
+                            {filteredProperties.map((property, index) => (
+                              <SmallPropertyCard
+                                key={index}
+                                property={property}
+                                loadImage={loadImage}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ) : null;
+                    })}
+                    {properties.length === 0 ? <NoPropertiesFound /> : null}
                   </div>
                 </div>
 
                 {/* Right Side - Sticky Map */}
                 <div
-                  className='hidden xl:block w-1/2'
+                  className='hidden xl:block w-[55%]'
                   style={{
                     position: 'sticky',
-                    top: `140px`,
-                    height: `${mapHeight}px`,
+                    top: `${navHeight + 10}px`,
+                    height: `${mapHeight - 20}px`,
                   }}
                 >
-                  <div className='h-full rounded-lg relative overflow-hidden'>
+                  <div className='h-full relative overflow-hidden'>
                     <MapComponent properties={properties} />
                   </div>
                 </div>

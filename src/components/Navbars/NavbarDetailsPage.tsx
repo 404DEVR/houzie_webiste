@@ -106,13 +106,13 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
     <>
       {isPopoverOpen && (
         <div
-          className='fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
+          className=' fixed inset-0 bg-black/60 backdrop-blur-sm z-40'
           onClick={() => setIsPopoverOpen(false)}
         />
       )}
       <nav
         ref={navRef}
-        className={`w-full h-[8.5vh] bg-[#3B82F6] text-black transition-colors duration-300 border-none z-50 ${
+        className={` w-full h-[8.5vh]  text-black transition-colors duration-300 border-none z-50 ${
           stickyPage === 'home' ? 'sticky top-0' : ''
         }`}
       >
@@ -255,7 +255,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
             className='cursor-pointer w-1/3 flex justify-center relative'
           >
             <Image
-              src='/svg/houzie light.svg'
+              src='/svg/houzie dark.svg'
               alt='Houzie Logo'
               width={110}
               height={110}
