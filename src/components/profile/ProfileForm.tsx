@@ -275,12 +275,12 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                         <Button
                           type='submit'
                           disabled={!hasChanges()}
-                          className='bg-blue-500 text-white rounded-md hover:bg-blue-600 col-span-2'
+                          className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600 col-span-2'
                         >
                           Edit <Edit className='h-4 w-4 ml-2' />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent className='bg-blue-500 text-white border-none shadow-lg shadow-slate-600 '>
+                      <TooltipContent className='bg-[#3b82f6] text-white border-none shadow-lg shadow-slate-600 '>
                         <p>No changes detected. Please update a field.</p>
                       </TooltipContent>
                     </Tooltip>
@@ -303,7 +303,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                 <div className='w-full'>
                   <div className='bg-gray-200 rounded-full h-2 w-full'>
                     <div
-                      className='bg-blue-500 rounded-full h-2'
+                      className='bg-[#3b82f6] rounded-full h-2'
                       style={{ width: '10%' }}
                     ></div>
                   </div>
@@ -318,7 +318,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                 <div className='w-full '>
                   <div className='bg-gray-200 rounded-full h-2 w-full'>
                     <div
-                      className='bg-blue-500 rounded-full h-2'
+                      className='bg-[#3b82f6] rounded-full h-2'
                       style={{ width: '20%' }}
                     ></div>
                   </div>

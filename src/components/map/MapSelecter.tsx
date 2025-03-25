@@ -4,7 +4,7 @@ import {
   StandaloneSearchBox,
   useJsApiLoader,
 } from '@react-google-maps/api';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -33,9 +33,12 @@ function MapSelecter({
   onLocationSave,
   initialLocation = null,
 }: MapLocationSelectorProps) {
-  const [location, setLocation] = useState<Location>(
-    initialLocation ?? defaultCenter
-  );
+  const [location, setLocation] = useState<Location>(() => {
+    const storedLocation = localStorage.getItem('userLocation');
+    return storedLocation
+      ? JSON.parse(storedLocation)
+      : initialLocation ?? defaultCenter;
+  });
   const [markerAnimation, setMarkerAnimation] = useState<
     google.maps.Animation | undefined
   >(undefined);
@@ -77,13 +80,13 @@ function MapSelecter({
 
         place.address_components.forEach((component) => {
           if (component.types.includes('locality')) {
-            newCity = component.long_name; // City Name
+            newCity = component.long_name;
           }
           if (component.types.includes('administrative_area_level_1')) {
-            newState = component.long_name; // State Name
+            newState = component.long_name;
           }
           if (component.types.includes('country')) {
-            newCountry = component.long_name; // Country Name
+            newCountry = component.long_name;
           }
         });
 
@@ -97,7 +100,6 @@ function MapSelecter({
     });
   };
 
-  // Handle Map Click
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
       const newLocation = {
@@ -108,16 +110,9 @@ function MapSelecter({
         country: '',
       };
 
-      // Apply smooth animation
       setMarkerAnimation(google.maps.Animation.BOUNCE);
-
-      // Update location state
       setLocation(newLocation);
-
-      // Fetch city, state, and country
       getPlaceDetails(newLocation.lat, newLocation.lng);
-
-      // Reset animation after 1s
       setTimeout(() => setMarkerAnimation(undefined), 1000);
     }
   };
@@ -138,6 +133,18 @@ function MapSelecter({
       console.log(address);
     }
   };
+
+  useEffect(() => {
+    const storedLocation = localStorage.getItem('userLocation');
+    if (storedLocation) {
+      const parsedLocation = JSON.parse(storedLocation);
+      setLocation(parsedLocation);
+      if (map) {
+        map.panTo(parsedLocation);
+        getPlaceDetails(parsedLocation.lat, parsedLocation.lng);
+      }
+    }
+  }, [map]);
 
   return isLoaded ? (
     <>

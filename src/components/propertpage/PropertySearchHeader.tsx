@@ -270,11 +270,13 @@ export function PropertySearchHeader({
       <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className='px-4 w-full border-none py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
-              {tempPropertyTypes.length > 0
-                ? tempPropertyTypes.map(toTitleCase).join(', ')
-                : 'Property Type'}
-              <ChevronDown />
+            <Button className='w-full px-4 py-2 rounded-lg flex justify-between items-center bg-[#eff5ff] text-[#2d495f]'>
+              <span className='flex-1 truncate mr-2'>
+                {tempPropertyTypes.length > 0
+                  ? tempPropertyTypes.map(toTitleCase).join(', ')
+                  : 'Property Type'}
+              </span>
+              <ChevronDown className='flex-shrink-0' />
             </Button>
           </PopoverTrigger>
           <PopoverContent className='w-80 p-4'>
@@ -297,18 +299,18 @@ export function PropertySearchHeader({
                 <Button
                   type='button'
                   variant='outline'
-                  className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
-                  onClick={handleApplyPropertyTypes}
-                >
-                  Apply
-                </Button>
-                <Button
-                  type='button'
-                  variant='outline'
                   className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
                   onClick={handleClearPropertyTypes}
                 >
                   Clear All
+                </Button>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+                  onClick={handleApplyPropertyTypes}
+                >
+                  Apply
                 </Button>
               </div>
             </div>
@@ -338,7 +340,7 @@ export function PropertySearchHeader({
               : 'border border-[#3b8ff6] bg-white text-[#3b8ff6]'
           }`}
         >
-          {isSearchSaved ? 'Remove Search' : 'Save Search'}
+          {isSearchSaved ? 'search saved' : 'Save Search'}
           <IoMdBookmark
             className={`${isSearchSaved ? 'text-white' : 'text-[#3b8ff6]'}`}
           />

@@ -5,13 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
@@ -288,7 +281,7 @@ export function SmallPropertyCard({
   };
 
   const handleFavoriteClick = async (listingId: string) => {
-    if (auth?.accessToken) {
+    if (!auth?.accessToken) {
       router.push(`/login?redirect=property`);
       return;
     }

@@ -112,7 +112,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
       )}
       <nav
         ref={navRef}
-        className={`w-full h-20 bg-[#3B82F6] text-black transition-colors duration-300 border-none z-50 ${
+        className={`w-full h-[8.5vh] bg-[#3B82F6] text-black transition-colors duration-300 border-none z-50 ${
           stickyPage === 'home' ? 'sticky top-0' : ''
         }`}
       >
@@ -131,7 +131,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   }
                 >
                   <PopoverTrigger asChild>
-                    <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
+                    <div className='flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl bg-[#3b8ff6] border border-white'>
                       <div className='w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center'>
                         <Image
                           src='/images/Dummy profile.png'
@@ -151,7 +151,10 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                     align='start'
                     sideOffset={20}
                   >
-                    <div className='pt-8 px-2 bg-white rounded-lg'>
+                    <div
+                      onClick={() => router.push('/profile?section=profile')}
+                      className='pt-8 px-2 bg-white rounded-lg cursor-pointer'
+                    >
                       <div className='flex flex-col space-y-4'>
                         <div className='flex flex-col md:flex-row w-full gap-8'>
                           {/* User Details */}
@@ -254,8 +257,8 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
             <Image
               src='/svg/houzie light.svg'
               alt='Houzie Logo'
-              width={140}
-              height={140}
+              width={110}
+              height={110}
               className='relative -bottom-1'
             />
             {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>

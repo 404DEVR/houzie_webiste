@@ -117,7 +117,7 @@ const DashboardNavbar = () => {
 
       <nav
         ref={navRef}
-        className={`w-full bg-[#3B82F6] text-black transition-colors duration-300 h-20 border-none z-50 ${
+        className={`w-full bg-[#3B82F6] text-black transition-colors duration-300 h-[8.5vh] border-none z-50 ${
           isHomePage ? 'sticky top-0' : ''
         }`}
       >
@@ -155,7 +155,10 @@ const DashboardNavbar = () => {
                 align='start'
                 sideOffset={20}
               >
-                <div className='pt-8 px-2 bg-white rounded-lg'>
+                <div
+                  onClick={() => router.push('')}
+                  className='pt-8 px-2 bg-white rounded-lg cursor-pointer'
+                >
                   <div className='flex flex-col space-y-4'>
                     <div className='flex flex-col md:flex-row w-full gap-8'>
                       {/* User Details */}
@@ -236,8 +239,8 @@ const DashboardNavbar = () => {
             <Image
               src='/svg/houzie light.svg'
               alt='Houzie Logo'
-              width={140}
-              height={140}
+              width={110}
+              height={110}
               className='relative -bottom-1'
             />
             {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-semibold text-white font-poppins'>

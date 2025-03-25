@@ -364,171 +364,20 @@ export default function FilterComponent({ setOpen }: PropertyComponentProps) {
             ))}
           </div> */}
         </div>
-        {/* <div className='space-y-2'>
-          <div
-            className='flex justify-between items-center cursor-pointer p-2 bg-[#eff5ff] rounded-lg'
-            onClick={() => handleDropdownToggle('bhkType')}
-          >
-            <span>BHK Type</span>
-            <ChevronDown className={isBHKOpen ? 'rotate-180' : ''} />
-          </div>
-          {isBHKOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-              className='bg-white shadow-md rounded-lg p-2 mt-2'
-            >
-              {bhkTypes.map((type) => (
-                <div key={type} className='flex items-center space-x-2 py-2'>
-                  <Checkbox
-                    checked={localFilters.bhkType.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange('bhkType', type, checked)
-                    }
-                  />
-                  <label className='text-sm'>{bhkToNumeric(type)}</label>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div> */}
-        {/* <div className='space-y-2'>
-          <div
-            className='flex justify-between items-center cursor-pointer p-2 bg-[#eff5ff] rounded-lg'
-            onClick={() => handleDropdownToggle('availableFor')}
-          >
-            <span>Available For</span>
-            <ChevronDown className={isAvailableForOpen ? 'rotate-180' : ''} />
-          </div>
-          {isAvailableForOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-              className='bg-white shadow-md rounded-lg p-2 mt-2'
-            >
-              {availableForTypes.map((type) => (
-                <div key={type} className='flex items-center space-x-2 py-2'>
-                  <Checkbox
-                    checked={localFilters.availableFor.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange('availableFor', type, checked)
-                    }
-                  />
-                  <label className='text-sm'>{toTitleCase(type)}</label>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-        <div className='space-y-2'>
-          <div
-            className='flex justify-between items-center cursor-pointer p-2 bg-[#eff5ff] rounded-lg'
-            onClick={() => handleDropdownToggle('furnishing')}
-          >
-            <span>Furnishing</span>
-            <ChevronDown className={isFurnishingOpen ? 'rotate-180' : ''} />
-          </div>
-          {isFurnishingOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-              className='bg-white shadow-md rounded-lg p-2 mt-2'
-            >
-              {furnishingTypes.map((type) => (
-                <div key={type} className='flex items-center space-x-2 py-2'>
-                  <Checkbox
-                    checked={localFilters.furnishing.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange('furnishing', type, checked)
-                    }
-                  />
-                  <label className='text-sm'>{toTitleCase(type)}</label>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-        <div className='space-y-2'>
-          <div
-            className='flex justify-between items-center cursor-pointer p-2 bg-[#eff5ff] rounded-lg'
-            onClick={() => handleDropdownToggle('amenities')}
-          >
-            <span>Amenities</span>
-            <ChevronDown className={isAmenitiesOpen ? 'rotate-180' : ''} />
-          </div>
-          {isAmenitiesOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-              className='bg-white shadow-md rounded-lg p-2 mt-2 max-h-[300px] overflow-y-auto'
-            >
-              {allAmenities.map((type) => (
-                <div key={type} className='flex items-center space-x-2 py-2'>
-                  <Checkbox
-                    checked={localFilters.amenities.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange('amenities', type, checked)
-                    }
-                  />
-                  <label className='text-sm'>{toTitleCase(type)}</label>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-        <div className='space-y-2'>
-          <div
-            className='flex justify-between items-center cursor-pointer p-2 bg-[#eff5ff] rounded-lg'
-            onClick={() => handleDropdownToggle('parking')}
-          >
-            <span>Parking</span>
-            <ChevronDown className={isParkingOpen ? 'rotate-180' : ''} />
-          </div>
-          {isParkingOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-              className='bg-white shadow-md rounded-lg p-2 mt-2'
-            >
-              {parkingTypes.map((type) => (
-                <div key={type} className='flex items-center space-x-2 py-2'>
-                  <Checkbox
-                    checked={localFilters.parking.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange('parking', type, checked)
-                    }
-                  />
-                  <label className='text-sm'>{toTitleCase(type)}</label>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </div> */}
-
         <div className='flex justify-between gap-2 mt-4'>
-          <Button
-            variant='outline'
-            className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
-            onClick={handleApplyRent}
-          >
-            Apply
-          </Button>
           <Button
             variant='outline'
             className='bg-[#f5f5fa] text-[#f66659] hover:bg-[#f66659] hover:text-[#f5f5fa] px-4 font-normal py-4 rounded-lg border-none'
             onClick={handleClearAll}
           >
             Clear All
+          </Button>
+          <Button
+            variant='outline'
+            className='bg-[#f5f5fa] text-[#3b8ff6] hover:bg-[#3b8ff6] hover:text-white px-4 font-normal py-4 rounded-lg border-none'
+            onClick={handleApplyRent}
+          >
+            Apply
           </Button>
         </div>
       </div>

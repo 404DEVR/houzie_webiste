@@ -9,6 +9,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
 import useAuth from '@/hooks/useAuth';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -16,9 +20,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 import { Listing, PropertyPost } from '@/interfaces/Interface';
 const url = `https://api.houzie.in/profile/favorites`;
