@@ -102,17 +102,17 @@ const SaveSearchList = () => {
                   <h1 className='text-lg text-black font-semibold'>
                     Filters Applied
                   </h1>
-                  <p>
-                    <span className='font-medium'>Price Range:</span>{' '}
+                  <div className='flex items-start justify-start mb-2'>
+                    <span className='font-medium mr-2'>Price Range:</span>{' '}
                     {formatRentRange(
                       search.searchData?.minRent,
                       search.searchData?.maxRent
                     )}
-                  </p>
+                  </div>
                   {search.searchData?.propertyType && (
-                    <div className='flex items-center justify-center'>
+                    <div className='flex items-start justify-start mb-2'>
                       <span className='font-medium mr-2'>Property Type:</span>{' '}
-                      <div className='flex gap-2'>
+                      <div className='flex flex-col justify-start items-start'>
                         {search.filters?.propertyType.map((e, index) => (
                           <p key={index}>{transformString(e)}</p>
                         ))}
@@ -120,9 +120,9 @@ const SaveSearchList = () => {
                     </div>
                   )}
                   {search.filters?.bhkType.length > 0 && (
-                    <div className='flex items-center justify-center'>
+                    <div className='flex items-start justify-start'>
                       <span className='font-medium mr-2'>Configuration:</span>{' '}
-                      <div>
+                      <div className='flex flex-col justify-start items-start'>
                         {search.filters?.bhkType.map((e, index) => (
                           <p key={index}>{transformString(e)}</p>
                         ))}
@@ -199,7 +199,7 @@ const SaveSearchList = () => {
                     <h2 className='text-sm md:text-lg font-semibold mb-4 text-nowrap'>
                       Filters Applied:
                     </h2>
-                    <div className='gap-x-8 gap-y-2 text-sm text-gray-600 flex flex-col'>
+                    <div className='gap-x-8 gap-y-2 text-base text-gray-600 flex flex-col'>
                       <div className='flex flex-col md:flex-row items-start md:items-center justify-start text-nowrap'>
                         <span className='font-medium mr-2'>Price Range:</span>{' '}
                         {formatRentRange(
@@ -251,13 +251,13 @@ const SaveSearchList = () => {
                       )}
                     </div>
                   </div>
-                  <div className='col-span-1 '>
+                  <div className='col-span-1 space-y-3 '>
                     {search.filters?.furnishing.length > 0 && (
-                      <p className='flex flex-col md:flex-row gap-2 items-start justify-center'>
+                      <p className='flex flex-col md:flex-row gap-2 items-start justify-start'>
                         <h2 className='text-lg font-semibold mb-4'>
                           Furnishing Selected:
                         </h2>
-                        <div>
+                        <div className='text-gray-600 text-base'>
                           {search.filters?.furnishing.map((e, index) => (
                             <p key={index}>{transformString(e)}</p>
                           ))}
@@ -265,11 +265,11 @@ const SaveSearchList = () => {
                       </p>
                     )}
                     {search.filters?.amenities.length > 0 && (
-                      <p className='flex flex-col md:flex-row gap-2 items-start justify-center'>
+                      <p className='flex flex-col md:flex-row gap-2 items-start justify-start'>
                         <h2 className='text-lg font-semibold mb-4'>
                           Amenities Selected:
                         </h2>
-                        <div>
+                        <div className='text-gray-600 text-base'>
                           {search.filters?.amenities.map((amenity, index) => (
                             <p key={index}>{transformString(amenity)}</p>
                           ))}

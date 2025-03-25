@@ -194,7 +194,7 @@ export default function DetailsPage() {
           <NavbarDetailsPage stickyPage='property' />
           <PropertySearchHeader onViewChange={(view) => setActiveView(view)} />
         </div>
-        <main className='mt-96 md:mt-40'>
+        <main className='mt-96 md:mt-36'>
           <div className='relative w-[95%] mx-auto'>
             <div className='flex flex-col md:flex-row'>
               {/* Left Side - Property List */}
@@ -222,7 +222,7 @@ export default function DetailsPage() {
                 className='hidden xl:block w-1/2'
                 style={{
                   position: 'sticky',
-                  top: `160px`,
+                  top: `140px`,
                   height: `${mapHeight}px`,
                 }}
               >

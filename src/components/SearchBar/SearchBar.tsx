@@ -40,10 +40,17 @@ const SearchBar = () => {
     updateFilters('location', e.target.value);
   };
 
-  const handleOnPlaceChanged = () => {
+  const handleOnPlacesChanged = () => {
     if (inputRef.current) {
-      const address = inputRef.current.getPlaces();
-      console.log(address);
+      const places = inputRef.current.getPlaces();
+      if (places && places.length > 0) {
+        const place = places[0];
+        const formattedAddress = place.formatted_address;
+        if (formattedAddress) {
+          dispatch(setLocation(formattedAddress));
+          updateFilters('location', formattedAddress);
+        }
+      }
     }
   };
 
@@ -57,7 +64,7 @@ const SearchBar = () => {
           {isLoaded && (
             <StandaloneSearchBox
               onLoad={(ref) => (inputRef.current = ref)}
-              onPlacesChanged={handleOnPlaceChanged}
+              onPlacesChanged={handleOnPlacesChanged}
             >
               <div className='relative flex justify-center items-center bg-[#e0e0e0] px-4 py-2 rounded-md w-full border-none'>
                 <MdLocationOn className='h-6 w-6' />

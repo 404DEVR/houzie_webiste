@@ -18,7 +18,14 @@ import Mylistings from '@/components/Mylistings/Mylistings';
 import ProfileForm from '@/components/profile/ProfileForm';
 import SettingsPage from '@/components/settings/SettingsPage';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 import store from '@/redux/store';
 
@@ -88,7 +95,7 @@ const BrokerContent = () => {
               Profile
             </Button>
 
-            <Dialog>
+            {/* <Dialog>
               <DialogTrigger asChild>
                 <Button
                   className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
@@ -103,7 +110,7 @@ const BrokerContent = () => {
               <DialogContent className='sm:max-w-[425px] shadow-md'>
                 <ProfileForm />
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             <Button
               className={`rounded-xl hover:text-gray-800 hover:bg-[#D3E3FC] text-gray-600 bg-transparent flex items-center ${
@@ -130,7 +137,7 @@ const BrokerContent = () => {
           </div>
         </div>
       </Provider>
-      {/* <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Location Notice</DialogTitle>
@@ -146,7 +153,7 @@ const BrokerContent = () => {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 };

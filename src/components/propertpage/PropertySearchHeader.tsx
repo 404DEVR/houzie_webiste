@@ -1,6 +1,7 @@
+import { StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
 import { ChevronDown, Search, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IoMdBookmark } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 
@@ -42,6 +43,12 @@ export function PropertySearchHeader({
     ...filters.propertyType,
   ]);
   const [open, setOpen] = useState(false);
+  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API || '',
+    libraries: ['places'],
+  });
 
   useEffect(() => {
     const storedSearches = localStorage.getItem('savedSearches');
@@ -163,22 +170,44 @@ export function PropertySearchHeader({
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
+  const handlePlaceChanged = () => {
+    if (searchBoxRef.current) {
+      const places = searchBoxRef.current.getPlaces();
+      if (places && places.length > 0) {
+        const place = places[0];
+        if (place.formatted_address) {
+          updateFilters('location', place.formatted_address);
+        }
+      }
+    }
+  };
 
   return (
     <div className='flex flex-col md:flex-row items-center gap-2 md:gap-4 px-4 py-4 bg-white border-b-2 w-[95%] mx-auto'>
-      <div className='flex items-center border-none rounded-full px-0 bg-[#eff5ff] flex-[2] w-full md:w-auto md:max-w-[400px]'>
-        <Input
-          placeholder='Noida'
-          defaultValue={filters.location || ''}
-          className='border-none pl-6 placeholder:text-[#2d495f]  h-8 bg-transparent focus:ring-0 focus:outline-none w-full focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-        />
-        <Button
-          variant='ghost'
-          className='p-3 bg-[#3b8ff6] text-white rounded-full'
-        >
-          <Search className='' />
-        </Button>
+      <div className='flex items-center border-none rounded-full px-0 flex-[2] w-full md:max-w-[400px]'>
+        {isLoaded && (
+          <StandaloneSearchBox
+            onLoad={(ref) => (searchBoxRef.current = ref)}
+            onPlacesChanged={handlePlaceChanged}
+          >
+            <div className='relative flex justify-between items-center w-full md:min-w-[400px] bg-[#eff5ff] rounded-full'>
+              <input
+                type='text'
+                placeholder='Enter location...'
+                defaultValue={filters.location || ''}
+                className='border-none pl-6 placeholder:text-[#2d495f] h-8 bg-transparent focus:ring-0 flex-grow  focus:outline-none focus-visible:ring-0'
+              />
+              <Button
+                variant='ghost'
+                className='p-3 bg-[#3b8ff6] text-white rounded-full'
+              >
+                <Search className='' />
+              </Button>
+            </div>
+          </StandaloneSearchBox>
+        )}
       </div>
+
       <div className='flex-[1] w-full md:w-auto md:max-w-[200px]'>
         <Select onValueChange={handleRadiusChange} value={filters.radius || ''}>
           <SelectTrigger className='w-full text-md border-none rounded-lg focus:ring-0 bg-[#eff5ff] focus:outline-none focus-visible:border-none ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'>
