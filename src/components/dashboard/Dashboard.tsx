@@ -38,7 +38,7 @@ export default function Dashboard() {
         Welcome {capitalizeName(userData?.name)}
       </h1>
       <MergedDashboard isLoading={isLoading} setIsLoading={setIsLoading} />
-      <Brokerdetail />
+      <Brokerdetail isLoading={isLoading} setIsLoading={setIsLoading} />
     </div>
   );
 }
