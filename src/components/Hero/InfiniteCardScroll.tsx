@@ -79,6 +79,7 @@ const InfiniteCardScroll: React.FC = () => {
   };
 
   const blurWidth = 200;
+  const blurWidthsmall = 50;
 
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true });
@@ -94,18 +95,26 @@ const InfiniteCardScroll: React.FC = () => {
 
   return (
     <motion.div
-      className='py-8 relative overflow-hidden'
+      className='py-4 md:py-8 relative overflow-hidden'
       ref={sectionRef}
       variants={fadeInVariants}
       initial='hidden'
       animate={isInView ? 'visible' : 'hidden'}
     >
       <div
-        className='absolute left-0 top-0 h-full bg-gradient-to-r from-white to-transparent z-10'
+        className='absolute md:hidden left-0 top-0 h-full bg-gradient-to-r from-white to-transparent z-10'
+        style={{ width: `${blurWidthsmall}px`, pointerEvents: 'none' }}
+      />
+      <div
+        className='absolute md:hidden right-0 top-0 h-full bg-gradient-to-l from-white to-transparent z-10'
+        style={{ width: `${blurWidthsmall}px`, pointerEvents: 'none' }}
+      />
+      <div
+        className='md:absolute left-0 top-0 h-full bg-gradient-to-r from-white to-transparent z-10'
         style={{ width: `${blurWidth}px`, pointerEvents: 'none' }}
       />
       <div
-        className='absolute right-0 top-0 h-full bg-gradient-to-l from-white to-transparent z-10'
+        className='md:absolute right-0 top-0 h-full bg-gradient-to-l from-white to-transparent z-10'
         style={{ width: `${blurWidth}px`, pointerEvents: 'none' }}
       />
       <motion.div

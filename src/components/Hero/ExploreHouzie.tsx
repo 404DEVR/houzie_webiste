@@ -45,7 +45,7 @@ const HeroText = () => {
   return (
     <>
       <div className='text-center mt-16 sm:mt-24 md:mt-32 px-4'>
-        <p className='text-5xl md:text-7xl font-normal mb-3'>
+        <p className='text-4xl md:text-7xl font-normal md:mb-3'>
           Find Home
           <Image
             src='/svg/small house 1.svg'
@@ -55,17 +55,17 @@ const HeroText = () => {
             priority
             className='inline-block mx-2 rounded-full object-cover w-16 h-12 md:w-20 md:h-16'
           />
-          close to work
+          close to work with zero
         </p>
-        <p className='text-5xl md:text-7xl font-normal flex flex-wrap justify-center items-center mb-4'>
-          with zero hassle
+        <p className='text-4xl md:text-7xl font-normal flex flex-wrap justify-center items-center md:mb-4'>
+          hassle
           <div className='flex justify-center items-center text-white  p-3 md:p-5 bg-[#ff764d] rounded-full mx-2 my-2'>
             <House className='h-5 w-5 md:h-6 md:w-6' />
           </div>
-          and
+          and full
         </p>
-        <p className='text-5xl md:text-7xl font-normal'>
-          full transparency
+        <p className='text-4xl md:text-7xl font-normal'>
+          transparency
           <Image
             src='/svg/small house 2.svg'
             alt='Transparency'
@@ -94,7 +94,7 @@ const HeroText = () => {
                 width={800}
                 height={600}
                 priority
-                className='absolute inset-0 object-cover'
+                className='absolute inset-0 object-cover  '
               />
               <div className='relative flex flex-col h-full justify-between px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16'>
                 <CardTitle className='text-2xl sm:text-3xl md:text-4xl font-normal text-white mb-4'>
@@ -129,19 +129,19 @@ const HeroText = () => {
             <CardFooter className='flex flex-wrap gap-2 p-4 sm:p-6 md:p-8'>
               <Badge
                 variant='outline'
-                className='text-sm md:text-lg px-4 py-2 text-white border'
+                className='text-xs md:text-lg px-4 py-2 text-white border'
               >
                 Affordable
               </Badge>
               <Badge
                 variant='outline'
-                className='text-sm md:text-lg px-4 py-2 text-white border'
+                className='text-xs md:text-lg px-4 py-2 text-white border'
               >
                 Searchable
               </Badge>
               <Badge
                 variant='outline'
-                className='text-sm md:text-lg px-4 py-2 text-white border'
+                className='text-xs md:text-lg px-4 py-2 text-white border'
               >
                 Proximal
               </Badge>
@@ -149,8 +149,8 @@ const HeroText = () => {
           </Card>
         </MotionDiv>
       </div>
-      <div className='text-center mt-16 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4'>
-        <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal'>
+      <div className='text-center mt-10 sm:mt-20 md:mt-28 mb-4 sm:mb-12 md:mb-16 px-4'>
+        <h1 className='text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-normal'>
           Rent Smarter With Houzie
         </h1>
       </div>

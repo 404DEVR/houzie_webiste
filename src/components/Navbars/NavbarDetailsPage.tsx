@@ -32,6 +32,24 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
   const [opacity, setOpacity] = useState(1);
   const navRef = useRef(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [showNavbarBackground, setShowNavbarBackground] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const newOpacity = Math.max(1 - scrollPosition / 100, 2);
+      setOpacity(newOpacity);
+
+      if (stickyPage === 'home' && scrollPosition > 100) {
+        setShowNavbarBackground(true);
+      } else {
+        setShowNavbarBackground(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [stickyPage]);
 
   const handleLogout = async () => {
     try {
@@ -64,17 +82,6 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
     };
     fetchUserData();
   }, [auth]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const newOpacity = Math.max(1 - scrollPosition / 300, 0.9);
-      setOpacity(newOpacity);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -112,8 +119,12 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
       )}
       <nav
         ref={navRef}
-        className={` w-full h-[8.5vh]  text-black transition-colors duration-300 border-none z-50 ${
-          stickyPage === 'home' ? 'sticky top-0' : ''
+        className={`${
+          stickyPage === 'home' && showNavbarBackground
+            ? 'bg-[#3b8ff6] shadow-md'
+            : 'bg-none'
+        } w-full h-[8.5vh]  text-black transition-colors bg-none duration-300 border-none z-50 ${
+          stickyPage === 'home' ? 'fixed top-0' : ''
         }`}
       >
         <div className='max-w-full h-full flex items-center justify-between px-4 md:p-0 md:mx-auto'>
@@ -131,7 +142,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   }
                 >
                   <PopoverTrigger asChild>
-                    <div className='flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl bg-[#3b8ff6] border border-white'>
+                    <div className='flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl border border-[#3b8ff6]'>
                       <div className='w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center'>
                         <Image
                           src='/images/Dummy profile.png'
@@ -153,7 +164,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   >
                     <div
                       onClick={() => router.push('/profile?section=profile')}
-                      className='pt-8 px-2 bg-white rounded-lg cursor-pointer'
+                      className='pt-8 px-2  rounded-lg cursor-pointer'
                     >
                       <div className='flex flex-col space-y-4'>
                         <div className='flex flex-col md:flex-row w-full gap-8'>
@@ -206,21 +217,6 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                                 priority
                                 height={160}
                               />
-                              {/* {userData?.profilePicture ? (
-                                <Image
-                                  src={
-                                    userData.profilePicture || '/placeholder.svg'
-                                  }
-                                  alt='Profile'
-                                  width={160}
-                                  height={160}
-                                  className='object-cover'
-                                />
-                              ) : (
-                                <span className='text-2xl font-bold text-gray-500'>
-                                  {userData?.name?.charAt(0) || 'U'}
-                                </span>
-                              )} */}
                             </div>
                           </div>
                         </div>
@@ -235,7 +231,11 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   onClick={() => {
                     router.push('/');
                   }}
-                  className='cursor-pointer text-white py-1 px-2 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  className={`${
+                    stickyPage === 'home'
+                      ? 'text-white hover:bg-white hover:text-[#579AFF]'
+                      : 'text-[#579AFF] hover:bg-[#579AFF] hover:text-white'
+                  } cursor-pointer  py-1 px-2 text-sm sm:text-xl rounded-full  transition-colors`}
                 >
                   About
                 </div>
@@ -243,7 +243,11 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   onClick={() => {
                     router.push('/');
                   }}
-                  className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                  className={`${
+                    stickyPage === 'home'
+                      ? 'text-white hover:bg-white hover:text-[#579AFF]'
+                      : 'text-[#579AFF] hover:bg-[#579AFF] hover:text-white'
+                  } cursor-pointer py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full  transition-colors`}
                 >
                   Concept
                 </div>
@@ -254,13 +258,24 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
             onClick={() => router.push('/')}
             className='cursor-pointer w-1/3 flex justify-center relative'
           >
-            <Image
-              src='/svg/houzie dark.svg'
-              alt='Houzie Logo'
-              width={110}
-              height={110}
-              className='relative -bottom-1'
-            />
+            {stickyPage === 'home' ? (
+              <Image
+                src='/svg/houzie light.svg'
+                alt='Houzie Logo'
+                width={110}
+                height={110}
+                className='relative md:-bottom-1'
+              />
+            ) : (
+              <Image
+                src='/svg/houzie dark.svg'
+                alt='Houzie Logo'
+                width={110}
+                height={110}
+                className='relative md:-bottom-1'
+              />
+            )}
+
             {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>
               Houzie
             </h1> */}
@@ -281,12 +296,21 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                 <PopoverTrigger asChild>
                   <Card className=' bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
                     <CardContent className='bg-transparent flex items-center justify-center p-0'>
-                      <Image
-                        src='/svg/list.svg'
-                        alt='public/svg/list.svg'
-                        width={40}
-                        height={40}
-                      />
+                      {stickyPage === 'home' ? (
+                        <Image
+                          src='/svg/list light.svg'
+                          alt='public/svg/list.svg'
+                          width={40}
+                          height={40}
+                        />
+                      ) : (
+                        <Image
+                          src='/svg/list.svg'
+                          alt='public/svg/list.svg'
+                          width={40}
+                          height={40}
+                        />
+                      )}
                     </CardContent>
                   </Card>
                 </PopoverTrigger>
@@ -295,7 +319,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   align='end'
                   sideOffset={20}
                 >
-                  <div className='p-0 bg-white rounded-lg'>
+                  <div className='p-0 rounded-lg'>
                     <div className='flex flex-col space-y-2 px-4'>
                       <Button
                         size='custom'
@@ -354,22 +378,129 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
               </Popover>
             ) : (
               <>
-                <div className='flex items-center space-x-1 sm:space-x-2'>
-                  <div
-                    onClick={() => {
-                      router.push('/brokerSignUp');
-                    }}
-                    className='cursor-pointer text-white py-1 px-2 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
+                <Popover
+                  open={
+                    isPopoverOpen &&
+                    popoverContent === 'menu' &&
+                    popoverPosition === 'right'
+                  }
+                  onOpenChange={(open) =>
+                    handlePopoverOpenChange(open, 'menu', 'right')
+                  }
+                >
+                  <PopoverTrigger asChild>
+                    <Card className='md:hidden bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
+                      <CardContent className='bg-transparent flex items-center justify-center p-0'>
+                        {stickyPage === 'home' ? (
+                          <Image
+                            src='/svg/list light.svg'
+                            alt='public/svg/list.svg'
+                            width={40}
+                            height={40}
+                          />
+                        ) : (
+                          <Image
+                            src='/svg/list.svg'
+                            alt='public/svg/list.svg'
+                            width={40}
+                            height={40}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className='w-auto shadow-[0_0_15px_rgba(255,255,255,0.5)] border-2 border-white/20 z-50'
+                    align='end'
+                    sideOffset={20}
                   >
-                    Post Property
-                  </div>
-                  <div
-                    onClick={() => {
-                      router.push('/');
-                    }}
-                    className='cursor-pointer text-white py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full hover:bg-white hover:text-[#579AFF] transition-colors'
-                  >
-                    Contact
+                    <div className='p-0 rounded-lg'>
+                      <div className='flex flex-col space-y-2 px-4'>
+                        <Button
+                          size='custom'
+                          onClick={() =>
+                            router.push('/profile?section=profile')
+                          }
+                          className='focus-visible:border-0 border-b rounded-none py-1 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 '
+                        >
+                          <span>Profile</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          onClick={() =>
+                            router.push('/profile?section=savedsearch')
+                          }
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                        >
+                          <span>Saved Search</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          onClick={() =>
+                            router.push('/profile?section=favorites')
+                          }
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2  border-b rounded-none py-1'
+                        >
+                          <span>Favorites</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                        >
+                          <span>Contacted</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          onClick={() =>
+                            router.push('/profile?section=settings')
+                          }
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                        >
+                          <span>Settings</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
+                        >
+                          <span>Notifications</span>
+                        </Button>
+                        <Button
+                          size='custom'
+                          onClick={handleLogout}
+                          className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2  border-b rounded-none py-1 text-red-500 hover:text-red-500'
+                        >
+                          <span>Logout</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <div className='md:block hidden'>
+                  <div className='flex items-center space-x-1 sm:space-x-2'>
+                    <div
+                      onClick={() => {
+                        router.push('/brokerSignUp');
+                      }}
+                      className={`${
+                        stickyPage === 'home'
+                          ? 'text-white hover:bg-white hover:text-[#579AFF]'
+                          : 'text-[#579AFF] hover:bg-[#579AFF] hover:text-white'
+                      } cursor-pointer py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full  transition-colors`}
+                    >
+                      Post Property
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.push('/');
+                      }}
+                      className={`${
+                        stickyPage === 'home'
+                          ? 'text-white hover:bg-white hover:text-[#579AFF]'
+                          : 'text-[#579AFF] hover:bg-[#579AFF] hover:text-white'
+                      } cursor-pointer py-1 px-2 sm:px-3 text-sm sm:text-xl rounded-full  transition-colors`}
+                    >
+                      Contact
+                    </div>
                   </div>
                 </div>
               </>

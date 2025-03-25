@@ -23,6 +23,10 @@ export function SmallPropertyCard({
   property,
   iscreate,
   loadImage,
+  setWidthDecider,
+  widthDecider,
+  mapWidth,
+  setMapWidth,
 }: PropertyCardProps) {
   const toast = useCustomToast();
   const { auth } = useAuth();
@@ -312,11 +316,33 @@ export function SmallPropertyCard({
     return price.toString();
   };
 
+  useEffect(() => {
+    const updateHeight = () => {
+      const imageWidthDecider = document.querySelector('.imageWidthDecider');
+      const widthDecider = document.querySelector('.widthDecider');
+
+      if (imageWidthDecider && widthDecider && setWidthDecider && setMapWidth) {
+        const imageWidth = imageWidthDecider.clientWidth;
+        const contentWidth = widthDecider.clientWidth;
+
+        // Calculate maximum height based on widths
+        const maxWidth = imageWidth + contentWidth + 120;
+
+        setWidthDecider(maxWidth);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
   return (
-    <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden'>
-      <CardContent className='p-2 flex flex-col md:flex-row gap-1 md:h-[260px] md:max-h-[260px]'>
-        <div className='w-full md:w-[550px] md:h-[260px] flex flex-col'>
-          <div className='relative w-[300px] h-[190px] border rounded-2xl mx-auto md:mx-0'>
+    <Card className='w-full mx-auto shadow-md rounded-2xl bg-[#eff6ff] border transition-all duration-300 overflow-hidden '>
+      <CardContent className='p-2 flex flex-col md:flex-row gap-1 md:h-[260px] md:max-h-[260px] '>
+        <div className='w-full md:w-[550px] md:h-[260px] flex flex-col '>
+          <div className='relative w-[300px] h-[190px] border rounded-2xl mx-auto md:mx-0 imageWidthDecider'>
             <Image
               src={property.mainImage || '/svg/no-results.svg'}
               alt={property.title}
@@ -359,10 +385,10 @@ export function SmallPropertyCard({
           </div>
         </div>
 
-        <div className='w-full flex flex-col md:flex-row h-full'>
+        <div className='w-full flex flex-col md:flex-row h-full '>
           <div className=' flex flex-col h-full justify-between items-start md:py-2'>
             <div className='md:w-full pl-6 h-full '>
-              <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap '>
+              <div className='flex gap-6 mb-2 flex-wrap md:flex-nowrap widthDecider'>
                 <div className='mb-1'>
                   <p className='text-gray-500 text-xs'>Rent</p>
                   <span className='text-black text-2xl font-semibold flex gap-2'>

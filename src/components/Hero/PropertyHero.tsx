@@ -60,7 +60,7 @@ export default function PropertyHero() {
         </video>
       </div>
 
-      <div className='container mx-auto px-4 mt-16 mb-10'>
+      <div className='container mx-auto px-4 mt-32 md:mt-16 mb-10'>
         <MotionDiv
           className='text-center mb-8'
           initial='hidden'
@@ -76,13 +76,13 @@ export default function PropertyHero() {
           }}
         >
           <MotionDiv
-            className='text-[60px] lg:text-[90px] font-normal leading-none md:leading-snug text-[#DBDBDB]'
+            className='text-[50px] lg:text-[90px] font-normal leading-none md:leading-snug text-[#DBDBDB]'
             variants={textVariants}
           >
             Find. Move. Settle.
           </MotionDiv>
           <MotionDiv
-            className='text-[60px] lg:text-[100px] leading-none md:leading-snug mx-auto text-white'
+            className='text-[50px] lg:text-[100px] leading-none md:leading-snug mx-auto text-white'
             variants={textVariants}
           >
             Renting Simplified!

@@ -114,6 +114,10 @@ export interface PropertyCardProps {
   property: Property;
   iscreate?: boolean;
   loadImage: (url: string) => Promise<string>;
+  widthDecider?: number | null;
+  setWidthDecider?: React.Dispatch<React.SetStateAction<number>>;
+  mapWidth?: number | null;
+  setMapWidth?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface PropertyHighlightprops {

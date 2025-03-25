@@ -34,6 +34,8 @@ export default function DetailsPage() {
   const [mapHeight, setMapHeight] = useState(500);
   const [navHeight, setNavHeight] = useState(120);
   const [page, setPage] = useState(1);
+  const [widthDecider, setWidthDecider] = useState(300);
+  const [mapWidth, setMapWidth] = useState(300);
 
   const [imageCache, setImageCache] = useState<Record<string, string>>({});
 
@@ -132,6 +134,9 @@ export default function DetailsPage() {
       const totalOffset = navbarHeight;
       setNavHeight(navbarHeight);
       setMapHeight(window.innerHeight - totalOffset);
+      const totalWidth = window.innerWidth;
+      const totalMapWidth = totalWidth - mapWidth;
+      setMapWidth(totalMapWidth);
     };
 
     updateHeight();
@@ -250,8 +255,11 @@ export default function DetailsPage() {
               <div className='flex flex-col md:flex-row'>
                 {/* Left Side - Property List */}
                 <div
-                  style={{ marginTop: `${navHeight + 20}px` }}
-                  className='xl:pr-4 w-full xl:w-[45%]'
+                  style={{
+                    marginTop: `${navHeight + 20}px`,
+                    width: `${widthDecider}px`,
+                  }}
+                  className='md:pr-4 hidden md:block'
                 >
                   <div className='flex flex-col gap-2'>
                     {propertyTypes.map((propertyType) => {
@@ -268,12 +276,63 @@ export default function DetailsPage() {
                           <h1 className='text-2xl font-semibold'>
                             {propertyType.label}
                           </h1>
-                          <div className='flex flex-col gap-4 pr-4'>
+                          <div
+                            style={{ maxWidth: `${widthDecider}px` }}
+                            className='flex flex-col gap-4 pr-4'
+                          >
                             {filteredProperties.map((property, index) => (
                               <SmallPropertyCard
                                 key={index}
                                 property={property}
                                 loadImage={loadImage}
+                                setWidthDecider={setWidthDecider}
+                                widthDecider={widthDecider}
+                                mapWidth={mapWidth}
+                                setMapWidth={setMapWidth}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ) : null;
+                    })}
+                    {properties.length === 0 ? <NoPropertiesFound /> : null}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    marginTop: `${navHeight + 20}px`,
+                    width: `100%`,
+                  }}
+                  className='md:pr-4 block md:hidden'
+                >
+                  <div className='flex flex-col gap-2'>
+                    {propertyTypes.map((propertyType) => {
+                      const filteredProperties = properties.filter(
+                        (property) =>
+                          property.propertyType === propertyType.value
+                      );
+
+                      return filteredProperties.length > 0 ? (
+                        <div
+                          key={propertyType.value}
+                          className='flex flex-col gap-4 mb-4'
+                        >
+                          <h1 className='text-2xl font-semibold'>
+                            {propertyType.label}
+                          </h1>
+                          <div
+                            style={{ maxWidth: `${widthDecider}px` }}
+                            className='flex flex-col gap-4 pr-4'
+                          >
+                            {filteredProperties.map((property, index) => (
+                              <SmallPropertyCard
+                                key={index}
+                                property={property}
+                                loadImage={loadImage}
+                                setWidthDecider={setWidthDecider}
+                                widthDecider={widthDecider}
+                                mapWidth={mapWidth}
+                                setMapWidth={setMapWidth}
                               />
                             ))}
                           </div>
@@ -286,11 +345,12 @@ export default function DetailsPage() {
 
                 {/* Right Side - Sticky Map */}
                 <div
-                  className='hidden xl:block w-[55%]'
+                  className='hidden md:block'
                   style={{
                     position: 'sticky',
                     top: `${navHeight + 10}px`,
                     height: `${mapHeight - 20}px`,
+                    width: `${mapWidth}px`,
                   }}
                 >
                   <div className='h-full relative overflow-hidden'>

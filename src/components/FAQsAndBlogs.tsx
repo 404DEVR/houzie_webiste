@@ -69,7 +69,7 @@ export default function FAQsAndBlogs() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(1);
 
   return (
-    <div className='max-w-6xl mx-auto px-4 py-16'>
+    <div className='max-w-6xl mx-auto px-4 py-8 md:py-16'>
       <div className='flex gap-4 justify-center'>
         <button
           onClick={() => setActiveSection('faqs')}

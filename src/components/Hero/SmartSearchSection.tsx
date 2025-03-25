@@ -90,7 +90,7 @@ const SmartSearch: React.FC = () => {
         initial='hidden'
         animate={isInView ? 'visible' : 'hidden'}
         variants={containerVariants}
-        className='max-w-7xl mx-auto flex flex-col lg:flex-row items-start bg-gray-50 rounded-3xl overflow-hidden pt-28'
+        className='max-w-7xl mx-auto flex flex-col lg:flex-row items-start bg-gray-50 rounded-3xl overflow-hidden pt-2 md:pt-28'
       >
         <div ref={accordionRef} className='w-full lg:w-1/2 p-8'>
           {accordionData.map((item, index) => (
@@ -155,11 +155,11 @@ const SmartSearch: React.FC = () => {
           </AnimatePresence>
         </MotionDiv>
       </MotionDiv>
-      <div className='text-center max-w-[90%] mx-auto mt-28 mb-16'>
-        <h1 className='text-4xl md:text-5xl lg:text-6xl font-normal mb-4'>
+      <div className='md:block hidden text-center max-w-[90%] mx-auto mt-8 md:mt-28 mb-8'>
+        <h1 className='text-3xl md:text-5xl lg:text-6xl font-normal mb-4'>
           Why Houzie?
         </h1>
-        <h1 className='text-4xl md:text-5xl lg:text-6xl font-normal'>
+        <h1 className='text-3xl md:text-5xl lg:text-6xl font-normal'>
           Because Renting Should Be Easy
         </h1>
       </div>

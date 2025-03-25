@@ -117,7 +117,7 @@ const DashboardNavbar = () => {
 
       <nav
         ref={navRef}
-        className={`w-full bg-[#3B82F6] text-black transition-colors duration-300 h-[8.5vh] border-none z-50 ${
+        className={`w-full bg-none text-black transition-colors duration-300 h-[8.5vh] border-none z-50 ${
           isHomePage ? 'sticky top-0' : ''
         }`}
       >
@@ -237,7 +237,7 @@ const DashboardNavbar = () => {
             className='cursor-pointer w-1/3 flex relative justify-center items-end'
           >
             <Image
-              src='/svg/houzie light.svg'
+              src='/svg/houzie dark.svg'
               alt='Houzie Logo'
               width={110}
               height={110}

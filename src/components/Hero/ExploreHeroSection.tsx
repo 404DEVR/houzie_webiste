@@ -18,13 +18,13 @@ const Card: React.FC<CardProps> = ({ label, description, className }) => {
   return (
     <div
       className={cn(
-        'rounded-[60px] pt-12 pb-6 px-6 flex flex-col items-start justify-between h-full',
+        'rounded-[30px] lg:rounded-[60px] pt-12 pb-6 px-6 flex flex-col items-start justify-between h-full',
         className
       )}
     >
       <span className='text-2xl md:text-4xl mb-4 text-start '>{label}</span>
       <MotionDiv
-        className='bg-white w-full text-gray-800 font-normal text-xl py-4 rounded-full flex justify-between items-center space-x-2 hover:bg-gray-100'
+        className='bg-white w-full text-gray-800 font-normal text-xl py-2 lg:py-4 rounded-lg lg:rounded-full flex justify-between items-center space-x-2 hover:bg-gray-100'
         initial={{ paddingLeft: 16, paddingRight: 16 }}
         whileHover={{ paddingLeft: 24, paddingRight: 24 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
@@ -65,7 +65,7 @@ const HeroSection: React.FC = () => {
   return (
     <MotionDiv
       ref={sectionRef}
-      className='py-12 rounded-3xl max-w-[90%] sm:max-w-7xl mx-auto w-full mt-20'
+      className='py-4 md:py-12 rounded-3xl max-w-[90%] sm:max-w-7xl mx-auto w-full md:mt-20'
       style={{
         background: '#729eff',
       }}
@@ -75,7 +75,7 @@ const HeroSection: React.FC = () => {
     >
       <div className='px-4 sm:px-6 lg:px-8 flex flex-col w-full sm:max-w-[85%] mx-auto items-center'>
         <MotionDiv
-          className='text-4xl lg:text-5xl font-normal text-white mb-8 text-center'
+          className='text-3xl md:text-4xl lg:text-5xl font-normal text-white mb-8 text-center'
           variants={cardVariants}
         >
           Ready For a New Property Search Experience?

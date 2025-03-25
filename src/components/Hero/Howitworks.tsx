@@ -43,7 +43,7 @@ const ProcessComponent = () => {
   };
 
   return (
-    <div className='max-w-7xl mx-auto py-12 px-4 md:px-6 lg:px-8 flex flex-col lg:flex-row text-center h-full justify-between'>
+    <div className='max-w-7xl mx-auto py-4 md:py-12 px-4 md:px-6 lg:px-8 flex flex-col lg:flex-row text-center h-full justify-between'>
       <div className='lg:w-1/2 flex items-center justify-center h-full mt-10'>
         <h2 className='text-4xl md:text-5xl lg:text-6xl font-normal leading-none '>
           Our process of<br></br> helping you find your <br></br>home away from

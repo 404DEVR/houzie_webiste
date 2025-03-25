@@ -60,7 +60,7 @@ const HeroSection = () => {
 
   return (
     <TooltipProvider>
-      <div id='feature' className='pt-28 px-4 sm:px-6 lg:px-8'>
+      <div id='feature' className='pt-12 md:pt-28 px-4 sm:px-6 lg:px-8'>
         <MotionDiv // Use MotionDiv
           ref={ref}
           variants={containerVariants}
@@ -83,7 +83,7 @@ const HeroSection = () => {
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className='bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
+                <button className='bg-white text-nowrap text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
                   Verified Properties
                   <div className='text-black relative right-0 text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 border border-black ml-2 sm:ml-4 md:ml-6 h-full flex items-center justify-center'>
                     <MoveUpRight />
@@ -105,7 +105,7 @@ const HeroSection = () => {
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className='bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
+                <button className='bg-white text-nowrap text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
                   Extensive Inventory
                   <div className='text-black relative right-0 text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 border border-black ml-2 sm:ml-4 md:ml-6 h-full flex items-center justify-center'>
                     <MoveUpRight />
@@ -123,11 +123,11 @@ const HeroSection = () => {
 
           <MotionDiv // Use MotionDiv
             variants={itemVariants}
-            className='absolute top-[45%] left-[50%] sm:left-[55%] transform -translate-x-1/2 -translate-y-1/2'
+            className='absolute top-[55%] left-[30%] sm:left-[55%] transform -translate-x-1/2 -translate-y-1/2'
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className='bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
+                <button className='bg-white text-nowrap text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 flex items-center justify-center'>
                   Proximity Search
                   <div className='text-black relative right-0 text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 border border-black ml-2 sm:ml-4 md:ml-6 h-full flex items-center justify-center'>
                     <MoveUpRight />
@@ -149,7 +149,7 @@ const HeroSection = () => {
           >
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className='flex justify-between bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 items-center '>
+                <button className='flex text-nowrap justify-between bg-white text-gray-800 text-sm sm:text-lg md:text-2xl h-8 sm:h-10 md:h-12 rounded-full py-1 pr-1 pl-3 sm:pl-4 md:pl-6 font-medium shadow-md hover:bg-gray-100 items-center '>
                   Lifestyle Filters
                   <div className='text-black relative right-0 text-xs sm:text-sm md:text-lg font-medium rounded-full px-2 sm:px-3 py-1 sm:py-2 border border-black ml-2 sm:ml-4 md:ml-6 h-full flex items-center justify-center'>
                     <MoveUpRight />
@@ -167,7 +167,7 @@ const HeroSection = () => {
 
           <MotionDiv // Use MotionDiv
             variants={itemVariants}
-            className='absolute bottom-4 sm:bottom-8 md:bottom-10 left-4 sm:left-8 md:left-10 rounded-3xl bg-white p-4 sm:p-6 md:p-8 h-[40%] w-[45%] md:w-1/2 shadow-lg'
+            className='hidden md:absolute bottom-4 sm:bottom-8 md:bottom-10 left-4 sm:left-8 md:left-10 rounded-3xl bg-white p-4 sm:p-6 md:p-8 h-[40%] w-[45%] md:w-1/2 shadow-lg'
           >
             <Badge className='bg-[#cbb3ff] text-black rounded-full px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm md:text-md font-medium'>
               Features
@@ -196,8 +196,8 @@ const HeroSection = () => {
             </div>
           </MotionDiv>
         </MotionDiv>
-        <div className='text-center mt-16 sm:mt-20 md:mt-28'>
-          <h1 className='text-4xl md:text-5xl lg:text-6xl font-normal'>
+        <div className='text-center mt-10 sm:mt-20 md:mt-28'>
+          <h1 className='text-3xl md:text-5xl lg:text-6xl font-normal'>
             Houzie Services
           </h1>
         </div>

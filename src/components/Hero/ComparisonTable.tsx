@@ -12,7 +12,7 @@ const ComparisonTable: React.FC = () => {
 
   return (
     <>
-      <div className='overflow-x-auto rounded-3xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='hidden md:block overflow-x-auto rounded-3xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='hidden sm:block'>
           {' '}
           {/* Table for larger screens */}
@@ -110,7 +110,7 @@ const ComparisonTable: React.FC = () => {
         </div>
       </div>
 
-      <div className='text-center mt-16 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4 sm:px-6 lg:px-8'>
+      <div className='text-center mt-8 sm:mt-20 md:mt-28 mb-8 sm:mb-12 md:mb-16 px-4 sm:px-6 lg:px-8'>
         <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-4'>
           Your Next Rental Made Easy
         </h1>
