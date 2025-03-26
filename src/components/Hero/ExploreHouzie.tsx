@@ -55,17 +55,17 @@ const HeroText = () => {
             priority
             className='inline-block mx-2 rounded-full object-cover w-16 h-12 md:w-20 md:h-16'
           />
-          close to work with zero
+          close to work
         </p>
         <p className='text-4xl md:text-7xl font-normal flex flex-wrap justify-center items-center md:mb-4'>
-          hassle
+          with zero hassle
           <div className='flex justify-center items-center text-white  p-3 md:p-5 bg-[#ff764d] rounded-full mx-2 my-2'>
             <House className='h-5 w-5 md:h-6 md:w-6' />
           </div>
-          and full
+          and
         </p>
         <p className='text-4xl md:text-7xl font-normal'>
-          transparency
+          full transparency
           <Image
             src='/svg/small house 2.svg'
             alt='Transparency'

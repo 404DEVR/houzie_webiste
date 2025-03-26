@@ -167,7 +167,7 @@ const HeroSection = () => {
 
           <MotionDiv // Use MotionDiv
             variants={itemVariants}
-            className='hidden md:absolute bottom-4 sm:bottom-8 md:bottom-10 left-4 sm:left-8 md:left-10 rounded-3xl bg-white p-4 sm:p-6 md:p-8 h-[40%] w-[45%] md:w-1/2 shadow-lg'
+            className='hidden md:block absolute bottom-4 sm:bottom-8 md:bottom-10 left-4 sm:left-8 md:left-10 rounded-3xl bg-white p-4 sm:p-6 md:p-8 h-[40%] w-[45%] md:w-1/2 shadow-lg'
           >
             <Badge className='bg-[#cbb3ff] text-black rounded-full px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm md:text-md font-medium'>
               Features
