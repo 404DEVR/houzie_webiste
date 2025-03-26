@@ -239,6 +239,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
     setSelectedProperty(property);
 
     if (mapRef.current) {
+      mapRef.current.setZoom(13);
       mapRef.current.panTo({
         lat: property.location.latitude,
         lng: property.location.longitude,
@@ -288,7 +289,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
   };
 
   return (
-    <div className='relative w-full h-screen'>
+    <div className='relative w-full h-full'>
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -317,7 +318,7 @@ export default function MapComponent({ properties }: MapComponentProps) {
           style={{
             top: `${markerPosition.top}px`,
             left: `${markerPosition.left}px`,
-            transform: 'translateY(-30%)',
+            transform: 'translateX(65%) TranslateY(-30%)',
           }}
         >
           <Card className='relative w-[350px] shadow-xl rounded-xl overflow-hidden bg-white'>
