@@ -167,6 +167,10 @@ export interface MapLocationDisplayProps {
   location: Location;
 }
 
+export interface NearbyAmenitiesProps {
+  propertyData: PropertyPost;
+}
+
 export interface MapLocationSelectorProps {
   onLocationSave: (location: Location) => void;
   initialLocation?: Location | null;

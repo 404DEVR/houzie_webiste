@@ -24,6 +24,17 @@ export default interface Property {
   availableFrom: string;
 }
 
+interface Place {
+  name: string;
+  vicinity: string;
+  distance: number;
+  photos?: { photo_reference: string }[];
+}
+
+export interface NearbyPlaces {
+  [key: string]: Place | null;
+}
+
 export interface Location {
   city?: string;
   state?: string;

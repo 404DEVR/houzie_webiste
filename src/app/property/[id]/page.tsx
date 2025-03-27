@@ -125,7 +125,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           <ImageGallery propertyData={propertyData} />
         </div>
 
-        <div className='mt-4 sm:mt-7 px-20 flex flex-col justify-start items-start lg:flex-row gap-4'>
+        <div className='mt-4 sm:mt-7 flex flex-col justify-start items-start lg:flex-row gap-4'>
           {/* Left column */}
           <div className='w-full pr-4 flex flex-col md:w-[75%]'>
             <div className='w-full'>
@@ -175,7 +175,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
               )}
 
             <div className='space-y-4 sm:space-y-6 my-4 border-b pb-4 border-gray-200'>
-              <NearbyAmenities />
+              <NearbyAmenities propertyData={propertyData} />
             </div>
             {propertyData?.occupants && (
               <div className='space-y-4 sm:space-y-6  my-4 border-b pb-4 border-gray-200'>
@@ -197,7 +197,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
             </div>
           </div>
         </div>
-        <div className='px-20 space-y-4 sm:space-y-6 my-4 sm:my-6'>
+        <div className=' space-y-4 sm:space-y-6 my-4 sm:my-6'>
           <PropertySuggestions />
         </div>
       </main>

@@ -129,6 +129,12 @@ const ProfileCard = ({
   const handleLeadSubmit = async () => {
     if (!auth?.accessToken) {
       router.push('/login');
+      return;
+    }
+
+    if (!userData?.phoneNumber) {
+      router.push(`/verify-number?redirect=property/${propertyData?.id}`);
+      return;
     }
 
     const formdata = {
@@ -346,7 +352,10 @@ const ProfileCard = ({
             <Button
               size='custom'
               className='flex justify-center items-center w-auto p-4  text-white bg-[#3b8ff6]'
-              onClick={() => setSuccessDialog(false)}
+              onClick={() => {
+                setSuccessDialog(false);
+                router.push('/property');
+              }}
             >
               Continue Browsing
             </Button>

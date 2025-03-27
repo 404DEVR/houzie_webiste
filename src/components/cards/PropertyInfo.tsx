@@ -29,6 +29,7 @@ import {
 
 import { PropertyFeature } from '@/interfaces/Interface';
 import { PropertyInfoProps } from '@/interfaces/PropsInterface';
+import { BsPeople } from 'react-icons/bs';
 interface propertyDetailsObject {
   label: string;
   value: string;
@@ -115,51 +116,59 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
   const getPropertyDetails = (
     propertyType: string
   ): propertyDetailsObject[] => {
-    const baseDetails: propertyDetailsObject[] = [
-      {
-        label: 'Bedroom',
-        value: `${String(propertyData.bedrooms)} Bedrooms`,
-        icon: <Bed size={20} />,
-        hasIcon: false,
-      },
-      {
-        label: 'Balcony',
-        value: `${String(propertyData.balconies)} Balconies`,
-        icon: <Building2 size={20} />,
-        hasIcon: false,
-      },
-      {
-        label: 'Bathroom',
-        value: `${String(propertyData.bathrooms)} Bathrooms`,
-        icon: <Bath size={20} />,
-        hasIcon: false,
-      },
-      {
-        label: 'Type',
-        value: `${transformString(propertyData.propertyType)}`,
-        icon: <Building size={20} />,
-        hasIcon: false,
-      },
-      {
-        label: 'Furnishing',
-        value: transformString(propertyData.furnishing),
-        icon: <Sofa size={20} />,
-        hasIcon: true,
-      },
-
-      {
-        label: 'Available From',
-        value: formatDate(propertyData.availableFrom),
-        icon: <Calendar size={20} />,
-        hasIcon: false,
-      },
-    ];
-
     let additionalDetails: propertyDetailsObject[] = [];
 
     switch (propertyType) {
       case 'BUILDER_FLOOR':
         additionalDetails = [
+          {
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
+            hasIcon: true,
+          },
           {
             label: 'Floor Number',
             value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
@@ -172,17 +181,139 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
             icon: <User size={20} />,
             hasIcon: false,
           },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
+        ];
+        break;
+      case 'FLAT_APARTMENT':
+        additionalDetails = [
+          {
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
+            hasIcon: true,
+          },
+          {
+            label: 'Floor Number',
+            value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available for',
+            value: transformString(propertyData.preferredTenant),
+            icon: <User size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
         ];
         break;
 
       case 'VILLA':
         additionalDetails = [
           {
-            label: 'Meals',
-            value: propertyData.amenities.includes('MEALS')
-              ? 'Included'
-              : 'Not Included',
-            icon: <Utensils size={20} />,
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
+            hasIcon: true,
+          },
+          {
+            label: 'Floor Number',
+            value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+            icon: <Building size={20} />,
             hasIcon: false,
           },
           {
@@ -193,17 +324,63 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
             icon: <Bike size={20} />,
             hasIcon: false,
           },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
         ];
         break;
 
       case 'CO_LIVING':
         additionalDetails = [
           {
-            label: 'AC',
-            value: propertyData.furnishingExtras.includes('AC')
-              ? 'Included'
-              : 'Not Included',
-            icon: <Snowflake size={20} />,
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
             hasIcon: true,
           },
           {
@@ -212,18 +389,70 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
             icon: <Users size={20} />,
             hasIcon: false,
           },
+          {
+            label: 'Sharing Type',
+            value: transformString(propertyData.sharingType),
+            icon: <Users size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
         ];
         break;
 
       case 'PG':
         additionalDetails = [
           {
-            label: 'Meals',
-            value: propertyData.amenities.includes('MEALS')
-              ? 'Included'
-              : 'Not Included',
-            icon: <Utensils size={20} />,
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
             hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
+            hasIcon: true,
           },
           {
             label: 'Preferred Gender',
@@ -231,14 +460,93 @@ const PropertyInfo = ({ propertyData }: PropertyInfoProps) => {
             icon: <Users size={20} />,
             hasIcon: false,
           },
+          {
+            label: 'Sharing Type',
+            value: transformString(propertyData.sharingType),
+            icon: <Users size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
         ];
         break;
 
       default:
-        additionalDetails = [];
+        additionalDetails = [
+          {
+            label: 'Bedroom',
+            value: `${
+              propertyData.bedrooms === null ? (
+                <>{String(propertyData.bedrooms)} Bedrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bed size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Balcony',
+            value: `${
+              propertyData.balconies === null ? (
+                <>{String(propertyData.balconies)} Balconies</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Building2 size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Bathroom',
+            value: `${
+              propertyData.bathrooms === null ? (
+                <>{String(propertyData.bathrooms)} Bathrooms</>
+              ) : (
+                'Not Available'
+              )
+            }`,
+            icon: <Bath size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Type',
+            value: `${transformString(propertyData.propertyType)}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Furnishing',
+            value: transformString(propertyData.furnishing),
+            icon: <Sofa size={20} />,
+            hasIcon: true,
+          },
+          {
+            label: 'Floor Number',
+            value: `${propertyData.floorNumber} Out Of ${propertyData.totalFloors}`,
+            icon: <Building size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available for',
+            value: transformString(propertyData.preferredTenant),
+            icon: <User size={20} />,
+            hasIcon: false,
+          },
+          {
+            label: 'Available From',
+            value: formatDate(propertyData.availableFrom),
+            icon: <Calendar size={20} />,
+            hasIcon: false,
+          },
+        ];
     }
 
-    return [...baseDetails, ...additionalDetails];
+    return [...additionalDetails];
   };
 
   useEffect(() => {

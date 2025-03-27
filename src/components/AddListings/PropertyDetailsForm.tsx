@@ -2283,8 +2283,7 @@ const PropertyDetailsForm = ({
                 propertyDetails.preoccupiedPropertyType === 'PG' ||
                 propertyDetails.preoccupiedPropertyType === 'CO_LIVING' ||
                 propertyDetails.propertyType === 'PG' ||
-                propertyDetails.propertyType === 'CO_LIVING') &&
-              propertyDetails.isPreoccupied && (
+                propertyDetails.propertyType === 'CO_LIVING') && (
                 <>
                   <div>
                     <Label className='text-md text-black font-normal'>

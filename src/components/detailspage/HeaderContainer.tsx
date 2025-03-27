@@ -184,9 +184,12 @@ export default function HeaderContainer({
           </Button> */}
         </div>
       </div>
-      <div className='flex-1 w-full flex justify-between items-end border-b pt-4'>
+      <div className='flex-1 w-full flex justify-between items-end border-b pt-4 pb-4'>
         <h1 className='font-semibold text-2xl sm:text-[28px] text-black font-inter'>
-          {propertyData ? propertyData.title : ''}
+          {propertyData
+            ? propertyData.title.charAt(0).toUpperCase() +
+              propertyData.title.slice(1)
+            : ''}
         </h1>
         <div className='items-center justify-center flex gap-2'>
           <h1 className='text-base font-normal'>Rent</h1>
@@ -195,27 +198,31 @@ export default function HeaderContainer({
         </div>
       </div>
       <div className='flex justify-start items-start gap-12'>
-        <div className='flex flex-col items-start justify-start gap-1 w-auto'>
-          <span className='text-sm font-medium'>Feature</span>
-          <div className='flex gap-4 items-center justify-start'>
-            {propertyFeatures.map((feature, index) => (
-              <Badge
-                key={index}
-                variant='outline'
-                className='border-none flex gap-1 p-0 justify-center items-center'
-              >
-                <feature.icon className='w-[14px] h-[14px]' />
-                <span className='font-medium text-xs text-nowrap'>
-                  {feature.label}
-                </span>
-              </Badge>
-            ))}
-          </div>
-        </div>
+        {(propertyData.bedrooms !== 0 && propertyData.bedrooms !== null) ||
+          (propertyData.bedrooms !== 0 && propertyData.bedrooms !== null && (
+            <div className='flex flex-col items-start justify-start gap-1 w-auto'>
+              <span className='text-sm font-medium'>Feature</span>
+              <div className='flex gap-4 items-center justify-start'>
+                {propertyFeatures.map((feature, index) => (
+                  <Badge
+                    key={index}
+                    variant='outline'
+                    className='border-none flex gap-1 p-0 justify-center items-center'
+                  >
+                    <feature.icon className='w-[14px] h-[14px]' />
+                    <span className='font-medium text-xs text-nowrap'>
+                      {feature.label}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
+
         <div className='flex flex-col items-start justify-start gap-1 w-full'>
           <span className='text-sm font-medium'>Location</span>
-          <div className='flex gap-4 items-center justify-start'>
-            <span className='text-xs font-normal '>{address}</span>
+          <div className='flex items-center gap-2 text-xs truncate line-clamp-1'>
+            {address}
           </div>
         </div>
       </div>

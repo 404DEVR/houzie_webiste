@@ -48,21 +48,6 @@ export default function MapLocationDisplay({
     }
   };
 
-  const mapData = [
-    {
-      label: 'Distance From Work',
-      value: `13 Min`,
-      icon: '/svg/office.svg',
-      hasIcon: false,
-    },
-    {
-      label: 'Distance From Nearest Metro',
-      value: `7 Min`,
-      icon: '/svg/metro.svg',
-      hasIcon: false,
-    },
-  ];
-
   return (
     <div className='w-full'>
       {isLoaded && (
@@ -76,30 +61,6 @@ export default function MapLocationDisplay({
           <Marker position={center} onClick={handleMarkerClick} />
         </GoogleMap>
       )}
-      <div className='w-full flex justify-between items-center'>
-        {mapData.map((detail, index) => (
-          <div key={index}>
-            <div className='flex gap-4 items-center py-3'>
-              <div className='p-4 border border-black rounded-lg mr-2'>
-                <Image
-                  src={detail.icon}
-                  alt={detail.icon}
-                  width={25}
-                  height={25}
-                />
-              </div>
-              <div>
-                <div className='text-[#6f6f6f] text-nowrap text-xl leading-[21px]'>
-                  {detail.label}
-                </div>
-                <div className='flex text-nowrap text-[#3b8ff6] items-center gap-1.5 font-medium text-2xl'>
-                  {detail.value}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

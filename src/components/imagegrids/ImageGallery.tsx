@@ -79,7 +79,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
         </Card>
 
         {/* Other Images in Scrollable Container */}
-        <div className=' relative z-0 px-20'>
+        <div className=' relative z-0 '>
           <div className='relative flex overflow-x-scroll gap-4'>
             {propertyData.photos.map((image, index) => (
               <div key={index} className='relative w-36 h-36 aspect-square'>
