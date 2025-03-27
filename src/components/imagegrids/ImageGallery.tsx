@@ -1,11 +1,7 @@
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 import { ImageGalleryprops } from '@/interfaces/PropsInterface';
 
@@ -64,11 +60,11 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
 
   return (
     <>
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 w-full'>
         {/* Main Image */}
         <Card className='overflow-hidden rounded-lg border-0'>
           <CardContent className='p-0'>
-            <div className='relative w-full h-48 sm:h-[28rem]'>
+            <div className='relative w-full h-48 sm:h-[32rem]'>
               <Image
                 src={propertyData.mainImage || '/svg/no-results.svg'}
                 alt={propertyData.title}
@@ -83,7 +79,7 @@ const ImageGallery = ({ propertyData }: ImageGalleryprops) => {
         </Card>
 
         {/* Other Images in Scrollable Container */}
-        <div className=' relative z-0'>
+        <div className=' relative z-0 px-20'>
           <div className='relative flex overflow-x-scroll gap-4'>
             {propertyData.photos.map((image, index) => (
               <div key={index} className='relative w-36 h-36 aspect-square'>

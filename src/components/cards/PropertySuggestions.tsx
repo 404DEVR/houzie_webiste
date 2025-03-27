@@ -1,18 +1,19 @@
 import axios from 'axios';
 import { ArrowRight, Bath, Bed, Building2, Heart, Home } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { FaHeart } from 'react-icons/fa6';
+
+import { useCustomToast } from '@/hooks/use-custom-toast';
+import useAuth from '@/hooks/useAuth';
+import useFavorites from '@/hooks/UseFavorites';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
-import { Listing, PropertyFeature, PropertyPost } from '@/interfaces/Interface';
-import PropertyDetails from '@/components/detailspage/PropertyDetails';
-import useAuth from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { useCustomToast } from '@/hooks/use-custom-toast';
-import { FaHeart } from 'react-icons/fa6';
+import { PropertyFeature, PropertyPost } from '@/interfaces/Interface';
 
 const transformString = (str: string | null | undefined) => {
   if (!str) return '';
@@ -32,34 +33,7 @@ export default function PropertySuggestions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
-
-  const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const url = `https://api.houzie.in/profile/favorites`;
-  const fetchListings = async () => {
-    setIsLoading(true);
-    try {
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const listingsData = response.data.map((item: any) => item.listing);
-      setFavoriteListings(listingsData);
-    } catch (error) {
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchListings();
-  }, [auth?.accessToken, url]);
+  const { handleFavoriteClick, isListingInFavorites } = useFavorites([]);
 
   useEffect(() => {
     const fetchPropertyData = async () => {
@@ -80,13 +54,6 @@ export default function PropertySuggestions() {
 
     fetchPropertyData();
   }, []);
-
-  const toggleFavorite = (propertyId: string) => {
-    setFavorites((prev) => ({
-      ...prev,
-      [propertyId]: !prev[propertyId],
-    }));
-  };
 
   const handleViewDetails = async (id: string) => {
     const accessToken = auth?.accessToken;
@@ -124,13 +91,13 @@ export default function PropertySuggestions() {
   const getPropertyFeatures = (property: PropertyPost): PropertyFeature[] => {
     const features: PropertyFeature[] = [];
 
-    if (property.bedrooms !== 0) {
+    if (property.bedrooms !== 0 && property.bedrooms !== null) {
       features.push({ icon: Bed, label: `${property.bedrooms}-Bedroom` });
     }
-    if (property.bathrooms !== 0) {
+    if (property.bathrooms !== 0 && property.bathrooms !== null) {
       features.push({ icon: Bath, label: `${property.bathrooms}-Bathroom` });
     }
-    if (property.balconies !== 0) {
+    if (property.balconies !== 0 && property.balconies !== null) {
       features.push({
         icon: Building2,
         label: `${property.balconies} Balcony`,
@@ -146,128 +113,6 @@ export default function PropertySuggestions() {
     return features;
   };
 
-  const removefavorites = async (id: string) => {
-    try {
-      setIsLoading(true);
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-
-      const deleteUrl = `https://api.houzie.in/profile/favorites/${id}`;
-      const response = await axios.delete(deleteUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success({
-          title: 'Success',
-          description: 'Property removed from favorites.',
-        });
-
-        setFavoriteListings((prevListings) =>
-          prevListings.filter((listing) => listing.id !== id)
-        );
-        await fetchListings();
-      } else {
-        toast.error({
-          title: 'Failed to Remove',
-          description:
-            'Failed to remove property from favorites. Please Check Your Network Connection',
-        });
-      }
-    } catch (error: any) {
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const isListingInFavorites = (listingId: string) => {
-    return favoriteListings.some((listing) => listing.id === listingId);
-  };
-
-  const addFavorites = async (id: string) => {
-    try {
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-
-      // Assuming you have a function to fetch property details by id
-      const property = await fetchPropertyDetails(id);
-
-      const response = await axios.post(
-        `https://api.houzie.in/profile/favorites/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      setFavoriteListings((prevListings) => {
-        if (!prevListings.some((listing) => listing.id === id)) {
-          const newListing: Listing = {
-            id: property.id,
-            title: property.title,
-            description: property.description,
-            location: {
-              id: '',
-              city: property.location.city,
-              state: property.location.state,
-              country: '',
-              latitude: 0,
-              longitude: 0,
-            },
-            brokerId: '',
-            isActive: false,
-            photos: property.photos,
-            mainImage: property.mainImage,
-            bathrooms: property.bathrooms,
-            bedrooms: property.bedrooms,
-            balconies: 0,
-            propertyType: property.propertyType,
-            views: 0,
-            price: property.price,
-            security: property.security,
-            brokerage: property.brokerage,
-            isNegotiable: false,
-            lockInPeriod: '',
-            availableFrom: property.availableFrom,
-            configuration: '',
-            floorNumber: '',
-            totalFloors: 0,
-            maintenanceCharges: property.maintenanceCharges,
-            isMaintenanceIncluded: property.isMaintenanceIncluded,
-            roomType: '',
-            sharingType: '',
-            unitsAvailable: '',
-            roomSize: '',
-            amenities: [],
-            features: [],
-            furnishing: '',
-            furnishingExtras: [],
-            preferredTenant: '',
-          };
-
-          return [...prevListings, newListing];
-        }
-        return prevListings;
-      });
-
-      toast.success({
-        title: 'Success',
-        description: 'Property Added to favorites.',
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // Example function to fetch property details by id
   const fetchPropertyDetails = async (id: string) => {
     try {
@@ -278,23 +123,6 @@ export default function PropertySuggestions() {
     } catch (error) {
       console.error('Failed to fetch property details:', error);
       throw error;
-    }
-  };
-
-  const handleFavoriteClick = async (listingId: string) => {
-    try {
-      const accessToken = auth?.accessToken;
-      if (!accessToken) {
-        throw new Error('No access token available');
-      }
-
-      if (isListingInFavorites(listingId)) {
-        await removefavorites(listingId);
-      } else {
-        await addFavorites(listingId);
-      }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -311,13 +139,13 @@ export default function PropertySuggestions() {
   }
 
   return (
-    <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto md:p-4 bg-white rounded-lg shadow-sm'>
+    <div className='w-full max-w-[95%] md:max-w-[100%] mx-auto p-4 border  bg-white rounded-lg shadow-sm'>
       <h2 className='text-2xl font-semibold mb-4'>Other suggestions</h2>
       <div className='flex gap-6 overflow-x-auto scrollbar-hide p-6 h-auto'>
         {properties.map((property) => (
           <Card
             key={property.id}
-            className='min-w-[360px] bg-[#eff5ff] max-w-[360px] justify-between h-auto flex flex-col border-none px-2'
+            className='min-w-[360px] max-w-[360px] justify-between h-auto flex flex-col border-none px-2'
           >
             <div>
               <div className='relative'>
@@ -330,7 +158,7 @@ export default function PropertySuggestions() {
                 />
                 <Button
                   className='absolute top-0 right-3 p-2'
-                  onClick={() => handleFavoriteClick(property.id)}
+                  onClick={() => handleFavoriteClick(property)}
                 >
                   {isListingInFavorites(property.id) ? (
                     <FaHeart className='w-5 h-5 text-red-600' />
@@ -339,10 +167,10 @@ export default function PropertySuggestions() {
                   )}
                 </Button>
               </div>
-              <CardContent className='pt-1 px-2'>
+              <CardContent className='pt-1 px-0'>
                 <h3 className='text-lg font-semibold mb-1'>{property.title}</h3>
                 {property.description && (
-                  <p className='text-sm text-gray-600 mb-4 line-clamp-2'>
+                  <p className='text-sm text-gray-600 mb-4 line-clamp-2 h-[40px]'>
                     {property.description}
                   </p>
                 )}
@@ -351,7 +179,7 @@ export default function PropertySuggestions() {
                     <Badge
                       key={index}
                       variant='outline'
-                      className=' border-none flex gap-1 justify-center items-center'
+                      className='px-0 border-none flex gap-1 justify-start items-center'
                     >
                       <feature.icon className='w-[12px] h-[12px]' />
                       <span className='font-medium text-[12px]'>
@@ -363,7 +191,7 @@ export default function PropertySuggestions() {
               </CardContent>
             </div>
 
-            <CardFooter className='px-2 flex'>
+            <CardFooter className='px-0 flex'>
               {property.price !== undefined && (
                 <div className='flex text-nowrap items-center justify-between flex-[1]'>
                   <div>
@@ -374,7 +202,7 @@ export default function PropertySuggestions() {
               )}
               <Button
                 onClick={() => handleViewDetails(property.id)}
-                className='w-full lg:w-auto border bg-[#f5f5fa] rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
+                className='w-full lg:w-auto border shadow-md bg-[#f5f5fa] rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
               >
                 View Details <ArrowRight />
               </Button>

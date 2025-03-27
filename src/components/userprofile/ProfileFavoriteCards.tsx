@@ -17,7 +17,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
-import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
 import { Badge } from '@/components/ui/badge';
@@ -41,7 +40,6 @@ const transformString = (str: string | null | undefined) => {
 };
 
 const MyListings = () => {
-  const toast = useCustomToast();
   const router = useRouter();
   const { auth } = useAuth();
   const [favoriteListings, setFavoriteListings] = useState<Listing[]>([]);
@@ -114,18 +112,6 @@ const MyListings = () => {
     return details;
   };
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [favorites, setFavorites] = useState(false);
-  const [iscreate, setIscreate] = useState(false);
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const toggleFavorite = () => {
-    setFavorites(!favorites);
-  };
-
   const handleFavoriteClick = async (listingId: string) => {
     try {
       const accessToken = auth?.accessToken;
@@ -143,7 +129,7 @@ const MyListings = () => {
 
   const removefavorites = async (id: string) => {
     try {
-      setIsLoading(true); // Disable the button while loading
+      setIsLoading(true);
       const accessToken = auth?.accessToken;
       if (!accessToken) {
         throw new Error('No access token available');
@@ -157,7 +143,6 @@ const MyListings = () => {
       });
 
       if (response.status === 200) {
-        // Optimistically update the UI by removing the item from the state
         setFavoriteListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== id)
         );
@@ -283,17 +268,15 @@ const MyListings = () => {
                             </span>
                           </div>
                         </div>
-                        {!iscreate && (
-                          <div className='flex justify-end mt-auto pt-0'>
-                            <Button
-                              onClick={() => handleViewDetails(property.id)}
-                              className='w-full lg:w-auto border bg-[#f5f5fa] rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
-                            >
-                              View Details
-                              <ArrowRight />
-                            </Button>
-                          </div>
-                        )}
+                        <div className='flex justify-end mt-auto pt-0'>
+                          <Button
+                            onClick={() => handleViewDetails(property.id)}
+                            className='w-full lg:w-auto border bg-[#f5f5fa] rounded-lg px-6 text-[#60a5fa] hover:bg-[#e8e8f5] hover:text-[#60a5fa] transition-colors'
+                          >
+                            View Details
+                            <ArrowRight />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     <div className='relative hidden md:block'>

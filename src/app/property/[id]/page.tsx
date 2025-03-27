@@ -9,15 +9,17 @@ import useAuth from '@/hooks/useAuth';
 
 import ItemGrid from '@/components/cards/IconGrid';
 import MapCard from '@/components/cards/MapCard';
+import NearbyAmenities from '@/components/cards/NearbyAmenities';
 import OccupantData from '@/components/cards/OccupantData';
 import ProfileCard from '@/components/cards/profilecard';
 import PropertyInfo from '@/components/cards/PropertyInfo';
 import PropertySuggestions from '@/components/cards/PropertySuggestions';
+import HeaderContainer from '@/components/detailspage/HeaderContainer';
 import ImageGallery from '@/components/imagegrids/ImageGallery';
+import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 import { Button } from '@/components/ui/button';
 
 import { PropertyPost } from '@/interfaces/Interface';
-import NavbarDetailsPage from '@/components/Navbars/NavbarDetailsPage';
 
 interface DetailsPageClientProps {
   params: { id: string };
@@ -36,7 +38,7 @@ const ProfileCardWithOverlay = ({ children, showOverlay, buttonClick }) => (
 
     {/* Render the overlay if required */}
     {showOverlay && (
-      <div className='absolute inset-0 bg-black  bg-opacity-80 flex items-center justify-center rounded-lg z-10'>
+      <div className='absolute inset-0 bg-black  bg-opacity-80 flex items-center justify-center rounded-xl z-10'>
         <div className='text-center space-y-4 p-4'>
           <h3 className='text-white text-3xl font-semibold'>
             Sign In to View Details
@@ -61,6 +63,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   const [propertyData, setPropertyData] = useState<PropertyPost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const [address, setAddress] = useState('');
   const { auth } = useAuth();
 
   useEffect(() => {
@@ -74,7 +77,6 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
           throw new Error('Failed to fetch property data');
         }
         const data = await response.json();
-        console.log(data.data);
         setPropertyData(data.data);
       } catch (error) {
         setIsLoading(false);
@@ -112,27 +114,29 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
   return (
     <>
       <NavbarDetailsPage stickyPage='property' />
-      <main className='px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 mb-2 pt-10 sm:mb-3 bg-[#F4F4F4]'>
-        {/* <HeaderContainer propertyData={propertyData} /> */}
-        <div className='w-full flex flex-col lg:flex-row gap-4'>
-          <div className='w-full lg:w-1/2'>
-            <ImageGallery propertyData={propertyData} />
-          </div>
-          <div className='w-full lg:w-1/2'>
-            <PropertyInfo propertyData={propertyData} />
-          </div>
+      <main className='px-4 sm:px-6 md:px-8  mb-2 sm:mb-3 '>
+        <HeaderContainer
+          propertyData={propertyData}
+          setIsLoading={setIsLoading}
+          address={address}
+          setAddress={setAddress}
+        />
+        <div className='w-full'>
+          <ImageGallery propertyData={propertyData} />
         </div>
 
-        <div className='mt-4 sm:mt-7 flex flex-col lg:flex-row gap-4'>
+        <div className='mt-4 sm:mt-7 px-20 flex flex-col justify-start items-start lg:flex-row gap-4'>
           {/* Left column */}
-          <div className='w-full flex flex-col lg:w-[65%] xl:w-[70%] order-2 lg:order-1'>
-            {/* <PropertyHighlights propertyData={propertyData} />
-            <PropertyDetails propertyData={propertyData} />
-            <AboutProperty propertyData={propertyData} /> */}
-            <div className='space-y-4 sm:space-y-6 mt-0 z-0'>
-              {propertyData && <MapCard propertyData={propertyData} />}
+          <div className='w-full pr-4 flex flex-col md:w-[75%]'>
+            <div className='w-full'>
+              <PropertyInfo propertyData={propertyData} />
             </div>
-            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+            <div className='space-y-4 sm:space-y-6 mt-0 z-0'>
+              {propertyData && (
+                <MapCard propertyData={propertyData} address={address} />
+              )}
+            </div>
+            <div className='space-y-4 sm:space-y-6 my-4 pb-4 border-b border-gray-200'>
               <ItemGrid
                 title='Amenities'
                 data={propertyData.amenities}
@@ -140,7 +144,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
               />
             </div>
             {propertyData.furnishingExtras.length > 0 && (
-              <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+              <div className='space-y-4 sm:space-y-6 my-4 pb-4 border-b border-gray-200'>
                 <ItemGrid
                   title='Furnishing'
                   data={propertyData.furnishingExtras}
@@ -151,7 +155,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
 
             {propertyData.houseFurnishingItems &&
               propertyData.houseFurnishingItems.length > 0 && (
-                <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                <div className='space-y-4 sm:space-y-6 my-4 pb-4 border-b border-gray-200'>
                   <ItemGrid
                     title='House Furnishing'
                     data={propertyData.houseFurnishingItems}
@@ -161,7 +165,7 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
               )}
             {propertyData.roomFurnishingItems &&
               propertyData.roomFurnishingItems?.length > 0 && (
-                <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
+                <div className='space-y-4 sm:space-y-6 my-4 pb-4 border-b border-gray-200'>
                   <ItemGrid
                     title='Room Furnishing'
                     data={propertyData.roomFurnishingItems}
@@ -170,30 +174,30 @@ export default function DetailsPageClient({ params }: DetailsPageClientProps) {
                 </div>
               )}
 
-            <div className='space-y-4 sm:space-y-6 mt-4 sm:mt-6'>
-              <OccupantData propertyData={propertyData} />
+            <div className='space-y-4 sm:space-y-6 my-4 border-b pb-4 border-gray-200'>
+              <NearbyAmenities />
             </div>
+            {propertyData?.occupants && (
+              <div className='space-y-4 sm:space-y-6  my-4 border-b pb-4 border-gray-200'>
+                <OccupantData propertyData={propertyData} />
+              </div>
+            )}
           </div>
-          <div className='w-full ml-0 lg:w-[35%] xl:w-[40%] order-1 lg:order-2'>
+          <div className='w-full md:w-[25%] sticky top-0'>
             <div className='space-y-4'>
-              <ProfileCardWithOverlay
-                showOverlay={!auth?.accessToken}
-                buttonClick={() => router.push('/login')}
-              >
-                <ProfileCard
-                  propertyData={propertyData}
-                  rating={4}
-                  listingCount={10}
-                  totalDeals={6}
-                  postedDate={propertyData.createdAt}
-                  showContact={false}
-                  avatarUrl='/images/Dummy profile.png'
-                />
-              </ProfileCardWithOverlay>
+              <ProfileCard
+                propertyData={propertyData}
+                rating={4}
+                listingCount={10}
+                totalDeals={6}
+                postedDate={propertyData.createdAt}
+                showContact={false}
+                avatarUrl='/images/Dummy profile.png'
+              />
             </div>
           </div>
         </div>
-        <div className='space-y-4 sm:space-y-6 my-4 sm:my-6'>
+        <div className='px-20 space-y-4 sm:space-y-6 my-4 sm:my-6'>
           <PropertySuggestions />
         </div>
       </main>

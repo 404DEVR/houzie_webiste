@@ -1,4 +1,4 @@
-import Property, { PropertyPost, Location } from '@/interfaces/Interface';
+import { Location, PropertyPost } from '@/interfaces/Interface';
 
 export interface AddListingsProps {
   page?: string;
@@ -90,6 +90,7 @@ export interface ItemGridProps {
 
 export interface MapCardProps {
   propertyData?: PropertyPost;
+  address?: string;
 }
 
 export interface ProfileCardProps {
@@ -111,7 +112,7 @@ export interface OccupantDataProps {
 }
 
 export interface PropertyCardProps {
-  property: Property;
+  property: PropertyPost;
   iscreate?: boolean;
   loadImage: (url: string) => Promise<string>;
   widthDecider?: number | null;
@@ -136,6 +137,9 @@ export interface AboutPropertyProps {
 
 export interface HeaderContainerprops {
   propertyData: PropertyPost;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  address?: string;
+  setAddress?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface LeadformProps {

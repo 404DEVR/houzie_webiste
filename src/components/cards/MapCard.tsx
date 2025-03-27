@@ -7,6 +7,7 @@ import { MapCardProps } from '@/interfaces/PropsInterface';
 
 export default function MapCard({
   propertyData = {} as PropertyPost,
+  address,
 }: MapCardProps) {
   const location = propertyData?.location
     ? {
@@ -16,15 +17,12 @@ export default function MapCard({
     : { lat: 28.6139, lng: 77.209 }; // Default to Delhi
 
   return (
-    <div className='p-4 sm:p-6 bg-white rounded-lg shadow-sm w-full mx-auto z-0'>
-      <h2 className='text-2xl font-semibold'>Location</h2>
-      <div className='flex items-center gap-2 text-sm mt-1'>
-        <TiLocation size={20} />
-        <span className='text-gray-600'>
-          {propertyData?.location?.city || 'Unknown City'},{' '}
-          {propertyData?.location?.state || 'Unknown State'}
-        </span>
+    <div className='py-4 bg-white rounded-lg shadow-sm w-full mx-auto z-0 border-b border-gray-200'>
+      <div className='flex justify-between items-center mb-4'>
+        <h2 className='text-2xl font-semibold'>Location</h2>
+        <div className='flex items-center gap-2 text-sm mt-1'>{address}</div>
       </div>
+
       <MapLocationDisplay location={location} />
     </div>
   );

@@ -15,13 +15,13 @@ import * as z from 'zod';
 import { useCustomToast } from '@/hooks/use-custom-toast';
 import useAuth from '@/hooks/useAuth';
 
+import ForgotPasswordFlow from '@/components/auth/ForgetPassword';
 import withAuthRedirect from '@/components/hoc/withAuthRedirect';
 import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -300,29 +300,28 @@ const SignUpForm = () => {
     setFieldErrors((prevErrors) => ({ ...prevErrors, [name]: false }));
   };
 
-  const validateForm = () => {
-    const errors = {};
-    const requiredFields = getRequiredFields();
-
-    requiredFields.forEach((field) => {
-      const value = resetEmail;
-      if (Array.isArray(value)) {
-        errors[field] = value.length === 0;
-      } else {
-        errors[field] = !value;
-      }
-    });
-    return errors;
-  };
-
-  const handleForgotLink = () => {
-    const errors = validateForm();
-    setFieldErrors(errors);
-
-    const errorFields = Object.keys(errors).filter((key) => errors[key]);
-
-    if (errorFields.length > 0) {
+  const handleForgotLink = async () => {
+    if (!resetEmail.trim()) {
+      setFieldErrors({ email: 'Please enter an email' });
       return;
+    }
+
+    setFieldErrors({});
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        'https://api.houzie.in/auth/forgot-password',
+        { email: resetEmail }
+      );
+      toast.success({
+        title: 'Link Sent!',
+        description: 'Reset link sent successfully to your phone number',
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -631,64 +630,65 @@ const SignUpForm = () => {
                   </CardContent>
                 </div>
               ) : (
-                <div className='h-auto w-full py-40'>
-                  <CardHeader className='space-y-1 flex flex-col items-center p-2'>
-                    <CardTitle className='text-3xl md:text-4xl text-center mb-8'>
-                      Forgot Password
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
-                    <form className='grid gap-4'>
-                      <div className='grid gap-2'>
-                        <Label htmlFor='email'>Email Address</Label>
-                        <div className='relative'>
-                          <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                          <Input
-                            id='email'
-                            placeholder='hello@example.com'
-                            type='email'
-                            className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
-                            onChange={(e) => setResetEmail(e.target.value)}
-                          />
-                        </div>
-                        {fieldErrors['email'] && (
-                          <p className='text-red-500 text-sm'>
-                            Please Enter An Email
-                          </p>
-                        )}
-                      </div>
-                    </form>
+                <ForgotPasswordFlow />
+                // <div className='h-auto w-full py-40'>
+                //   <CardHeader className='space-y-1 flex flex-col items-center p-2'>
+                //     <CardTitle className='text-3xl md:text-4xl text-center mb-8'>
+                //       Forgot Password
+                //     </CardTitle>
+                //   </CardHeader>
+                //   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
+                //     <form className='grid gap-4'>
+                //       <div className='grid gap-2'>
+                //         <Label htmlFor='email'>Email Address</Label>
+                //         <div className='relative'>
+                //           <Mail className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                //           <Input
+                //             id='email'
+                //             placeholder='hello@example.com'
+                //             type='email'
+                //             className='pl-8 placeholder:text-slate-700 sm:text-md rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                //             onChange={(e) => setResetEmail(e.target.value)}
+                //           />
+                //         </div>
+                //         {fieldErrors['email'] && (
+                //           <p className='text-red-500 text-sm'>
+                //             Please Enter An Email
+                //           </p>
+                //         )}
+                //       </div>
+                //     </form>
 
-                    <div className='flex flex-col gap-2 justify-center items-center mt-6'>
-                      <Button
-                        onClick={handleForgotLink}
-                        size='custom'
-                        className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-4'
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          'Sending...'
-                        ) : (
-                          <div className='flex gap-1 justify-center items-center'>
-                            <p>Send Password Reset Link</p>{' '}
-                            <ChevronRight className='' />
-                          </div>
-                        )}
-                      </Button>
-                      <div className='flex flex-col gap-2 justify-center items-center'>
-                        <div className='text-center text-xs flex gap-1'>
-                          <Button
-                            size='custom'
-                            onClick={() => setShowForm('email')}
-                            className='text-[#3b82f6]'
-                          >
-                            Back to Login
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
+                //     <div className='flex flex-col gap-2 justify-center items-center mt-6'>
+                //       <Button
+                //         onClick={handleForgotLink}
+                //         size='custom'
+                //         className=' bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-4'
+                //         disabled={loading}
+                //       >
+                //         {loading ? (
+                //           'Sending...'
+                //         ) : (
+                //           <div className='flex gap-1 justify-center items-center'>
+                //             <p>Send Password Reset Link</p>
+                //             <ChevronRight className='' />
+                //           </div>
+                //         )}
+                //       </Button>
+                //       <div className='flex flex-col gap-2 justify-center items-center'>
+                //         <div className='text-center text-xs flex gap-1'>
+                //           <Button
+                //             size='custom'
+                //             onClick={() => setShowForm('email')}
+                //             className='text-[#3b82f6]'
+                //           >
+                //             Back to Login
+                //           </Button>
+                //         </div>
+                //       </div>
+                //     </div>
+                //   </CardContent>
+                // </div>
               )}
             </div>
           </div>

@@ -134,7 +134,7 @@ const DashboardNavbar = () => {
               }
             >
               <PopoverTrigger asChild>
-                <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer bg-[#3b8ff6] border border-white'>
+                <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer border border-[#3b8ff6]'>
                   <div className='w-10 h-10 relative  rounded-full overflow-hidden flex items-center justify-center'>
                     <Image
                       src='/images/Dummy profile.png'
@@ -144,7 +144,7 @@ const DashboardNavbar = () => {
                       className='w-full h-full absolute object-cover'
                     />
                   </div>
-                  <span className='text-white text-base gap-2 flex justify-between items-center'>
+                  <span className='text-[#3b8ff6] text-base gap-2 flex justify-between items-center'>
                     {userData?.name || 'John Doe'}
                     <ChevronDown className='w-5 h-5' />
                   </span>
@@ -157,7 +157,7 @@ const DashboardNavbar = () => {
               >
                 <div
                   onClick={() => router.push('')}
-                  className='pt-8 px-2 bg-white rounded-lg cursor-pointer'
+                  className='pt-8 px-2  rounded-lg cursor-pointer'
                 >
                   <div className='flex flex-col space-y-4'>
                     <div className='flex flex-col md:flex-row w-full gap-8'>
@@ -276,7 +276,7 @@ const DashboardNavbar = () => {
                 align='end'
                 sideOffset={20}
               >
-                <div className='p-0 bg-white rounded-lg'>
+                <div className='p-0  rounded-lg'>
                   <div className='flex flex-col space-y-1'>
                     <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
                       <Bell size={16} />

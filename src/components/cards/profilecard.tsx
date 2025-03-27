@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
@@ -29,6 +30,7 @@ const ProfileCard = ({
 }: ProfileCardProps) => {
   const toast = useCustomToast();
   const { auth } = useAuth();
+  const router = useRouter();
   const [brokerData, setBrokerData] = useState<ProfileCardProps>();
   const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -125,6 +127,10 @@ const ProfileCard = ({
   };
 
   const handleLeadSubmit = async () => {
+    if (!auth?.accessToken) {
+      router.push('/login');
+    }
+
     const formdata = {
       name: userData?.name || '',
       phoneNumber: userData?.phoneNumber || '',
@@ -180,7 +186,7 @@ const ProfileCard = ({
 
   const rating = 3;
   return (
-    <Card className='w-full bg-[#eff5ff] md:ml-auto mb-6'>
+    <Card className='w-full md:ml-auto mb-6 rounded-xl'>
       <div className='flex flex-col items-center'>
         <div className='w-24 h-24 rounded-full bg-gray-200 mt-6 mb-4'>
           {avatarUrl && (
@@ -195,7 +201,7 @@ const ProfileCard = ({
         </div>
 
         <div className='w-full px-6 pb-4'>
-          <div className='flex justify-between items-start'>
+          <div className='flex justify-between items-center'>
             <div>
               <h3 className='font-semibold'>
                 {brokerData && brokerData.name
@@ -208,11 +214,11 @@ const ProfileCard = ({
                   : 'Broker Name'}
               </h3>
 
-              <div className='flex gap-1 mt-1'>
+              <div className='flex gap-1'>
                 {[...Array(5)].map((_, i) => (
                   <AiFillStar
                     key={i}
-                    className={`w-5 h-5 ${
+                    className={`w-4 h-4 ${
                       i < (rating || 0) ? 'text-[#3b8ff6]' : 'text-[#bfdbfe]'
                     }`}
                   />

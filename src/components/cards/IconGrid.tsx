@@ -171,7 +171,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
 
   return (
     <div
-      className={`p-4 sm:p-6 bg-white rounded-lg shadow-sm ${
+      className={`py-4 bg-white rounded-lg shadow-sm ${
         showAll ? 'h-auto' : 'h-auto'
       } transition-all duration-300 ease-in-out`}
     >

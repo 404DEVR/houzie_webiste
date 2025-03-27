@@ -142,7 +142,13 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                   }
                 >
                   <PopoverTrigger asChild>
-                    <div className='flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl border border-[#3b8ff6]'>
+                    <div
+                      className={`flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl border ${
+                        stickyPage !== 'home'
+                          ? 'text-[#3b8ff6] border-[#3b8ff6]'
+                          : 'text-white border-white'
+                      }`}
+                    >
                       <div className='w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center'>
                         <Image
                           src='/images/Dummy profile.png'
@@ -151,7 +157,9 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                           className='w-full h-full object-cover'
                         />
                       </div>
-                      <span className='text-white text-base gap-2 flex justify-between items-center'>
+                      <span
+                        className={` text-base gap-2 flex justify-between items-center`}
+                      >
                         {userData?.name || 'John Doe'}
                         <ChevronDown className='w-5 h-5' />
                       </span>
