@@ -143,10 +143,14 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                 >
                   <PopoverTrigger asChild>
                     <div
-                      className={`flex cursor-pointer items-center gap-3 px-1 py-1 rounded-xl border ${
+                      className={`flex cursor-pointer items-center gap-3 px-1 py-1 z-50 rounded-xl border ${
                         stickyPage !== 'home'
                           ? 'text-[#3b8ff6] border-[#3b8ff6]'
                           : 'text-white border-white'
+                      } ${
+                        isPopoverOpen
+                          ? 'text-white border-white'
+                          : 'text-[#3b8ff6] border-[#3b8ff6]'
                       }`}
                     >
                       <div className='w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center'>
@@ -171,7 +175,10 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                     sideOffset={20}
                   >
                     <div
-                      onClick={() => router.push('/profile?section=profile')}
+                      onClick={() => {
+                        router.push('/profile?section=profile');
+                        setIsPopoverOpen(false);
+                      }}
                       className='pt-8 px-2  rounded-lg cursor-pointer'
                     >
                       <div className='flex flex-col space-y-4'>
@@ -264,9 +271,9 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
           </div>
           <div
             onClick={() => router.push('/')}
-            className='cursor-pointer w-1/3 flex justify-center relative'
+            className='cursor-pointer w-1/3 z-50 flex relative justify-center items-end'
           >
-            {stickyPage === 'home' ? (
+            {isPopoverOpen || stickyPage === 'home' ? (
               <Image
                 src='/svg/houzie light.svg'
                 alt='Houzie Logo'
@@ -283,8 +290,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                 className='relative md:-bottom-1'
               />
             )}
-
-            {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-bold text-white'>
+            {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-semibold text-white font-poppins'>
               Houzie
             </h1> */}
           </div>
@@ -304,7 +310,7 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                 <PopoverTrigger asChild>
                   <Card className=' bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
                     <CardContent className='bg-transparent flex items-center justify-center p-0'>
-                      {stickyPage === 'home' ? (
+                      {stickyPage === 'home' || isPopoverOpen ? (
                         <Image
                           src='/svg/list light.svg'
                           alt='public/svg/list.svg'
@@ -331,30 +337,39 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                     <div className='flex flex-col space-y-2 px-4'>
                       <Button
                         size='custom'
-                        onClick={() => router.push('/profile?section=profile')}
+                        onClick={() => {
+                          router.push('/profile?section=profile');
+                          setIsPopoverOpen(false);
+                        }}
                         className='focus-visible:border-0 border-b rounded-none py-1 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 '
                       >
                         <span>Profile</span>
                       </Button>
                       <Button
                         size='custom'
-                        onClick={() =>
-                          router.push('/profile?section=savedsearch')
-                        }
+                        onClick={() => {
+                          router.push('/profile?section=savedsearch');
+                          setIsPopoverOpen(false);
+                        }}
                         className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
                       >
                         <span>Saved Search</span>
                       </Button>
                       <Button
                         size='custom'
-                        onClick={() =>
-                          router.push('/profile?section=favorites')
-                        }
+                        onClick={() => {
+                          router.push('/profile?section=favorites');
+                          setIsPopoverOpen(false);
+                        }}
                         className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2  border-b rounded-none py-1'
                       >
                         <span>Favorites</span>
                       </Button>
                       <Button
+                        onClick={() => {
+                          router.push('/contact-us');
+                          setIsPopoverOpen(false);
+                        }}
                         size='custom'
                         className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
                       >
@@ -362,7 +377,10 @@ const NavbarDetailsPage = ({ stickyPage }: NavbarDetailsPageProps) => {
                       </Button>
                       <Button
                         size='custom'
-                        onClick={() => router.push('/profile?section=settings')}
+                        onClick={() => {
+                          router.push('/profile?section=settings');
+                          setIsPopoverOpen(false);
+                        }}
                         className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 w-32 flex justify-start items-center space-x-2 border-b rounded-none py-1'
                       >
                         <span>Settings</span>

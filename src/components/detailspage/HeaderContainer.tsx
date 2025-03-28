@@ -198,27 +198,23 @@ export default function HeaderContainer({
         </div>
       </div>
       <div className='flex justify-start items-start gap-12'>
-        {(propertyData.bedrooms !== 0 && propertyData.bedrooms !== null) ||
-          (propertyData.bedrooms !== 0 && propertyData.bedrooms !== null && (
-            <div className='flex flex-col items-start justify-start gap-1 w-auto'>
-              <span className='text-sm font-medium'>Feature</span>
-              <div className='flex gap-4 items-center justify-start'>
-                {propertyFeatures.map((feature, index) => (
-                  <Badge
-                    key={index}
-                    variant='outline'
-                    className='border-none flex gap-1 p-0 justify-center items-center'
-                  >
-                    <feature.icon className='w-[14px] h-[14px]' />
-                    <span className='font-medium text-xs text-nowrap'>
-                      {feature.label}
-                    </span>
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          ))}
-
+        <div className='flex flex-col items-start justify-start gap-1 w-auto'>
+          <span className='text-sm font-medium'>Feature</span>
+          <div className='flex gap-4 items-center justify-start'>
+            {propertyFeatures.map((feature, index) => (
+              <Badge
+                key={index}
+                variant='outline'
+                className='border-none flex gap-1 p-0 justify-center items-center'
+              >
+                <feature.icon className='w-[14px] h-[14px]' />
+                <span className='font-medium text-xs text-nowrap'>
+                  {feature.label}
+                </span>
+              </Badge>
+            ))}
+          </div>
+        </div>
         <div className='flex flex-col items-start justify-start gap-1 w-full'>
           <span className='text-sm font-medium'>Location</span>
           <div className='flex items-center gap-2 text-xs truncate line-clamp-1'>

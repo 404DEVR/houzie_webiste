@@ -283,10 +283,7 @@ const PropertyFooter = () => {
       'location',
       'propertyType',
       'configuration',
-      'furnishing',
-      'availableFrom',
-      'preferredTenant',
-      'features',
+      'availableFrom'
     ];
     return commonFields;
   };
@@ -443,8 +440,8 @@ const PropertyFooter = () => {
                       </p>
                     )}
                   </div>
-                  <div className='flex flex-col md:flex-row gap-2 my-2'>
-                    <div className='space-y-2  border rounded-lg p-3'>
+                  <div className='flex flex-col md:flex-row gap-2 my-2 w-full'>
+                    {/* <div className='space-y-2  border rounded-lg p-3'>
                       <h4 className='font-medium'>Radius</h4>
                       <div className='flex flex-col gap-0 '>
                         <div className='relative w-[90%] mx-auto h-8'>
@@ -530,8 +527,8 @@ const PropertyFooter = () => {
                           required
                         />
                       </div>
-                    </div>
-                    <div className='space-y-2 border rounded-lg p-3'>
+                    </div> */}
+                    <div className='space-y-2 border rounded-lg p-3 w-full'>
                       <h4 className='font-medium'>Rent</h4>
                       <div className='flex flex-col gap-0'>
                         <div className='relative w-[90%] mx-auto h-8'>
@@ -660,7 +657,7 @@ const PropertyFooter = () => {
                       </p>
                     )}
                   </div>
-                  <div>
+                  {/* <div>
                     <Label className='text-md text-black font-normal'>
                       Furnishing Level<span className='text-red-500'>*</span>
                     </Label>
@@ -687,8 +684,8 @@ const PropertyFooter = () => {
                         Please select a furnishing level
                       </p>
                     )}
-                  </div>
-                  <div>
+                  </div> */}
+                  {/* <div>
                     <Label className='text-md text-black font-normal'>
                       Preferred Tenant Type
                       <span className='text-red-500'>*</span>
@@ -740,7 +737,7 @@ const PropertyFooter = () => {
                         Please select an Features
                       </p>
                     )}
-                  </div>
+                  </div> */}
                   <div>
                     <Label className='text-md text-black font-normal'>
                       Configuration<span className='text-red-500'>*</span>

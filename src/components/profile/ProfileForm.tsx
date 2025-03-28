@@ -77,6 +77,9 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
   }, [auth?.userid, auth?.accessToken]);
 
   const handleSubmit = async (e) => {
+    if(!hasChanges()){
+      return;
+    }
     e.preventDefault();
 
     const data = {
@@ -179,10 +182,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
           {/* Profile Section */}
           <div className='flex flex-col md:flex-row w-full gap-8'>
             <div className=' bg-[#eff5ff] rounded-lg p-6 w-full h-auto md:h-[350px] md:w-1/2 shadow-2xl border'>
-              <form
-                onSubmit={handleSubmit}
-                className=' flex flex-col md:flex-row justify-center pt-6 md:px-6 h-full'
-              >
+              <form className=' flex flex-col md:flex-row justify-center pt-6 md:px-6 h-full'>
                 {/* User Details */}
                 <div className='flex-[2] col-span-1 flex flex-col gap-2 pb-8 '>
                   <div className='flex flex-col gap-'>
@@ -192,7 +192,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                       id='fullName'
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className={`border-none h-8 bg-transparent w-full px-0 text-2xl font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-2xl rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 `}
                       aria-label='Full Name'
                     />
                   </div>
@@ -205,7 +205,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                           id='emailAddress'
                           value={emailAddress}
                           readOnly
-                          className='border-none bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none bg-transparent px-0 w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Email Address'
                         />
                       </div>
@@ -223,7 +223,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                           id='phoneNumber'
                           value={phoneNumber}
                           readOnly
-                          className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
+                          className='border-none h-8 bg-transparent px-0 w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 cursor-not-allowed'
                           aria-label='Phone Number'
                           placeholder='No Phone Number'
                         />
@@ -241,7 +241,7 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                       id='companyName'
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      className='border-none h-8 bg-transparent w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                      className={`border-none h-8 bg-transparent px-0 w-full text-lg font-bold pt-0 placeholder:text-[#646464] text-[#646464] placeholder:text-lg rounded-md focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 `}
                       aria-label='Company Name'
                       placeholder='Please Update Company Name'
                     />
@@ -269,22 +269,21 @@ const ProfileForm = ({ page }: ProfileFormInterface) => {
                       <Camera className='h-4 w-4' />
                     </Button>
                   </div>
-                  <TooltipProvider>
+                  <Button
+                    type='button'
+                    onClick={handleSubmit}
+                    className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600 col-span-2'
+                  >
+                    Edit <Edit className='h-4 w-4 ml-2' />
+                  </Button>
+                  {/* <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger>
-                        <Button
-                          type='submit'
-                          disabled={!hasChanges()}
-                          className='bg-[#3b82f6] text-white rounded-md hover:bg-blue-600 col-span-2'
-                        >
-                          Edit <Edit className='h-4 w-4 ml-2' />
-                        </Button>
-                      </TooltipTrigger>
+                      <TooltipTrigger></TooltipTrigger>
                       <TooltipContent className='bg-[#3b82f6] text-white border-none shadow-lg shadow-slate-600 '>
                         <p>No changes detected. Please update a field.</p>
                       </TooltipContent>
                     </Tooltip>
-                  </TooltipProvider>
+                  </TooltipProvider> */}
                 </div>
               </form>
             </div>

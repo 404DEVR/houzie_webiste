@@ -492,7 +492,7 @@ const SignUpForm: React.FC = () => {
                   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
                     <div className='grid gap-4'>
                       <CardDescription className=' mb-2 w-full'>
-                        <div className='grid gap-2 mb-3'>
+                        {/* <div className='grid gap-2 mb-3'>
                           <Label htmlFor='phoneNumber'>Phone Number</Label>
                           <div className='relative'>
                             <Phone className='absolute left-3.5 top-3 h-3.5 w-3.5 text-gray-400' />
@@ -510,12 +510,46 @@ const SignUpForm: React.FC = () => {
                               {errors.phoneNumber?.message}
                             </p>
                           )}
+                        </div> */}
+                        <div className='grid gap-2 mb-3'>
+                          <Label htmlFor='phoneNumber' className='text-black'>
+                            Mobile Number
+                          </Label>
+                          <div className='relative flex justify-between items-center gap-2 '>
+                            <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+                            <Input
+                              id='phoneNumber'
+                              placeholder='Phone Number'
+                              type='tel'
+                              value={phoneNumber}
+                              disabled={step === 3 || step === 2}
+                              readOnly
+                              className='pl-8 placeholder:text-slate-700 text-slate-700 placeholder:text-sm sm:text-sm rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                              onChange={(e) => {
+                                setPhoneNumber(e.target.value);
+                                setPhoneNumberError('');
+                              }}
+                            />
+                            {step === 2 && (
+                              <div
+                                className='cursor-pointer relative text-[#3b8ff6] text-nowrap'
+                                onClick={handleInitiateLogin}
+                              >
+                                {loading ? 'Sending OTP...' : 'Send OTP'}
+                              </div>
+                            )}
+                          </div>
+                          {phoneNumberError && (
+                            <p className='text-red-500 text-[10px] leading-tight'>
+                              {phoneNumberError}
+                            </p>
+                          )}
                         </div>
                         {step === 1 && (
                           <div className='w-full flex justify-center items-center'>
                             <Button
                               size='custom'
-                              className='  bg-[#3b82f6] text-white hover:bg-[#6190dc] py-3 px-6 rounded-lg mb-2'
+                              className='  bg-[#3b82f6] text-white hover:bg-[#6190dc] py-2 px-6 rounded-lg mb-2'
                               onClick={handleSubmit(onSubmit)}
                             >
                               {loading ? (
@@ -529,11 +563,11 @@ const SignUpForm: React.FC = () => {
                           </div>
                         )}
                       </CardDescription>
-                      {step === 2 && (
+                      {/* {step === 2 && (
                         <Button onClick={handleInitiateLogin}>
                           {loading ? 'Sending OTP...' : 'Send OTP'}
                         </Button>
-                      )}
+                      )} */}
                       {step === 3 && (
                         <>
                           <div className='flex gap-2 flex-col justify-center items-start text-center'>

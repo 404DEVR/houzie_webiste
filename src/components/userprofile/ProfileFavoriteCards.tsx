@@ -169,8 +169,8 @@ const MyListings = () => {
   };
 
   return (
-    <div className='container mx-auto pb-8 pt-4 border px-2 sm:px-4 my-4 rounded-lg'>
-      <h1 className='text-xl sm:text-2xl font-bold mb-4'>Favorites</h1>
+    <div className='container mx-auto p-2 md:p-4'>
+      <h2 className='text-xl font-semibold mb-4'>Favorites</h2>
 
       {isLoading ? (
         <p>Loading listings...</p>

@@ -54,8 +54,8 @@ const SearchBar = () => {
 
   return (
     <div className='relative rounded-2xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-      <div className='flex flex-col w-full flex-grow xl:flex-row gap-2 items-stretch py-4 px-4 justify-between bg-white shadow-lg rounded-2xl  border border-gray-200'>
-        <div className='w-full xl:w-[45%]'>
+      <div className='flex flex-col w-full flex-grow lg:flex-row gap-2 items-stretch py-4 px-4 justify-between bg-white shadow-lg rounded-2xl  border border-gray-200'>
+        <div className='w-full lg:w-[45%]'>
           <label className='text-xl font-medium block text-gray-800 leading-normal'>
             Location
           </label>
@@ -77,14 +77,14 @@ const SearchBar = () => {
             </StandaloneSearchBox>
           )}
         </div>
-        <div className='w-full xl:w-[55%] flex flex-col xl:flex-row justify-between items-center gap-2'>
-          <div className='w-full xl:w-[40%] '>
+        <div className='w-full lg:w-[55%] flex flex-col xl:flex-row justify-between items-center gap-2'>
+          <div className='w-full lg:w-[40%] '>
             <PropertyComponentSearchbar />
           </div>
-          <div className='w-full xl:w-[40%]'>
+          <div className='w-full lg:w-[40%]'>
             <RentComponent />
           </div>
-          <div className='w-full xl:w-[20%] relative h-full'>
+          <div className='w-full lg:w-[20%] relative h-full'>
             <Button
               onClick={handleSearchClick}
               size='custom'

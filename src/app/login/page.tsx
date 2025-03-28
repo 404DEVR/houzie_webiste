@@ -493,16 +493,9 @@ const SignUpForm = () => {
                           <Label htmlFor='phoneNumber' className='text-black'>
                             Mobile Number
                           </Label>
-                          <div className='relative'>
+                          <div className='relative flex justify-between items-center gap-2 '>
                             <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
-                            {step === 1 && (
-                              <div
-                                className='cursor-pointer absolute top-2.5 right-2.5 text-[#3b8ff6]'
-                                onClick={handleInitiateLogin}
-                              >
-                                {loading ? 'Sending OTP...' : 'Send OTP'}
-                              </div>
-                            )}
+
                             {step === 2 && (
                               <Button
                                 variant='ghost'
@@ -528,6 +521,14 @@ const SignUpForm = () => {
                                 setPhoneNumberError('');
                               }}
                             />
+                            {step === 1 && (
+                              <div
+                                className='cursor-pointer relative text-[#3b8ff6] text-nowrap'
+                                onClick={handleInitiateLogin}
+                              >
+                                {loading ? 'Sending OTP...' : 'Send OTP'}
+                              </div>
+                            )}
                           </div>
                           {phoneNumberError && (
                             <p className='text-red-500 text-[10px] leading-tight'>

@@ -401,16 +401,63 @@ const SignUpForm = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className='w-[90%] md:w-[80%] mx-auto p-0'>
+                    <h2 className='text-xs mb-4 text-gray-400 font-normal'>Please Confirm Your Phone Number and verify it!</h2>
                     <div className='grid gap-4'>
                       <CardDescription className=' mb-2'>
-                        Please enter the OTP sent to your phone number{' '}
-                        {phoneNumber}
+                         <div className='grid gap-2'>
+                          <Label htmlFor='phoneNumber' className='text-black'>
+                            Mobile Number
+                          </Label>
+                          <div className='relative flex justify-between items-center gap-2 '>
+                            <Phone className='absolute left-2.5 top-2.5 h-4 w-4 text-gray-400' />
+
+                            {step === 2 && (
+                              <Button
+                                variant='ghost'
+                                size='custom'
+                                className=' p-0 cursor-pointer absolute top-2.5 right-2.5 text-[#3b8ff6] '
+                                onClick={handleResendOTP}
+                                disabled={!canResend}
+                              >
+                                {canResend
+                                  ? 'Resend OTP'
+                                  : `Resend OTP in ${resendCooldown}s`}
+                              </Button>
+                            )}
+
+                            <Input
+                              id='phoneNumber'
+                              placeholder='Phone Number'
+                              type='tel'
+                              value={phoneNumber}
+                              readOnly
+                              className='pl-8 placeholder:text-slate-700 text-slate-700 placeholder:text-sm sm:text-sm rounded-md focus-visible:border-[#3b8ff6] ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                              onChange={(e) => {
+                                setPhoneNumber(e.target.value);
+                                setPhoneNumberError('');
+                              }}
+                            />
+                            {step === 1 && (
+                              <div
+                                className='cursor-pointer relative text-[#3b8ff6] text-nowrap'
+                                onClick={handleInitiateLogin}
+                              >
+                                {loading ? 'Sending OTP...' : 'Send OTP'}
+                              </div>
+                            )}
+                          </div>
+                          {phoneNumberError && (
+                            <p className='text-red-500 text-[10px] leading-tight'>
+                              {phoneNumberError}
+                            </p>
+                          )}
+                        </div>
                       </CardDescription>
-                      {step === 1 && (
+                      {/* {step === 1 && (
                         <Button onClick={handleInitiateLogin}>
                           {loading ? 'Sending OTP...' : 'Send OTP'}
                         </Button>
-                      )}
+                      )} */}
                       {step === 2 && (
                         <>
                           <div className='flex gap-2 flex-col justify-center items-start text-center'>

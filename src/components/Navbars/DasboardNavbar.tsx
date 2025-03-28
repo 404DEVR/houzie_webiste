@@ -134,7 +134,11 @@ const DashboardNavbar = () => {
               }
             >
               <PopoverTrigger asChild>
-                <div className='flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer border border-[#3b8ff6]'>
+                <div className={`flex items-center gap-3 px-1 py-1 rounded-xl cursor-pointer border ${
+                        isPopoverOpen
+                          ? 'text-white border-white'
+                          : 'text-[#3b8ff6] border-[#3b8ff6]'
+                      } `}>
                   <div className='w-10 h-10 relative  rounded-full overflow-hidden flex items-center justify-center'>
                     <Image
                       src='/images/Dummy profile.png'
@@ -144,7 +148,7 @@ const DashboardNavbar = () => {
                       className='w-full h-full absolute object-cover'
                     />
                   </div>
-                  <span className='text-[#3b8ff6] text-base gap-2 flex justify-between items-center'>
+                  <span className=' text-base gap-2 flex justify-between items-center'>
                     {userData?.name || 'John Doe'}
                     <ChevronDown className='w-5 h-5' />
                   </span>
@@ -236,13 +240,23 @@ const DashboardNavbar = () => {
             onClick={() => router.push('/')}
             className='cursor-pointer w-1/3 flex relative justify-center items-end'
           >
-            <Image
-              src='/svg/houzie dark.svg'
-              alt='Houzie Logo'
-              width={110}
-              height={110}
-              className='relative -bottom-1'
-            />
+            {isPopoverOpen ? (
+              <Image
+                src='/svg/houzie light.svg'
+                alt='Houzie Logo'
+                width={110}
+                height={110}
+                className='relative md:-bottom-1'
+              />
+            ) : (
+              <Image
+                src='/svg/houzie dark.svg'
+                alt='Houzie Logo'
+                width={110}
+                height={110}
+                className='relative md:-bottom-1'
+              />
+            )}
             {/* <h1 className='text-3xl sm:text-4xl md:text-5xl md:pt-4 font-semibold text-white font-poppins'>
               Houzie
             </h1> */}
@@ -262,12 +276,21 @@ const DashboardNavbar = () => {
               <PopoverTrigger asChild>
                 <Card className=' bg-transparent border-none cursor-pointer rounded-[9px] overflow-hidden p-0 relative z-50'>
                   <CardContent className='bg-transparent flex items-center justify-center p-0'>
+                   {isPopoverOpen ? (
+                    <Image
+                      src='/svg/list light.svg'
+                      alt='public/svg/list.svg'
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
                     <Image
                       src='/svg/list.svg'
                       alt='public/svg/list.svg'
                       width={40}
                       height={40}
                     />
+                  )}
                   </CardContent>
                 </Card>
               </PopoverTrigger>
@@ -286,7 +309,7 @@ const DashboardNavbar = () => {
                       <BadgeInfo size={16} />
                       <span>Support</span>
                     </Button>
-                    <Button className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
+                    <Button onClick={()=>router.push('/contact-us')} className='focus-visible:border-0 ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex justify-start items-center space-x-2 hover:bg-gray-100 p-0 rounded'>
                       <Contact size={16} />
                       <span>Contact Us</span>
                     </Button>
